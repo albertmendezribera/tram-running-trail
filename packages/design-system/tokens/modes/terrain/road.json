@@ -1,0 +1,4 @@
+{
+  "$description": "Mode asfalt: el traç principal pren el color de la sèrie d'asfalt.",
+  "sys": { "data": { "primary": { "$value": "{sys.data.road}" } } }
+}

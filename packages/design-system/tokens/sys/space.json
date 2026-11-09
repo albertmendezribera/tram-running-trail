@@ -1,0 +1,23 @@
+{
+  "$description": "Rols d'espai. L'escala numèrica és un rol per si mateixa (space-0 … space-12); els rols de densitat en deriven.",
+  "sys": {
+    "space": {
+      "$type": "dimension",
+      "0": { "$value": "{ref.space.0}" },
+      "1": { "$value": "{ref.space.1}" },
+      "2": { "$value": "{ref.space.2}" },
+      "3": { "$value": "{ref.space.3}" },
+      "4": { "$value": "{ref.space.4}" },
+      "5": { "$value": "{ref.space.5}" },
+      "6": { "$value": "{ref.space.6}" },
+      "7": { "$value": "{ref.space.7}" },
+      "8": { "$value": "{ref.space.8}" },
+      "9": { "$value": "{ref.space.9}" },
+      "10": { "$value": "{ref.space.10}" },
+      "11": { "$value": "{ref.space.11}" },
+      "12": { "$value": "{ref.space.12}" },
+      "cell-y": { "$value": "{sys.space.3}", "$description": "Farciment vertical d'una cel·la de DataTable. Varia amb data-density." },
+      "cell-x": { "$value": "{sys.space.4}", "$description": "Farciment horitzontal d'una cel·la de DataTable. Varia amb data-density." }
+    }
+  }
+}

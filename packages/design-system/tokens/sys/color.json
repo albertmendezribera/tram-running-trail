@@ -1,0 +1,35 @@
+{
+  "$description": "Rols de color del sistema. Valors per defecte = tema clar, terreny mixt. Els modes de modes/ en sobreescriuen alguns.",
+  "sys": {
+    "$type": "color",
+    "surface": {
+      "$root": { "$value": "{ref.paper}", "$description": "Fons de pàgina." },
+      "alt": { "$value": "{ref.paper-shade}", "$description": "Bandes de taula, capçaleres de full de resultats. Mai com a 'targeta' amb ombra." }
+    },
+    "text": {
+      "$root": { "$value": "{ref.ink}" },
+      "muted": { "$value": "{ref.ink-muted}", "$description": "Text secundari: unitats, etiquetes, notes. Contrast AA verificat en build." }
+    },
+    "rule": {
+      "$root": { "$value": "{ref.paper-rule}", "$description": "Filet fi: retícula, separadors de taula. La profunditat es fa amb línies, no amb ombres (7.4)." },
+      "strong": { "$value": "{ref.ink}", "$description": "Filet principal: eixos, capçalera de taula." }
+    },
+    "accent": {
+      "$root": { "$value": "{ref.signal}", "$description": "Únic accent. Només per a l'acció principal i el punt actiu del recorregut. Com a fons, amb on-accent a sobre." },
+      "text": { "$value": "{ref.signal-ink}", "$description": "Accent per a text o icones petites sobre surface. --signal no arriba a AA sobre paper." }
+    },
+    "on-accent": { "$value": "{ref.ink}", "$description": "Text sobre un fons d'accent (5,85:1)." },
+    "focus": { "$value": "{sys.text}", "$description": "Anell de focus visible. No fa servir l'accent, que es reserva per a l'acció principal." },
+    "data": {
+      "road": { "$value": "{ref.graphite}", "$description": "Sèrie d'asfalt en gràfics. Sempre acompanyada d'un patró o d'una etiqueta (7.3): mai només color." },
+      "trail": { "$value": "{ref.contour}", "$description": "Sèrie de trail en gràfics. Sempre acompanyada d'un patró o d'una etiqueta (7.3)." },
+      "primary": { "$value": "{sys.text}", "$description": "Traç principal d'una dada segons el mode de terreny. En mixt és neutre; en road/trail pren el color del seu món." },
+      "active": { "$value": "{ref.signal}", "$description": "Punt actiu del recorregut. Sobre paper fa 2,64:1: cal un contorn amb sys.text (pendent d'E09)." }
+    },
+    "map": {
+      "contour": { "$value": "{ref.contour}", "$description": "Corbes de nivell. Només en mapes i dades." },
+      "vegetation": { "$value": "{ref.moss}", "$description": "Vegetació. Només en mapes i dades." },
+      "water": { "$value": "{ref.water}", "$description": "Aigua. Només en mapes i dades." }
+    }
+  }
+}

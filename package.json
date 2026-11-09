@@ -1,0 +1,15 @@
+{
+  "name": "tram",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "tokens:build": "pnpm --filter @tram/design-system tokens:build",
+    "tokens:check": "pnpm --filter @tram/design-system tokens:check",
+    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck"
+  }
+}

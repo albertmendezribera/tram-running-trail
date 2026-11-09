@@ -1,0 +1,9 @@
+{
+  "$description": "Densitat compacta: fulls de resultats i comparador.",
+  "sys": {
+    "space": {
+      "cell-y": { "$value": "{sys.space.1}" },
+      "cell-x": { "$value": "{sys.space.2}" }
+    }
+  }
+}

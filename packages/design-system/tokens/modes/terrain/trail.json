@@ -1,0 +1,4 @@
+{
+  "$description": "Mode trail: el traç principal pren el color de la sèrie de trail.",
+  "sys": { "data": { "primary": { "$value": "{sys.data.trail}" } } }
+}

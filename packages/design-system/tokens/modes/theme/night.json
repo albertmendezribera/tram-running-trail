@@ -1,0 +1,23 @@
+{
+  "$description": "Tema 'nit de cursa'. Fons carbó neutre, mai blau pissarra. L'accent de senyal es manté i fa de llum de frontal.",
+  "sys": {
+    "surface": {
+      "$root": { "$value": "{ref.night}" },
+      "alt": { "$value": "{ref.carbon}" }
+    },
+    "text": {
+      "$root": { "$value": "{ref.night-text}" },
+      "muted": { "$value": "{ref.night-text-muted}" }
+    },
+    "rule": {
+      "$root": { "$value": "{ref.night-rule}" },
+      "strong": { "$value": "{ref.night-text}" }
+    },
+    "accent": {
+      "text": { "$value": "{ref.signal}", "$description": "Sobre night, --signal ja fa 6,15:1." }
+    },
+    "data": {
+      "road": { "$value": "{ref.road-line}", "$description": "De nit, l'asfalt es llegeix per la pintura vial." }
+    }
+  }
+}

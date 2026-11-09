@@ -1,0 +1,26 @@
+{
+  "name": "@tram/design-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "TRAM design system: DTCG tokens → CSS, ECharts, Three.js and OG targets. Single source of visual truth (CLAUDE.md 6).",
+  "exports": {
+    "./tokens.css": "./dist/tokens.css",
+    "./echarts-theme": "./dist/echarts-theme.ts",
+    "./three": "./dist/three.ts",
+    "./og": "./dist/og.ts"
+  },
+  "scripts": {
+    "tokens:build": "node build/cli.ts",
+    "tokens:check": "node build/cli.ts --check",
+    "test": "node --test \"build/**/*.test.ts\"",
+    "test:browser": "node --test \"test/**/*.browser.test.ts\"",
+    "typecheck": "tsc -p tsconfig.json",
+    "tokens:proof": "node scripts/proof-sheet.cjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "playwright": "1.63.0",
+    "typescript": "5.9.3"
+  }
+}

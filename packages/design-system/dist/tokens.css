@@ -33,6 +33,30 @@
     --tram-ref-space-10: 4rem;
     --tram-ref-space-11: 5rem;
     --tram-ref-space-12: 6rem;
+    --tram-ref-font-display: "Sofia Sans Extra Condensed", sans-serif;
+    --tram-ref-font-text: "Sofia Sans", sans-serif;
+    --tram-ref-weight-regular: 400;
+    --tram-ref-weight-medium: 500;
+    --tram-ref-weight-bold: 700;
+    --tram-ref-weight-extrabold: 800;
+    --tram-ref-leading-tight: 0.95;
+    --tram-ref-leading-snug: 1.05;
+    --tram-ref-leading-data: 1.3;
+    --tram-ref-leading-text: 1.5;
+    --tram-ref-tracking-tight: -0.01;
+    --tram-ref-tracking-none: 0;
+    --tram-ref-tracking-open: 0.01;
+    --tram-ref-tracking-label: 0.02;
+    --tram-ref-size-2xs: clamp(0.75rem, 0.7268rem + 0.0952vw, 0.8125rem);
+    --tram-ref-size-xs: clamp(0.8125rem, 0.7893rem + 0.0952vw, 0.875rem);
+    --tram-ref-size-sm: clamp(0.875rem, 0.8518rem + 0.0952vw, 0.9375rem);
+    --tram-ref-size-md: clamp(0.9375rem, 0.9143rem + 0.0952vw, 1rem);
+    --tram-ref-size-base: clamp(1rem, 0.9768rem + 0.0952vw, 1.0625rem);
+    --tram-ref-size-lg: clamp(1.125rem, 1.0786rem + 0.1905vw, 1.25rem);
+    --tram-ref-size-xl: clamp(1.75rem, 1.4714rem + 1.1429vw, 2.5rem);
+    --tram-ref-size-2xl: clamp(2.75rem, 2.1rem + 2.6667vw, 4.5rem);
+    --tram-ref-size-3xl: clamp(4rem, 2.7rem + 5.3333vw, 7.5rem);
+    --tram-ref-size-4xl: clamp(7.5rem, 4.7143rem + 11.4286vw, 15rem);
     --tram-sys-surface: light-dark(var(--tram-ref-paper), var(--tram-ref-night));
     --tram-sys-surface-alt: light-dark(var(--tram-ref-paper-shade), var(--tram-ref-carbon));
     --tram-sys-text: light-dark(var(--tram-ref-ink), var(--tram-ref-night-text));
@@ -65,6 +89,64 @@
     --tram-sys-space-12: var(--tram-ref-space-12);
     --tram-sys-space-cell-y: var(--tram-sys-space-3);
     --tram-sys-space-cell-x: var(--tram-sys-space-4);
+    --tram-sys-font-display: var(--tram-ref-font-display);
+    --tram-sys-font-text: var(--tram-ref-font-text);
+    --tram-sys-font-data: var(--tram-ref-font-text);
+    --tram-sys-type-display-xl-family: var(--tram-sys-font-display);
+    --tram-sys-type-display-xl-size: var(--tram-ref-size-4xl);
+    --tram-sys-type-display-xl-weight: var(--tram-ref-weight-extrabold);
+    --tram-sys-type-display-xl-leading: var(--tram-ref-leading-tight);
+    --tram-sys-type-display-xl-tracking: var(--tram-ref-tracking-tight);
+    --tram-sys-type-display-lg-family: var(--tram-sys-font-display);
+    --tram-sys-type-display-lg-size: var(--tram-ref-size-3xl);
+    --tram-sys-type-display-lg-weight: var(--tram-ref-weight-extrabold);
+    --tram-sys-type-display-lg-leading: var(--tram-ref-leading-tight);
+    --tram-sys-type-display-lg-tracking: var(--tram-ref-tracking-tight);
+    --tram-sys-type-display-md-family: var(--tram-sys-font-display);
+    --tram-sys-type-display-md-size: var(--tram-ref-size-2xl);
+    --tram-sys-type-display-md-weight: var(--tram-ref-weight-extrabold);
+    --tram-sys-type-display-md-leading: var(--tram-ref-leading-snug);
+    --tram-sys-type-display-md-tracking: var(--tram-ref-tracking-none);
+    --tram-sys-type-display-sm-family: var(--tram-sys-font-display);
+    --tram-sys-type-display-sm-size: var(--tram-ref-size-xl);
+    --tram-sys-type-display-sm-weight: var(--tram-ref-weight-bold);
+    --tram-sys-type-display-sm-leading: var(--tram-ref-leading-snug);
+    --tram-sys-type-display-sm-tracking: var(--tram-ref-tracking-open);
+    --tram-sys-type-text-lg-family: var(--tram-sys-font-text);
+    --tram-sys-type-text-lg-size: var(--tram-ref-size-lg);
+    --tram-sys-type-text-lg-weight: var(--tram-ref-weight-regular);
+    --tram-sys-type-text-lg-leading: var(--tram-ref-leading-text);
+    --tram-sys-type-text-lg-tracking: var(--tram-ref-tracking-none);
+    --tram-sys-type-text-md-family: var(--tram-sys-font-text);
+    --tram-sys-type-text-md-size: var(--tram-ref-size-base);
+    --tram-sys-type-text-md-weight: var(--tram-ref-weight-regular);
+    --tram-sys-type-text-md-leading: var(--tram-ref-leading-text);
+    --tram-sys-type-text-md-tracking: var(--tram-ref-tracking-none);
+    --tram-sys-type-text-sm-family: var(--tram-sys-font-text);
+    --tram-sys-type-text-sm-size: var(--tram-ref-size-sm);
+    --tram-sys-type-text-sm-weight: var(--tram-ref-weight-regular);
+    --tram-sys-type-text-sm-leading: var(--tram-ref-leading-text);
+    --tram-sys-type-text-sm-tracking: var(--tram-ref-tracking-none);
+    --tram-sys-type-text-xs-family: var(--tram-sys-font-text);
+    --tram-sys-type-text-xs-size: var(--tram-ref-size-2xs);
+    --tram-sys-type-text-xs-weight: var(--tram-ref-weight-medium);
+    --tram-sys-type-text-xs-leading: var(--tram-ref-leading-data);
+    --tram-sys-type-text-xs-tracking: var(--tram-ref-tracking-label);
+    --tram-sys-type-data-lg-family: var(--tram-sys-font-data);
+    --tram-sys-type-data-lg-size: var(--tram-ref-size-lg);
+    --tram-sys-type-data-lg-weight: var(--tram-ref-weight-medium);
+    --tram-sys-type-data-lg-leading: var(--tram-ref-leading-data);
+    --tram-sys-type-data-lg-tracking: var(--tram-ref-tracking-none);
+    --tram-sys-type-data-md-family: var(--tram-sys-font-data);
+    --tram-sys-type-data-md-size: var(--tram-ref-size-md);
+    --tram-sys-type-data-md-weight: var(--tram-ref-weight-medium);
+    --tram-sys-type-data-md-leading: var(--tram-ref-leading-data);
+    --tram-sys-type-data-md-tracking: var(--tram-ref-tracking-none);
+    --tram-sys-type-data-sm-family: var(--tram-sys-font-data);
+    --tram-sys-type-data-sm-size: var(--tram-ref-size-xs);
+    --tram-sys-type-data-sm-weight: var(--tram-ref-weight-medium);
+    --tram-sys-type-data-sm-leading: var(--tram-ref-leading-data);
+    --tram-sys-type-data-sm-tracking: var(--tram-ref-tracking-none);
   }
 
   [data-theme="light"] {
@@ -95,5 +177,110 @@
   [data-density="compact"] {
     --tram-sys-space-cell-y: var(--tram-sys-space-1);
     --tram-sys-space-cell-x: var(--tram-sys-space-2);
+  }
+}
+
+@layer tram.type {
+  [data-type="display-xl"] {
+    font-family: var(--tram-sys-type-display-xl-family);
+    font-size: var(--tram-sys-type-display-xl-size);
+    font-weight: var(--tram-sys-type-display-xl-weight);
+    line-height: var(--tram-sys-type-display-xl-leading);
+    letter-spacing: calc(var(--tram-sys-type-display-xl-tracking) * 1em);
+    font-variant-numeric: proportional-nums lining-nums;
+  }
+
+  [data-type="display-lg"] {
+    font-family: var(--tram-sys-type-display-lg-family);
+    font-size: var(--tram-sys-type-display-lg-size);
+    font-weight: var(--tram-sys-type-display-lg-weight);
+    line-height: var(--tram-sys-type-display-lg-leading);
+    letter-spacing: calc(var(--tram-sys-type-display-lg-tracking) * 1em);
+    font-variant-numeric: proportional-nums lining-nums;
+  }
+
+  [data-type="display-md"] {
+    font-family: var(--tram-sys-type-display-md-family);
+    font-size: var(--tram-sys-type-display-md-size);
+    font-weight: var(--tram-sys-type-display-md-weight);
+    line-height: var(--tram-sys-type-display-md-leading);
+    letter-spacing: calc(var(--tram-sys-type-display-md-tracking) * 1em);
+    font-variant-numeric: proportional-nums lining-nums;
+  }
+
+  [data-type="display-sm"] {
+    font-family: var(--tram-sys-type-display-sm-family);
+    font-size: var(--tram-sys-type-display-sm-size);
+    font-weight: var(--tram-sys-type-display-sm-weight);
+    line-height: var(--tram-sys-type-display-sm-leading);
+    letter-spacing: calc(var(--tram-sys-type-display-sm-tracking) * 1em);
+    font-variant-numeric: proportional-nums lining-nums;
+  }
+
+  [data-type="text-lg"] {
+    font-family: var(--tram-sys-type-text-lg-family);
+    font-size: var(--tram-sys-type-text-lg-size);
+    font-weight: var(--tram-sys-type-text-lg-weight);
+    line-height: var(--tram-sys-type-text-lg-leading);
+    letter-spacing: calc(var(--tram-sys-type-text-lg-tracking) * 1em);
+    font-variant-numeric: normal;
+  }
+
+  [data-type="text-md"] {
+    font-family: var(--tram-sys-type-text-md-family);
+    font-size: var(--tram-sys-type-text-md-size);
+    font-weight: var(--tram-sys-type-text-md-weight);
+    line-height: var(--tram-sys-type-text-md-leading);
+    letter-spacing: calc(var(--tram-sys-type-text-md-tracking) * 1em);
+    font-variant-numeric: normal;
+  }
+
+  [data-type="text-sm"] {
+    font-family: var(--tram-sys-type-text-sm-family);
+    font-size: var(--tram-sys-type-text-sm-size);
+    font-weight: var(--tram-sys-type-text-sm-weight);
+    line-height: var(--tram-sys-type-text-sm-leading);
+    letter-spacing: calc(var(--tram-sys-type-text-sm-tracking) * 1em);
+    font-variant-numeric: normal;
+  }
+
+  [data-type="text-xs"] {
+    font-family: var(--tram-sys-type-text-xs-family);
+    font-size: var(--tram-sys-type-text-xs-size);
+    font-weight: var(--tram-sys-type-text-xs-weight);
+    line-height: var(--tram-sys-type-text-xs-leading);
+    letter-spacing: calc(var(--tram-sys-type-text-xs-tracking) * 1em);
+    font-variant-numeric: normal;
+  }
+
+  [data-type="data-lg"] {
+    font-family: var(--tram-sys-type-data-lg-family);
+    font-size: var(--tram-sys-type-data-lg-size);
+    font-weight: var(--tram-sys-type-data-lg-weight);
+    line-height: var(--tram-sys-type-data-lg-leading);
+    letter-spacing: calc(var(--tram-sys-type-data-lg-tracking) * 1em);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  [data-type="data-md"] {
+    font-family: var(--tram-sys-type-data-md-family);
+    font-size: var(--tram-sys-type-data-md-size);
+    font-weight: var(--tram-sys-type-data-md-weight);
+    line-height: var(--tram-sys-type-data-md-leading);
+    letter-spacing: calc(var(--tram-sys-type-data-md-tracking) * 1em);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  [data-type="data-sm"] {
+    font-family: var(--tram-sys-type-data-sm-family);
+    font-size: var(--tram-sys-type-data-sm-size);
+    font-weight: var(--tram-sys-type-data-sm-weight);
+    line-height: var(--tram-sys-type-data-sm-leading);
+    letter-spacing: calc(var(--tram-sys-type-data-sm-tracking) * 1em);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  [data-numeric="tabular"] {
+    font-variant-numeric: tabular-nums lining-nums;
   }
 }

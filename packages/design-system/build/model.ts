@@ -6,7 +6,7 @@
  * parser in load.ts and an emitter in every target.
  */
 
-export const SUPPORTED_TYPES = ['color', 'dimension'] as const;
+export const SUPPORTED_TYPES = ['color', 'dimension', 'fontFamily', 'fontWeight', 'number'] as const;
 export type TokenType = (typeof SUPPORTED_TYPES)[number];
 
 export const LAYERS = ['ref', 'sys', 'comp'] as const;
@@ -23,11 +23,16 @@ export interface ColorValue {
 export interface DimensionValue {
   value: number;
   unit: 'px' | 'rem';
+  /** Size at the narrowest viewport. `value` is then the size at the widest one. */
+  fluidMin?: DimensionValue;
 }
 
 export type Literal =
   | { type: 'color'; value: ColorValue }
-  | { type: 'dimension'; value: DimensionValue };
+  | { type: 'dimension'; value: DimensionValue }
+  | { type: 'fontFamily'; value: string[] }
+  | { type: 'fontWeight'; value: number }
+  | { type: 'number'; value: number };
 
 export interface TokenDef {
   /** Dotted id without `$root` segments, e.g. `sys.text.muted`. */

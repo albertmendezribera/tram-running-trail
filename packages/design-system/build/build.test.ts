@@ -60,6 +60,13 @@ const BASE: Record<string, unknown> = {
         '1': { $value: { value: 4, unit: 'px' } },
         '3': { $value: { value: 12, unit: 'px' } },
       },
+      font: { $type: 'fontFamily', text: { $value: ['Sofia Sans', 'sans-serif'] } },
+      weight: { $type: 'fontWeight', medium: { $value: 500 } },
+      ratio: { $type: 'number', leading: { $value: 1.3 }, tracking: { $value: 0.01 } },
+      size: {
+        $type: 'dimension',
+        md: { $value: { value: 16, unit: 'px' }, $extensions: { 'com.tramrun': { fluidMin: { value: 15, unit: 'px' } } } },
+      },
     },
   },
   'sys.json': {
@@ -81,6 +88,16 @@ const BASE: Record<string, unknown> = {
         '2': { $value: '{ref.space.1}' },
         '3': { $value: '{ref.space.3}' },
         '6': { $value: '{ref.space.3}' },
+      },
+      font: { $type: 'fontFamily', data: { $value: '{ref.font.text}' } },
+      type: {
+        'data-md': {
+          family: { $type: 'fontFamily', $value: '{sys.font.data}' },
+          size: { $type: 'dimension', $value: '{ref.size.md}' },
+          weight: { $type: 'fontWeight', $value: '{ref.weight.medium}' },
+          leading: { $type: 'number', $value: '{ref.ratio.leading}' },
+          tracking: { $type: 'number', $value: '{ref.ratio.tracking}' },
+        },
       },
     },
   },
@@ -154,6 +171,28 @@ describe('fixture build', () => {
     assert.match(r.files['echarts-theme.ts']!, /"tram-night"/);
   });
 
+  it('ships fluid sizes as clamp() between the reference viewports', () => {
+    assert.match(r.files['tokens.css']!, /--tram-ref-size-md: clamp\(0\.9375rem, 0\.9143rem \+ 0\.0952vw, 1rem\);/);
+  });
+
+  it('quotes font names and leaves generic families bare', () => {
+    assert.match(r.files['tokens.css']!, /--tram-ref-font-text: "Sofia Sans", sans-serif;/);
+  });
+
+  it('applies a whole role through data-type, with tabular figures on data roles', () => {
+    const css = r.files['tokens.css']!;
+    assert.match(css, /\[data-type="data-md"\] \{\n\s+font-family: var\(--tram-sys-type-data-md-family\);/);
+    assert.match(css, /letter-spacing: calc\(var\(--tram-sys-type-data-md-tracking\) \* 1em\);\n\s+font-variant-numeric: tabular-nums lining-nums;/);
+    assert.match(css, /\[data-numeric="tabular"\] \{\n\s+font-variant-numeric: tabular-nums lining-nums;/);
+  });
+
+  it('gives the TS targets the widest size and keeps type out of the spacing map', () => {
+    const og = r.files['og.ts']!;
+    assert.match(og, /"data-md": \{\n\s+"family": "Sofia Sans",\n\s+"size": 16,\n\s+"weight": 500,\n\s+"lineHeight": 1\.3,\n\s+"letterSpacing": 0\.01/);
+    assert.doesNotMatch(og, /type-data-md-size/);
+    assert.match(r.files['echarts-theme.ts']!, /"fontFamily": "var\(--tram-sys-font-data\)"/);
+  });
+
   it('is deterministic', () => assert.deepEqual(buildWith().files, r.files));
 });
 
@@ -223,7 +262,25 @@ describe('validation errors', () => {
     assertError(buildWith({ 'night.json': { 'sys.text.$root.$value': '{ref.night}' } }), /contrast sys\.text on sys\.surface is 1\.00:1, below 4\.5:1 \(theme=night/));
 
   it('unknown $type', () =>
-    assertError(buildWith({ 'ref.json': { 'ref.$type': 'colour' } }), /\$type "colour" is not supported \(supported: color, dimension\)/));
+    assertError(buildWith({ 'ref.json': { 'ref.$type': 'colour' } }), /\$type "colour" is not supported \(supported: color, dimension, fontFamily, fontWeight, number\)/));
+
+  it('fluidMin has to be smaller than the size', () =>
+    assertError(
+      buildWith({ 'ref.json': { 'ref.size.md.$extensions': { 'com.tramrun': { fluidMin: { value: 20, unit: 'px' } } } } }),
+      /ref\.size\.md: fluidMin \(20px\) must use the unit of \$value and be smaller than it \(16px\)/,
+    ));
+
+  it('font families are names', () =>
+    assertError(buildWith({ 'ref.json': { 'ref.font.text.$value': 5 } }), /ref\.font\.text: fontFamily \$value must be a font name/));
+
+  it('font weights are numbers', () =>
+    assertError(buildWith({ 'ref.json': { 'ref.weight.medium.$value': 'bold' } }), /ref\.weight\.medium: fontWeight \$value must be a number from 1 to 1000, got "bold"/));
+
+  it('a type role needs all its tokens', () =>
+    assertError(
+      buildWith({ 'sys.json': { 'sys.type.data-md.leading': undefined } }),
+      /sys\.type\.data-md\.leading: type role "data-md" needs a number token "leading"/,
+    ));
 
   it('duplicate token across files', () =>
     assertError(

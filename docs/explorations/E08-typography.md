@@ -44,7 +44,7 @@ Chromium 153 a macOS, amb les fonts carregades. El `l·l` es mesura sobre els p�
 | Mida màxima de "42,195" en 358 px d'amplada | 132,5 px | 141,0 px | 149,1 px |
 | Caràcters per línia a 16 px en 358 px | 53,7 | 53,7 | 51,0 |
 
-**Reducció de l'eix de pes a la parella B** (fontTools `instancer`, display 700–900 i text 400–700): de 79,0 KB a **51,6 KB** (26,2 + 25,4). Només s'ha mesurat la mida. Cal tornar a verificar-ne el renderitzat quan s'implementi.
+**Reducció de l'eix de pes a la parella B** (fontTools `instancer`, display 700–900 i text 400–700): de 79,0 KB a **51,6 KB** (26,2 + 25,4). `test/type.browser.test.ts` comprova amb aquests fitxers que els pesos funcionen, les xifres tabulars i el `l·l`.
 
 ### Troballes clau
 
@@ -63,7 +63,7 @@ Làmina de prova (no és UI de producte), amb els tokens reals de color i espai:
 | Nit | ![](E08/type-night-390.png) | ![](E08/type-night-1440.png) |
 
 Observacions de les captures:
-- A la parella B, les xifres tabulars deixen aire al voltant de l'`1` en mides grans ("1427"). És correcte en columnes, però a la xifra gran d'un dorsal convé provar les figures proporcionals.
+- A la parella B, les xifres tabulars deixen aire al voltant de l'`1` en mides grans ("1427"). És correcte en columnes, però no a la xifra gran d'un dorsal: per això els rols `display-*` són proporcionals per defecte (vegeu la làmina de rols).
 - Sense monoespaiada, la taula de B perd una mica de to de "cota tècnica", però continua alineada i ben llegible.
 
 ## Recomanació
@@ -76,14 +76,25 @@ Observacions de les captures:
 
 **Riscos i com mitigar-los:**
 - *Caràcter:* és la menys singular de les tres com a text. El caràcter l'ha d'aportar la display a mida gran i la composició (7.4), i s'ha de revisar contra 7.8 al catàleg.
-- *Display a mida gran:* decidir als tokens de tipografia quan es fan servir figures proporcionals i quan tabulars.
+
+## Implementació
+
+- **Rols:** `[data-type="<rol>"]` aplica família, mida, pes, interlineat i tracking. Mides fluides entre 390 i 1440 px, amb `clamp()` en `rem`.
+- **Xifres:** `data-*` tabulars, `display-*` proporcionals. `data-numeric="tabular"` força les tabulars, per exemple en una columna de xifres grans.
+- **Fonts:** `packages/design-system/fonts/`, carregades amb l'API de fonts d'Astro (`apps/web/astro.config.mjs`). Astro declara les mateixes variables `--tram-ref-font-*`, sense capa, i així substitueix el valor dels tokens i hi afegeix el fallback ajustat. S'ha comprovat amb una build temporal: `@font-face`, *preload* del fitxer i fallback amb mètriques.
+
+| | 390 px | 1440 px |
+|---|---|---|
+| Clar | ![](E08/roles-light-390.png) | ![](E08/roles-light-1440.png) |
+| Nit | ![](E08/roles-night-390.png) | ![](E08/roles-night-1440.png) |
+
+`pnpm --filter @tram/design-system exec node scripts/type-proof.cjs` regenera aquesta làmina.
 
 ## Pendent
 
-- **Prova amb dades reals.** El repositori encara no en té, i les xifres de la làmina són de mostra (`isPlaceholder`), per no inventar dades de curses.
+- **Prova amb dades reals.** El repositori encara no en té, i les xifres de les làmines són de mostra (`isPlaceholder`), per no inventar dades de curses.
 - Verificació a Safari i Firefox reals, amb la matriu d'E04.
-- Autoallotjament amb l'API de fonts d'Astro i subconjunt final.
-- Tokens de tipografia: E16 preveu afegir aquest tipus al pipeline.
+- Revisió de l'escala i del tracking al catàleg, amb components reals (E17).
 
 ## Com es reprodueix
 

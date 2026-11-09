@@ -1,0 +1,90 @@
+{
+  "$description": "Rols tipogràfics (CLAUDE.md 6.3 i E08). Cada rol s'aplica amb l'atribut data-type. Els rols data-* porten xifres tabulars; els display-*, proporcionals.",
+  "sys": {
+    "font": {
+      "$type": "fontFamily",
+      "display": { "$value": "{ref.font.display}" },
+      "text": { "$value": "{ref.font.text}" },
+      "data": { "$value": "{ref.font.text}" }
+    },
+    "type": {
+      "display-xl": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.display}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.4xl}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.extrabold}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.tight}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.tight}" }
+      },
+      "display-lg": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.display}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.3xl}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.extrabold}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.tight}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.tight}" }
+      },
+      "display-md": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.display}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.2xl}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.extrabold}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.snug}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.none}" }
+      },
+      "display-sm": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.display}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.xl}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.bold}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.snug}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.open}" }
+      },
+      "text-lg": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.text}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.lg}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.regular}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.text}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.none}" }
+      },
+      "text-md": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.text}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.base}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.regular}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.text}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.none}" }
+      },
+      "text-sm": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.text}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.sm}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.regular}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.text}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.none}" }
+      },
+      "text-xs": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.text}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.2xs}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.medium}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.data}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.label}" }
+      },
+      "data-lg": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.data}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.lg}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.medium}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.data}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.none}" }
+      },
+      "data-md": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.data}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.md}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.medium}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.data}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.none}" }
+      },
+      "data-sm": {
+        "family": { "$type": "fontFamily", "$value": "{sys.font.data}" },
+        "size": { "$type": "dimension", "$value": "{ref.size.xs}" },
+        "weight": { "$type": "fontWeight", "$value": "{ref.weight.medium}" },
+        "leading": { "$type": "number", "$value": "{ref.leading.data}" },
+        "tracking": { "$type": "number", "$value": "{ref.tracking.none}" }
+      }
+    }
+  }
+}

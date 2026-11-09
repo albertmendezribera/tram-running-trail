@@ -4,11 +4,23 @@ export type TramOgTheme = "light" | "night";
 export type TramOgTerrain = "mixed" | "road" | "trail";
 export type TramOgColorName = "surface" | "surface-alt" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "map-contour" | "map-vegetation" | "map-water";
 export type TramOgSpaceName = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12" | "cell-y" | "cell-x";
+export type TramOgTypeRole = "display-xl" | "display-lg" | "display-md" | "display-sm" | "text-lg" | "text-md" | "text-sm" | "text-xs" | "data-lg" | "data-md" | "data-sm";
 
 export interface TramOgStyle {
   readonly color: Record<TramOgColorName, string>;
   /** Pixels. */
   readonly space: Record<TramOgSpaceName, number>;
+}
+
+export interface TramOgTypeStyle {
+  readonly family: string;
+  /** Pixels. */
+  readonly size: number;
+  readonly weight: number;
+  /** Multiple of the font size. */
+  readonly lineHeight: number;
+  /** Em. */
+  readonly letterSpacing: number;
 }
 
 export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
@@ -243,5 +255,85 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
         "cell-x": 16
       }
     }
+  }
+};
+
+export const tramOgType: Record<TramOgTypeRole, TramOgTypeStyle> = {
+  "display-xl": {
+    "family": "Sofia Sans Extra Condensed",
+    "size": 240,
+    "weight": 800,
+    "lineHeight": 0.95,
+    "letterSpacing": -0.01
+  },
+  "display-lg": {
+    "family": "Sofia Sans Extra Condensed",
+    "size": 120,
+    "weight": 800,
+    "lineHeight": 0.95,
+    "letterSpacing": -0.01
+  },
+  "display-md": {
+    "family": "Sofia Sans Extra Condensed",
+    "size": 72,
+    "weight": 800,
+    "lineHeight": 1.05,
+    "letterSpacing": 0
+  },
+  "display-sm": {
+    "family": "Sofia Sans Extra Condensed",
+    "size": 40,
+    "weight": 700,
+    "lineHeight": 1.05,
+    "letterSpacing": 0.01
+  },
+  "text-lg": {
+    "family": "Sofia Sans",
+    "size": 20,
+    "weight": 400,
+    "lineHeight": 1.5,
+    "letterSpacing": 0
+  },
+  "text-md": {
+    "family": "Sofia Sans",
+    "size": 17,
+    "weight": 400,
+    "lineHeight": 1.5,
+    "letterSpacing": 0
+  },
+  "text-sm": {
+    "family": "Sofia Sans",
+    "size": 15,
+    "weight": 400,
+    "lineHeight": 1.5,
+    "letterSpacing": 0
+  },
+  "text-xs": {
+    "family": "Sofia Sans",
+    "size": 13,
+    "weight": 500,
+    "lineHeight": 1.3,
+    "letterSpacing": 0.02
+  },
+  "data-lg": {
+    "family": "Sofia Sans",
+    "size": 20,
+    "weight": 500,
+    "lineHeight": 1.3,
+    "letterSpacing": 0
+  },
+  "data-md": {
+    "family": "Sofia Sans",
+    "size": 16,
+    "weight": 500,
+    "lineHeight": 1.3,
+    "letterSpacing": 0
+  },
+  "data-sm": {
+    "family": "Sofia Sans",
+    "size": 14,
+    "weight": 500,
+    "lineHeight": 1.3,
+    "letterSpacing": 0
   }
 };

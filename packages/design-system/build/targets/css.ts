@@ -1,22 +1,40 @@
 import type { Literal, Modifier, Selection, TokenSet } from '../model.ts';
-import { attributeDependencies, defaultSelection, effectiveDef } from '../resolve.ts';
-import { GENERATED_NOTICE } from './shared.ts';
+import { attributeDependencies, defaultSelection, effectiveDef, TYPE_ROLE_PARTS, typeRoles } from '../resolve.ts';
+import { cssFontFamily, GENERATED_NOTICE, px } from './shared.ts';
 
 export const cssName = (id: string): string => `--tram-${id.replaceAll('.', '-')}`;
 
 const trim = (n: number): string => String(Number(n.toFixed(4)));
 
+// Fluid sizes interpolate between the two reference viewports (CLAUDE.md 0).
+const FLUID_VIEWPORT = { min: 390, max: 1440 };
+
+const rem = (pixels: number): string => `${trim(pixels / 16)}rem`;
+
+function fluid(minPx: number, maxPx: number): string {
+  const slope = (maxPx - minPx) / (FLUID_VIEWPORT.max - FLUID_VIEWPORT.min);
+  const intercept = minPx - slope * FLUID_VIEWPORT.min;
+  return `clamp(${rem(minPx)}, ${rem(intercept)} + ${trim(slope * 100)}vw, ${rem(maxPx)})`;
+}
+
 function literalCss(lit: Literal): string {
-  if (lit.type === 'color') {
-    const { components, alpha, hex } = lit.value;
-    if (alpha >= 1) return hex;
-    const [r, g, b] = components.map((c) => Math.round(c * 255));
-    return `rgb(${r} ${g} ${b} / ${trim(alpha)})`;
+  switch (lit.type) {
+    case 'color': {
+      const { components, alpha, hex } = lit.value;
+      if (alpha >= 1) return hex;
+      const [r, g, b] = components.map((c) => Math.round(c * 255));
+      return `rgb(${r} ${g} ${b} / ${trim(alpha)})`;
+    }
+    case 'dimension':
+      // Authored in px on a 4 px grid but shipped in rem, so sizes follow the
+      // reader's font-size setting. Targets that need pixels (ECharts, OG) get px.
+      return lit.value.fluidMin ? fluid(px(lit.value.fluidMin), px(lit.value)) : rem(px(lit.value));
+    case 'fontFamily':
+      return cssFontFamily(lit.value);
+    case 'fontWeight':
+    case 'number':
+      return trim(lit.value);
   }
-  const { value, unit } = lit.value;
-  // Spacing is authored on a 4 px grid but shipped in rem, so it follows the
-  // reader's font-size setting. Targets that need pixels (ECharts, OG) get px.
-  return unit === 'px' ? `${trim(value / 16)}rem` : `${trim(value)}rem`;
 }
 
 function expr(set: TokenSet, id: string, sel: Selection): string {
@@ -83,5 +101,31 @@ export function emitCss(set: TokenSet): string {
     }
   }
 
-  return `/* ${GENERATED_NOTICE} */\n\n@layer tram.tokens {\n${blocks.join('\n\n')}\n}\n`;
+  return `/* ${GENERATED_NOTICE} */\n\n@layer tram.tokens {\n${blocks.join('\n\n')}\n}\n${typeLayer(set)}`;
+}
+
+/** Data roles align in columns; display figures keep their natural widths (E08). */
+function numericFor(role: string): string {
+  if (role.startsWith('data-')) return 'tabular-nums lining-nums';
+  if (role.startsWith('display-')) return 'proportional-nums lining-nums';
+  return 'normal';
+}
+
+/** `[data-type="<role>"]` applies a whole typographic role. */
+function typeLayer(set: TokenSet): string {
+  const roles = typeRoles(set);
+  if (roles.length === 0) return '';
+  const part = (role: string, name: keyof typeof TYPE_ROLE_PARTS): string => `var(${cssName(`sys.type.${role}.${name}`)})`;
+  const blocks = roles.map((role) =>
+    block(`[data-type="${role}"]`, [
+      `font-family: ${part(role, 'family')};`,
+      `font-size: ${part(role, 'size')};`,
+      `font-weight: ${part(role, 'weight')};`,
+      `line-height: ${part(role, 'leading')};`,
+      `letter-spacing: calc(${part(role, 'tracking')} * 1em);`,
+      `font-variant-numeric: ${numericFor(role)};`,
+    ]),
+  );
+  blocks.push(block('[data-numeric="tabular"]', ['font-variant-numeric: tabular-nums lining-nums;']));
+  return `\n@layer tram.type {\n${blocks.join('\n\n')}\n}\n`;
 }

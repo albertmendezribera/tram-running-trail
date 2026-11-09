@@ -1,5 +1,6 @@
 import type { TokenSet } from '../model.ts';
 import { Resolver, type TargetRequirements } from '../resolve.ts';
+import { cssName } from './css.ts';
 import { GENERATED_NOTICE, matrix, px, toSource, unionType } from './shared.ts';
 
 const COLOR_TOKENS = [
@@ -17,10 +18,13 @@ const COLOR_TOKENS = [
 
 const DIMENSION_TOKENS = ['sys.space.2', 'sys.space.3', 'sys.space.6'] as const;
 
+const DATA_FONT = 'sys.font.data';
+
 export const ECHARTS_REQUIREMENTS: TargetRequirements = {
   target: 'ECharts theme',
   color: COLOR_TOKENS,
   dimension: DIMENSION_TOKENS,
+  fontFamily: [DATA_FONT],
 };
 
 /**
@@ -31,7 +35,10 @@ export const ECHARTS_REQUIREMENTS: TargetRequirements = {
  * the theme: road and trail series are always given their own colour AND their
  * own pattern by the chart specs (CLAUDE.md 7.3).
  *
- * Pending, until the tokens exist: typography (E08), line widths and radii.
+ * The font stays a CSS variable: Astro renames the families it self-hosts, and
+ * charts are rendered as SVG (CLAUDE.md 9.2), where the variable resolves in the page.
+ *
+ * Pending, until the tokens exist: line widths and radii.
  */
 export function emitEcharts(set: TokenSet): string {
   const r = new Resolver(set);
@@ -49,7 +56,7 @@ export function emitEcharts(set: TokenSet): string {
     themes[`tram-${keys[0]}`] = {
       backgroundColor: 'transparent',
       color: [c('sys.data.road'), c('sys.data.trail'), c('sys.map.water'), c('sys.map.vegetation')],
-      textStyle: { color: c('sys.text') },
+      textStyle: { color: c('sys.text'), fontFamily: `var(${cssName(DATA_FONT)})` },
       title: { textStyle: { color: c('sys.text') }, subtextStyle: { color: c('sys.text.muted') } },
       legend: { textStyle: { color: c('sys.text.muted') } },
       grid: { left: s('sys.space.6'), right: s('sys.space.6'), top: s('sys.space.6'), bottom: s('sys.space.6') },

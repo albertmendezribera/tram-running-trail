@@ -95,12 +95,12 @@ L'opció (c) no aporta res: la part que Style Dictionary faria bé (CSS pla) és
 ```sh
 pnpm tokens:build     # regenera packages/design-system/dist/
 pnpm tokens:check     # CI: falla si dist/ no coincideix amb tokens/
-pnpm --filter @tram/design-system test          # 31 tests unitaris
-pnpm --filter @tram/design-system test:browser  # modes niats a Chromium
+pnpm --filter @tram/design-system test          # 39 tests unitaris
+pnpm --filter @tram/design-system test:browser  # modes niats i rols tipogràfics a Chromium
 ```
 
 ## Pendent (fora de l'abast d'E16)
 
-- Tokens de tipografia (E08), gruixos de línia, radis (0 i 2 px), moviment, capes, breakpoints. El tema ECharts encara no fixa la tipografia ni el radi del tooltip.
+- Gruixos de línia, radis (0 i 2 px), moviment, capes, breakpoints. El tema ECharts encara no fixa el radi del tooltip. La tipografia ja és a la pipeline (E08).
 - Regles de Stylelint i ESLint (6.6).
 - Catàleg `/ds/` i regressió visual (E17). Aquesta làmina de prova és provisional i se substituirà per les fitxes del catàleg.

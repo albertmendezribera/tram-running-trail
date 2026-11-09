@@ -2,6 +2,18 @@
 
 Tot canvi de token o de component s'hi registra, amb captures abans/després (CLAUDE.md 6.8).
 
+## Sense publicar
+
+Tipografia (E08).
+
+- Tipus nous a la pipeline: `fontFamily`, `fontWeight` i `number`. Les dimensions admeten `$extensions["com.tramrun"].fluidMin` per a mides fluides.
+- Tokens `ref`: `font-*`, `weight-*`, `leading-*`, `tracking-*` i `size-*` (de `2xs` a `4xl`), fluids entre 390 i 1440 px.
+- Rols `sys`: `font-display`, `font-text`, `font-data` i `type-*`: `display-xl`, `display-lg`, `display-md`, `display-sm`, `text-lg`, `text-md`, `text-sm`, `text-xs`, `data-lg`, `data-md` i `data-sm`.
+- `tokens.css` afegeix la capa `tram.type`: `[data-type="<rol>"]` aplica un rol sencer. Els rols `data-*` porten xifres tabulars i els `display-*`, proporcionals. `data-numeric="tabular"` força les tabulars.
+- Destins: el tema ECharts fixa la tipografia de dades i `og.ts` exporta `tramOgType`.
+- Fonts autoallotjades a `fonts/`: Sofia Sans (400–700) i Sofia Sans Extra Condensed (700–900), 51,6 KB en total.
+- Captures: `docs/explorations/E08/roles-*.png`. No hi ha "abans": és el primer cop que hi ha tipografia.
+
 ## 0.1.0 · 2026-11-09
 
 Primera versió del pipeline (E16).

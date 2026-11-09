@@ -12,7 +12,8 @@ export const tramEchartsThemes = {
       "#5f6b3b"
     ],
     "textStyle": {
-      "color": "#141518"
+      "color": "#141518",
+      "fontFamily": "var(--tram-sys-font-data)"
     },
     "title": {
       "textStyle": {
@@ -151,7 +152,8 @@ export const tramEchartsThemes = {
       "#5f6b3b"
     ],
     "textStyle": {
-      "color": "#e8e5dc"
+      "color": "#e8e5dc",
+      "fontFamily": "var(--tram-sys-font-data)"
     },
     "title": {
       "textStyle": {

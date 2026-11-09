@@ -8,7 +8,8 @@
     "./tokens.css": "./dist/tokens.css",
     "./echarts-theme": "./dist/echarts-theme.ts",
     "./three": "./dist/three.ts",
-    "./og": "./dist/og.ts"
+    "./og": "./dist/og.ts",
+    "./fonts/*": "./fonts/*"
   },
   "scripts": {
     "tokens:build": "node build/cli.ts",

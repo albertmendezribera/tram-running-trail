@@ -49,3 +49,9 @@ export function toSource(value: unknown): string {
 }
 
 export const px = (v: { value: number; unit: 'px' | 'rem' }): number => (v.unit === 'px' ? v.value : v.value * 16);
+
+const GENERIC_FAMILIES = new Set(['serif', 'sans-serif', 'monospace', 'cursive', 'fantasy']);
+
+/** A CSS font-family list: names quoted, generic families bare. */
+export const cssFontFamily = (names: readonly string[]): string =>
+  names.map((n) => (GENERIC_FAMILIES.has(n) ? n : `"${n}"`)).join(', ');

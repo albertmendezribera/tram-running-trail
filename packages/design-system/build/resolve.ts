@@ -70,6 +70,19 @@ export class Resolver {
     if (lit?.type !== 'dimension') throw new Error(`${id} is not a dimension token`);
     return lit.value;
   }
+
+  fontFamily(id: string, sel: Selection): string[] {
+    const lit = this.resolve(id, sel);
+    if (lit?.type !== 'fontFamily') throw new Error(`${id} is not a fontFamily token`);
+    return lit.value;
+  }
+
+  /** The value of a fontWeight or number token. */
+  scalar(id: string, sel: Selection): number {
+    const lit = this.resolve(id, sel);
+    if (lit?.type !== 'fontWeight' && lit?.type !== 'number') throw new Error(`${id} is not a fontWeight or number token`);
+    return lit.value;
+  }
 }
 
 export class CycleError extends Error {
@@ -163,10 +176,11 @@ export interface TargetRequirements {
   target: string;
   color: readonly string[];
   dimension: readonly string[];
+  fontFamily: readonly string[];
 }
 
 export function validateTargetRequirements(set: TokenSet, diags: Diagnostics, req: TargetRequirements): void {
-  for (const type of ['color', 'dimension'] as const) {
+  for (const type of ['color', 'dimension', 'fontFamily'] as const) {
     for (const id of req[type]) {
       const def = set.base.get(id);
       if (!def) {
@@ -174,6 +188,35 @@ export function validateTargetRequirements(set: TokenSet, diags: Diagnostics, re
       } else if (def.type !== type) {
         diags.error(def.file, id, `the ${req.target} needs a ${type} token, but this one is ${def.type}`);
       }
+    }
+  }
+}
+
+/** The tokens every typographic role (`sys.type.<role>.*`) has to define. */
+export const TYPE_ROLE_PARTS = {
+  family: 'fontFamily',
+  size: 'dimension',
+  weight: 'fontWeight',
+  leading: 'number',
+  tracking: 'number',
+} as const;
+
+export function typeRoles(set: TokenSet): string[] {
+  const roles = new Set<string>();
+  for (const id of set.base.keys()) {
+    const m = /^sys\.type\.([^.]+)\./.exec(id);
+    if (m) roles.add(m[1]!);
+  }
+  return [...roles];
+}
+
+export function validateTypeRoles(set: TokenSet, diags: Diagnostics): void {
+  for (const role of typeRoles(set)) {
+    for (const [part, type] of Object.entries(TYPE_ROLE_PARTS)) {
+      const id = `sys.type.${role}.${part}`;
+      const def = set.base.get(id);
+      if (!def) diags.error('modes.json', id, `type role "${role}" needs a ${type} token "${part}"`);
+      else if (def.type !== type) diags.error(def.file, id, `must be a ${type} token, but this one is ${def.type}`);
     }
   }
 }

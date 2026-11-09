@@ -113,6 +113,63 @@ function parseDimension(v: Json, file: string, id: string, diags: Diagnostics): 
   return { type: 'dimension', value: { value: v['value'], unit: v['unit'] } };
 }
 
+/** Reads the optional `$extensions["com.tramrun"].fluidMin` of a dimension token. */
+function withFluidMin(lit: Literal, node: JsonObject, file: string, id: string, diags: Diagnostics): Literal | undefined {
+  if (lit.type !== 'dimension') return lit;
+  const ext = node['$extensions'];
+  const raw = isObject(ext) && isObject(ext['com.tramrun']) ? ext['com.tramrun']['fluidMin'] : undefined;
+  if (raw === undefined) return lit;
+  const min = parseDimension(raw, file, id, diags);
+  if (min?.type !== 'dimension') return undefined;
+  if (min.value.unit !== lit.value.unit || min.value.value >= lit.value.value) {
+    diags.error(file, id, `fluidMin (${min.value.value}${min.value.unit}) must use the unit of $value and be smaller than it (${lit.value.value}${lit.value.unit})`);
+    return undefined;
+  }
+  return { type: 'dimension', value: { ...lit.value, fluidMin: min.value } };
+}
+
+function parseFontFamily(v: Json, file: string, id: string, diags: Diagnostics): Literal | undefined {
+  const names = typeof v === 'string' ? [v] : v;
+  if (!Array.isArray(names) || names.length === 0 || !names.every((n): n is string => typeof n === 'string' && n !== '')) {
+    diags.error(file, id, 'fontFamily $value must be a font name or a non-empty array of font names');
+    return undefined;
+  }
+  return { type: 'fontFamily', value: names };
+}
+
+function parseFontWeight(v: Json, file: string, id: string, diags: Diagnostics): Literal | undefined {
+  if (typeof v !== 'number' || v < 1 || v > 1000) {
+    diags.error(file, id, `fontWeight $value must be a number from 1 to 1000, got ${JSON.stringify(v)}`);
+    return undefined;
+  }
+  return { type: 'fontWeight', value: v };
+}
+
+function parseNumber(v: Json, file: string, id: string, diags: Diagnostics): Literal | undefined {
+  if (typeof v !== 'number') {
+    diags.error(file, id, `number $value must be a number, got ${JSON.stringify(v)}`);
+    return undefined;
+  }
+  return { type: 'number', value: v };
+}
+
+function parseLiteral(type: TokenType, v: Json, node: JsonObject, file: string, id: string, diags: Diagnostics): Literal | undefined {
+  switch (type) {
+    case 'color':
+      return parseColor(v, file, id, diags);
+    case 'fontFamily':
+      return parseFontFamily(v, file, id, diags);
+    case 'fontWeight':
+      return parseFontWeight(v, file, id, diags);
+    case 'number':
+      return parseNumber(v, file, id, diags);
+    case 'dimension': {
+      const lit = parseDimension(v, file, id, diags);
+      return lit && withFluidMin(lit, node, file, id, diags);
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Flattening a token file
 // ---------------------------------------------------------------------------
@@ -219,7 +276,7 @@ function parseToken(
     diags.error(file, id, 'token has no $type (neither on the token nor on a parent group)');
     return def;
   }
-  def.literal = type === 'color' ? parseColor(v, file, id, diags) : parseDimension(v, file, id, diags);
+  def.literal = parseLiteral(type, v, node, file, id, diags);
   return def;
 }
 

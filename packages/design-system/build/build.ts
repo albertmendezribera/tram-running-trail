@@ -1,8 +1,8 @@
 import { loadTokenSet, type TokenSource } from './load.ts';
 import { Diagnostics, type TokenSet } from './model.ts';
-import { validate } from './resolve.ts';
+import { validate, validateTargetRequirements } from './resolve.ts';
 import { emitCss } from './targets/css.ts';
-import { emitEcharts } from './targets/echarts.ts';
+import { ECHARTS_REQUIREMENTS, emitEcharts } from './targets/echarts.ts';
 import { emitOg } from './targets/og.ts';
 import { emitThree } from './targets/three.ts';
 
@@ -17,7 +17,10 @@ export interface BuildResult {
 export function buildDesignSystem(src: TokenSource): BuildResult {
   const diagnostics = new Diagnostics();
   const set = loadTokenSet(src, diagnostics);
-  if (set) validate(set, diagnostics);
+  if (set) {
+    validate(set, diagnostics);
+    validateTargetRequirements(set, diagnostics, ECHARTS_REQUIREMENTS);
+  }
   if (!set || diagnostics.errors.length > 0) return { diagnostics, set, files: {} };
   return {
     diagnostics,

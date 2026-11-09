@@ -95,7 +95,7 @@ L'opció (c) no aporta res: la part que Style Dictionary faria bé (CSS pla) és
 ```sh
 pnpm tokens:build     # regenera packages/design-system/dist/
 pnpm tokens:check     # CI: falla si dist/ no coincideix amb tokens/
-pnpm --filter @tram/design-system test          # 22 tests unitaris
+pnpm --filter @tram/design-system test          # 31 tests unitaris
 pnpm --filter @tram/design-system test:browser  # modes niats a Chromium
 ```
 

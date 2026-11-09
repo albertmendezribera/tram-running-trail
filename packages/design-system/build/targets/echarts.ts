@@ -1,6 +1,27 @@
 import type { TokenSet } from '../model.ts';
-import { Resolver } from '../resolve.ts';
+import { Resolver, type TargetRequirements } from '../resolve.ts';
 import { GENERATED_NOTICE, matrix, px, toSource, unionType } from './shared.ts';
+
+const COLOR_TOKENS = [
+  'sys.surface',
+  'sys.text',
+  'sys.text.muted',
+  'sys.rule',
+  'sys.rule.strong',
+  'sys.data.road',
+  'sys.data.trail',
+  'sys.data.active',
+  'sys.map.water',
+  'sys.map.vegetation',
+] as const;
+
+const DIMENSION_TOKENS = ['sys.space.2', 'sys.space.3', 'sys.space.6'] as const;
+
+export const ECHARTS_REQUIREMENTS: TargetRequirements = {
+  target: 'ECharts theme',
+  color: COLOR_TOKENS,
+  dimension: DIMENSION_TOKENS,
+};
 
 /**
  * ECharts 6 theme objects, one per theme context ("tram-light", "tram-night").
@@ -16,8 +37,8 @@ export function emitEcharts(set: TokenSet): string {
   const r = new Resolver(set);
   const themes: Record<string, unknown> = {};
   for (const { keys, sel } of matrix(set, ['theme'])) {
-    const c = (id: string): string => r.color(id, sel).hex;
-    const s = (id: string): number => px(r.dimension(id, sel));
+    const c = (id: (typeof COLOR_TOKENS)[number]): string => r.color(id, sel).hex;
+    const s = (id: (typeof DIMENSION_TOKENS)[number]): number => px(r.dimension(id, sel));
     const axis = {
       axisLine: { lineStyle: { color: c('sys.rule.strong') } },
       axisTick: { lineStyle: { color: c('sys.rule.strong') } },

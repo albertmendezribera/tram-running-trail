@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { describe, it } from 'node:test';
+import { before, describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { buildDesignSystem } from './build.ts';
 import { componentsFromHex, contrastRatio } from './color.ts';
@@ -67,8 +67,21 @@ const BASE: Record<string, unknown> = {
       $type: 'color',
       surface: { $value: '{ref.paper}' },
       text: { $root: { $value: '{ref.ink}' }, muted: { $value: '{sys.text}' } },
-      data: { trail: { $value: '{ref.contour}' }, primary: { $value: '{sys.text}' } },
-      space: { $type: 'dimension', cell: { $value: '{ref.space.3}' } },
+      rule: { $root: { $value: '{ref.contour}' }, strong: { $value: '{ref.ink}' } },
+      data: {
+        trail: { $value: '{ref.contour}' },
+        primary: { $value: '{sys.text}' },
+        road: { $value: '{ref.ink}' },
+        active: { $value: '{ref.contour}' },
+      },
+      map: { water: { $value: '{ref.contour}' }, vegetation: { $value: '{ref.contour}' } },
+      space: {
+        $type: 'dimension',
+        cell: { $value: '{ref.space.3}' },
+        '2': { $value: '{ref.space.1}' },
+        '3': { $value: '{ref.space.3}' },
+        '6': { $value: '{ref.space.3}' },
+      },
     },
   },
   'night.json': { sys: { surface: { $value: '{ref.night}' }, text: { $root: { $value: '{ref.chalk}' } } } },
@@ -105,7 +118,11 @@ function assertError(r: ReturnType<typeof buildWith>, pattern: RegExp): void {
 // ---------------------------------------------------------------------------
 
 describe('fixture build', () => {
-  const r = buildWith();
+  // Built in a hook on purpose: an exception in a describe body is listed but does not fail the run.
+  let r: ReturnType<typeof buildWith>;
+  before(() => {
+    r = buildWith();
+  });
 
   it('has no errors', () => assert.deepEqual(errorsOf(r), []));
 
@@ -214,6 +231,18 @@ describe('validation errors', () => {
       /dup\.json → sys\.surface: token already defined in sys\.json/,
     ));
 
+  it('tokens a target needs, all reported instead of crashing', () => {
+    const r = buildWith({ 'sys.json': { 'sys.rule.strong': undefined, 'sys.map.water': undefined } });
+    assertError(r, /sys\.rule\.strong: required by the ECharts theme but not defined/);
+    assertError(r, /sys\.map\.water: required by the ECharts theme but not defined/);
+  });
+
+  it('a token a target needs, with the wrong type', () =>
+    assertError(
+      buildWith({ 'sys.json': { 'sys.space.6': { $type: 'color', $value: '{ref.ink}' } } }),
+      /sys\.space\.6: the ECharts theme needs a dimension token, but this one is color/,
+    ));
+
   it('reports every error at once, not just the first', () => {
     const r = buildWith({ 'sys.json': { 'sys.surface.$value': '{ref.nope}', 'sys.data.trail.$value': '{ref.nada}' } });
     assert.ok(r.diagnostics.errors.length >= 2);
@@ -226,14 +255,17 @@ describe('validation errors', () => {
 
 describe('TRAM tokens', () => {
   const pkg = fileURLToPath(new URL('..', import.meta.url));
-  const r = buildDesignSystem({
-    read: (p) => {
-      try {
-        return readFileSync(join(pkg, 'tokens', p), 'utf8');
-      } catch {
-        return undefined;
-      }
-    },
+  let r: ReturnType<typeof buildDesignSystem>;
+  before(() => {
+    r = buildDesignSystem({
+      read: (p) => {
+        try {
+          return readFileSync(join(pkg, 'tokens', p), 'utf8');
+        } catch {
+          return undefined;
+        }
+      },
+    });
   });
 
   it('build without errors', () => assert.deepEqual(r.diagnostics.errors.map(formatDiagnostic), []));

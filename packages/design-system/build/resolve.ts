@@ -158,6 +158,26 @@ export function attributeDependencies(set: TokenSet): Map<string, Set<string>> {
   return result;
 }
 
+/** The tokens a target reads by name, so that a missing one is a build error and not a crash. */
+export interface TargetRequirements {
+  target: string;
+  color: readonly string[];
+  dimension: readonly string[];
+}
+
+export function validateTargetRequirements(set: TokenSet, diags: Diagnostics, req: TargetRequirements): void {
+  for (const type of ['color', 'dimension'] as const) {
+    for (const id of req[type]) {
+      const def = set.base.get(id);
+      if (!def) {
+        diags.error('modes.json', id, `required by the ${req.target} but not defined.${suggest(id, set.base.keys())}`);
+      } else if (def.type !== type) {
+        diags.error(def.file, id, `the ${req.target} needs a ${type} token, but this one is ${def.type}`);
+      }
+    }
+  }
+}
+
 export function validate(set: TokenSet, diags: Diagnostics): void {
   const { base } = set;
   const overriddenBy = new Map<string, string>();

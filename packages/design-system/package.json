@@ -17,7 +17,7 @@
   "scripts": {
     "tokens:build": "node build/cli.ts",
     "tokens:check": "node build/cli.ts --check",
-    "test": "node --test \"build/**/*.test.ts\"",
+    "test": "node --test \"build/**/*.test.ts\" \"patterns/**/*.test.ts\"",
     "test:browser": "node --test \"test/**/*.browser.test.ts\"",
     "typecheck": "tsc -p tsconfig.json",
     "tokens:proof": "node scripts/proof-sheet.cjs"

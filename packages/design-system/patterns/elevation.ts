@@ -1,0 +1,138 @@
+/** A point of a route: kilometre and elevation in metres. */
+export type ProfilePoint = readonly [km: number, elevation: number];
+
+export interface GradeBand {
+  from: number;
+  to: number;
+  /** 0: below 5 %, 1: 5–10 %, 2: 10–15 %, 3: 15 % or more, climbing or descending. */
+  level: 0 | 1 | 2 | 3;
+}
+
+const levelFor = (grade: number): GradeBand['level'] => (grade < 5 ? 0 : grade < 10 ? 1 : grade < 15 ? 2 : 3);
+
+function mergeEqualNeighbours(bands: GradeBand[]): GradeBand[] {
+  const out: GradeBand[] = [];
+  for (const b of bands) {
+    const last = out.at(-1);
+    if (last?.level === b.level) last.to = b.to;
+    else out.push({ ...b });
+  }
+  return out;
+}
+
+/** Discrete grade bands (CLAUDE.md 9.3). Bands shorter than `minKm` join a neighbour, so a route never reads as a barcode. */
+export function gradeBands(points: readonly ProfilePoint[], windowKm = 0.25, minKm?: number): GradeBand[] {
+  if (points.length < 2) return [];
+  const total = points.at(-1)![0] - points[0]![0];
+  const minLength = minKm ?? Math.max(0.5, total * 0.02);
+
+  const raw: GradeBand[] = [];
+  let i = 0;
+  while (i < points.length - 1) {
+    let j = i + 1;
+    while (j < points.length - 1 && points[j]![0] - points[i]![0] < windowKm) j++;
+    const [fromKm, fromEle] = points[i]!;
+    const [toKm, toEle] = points[j]!;
+    const metres = (toKm - fromKm) * 1000;
+    raw.push({ from: fromKm, to: toKm, level: levelFor(metres > 0 ? (Math.abs(toEle - fromEle) / metres) * 100 : 0) });
+    i = j;
+  }
+
+  let bands = mergeEqualNeighbours(raw);
+  while (bands.length > 1) {
+    let shortest = -1;
+    bands.forEach((b, k) => {
+      const length = b.to - b.from;
+      if (length < minLength && (shortest < 0 || length < bands[shortest]!.to - bands[shortest]!.from)) shortest = k;
+    });
+    if (shortest < 0) break;
+    const band = bands[shortest]!;
+    const prev = bands[shortest - 1];
+    const next = bands[shortest + 1];
+    // Join the neighbour closest in grade; on a tie, the steeper one, which is the safer reading.
+    const target =
+      !prev ? next! : !next ? prev : Math.abs(prev.level - band.level) < Math.abs(next.level - band.level) ? prev : Math.abs(prev.level - band.level) > Math.abs(next.level - band.level) ? next : prev.level >= next.level ? prev : next;
+    if (target === prev) prev.to = band.to;
+    else target.from = band.from;
+    bands.splice(shortest, 1);
+    bands = mergeEqualNeighbours(bands);
+  }
+  return bands;
+}
+
+function niceStep(span: number, count: number): number {
+  const rough = span / Math.max(1, count);
+  const power = 10 ** Math.floor(Math.log10(rough));
+  const fraction = rough / power;
+  return (fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 5 ? 5 : 10) * power;
+}
+
+/** Round tick values inside [min, max]. */
+export function ticks(min: number, max: number, count: number): number[] {
+  const step = niceStep(max - min, count);
+  const out: number[] = [];
+  for (let v = Math.ceil(min / step) * step; v <= max + step * 1e-6; v += step) out.push(Number(v.toFixed(6)));
+  return out;
+}
+
+/** Vertical range of the chart. A minimum span keeps a flat course from looking like a mountain. */
+export function elevationDomain(points: readonly ProfilePoint[], minSpan = 100): [number, number] {
+  const values = points.map((p) => p[1]);
+  let low = Math.min(...values);
+  let high = Math.max(...values);
+  if (high - low < minSpan) {
+    const middle = (high + low) / 2;
+    low = middle - minSpan / 2;
+    high = middle + minSpan / 2;
+    // The padding must not suggest that a course goes below sea level.
+    if (low < 0 && Math.min(...values) >= 0) {
+      low = 0;
+      high = minSpan;
+    }
+  }
+  const step = niceStep(high - low, 4);
+  return [Math.floor(low / step) * step, Math.ceil(high / step) * step];
+}
+
+export interface Plot {
+  x(km: number): number;
+  y(elevation: number): number;
+  width: number;
+  height: number;
+}
+
+export function createPlot(points: readonly ProfilePoint[], domain: readonly [number, number], width: number, height: number): Plot {
+  const first = points[0]![0];
+  const span = points.at(-1)![0] - first;
+  const [low, high] = domain;
+  return {
+    width,
+    height,
+    x: (km) => ((km - first) / span) * width,
+    y: (elevation) => height - ((elevation - low) / (high - low)) * height,
+  };
+}
+
+const n = (v: number): string => String(Number(v.toFixed(1)));
+
+export function linePath(points: readonly ProfilePoint[], plot: Plot): string {
+  return `M${points.map(([km, e]) => `${n(plot.x(km))} ${n(plot.y(e))}`).join('L')}`;
+}
+
+export function areaPath(points: readonly ProfilePoint[], plot: Plot): string {
+  const first = points[0]!;
+  const last = points.at(-1)!;
+  return `${linePath(points, plot)}L${n(plot.x(last[0]))} ${plot.height}L${n(plot.x(first[0]))} ${plot.height}Z`;
+}
+
+export const pointsIn = (points: readonly ProfilePoint[], band: GradeBand): ProfilePoint[] =>
+  points.filter(([km]) => km >= band.from && km <= band.to);
+
+export function nearestPoint(points: readonly ProfilePoint[], km: number): ProfilePoint {
+  return points.reduce((best, p) => (Math.abs(p[0] - km) < Math.abs(best[0] - km) ? p : best));
+}
+
+let instances = 0;
+
+/** SVG patterns take their colours from where they are defined, so each chart needs its own. */
+export const nextPatternPrefix = (): string => `elevation-${++instances}`;

@@ -50,6 +50,8 @@ Observacions:
 2. **Tokens directes:** un sol SVG amb variables CSS serveix per a clar, nit i qualsevol mode niat.
 3. **Sincronia:** moure el cursor és canviar dos atributs, sense passar per cap llibreria.
 
+**Implementació:** `packages/design-system/patterns/ElevationProfile.astro`. Finalment no ha calgut d3: la geometria són unes 100 línies pròpies amb tests, i les bandes curtes s'absorbeixen per evitar l'efecte de codi de barres.
+
 **Riscos i com mitigar-los:**
 - *El codi és nostre:* eixos, marques i POIs s'han de mantenir. El prototip té unes 45 línies de dibuix.
 - *Comparació parcial:* el prototip SVG només té cursor i etiqueta, mentre que ECharts porta el seu tooltip complet. Un tooltip amb format de full de resultats afegirà pes, però l'ordre de magnitud no canviarà.

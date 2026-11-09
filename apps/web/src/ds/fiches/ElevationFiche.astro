@@ -1,0 +1,43 @@
+---
+import ElevationProfile from '@tram/design-system/patterns/ElevationProfile.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+import { ROAD, TRAIL, TRAIL_POIS } from '../sample-profile';
+
+const code = `<ElevationProfile
+  label="Perfil altimètric"
+  points={[[0, 700], [1.2, 760]]}
+  pois={[{ km: 1.2, kind: 'summit' }]}
+/>`;
+---
+
+<Fiche
+  title="ElevationProfile"
+  use="El perfil d'una cursa o d'una ruta, generat en build. No porta JavaScript i s'adapta a qualsevol mode."
+  avoid="Gràfics de ritme o de parcials: per a això hi ha els gràfics d'ECharts."
+  code={code}
+>
+  <section class="fiche-block" data-testid="trail">
+    <h2 data-type="text-sm">Muntanya, amb punts d'interès</h2>
+    <ElevationProfile label="Perfil de mostra de muntanya" points={TRAIL} pois={TRAIL_POIS} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Asfalt</h2>
+    <p class="fiche-note">L'escala vertical té un mínim, perquè un recorregut pla no sembli una muntanya.</p>
+    <ElevationProfile label="Perfil de mostra d'asfalt" points={ROAD} />
+  </section>
+
+  <section class="fiche-block" data-testid="absent">
+    <h2 data-type="text-sm">Dada absent</h2>
+    <ElevationProfile label="Sense recorregut" points={[]} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Modes</h2>
+    <div class="fiche-grid">
+      {MODES.map((m) => <Mode {...m}><div style="inline-size: 100%"><ElevationProfile label={`Mode ${m.theme} ${m.terrain}`} points={m.terrain === 'road' ? ROAD : TRAIL} /></div></Mode>)}
+    </div>
+  </section>
+</Fiche>

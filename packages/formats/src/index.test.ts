@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { ABSENT, absentLabel, formatMeasure } from './index.ts';
+import { ABSENT, absentLabel, formatMeasure, formatNumber } from './index.ts';
 
 const clean = (s: string): string => s.replaceAll(' ', ' ');
 
@@ -37,6 +37,12 @@ describe('formatMeasure', () => {
   it('shows a missing value as absent, and keeps a real zero', () => {
     for (const v of [null, undefined, Number.NaN, Number.POSITIVE_INFINITY]) assert.equal(formatMeasure(v, 'km', 'ca'), ABSENT);
     assert.equal(clean(formatMeasure(0, 'm-gain', 'ca')), '0 m D+');
+  });
+
+  it('formats bare figures for axes', () => {
+    assert.equal(formatNumber(1400, 'ca'), '1.400');
+    assert.equal(formatNumber(1400, 'en'), '1,400');
+    assert.equal(formatNumber(2.5, 'ca'), '2,5');
   });
 
   it('labels the absent value for screen readers', () => {

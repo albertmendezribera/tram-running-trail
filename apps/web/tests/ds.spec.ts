@@ -7,6 +7,7 @@ const PAGES = {
   'data-table': '/ds/primitives/data-table/',
   bib: '/ds/patterns/bib/',
   'stat-block': '/ds/patterns/stat-block/',
+  'elevation-profile': '/ds/patterns/elevation-profile/',
   'segmented-control': '/ds/interactive/segmented-control/',
 };
 
@@ -84,6 +85,29 @@ test.describe('DataTable', () => {
   test('says so when it has no rows', async ({ page }) => {
     await open(page, PAGES['data-table']);
     await expect(page.getByTestId('empty').getByText('Sense dades')).toBeVisible();
+  });
+});
+
+test.describe('ElevationProfile', () => {
+  test('names the chart and offers its data as HTML', async ({ page }) => {
+    await open(page, PAGES['elevation-profile']);
+    const block = page.getByTestId('trail');
+    await expect(block.getByRole('img', { name: 'Perfil de mostra de muntanya' })).toBeVisible();
+    await block.getByText('Dades del perfil').click();
+    await expect(block.getByRole('table', { name: 'Perfil de mostra de muntanya' }).getByRole('rowheader').first()).toBeVisible();
+    await expect(block.getByRole('cell', { name: 'Cim' }).or(block.getByRole('rowheader', { name: 'Cim' }))).toBeVisible();
+  });
+
+  test('keeps the bands readable and ships no script', async ({ page }) => {
+    await open(page, PAGES['elevation-profile']);
+    const svg = page.getByTestId('trail').getByRole('img');
+    expect(await svg.locator('path.band').count()).toBeLessThanOrEqual(4);
+    expect(await page.locator('script[src]').count()).toBe(0);
+  });
+
+  test('says so when there is no route', async ({ page }) => {
+    await open(page, PAGES['elevation-profile']);
+    await expect(page.getByTestId('absent').getByText('Sense perfil')).toBeVisible();
   });
 });
 

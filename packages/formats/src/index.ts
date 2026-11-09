@@ -15,6 +15,9 @@ export const absentLabel = (locale: Locale): string => ABSENT_LABEL[locale];
 const number = (value: number, locale: Locale, maxDecimals: number): string =>
   new Intl.NumberFormat(locale, { useGrouping: 'always', maximumFractionDigits: maxDecimals }).format(value);
 
+/** A bare figure for axes and legends, where the unit is stated once. */
+export const formatNumber = (value: number, locale: Locale, maxDecimals = 1): string => number(value, locale, maxDecimals);
+
 const pad = (n: number): string => String(n).padStart(2, '0');
 
 function clock(totalSeconds: number): string {

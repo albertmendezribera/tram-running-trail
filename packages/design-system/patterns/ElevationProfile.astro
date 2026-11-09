@@ -1,0 +1,291 @@
+---
+import { formatNumber, type Locale } from '@tram/formats';
+import DataTable from '../primitives/DataTable.astro';
+import { areaPath, createPlot, elevationDomain, gradeBands, linePath, nearestPoint, nextPatternPrefix, type ProfilePoint, pointsIn, ticks } from './elevation.ts';
+
+type PoiKind = 'aid_station' | 'summit' | 'checkpoint' | 'km_marker' | 'landmark';
+
+export interface Poi {
+  km: number;
+  kind: PoiKind;
+  /** Name of the place. Defaults to the name of its kind. */
+  label?: string;
+}
+
+export interface Props {
+  /** Kilometre and elevation in metres, ordered by distance. */
+  points: readonly ProfilePoint[];
+  /** Names the chart and its data table. */
+  label: string;
+  pois?: readonly Poi[];
+  locale?: Locale;
+}
+
+const COPY = {
+  ca: { absent: 'Sense perfil', data: 'Dades del perfil', grade: 'Pendent', km: 'Km', altitude: 'Altitud', point: 'Punt', pois: 'Punts d’interès' },
+  es: { absent: 'Sin perfil', data: 'Datos del perfil', grade: 'Pendiente', km: 'Km', altitude: 'Altitud', point: 'Punto', pois: 'Puntos de interés' },
+  en: { absent: 'No profile', data: 'Profile data', grade: 'Grade', km: 'Km', altitude: 'Elevation', point: 'Point', pois: 'Points of interest' },
+};
+const POI_NAME: Record<Locale, Record<PoiKind, string>> = {
+  ca: { aid_station: 'Avituallament', summit: 'Cim', checkpoint: 'Control', km_marker: 'Quilòmetre', landmark: 'Lloc destacat' },
+  es: { aid_station: 'Avituallamiento', summit: 'Cima', checkpoint: 'Control', km_marker: 'Kilómetro', landmark: 'Lugar destacado' },
+  en: { aid_station: 'Aid station', summit: 'Summit', checkpoint: 'Checkpoint', km_marker: 'Kilometre', landmark: 'Landmark' },
+};
+const PICTOGRAM: Record<PoiKind, string> = {
+  aid_station: 'M-6 -2H-2V-6H2V-2H6V2H2V6H-2V2H-6Z',
+  summit: 'M0 -7L7 6H-7Z',
+  checkpoint: 'M-6 -6H6V6H-6Z',
+  km_marker: 'M-2 -7H2V7H-2Z',
+  landmark: 'M0 -7L7 0L0 7L-7 0Z',
+};
+const LEVELS = ['< 5 %', '5–10 %', '10–15 %', '≥ 15 %'];
+const OPACITY = [0.22, 0.45, 0.7, 1];
+const HATCH_GAP = [0, 9, 6, 4];
+const WIDTH = 1000;
+const HEIGHT = 300;
+
+const { points, label, pois = [], locale = 'ca' } = Astro.props;
+const copy = COPY[locale];
+const hasRoute = points.length >= 2;
+
+const prefix = nextPatternPrefix();
+const domain = hasRoute ? elevationDomain(points) : ([0, 1] as const);
+const plot = hasRoute ? createPlot(points, domain, WIDTH, HEIGHT) : undefined;
+const bands = hasRoute ? gradeBands(points) : [];
+const areaOf = (level: number): string =>
+  bands
+    .filter((b) => b.level === level)
+    .map((b) => areaPath(pointsIn(points, b), plot!))
+    .join('');
+const areas = [0, 1, 2, 3].map(areaOf);
+
+const first = hasRoute ? points[0]![0] : 0;
+const last = hasRoute ? points.at(-1)![0] : 0;
+const pct = (v: number, of: number): string => `${Number(((v / of) * 100).toFixed(2))}%`;
+const xTicks = hasRoute ? ticks(first, last, 8) : [];
+const yTicks = hasRoute ? ticks(domain[0], domain[1], 4) : [];
+
+const placedPois = plot
+  ? pois.map((p) => {
+      const [km, elevation] = nearestPoint(points, p.km);
+      return { ...p, name: p.label ?? POI_NAME[locale][p.kind], left: pct(plot.x(km), WIDTH), top: pct(plot.y(elevation), HEIGHT) };
+    })
+  : [];
+
+const every = Math.max(1, Math.ceil((last - first) / 30));
+const stops = [...new Set([...Array.from({ length: Math.floor((last - first) / every) + 1 }, (_, i) => first + i * every), last])];
+const rows = hasRoute ? stops.map((km) => ({ km, elevation: nearestPoint(points, km)[1] })) : [];
+const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nearestPoint(points, p.km)[1] }));
+---
+
+{
+  !plot ? (
+    <p class="absent" data-type="text-sm">{copy.absent}</p>
+  ) : (
+    <figure class="profile">
+      <div class="chart">
+        <span class="unit" data-type="text-xs">m</span>
+        <span />
+        <div class="y" aria-hidden="true">
+          {yTicks.map((t) => <span class="tick" data-type="data-sm" style={`top: ${pct(plot.y(t), HEIGHT)}`}>{formatNumber(t, locale, 0)}</span>)}
+        </div>
+        <div class="plot">
+          <svg class="svg" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} preserveAspectRatio="none" role="img" aria-label={label}>
+            <defs>
+              {[1, 2, 3].map((l) => (
+                <pattern id={`${prefix}-${l}`} patternUnits="userSpaceOnUse" width={HATCH_GAP[l]} height={HATCH_GAP[l]} patternTransform="rotate(45)">
+                  <line class="hatch" x1="0" y1="0" x2="0" y2={HATCH_GAP[l]} />
+                </pattern>
+              ))}
+            </defs>
+            {yTicks.map((t) => <line class="grid" x1="0" x2={WIDTH} y1={plot.y(t)} y2={plot.y(t)} />)}
+            {areas.map((d, l) => d && <path class="band" fill-opacity={OPACITY[l]} d={d} />)}
+            {areas.map((d, l) => d && l > 0 && <path d={d} fill={`url(#${prefix}-${l})`} />)}
+            <path class="line" d={linePath(points, plot)} />
+          </svg>
+          {
+            placedPois.map((p) => (
+              <svg class="poi" viewBox="-8 -8 16 16" style={`left: ${p.left}; top: ${p.top}`} aria-hidden="true">
+                <path d={PICTOGRAM[p.kind]} />
+              </svg>
+            ))
+          }
+        </div>
+        <span class="unit" data-type="text-xs">km</span>
+        <div class="x" aria-hidden="true">
+          {xTicks.map((t, i) => <span class="tick" data-minor={i % 2 ? '' : undefined} data-type="data-sm" style={`left: ${pct(plot.x(t), WIDTH)}`}>{formatNumber(t, locale, 1)}</span>)}
+        </div>
+      </div>
+
+      <figcaption class="legend" data-type="text-xs">
+        <span>{copy.grade}</span>
+        {
+          LEVELS.map((text, l) => (
+            <span class="key">
+              <svg class="swatch" viewBox="0 0 16 16" aria-hidden="true">
+                <rect class="band" width="16" height="16" fill-opacity={OPACITY[l]} />
+                {l > 0 && <rect width="16" height="16" fill={`url(#${prefix}-${l})`} />}
+              </svg>
+              {text}
+            </span>
+          ))
+        }
+      </figcaption>
+
+      <details class="data">
+        <summary data-type="text-sm">{copy.data}</summary>
+        <DataTable
+          caption={label}
+          density="compact"
+          locale={locale}
+          columns={[
+            { key: 'km', label: copy.km, unit: 'km' },
+            { key: 'elevation', label: copy.altitude, unit: 'm' },
+          ]}
+          rows={rows}
+        />
+        {
+          poiRows.length > 0 && (
+            <DataTable
+              caption={copy.pois}
+              density="compact"
+              locale={locale}
+              columns={[
+                { key: 'point', label: copy.point },
+                { key: 'km', label: copy.km, unit: 'km' },
+                { key: 'elevation', label: copy.altitude, unit: 'm' },
+              ]}
+              rows={poiRows}
+            />
+          )
+        }
+      </details>
+    </figure>
+  )
+}
+
+<style>
+  .absent {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+  }
+
+  .profile {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  .chart {
+    display: grid;
+    grid-template-columns: var(--tram-sys-space-9) minmax(0, 1fr);
+    grid-template-rows: auto clamp(11rem, 8rem + 13vw, 20rem) var(--tram-sys-space-6);
+    padding-inline-end: var(--tram-sys-space-3);
+  }
+
+  .unit {
+    padding-block-end: var(--tram-sys-space-3);
+    color: var(--tram-sys-text-muted);
+  }
+
+  .y,
+  .x,
+  .plot {
+    position: relative;
+  }
+
+  .tick {
+    position: absolute;
+    color: var(--tram-sys-text-muted);
+    white-space: nowrap;
+  }
+
+  .y .tick {
+    inset-inline-end: var(--tram-sys-space-2);
+    transform: translateY(-50%);
+  }
+
+  .x .tick {
+    inset-block-start: var(--tram-sys-space-1);
+    transform: translateX(-50%);
+  }
+
+  .svg {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+  }
+
+  .grid {
+    stroke: var(--tram-sys-rule);
+    stroke-width: var(--tram-sys-line-hairline);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .band {
+    fill: var(--tram-sys-map-contour);
+  }
+
+  .hatch {
+    stroke: var(--tram-sys-surface);
+    stroke-width: 1.5;
+  }
+
+  .line {
+    fill: none;
+    stroke: var(--tram-sys-data-primary);
+    stroke-width: var(--tram-sys-line-strong);
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .poi {
+    position: absolute;
+    inline-size: var(--tram-sys-space-4);
+    block-size: var(--tram-sys-space-4);
+    transform: translate(-50%, -150%);
+    fill: var(--tram-sys-text);
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--tram-sys-space-1) var(--tram-sys-space-4);
+    color: var(--tram-sys-text-muted);
+  }
+
+  .key {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tram-sys-space-1);
+    white-space: nowrap;
+  }
+
+  .swatch {
+    inline-size: var(--tram-sys-space-4);
+    block-size: var(--tram-sys-space-4);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+  }
+
+  .data summary {
+    cursor: pointer;
+  }
+
+  .data[open] summary {
+    margin-block-end: var(--tram-sys-space-3);
+  }
+
+  .data :global(.scroller + .scroller) {
+    margin-block-start: var(--tram-sys-space-4);
+  }
+
+  @media (width < 48rem) {
+    .x [data-minor] {
+      display: none;
+    }
+  }
+</style>

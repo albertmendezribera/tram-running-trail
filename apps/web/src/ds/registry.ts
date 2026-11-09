@@ -1,5 +1,6 @@
 import BibFiche from './fiches/BibFiche.astro';
 import DataTableFiche from './fiches/DataTableFiche.astro';
+import ElevationFiche from './fiches/ElevationFiche.astro';
 import Foundations from './fiches/Foundations.astro';
 import Index from './fiches/Index.astro';
 import MeasureFiche from './fiches/MeasureFiche.astro';
@@ -13,5 +14,6 @@ export const FICHES = [
   { slug: 'primitives/data-table', title: 'DataTable', Page: DataTableFiche },
   { slug: 'patterns/bib', title: 'Bib', Page: BibFiche },
   { slug: 'patterns/stat-block', title: 'StatBlock', Page: StatBlockFiche },
+  { slug: 'patterns/elevation-profile', title: 'ElevationProfile', Page: ElevationFiche },
   { slug: 'interactive/segmented-control', title: 'SegmentedControl', Page: SegmentedFiche },
 ];

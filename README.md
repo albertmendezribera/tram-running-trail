@@ -13,7 +13,7 @@ Plataforma de running d'asfalt i trail running. Abans d'escriure codi, llegiu [`
 | E08 · Tipografia | Decidida (Sofia Sans), pendent de la prova amb dades reals: [`docs/explorations/E08-typography.md`](docs/explorations/E08-typography.md) |
 | Tokens de tipografia | Fet: rols `[data-type]` i fonts a `packages/design-system/fonts/` |
 | E09 · Color i mode nit | Pendent (hipòtesis i problemes oberts a E16) |
-| Lint (Stylelint, ESLint) | Pendent |
+| Lint (Stylelint, ESLint) | Fet: `pnpm lint`, regles de la secció 6.6 de `CLAUDE.md` |
 
 ## Requisits
 

@@ -19,6 +19,9 @@ jobs:
       # CLAUDE.md 6.6: the PR fails if dist/ does not match the tokens.
       - run: pnpm tokens:check
       - run: pnpm typecheck
+      # CLAUDE.md 6.6: the design system rules are enforced by the tools.
+      - run: pnpm lint
+      - run: pnpm test:lint
       - run: pnpm test
       - run: pnpm --filter @tram/design-system exec playwright install --with-deps chromium
       - run: pnpm --filter @tram/design-system test:browser

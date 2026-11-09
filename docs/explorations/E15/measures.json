@@ -1,0 +1,59 @@
+{
+  "isPlaceholder": true,
+  "points": 1200,
+  "bands": 74,
+  "ssr": {
+    "svg": {
+      "oneTheme": 43.3,
+      "gzip": 9.4,
+      "themesNeeded": 1,
+      "ms": 3.6
+    },
+    "echarts": {
+      "oneTheme": 40.4,
+      "gzip": 5.5,
+      "themesNeeded": 2,
+      "ms": 18.4
+    }
+  },
+  "client": {
+    "svg": {
+      "raw": 0.5,
+      "gzip": 0.4
+    },
+    "echarts": {
+      "raw": 550.6,
+      "gzip": 191
+    }
+  },
+  "interaction": {
+    "svg": {
+      "mobile": {
+        "mountMs": 51.6,
+        "updateP50": 0.1,
+        "updateP95": 0.8,
+        "droppedOf300": 0
+      },
+      "desktop": {
+        "mountMs": 51.2,
+        "updateP50": 0.1,
+        "updateP95": 0.9,
+        "droppedOf300": 0
+      }
+    },
+    "echarts": {
+      "mobile": {
+        "mountMs": 254.1,
+        "updateP50": 2.4,
+        "updateP95": 3.7,
+        "droppedOf300": 1
+      },
+      "desktop": {
+        "mountMs": 267.6,
+        "updateP50": 2.3,
+        "updateP95": 4,
+        "droppedOf300": 1
+      }
+    }
+  }
+}

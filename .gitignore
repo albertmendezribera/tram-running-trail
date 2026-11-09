@@ -8,3 +8,4 @@ playwright-report/
 
 # packages/design-system/dist/ is generated but COMMITTED on purpose:
 # CI regenerates it and fails if it differs from the tokens (CLAUDE.md 6.6).
+.wrangler/

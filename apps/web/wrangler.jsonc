@@ -1,0 +1,6 @@
+{
+  // Test environment only: it serves the /ds/ catalogue, which production leaves out.
+  "name": "tram-staging",
+  "compatibility_date": "2026-11-09",
+  "assets": { "directory": "./dist" }
+}

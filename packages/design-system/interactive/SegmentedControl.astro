@@ -1,0 +1,101 @@
+---
+export interface Option {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+
+export interface Props {
+  /** Name of the radio group. Must be unique in the page. */
+  name: string;
+  /** Accessible name of the group. */
+  legend: string;
+  options: readonly Option[];
+  /** The selected option. */
+  value: string;
+}
+
+// Native radios: arrow keys, focus and form state come from the browser, and
+// the `change` event works with any island framework (E10 is still open).
+const { name, legend, options, value } = Astro.props;
+---
+
+<fieldset class="control">
+  <legend class="legend">{legend}</legend>
+  {
+    options.map((o) => (
+      <label class="option">
+        <input class="input" type="radio" name={name} value={o.value} checked={o.value === value} disabled={o.disabled} />
+        <span class="face" data-type="text-sm">
+          {o.label}
+        </span>
+      </label>
+    ))
+  }
+</fieldset>
+
+<style>
+  .control {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    border-radius: var(--tram-sys-radius-soft);
+  }
+
+  .legend,
+  .input {
+    position: absolute;
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-line-hairline);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    appearance: none;
+  }
+
+  .option {
+    position: relative;
+  }
+
+  /* The focus ring has to paint over the next option. */
+  .option:has(.input:focus-visible) {
+    z-index: 1;
+  }
+
+  .option + .option {
+    border-inline-start: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+  }
+
+  .face {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--tram-sys-space-9);
+    padding-inline: var(--tram-sys-space-4);
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface);
+    cursor: pointer;
+  }
+
+  .input:not(:disabled, :checked) + .face:hover {
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .input:checked + .face {
+    color: var(--tram-sys-surface);
+    background: var(--tram-sys-text);
+  }
+
+  .input:disabled + .face {
+    color: var(--tram-sys-text-muted);
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .input:focus-visible + .face {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+</style>

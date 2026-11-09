@@ -1,0 +1,15 @@
+{
+  "$description": "Rols de línia i radi. Els radis només poden ser 0 o 2 px (CLAUDE.md 6.3).",
+  "sys": {
+    "line": {
+      "$type": "dimension",
+      "hairline": { "$value": "{ref.line.1}" },
+      "strong": { "$value": "{ref.line.2}" }
+    },
+    "radius": {
+      "$type": "dimension",
+      "none": { "$value": "{ref.radius.0}" },
+      "soft": { "$value": "{ref.radius.2}" }
+    }
+  }
+}

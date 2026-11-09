@@ -57,6 +57,10 @@
     --tram-ref-size-2xl: clamp(2.75rem, 2.1rem + 2.6667vw, 4.5rem);
     --tram-ref-size-3xl: clamp(4rem, 2.7rem + 5.3333vw, 7.5rem);
     --tram-ref-size-4xl: clamp(7.5rem, 4.7143rem + 11.4286vw, 15rem);
+    --tram-ref-line-1: 0.0625rem;
+    --tram-ref-line-2: 0.125rem;
+    --tram-ref-radius-0: 0rem;
+    --tram-ref-radius-2: 0.125rem;
     --tram-sys-surface: light-dark(var(--tram-ref-paper), var(--tram-ref-night));
     --tram-sys-surface-alt: light-dark(var(--tram-ref-paper-shade), var(--tram-ref-carbon));
     --tram-sys-text: light-dark(var(--tram-ref-ink), var(--tram-ref-night-text));
@@ -147,6 +151,10 @@
     --tram-sys-type-data-sm-weight: var(--tram-ref-weight-medium);
     --tram-sys-type-data-sm-leading: var(--tram-ref-leading-data);
     --tram-sys-type-data-sm-tracking: var(--tram-ref-tracking-none);
+    --tram-sys-line-hairline: var(--tram-ref-line-1);
+    --tram-sys-line-strong: var(--tram-ref-line-2);
+    --tram-sys-radius-none: var(--tram-ref-radius-0);
+    --tram-sys-radius-soft: var(--tram-ref-radius-2);
   }
 
   [data-theme="light"] {

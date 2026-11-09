@@ -1,0 +1,73 @@
+---
+import Measure from '@tram/design-system/primitives/Measure.astro';
+import type { Locale, Unit } from '@tram/formats';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const UNITS: Array<[Unit, number]> = [
+  ['km', 42.195],
+  ['m', 1250],
+  ['m-gain', 1250],
+  ['pace', 255],
+  ['duration', 12461],
+  ['vertical-speed', 820],
+  ['km-effort', 54.5],
+  ['g', 245],
+  ['mm', 8.5],
+];
+const LOCALES: Locale[] = ['ca', 'es', 'en'];
+const code = `<Measure value={42.195} unit="km" />
+<Measure value={1250} unit="m-gain" type="display-lg" />
+<Measure value={null} unit="g" />`;
+---
+
+<Fiche
+  title="Measure"
+  use="Qualsevol xifra amb unitat: distància, D+, ritme, pes o mm. Formata segons l'idioma i no parteix mai la xifra de la unitat."
+  avoid="Xifres sense unitat, com un dorsal o un any."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Unitats i idiomes</h2>
+    <div class="fiche-scroll">
+      <table class="fiche-table" data-type="data-sm">
+        <thead><tr><th>Unitat</th>{LOCALES.map((l) => <th>{l}</th>)}</tr></thead>
+        <tbody>
+          {
+            UNITS.map(([unit, value]) => (
+              <tr>
+                <td>{unit}</td>
+                {LOCALES.map((locale) => <td><Measure value={value} unit={unit} locale={locale} type="data-sm" /></td>)}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Dada absent</h2>
+    <p class="fiche-row" data-testid="absent">
+      <Measure value={null} unit="km" />
+      <Measure value={undefined} unit="g" type="display-md" />
+    </p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Mides</h2>
+    <div class="fiche-row">
+      <Measure value={42.195} unit="km" type="display-lg" />
+      <Measure value={255} unit="pace" type="display-md" />
+      <Measure value={1250} unit="m-gain" type="data-lg" />
+    </div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Modes</h2>
+    <div class="fiche-grid">
+      {MODES.map((m) => <Mode {...m}><Measure value={1250} unit="m-gain" type="display-md" /><Measure value={null} unit="km" /></Mode>)}
+    </div>
+  </section>
+</Fiche>

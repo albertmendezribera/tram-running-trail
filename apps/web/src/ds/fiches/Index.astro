@@ -1,0 +1,12 @@
+---
+import { NAV } from '../nav';
+---
+
+<h1 data-type="display-md" style="margin: 0">Catàleg</h1>
+<p style="margin: 0">Els components reals del paquet <code>@tram/design-system</code>. Aquesta ruta no arriba mai a producció.</p>
+<section class="fiche-block">
+  <h2 data-type="text-sm">Fitxes</h2>
+  <ul style="margin: 0; padding: 0; list-style: none">
+    {NAV.slice(1).map((n) => <li><a href={n.href}>{n.title}</a></li>)}
+  </ul>
+</section>

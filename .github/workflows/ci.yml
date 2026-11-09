@@ -34,3 +34,24 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @tram/web build
+      # CLAUDE.md 6.7: the catalogue never reaches production.
+      - run: test ! -e apps/web/dist/ds
+
+  visual:
+    runs-on: ubuntu-latest
+    # The baselines are generated in this same image: see E17.
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    env:
+      HOME: /root
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tram/web test:visual
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: visual-report
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results

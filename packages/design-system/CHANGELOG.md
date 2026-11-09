@@ -14,6 +14,12 @@ Tipografia (E08).
 - Fonts autoallotjades a `fonts/`: Sofia Sans (400–700) i Sofia Sans Extra Condensed (700–900), 51,6 KB en total.
 - Captures: `docs/explorations/E08/roles-*.png`. No hi ha "abans": és el primer cop que hi ha tipografia.
 
+Catàleg i primers components (E17).
+
+- Tokens de forma: `line-hairline`, `line-strong`, `radius-none` i `radius-soft`.
+- Components: `Measure`, `Bib` i `SegmentedControl`, amb fitxa a `/ds/`.
+- Captures de regressió: `apps/web/tests/__screenshots__/`.
+
 ## 0.1.0 · 2026-11-09
 
 Primera versió del pipeline (E16).

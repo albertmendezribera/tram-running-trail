@@ -1,0 +1,14 @@
+export const NAV = [
+  { href: '/ds/', title: 'Catàleg' },
+  { href: '/ds/fonaments/', title: 'Fonaments' },
+  { href: '/ds/primitives/measure/', title: 'Measure' },
+  { href: '/ds/patterns/bib/', title: 'Bib' },
+  { href: '/ds/interactive/segmented-control/', title: 'SegmentedControl' },
+] as const;
+
+export const MODES = [
+  { theme: 'light', terrain: 'road' },
+  { theme: 'light', terrain: 'trail' },
+  { theme: 'night', terrain: 'road' },
+  { theme: 'night', terrain: 'trail' },
+] as const;

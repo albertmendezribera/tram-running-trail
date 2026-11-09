@@ -1,0 +1,149 @@
+---
+import { Font } from 'astro:assets';
+import '@tram/design-system/tokens.css';
+import { NAV } from './nav';
+
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const current = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} · TRAM DS</title>
+    <Font cssVariable="--tram-ref-font-display" preload />
+    <Font cssVariable="--tram-ref-font-text" preload />
+  </head>
+  <body data-type="text-md">
+    <header class="top">
+      <strong data-type="display-sm">TRAM · design system</strong>
+      <nav aria-label="Catàleg">
+        {NAV.map((n) => <a data-type="text-sm" href={n.href} aria-current={n.href === current ? 'page' : undefined}>{n.title}</a>)}
+      </nav>
+    </header>
+    <main class="main">
+      <slot />
+    </main>
+    <footer class="foot" data-type="text-xs">
+      Dades de mostra (isPlaceholder): no corresponen a cap cursa ni cap sabatilla real.
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  @layer ds {
+    body {
+      margin: 0;
+      padding: var(--tram-sys-space-5) var(--tram-sys-space-4);
+      color: var(--tram-sys-text);
+      background: var(--tram-sys-surface);
+    }
+
+    /* No default monospace (CLAUDE.md 2.4): its line boxes made the baselines unstable (E17). */
+    code {
+      font: inherit;
+    }
+
+    .top {
+      display: grid;
+      gap: var(--tram-sys-space-3);
+      padding-block-end: var(--tram-sys-space-4);
+      border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    }
+
+    .top nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--tram-sys-space-2) var(--tram-sys-space-4);
+    }
+
+    .top a {
+      color: var(--tram-sys-text);
+    }
+
+    .top a[aria-current] {
+      color: var(--tram-sys-accent-text);
+    }
+
+    .main {
+      display: grid;
+      gap: var(--tram-sys-space-7);
+      padding-block: var(--tram-sys-space-6);
+    }
+
+    .foot {
+      padding-block-start: var(--tram-sys-space-3);
+      border-block-start: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+      color: var(--tram-sys-text-muted);
+    }
+
+    .fiche-block {
+      display: grid;
+      gap: var(--tram-sys-space-3);
+      min-inline-size: 0;
+    }
+
+    .fiche-block > h2 {
+      margin: 0;
+      padding-block-end: var(--tram-sys-space-1);
+      border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+    }
+
+    .fiche-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: var(--tram-sys-space-4);
+      min-inline-size: 0;
+    }
+
+    .fiche-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--tram-sys-space-12) * 3)), 1fr));
+      gap: var(--tram-sys-space-4);
+      min-inline-size: 0;
+    }
+
+    .fiche-table {
+      inline-size: 100%;
+      border-collapse: collapse;
+    }
+
+    .fiche-table th,
+    .fiche-table td {
+      padding: var(--tram-sys-space-cell-y) var(--tram-sys-space-cell-x);
+      border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+      text-align: start;
+    }
+
+    .fiche-scroll {
+      min-inline-size: 0;
+      overflow-x: auto;
+    }
+
+    .fiche-note {
+      margin: 0;
+      color: var(--tram-sys-text-muted);
+    }
+
+    .fiche-code {
+      margin: 0;
+      padding: var(--tram-sys-space-3);
+      overflow-x: auto;
+      background: var(--tram-sys-surface-alt);
+    }
+
+    @media (width >= 48rem) {
+      body {
+        padding-inline: var(--tram-sys-space-8);
+      }
+    }
+  }
+</style>

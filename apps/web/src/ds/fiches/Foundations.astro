@@ -1,0 +1,105 @@
+---
+import { tramOg, tramOgType } from '@tram/design-system/og';
+
+const light = tramOg.light.mixed;
+const night = tramOg.night.mixed;
+const colors = Object.keys(light.color) as Array<keyof typeof light.color>;
+const spaces = Object.keys(light.space) as Array<keyof typeof light.space>;
+const roles = Object.keys(tramOgType);
+
+const sample = (role: string): string => {
+  if (role.startsWith('display-')) return 'Col·lecció 42,195';
+  if (role.startsWith('data-')) return '4:12 · 12:58 · 44:06';
+  return 'El ritme per quilòmetre enganya a la muntanya.';
+};
+---
+
+<h1 data-type="display-md" style="margin: 0">Fonaments</h1>
+
+<section class="fiche-block">
+  <h2 data-type="text-sm">Color · clar i nit</h2>
+  <div class="fiche-grid">
+    {
+      colors.map((c) => (
+        <div class="swatch-row">
+          <span class="swatch" style={`background: var(--tram-sys-${c})`} />
+          <span data-type="data-sm">--tram-sys-{c}</span>
+          <span class="fiche-note" data-type="data-sm">{light.color[c]} · {night.color[c]}</span>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<section class="fiche-block">
+  <h2 data-type="text-sm">Espai · base de 4 px</h2>
+  {
+    spaces.map((s) => (
+      <div class="space-row">
+        <span data-type="data-sm">space-{s}</span>
+        <span class="bar" style={`inline-size: var(--tram-sys-space-${s})`} />
+      </div>
+    ))
+  }
+</section>
+
+<section class="fiche-block">
+  <h2 data-type="text-sm">Tipografia</h2>
+  {
+    roles.map((r) => (
+      <div class="type-row">
+        <span class="fiche-note" data-type="data-sm">{r}</span>
+        <span data-type={r}>{sample(r)}</span>
+      </div>
+    ))
+  }
+</section>
+
+<section class="fiche-block">
+  <h2 data-type="text-sm">Línies i radis</h2>
+  <div class="fiche-row">
+    <span class="shape" style="border-width: var(--tram-sys-line-hairline)" data-type="text-xs">line-hairline</span>
+    <span class="shape" style="border-width: var(--tram-sys-line-strong)" data-type="text-xs">line-strong</span>
+    <span class="shape" style="border-radius: var(--tram-sys-radius-none)" data-type="text-xs">radius-none</span>
+    <span class="shape" style="border-radius: var(--tram-sys-radius-soft)" data-type="text-xs">radius-soft</span>
+  </div>
+</section>
+
+<style>
+  .swatch-row {
+    display: grid;
+    grid-template-columns: var(--tram-sys-space-8) 1fr;
+    column-gap: var(--tram-sys-space-3);
+    align-items: center;
+    min-inline-size: 0;
+  }
+
+  .swatch {
+    grid-row: span 2;
+    block-size: var(--tram-sys-space-8);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+  }
+
+  .space-row {
+    display: grid;
+    grid-template-columns: var(--tram-sys-space-12) 1fr;
+    align-items: center;
+  }
+
+  .bar {
+    block-size: var(--tram-sys-space-2);
+    background: var(--tram-sys-text);
+  }
+
+  .type-row {
+    display: grid;
+    gap: var(--tram-sys-space-1);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .shape {
+    padding: var(--tram-sys-space-3);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+  }
+</style>

@@ -9,7 +9,10 @@
     "./echarts-theme": "./dist/echarts-theme.ts",
     "./three": "./dist/three.ts",
     "./og": "./dist/og.ts",
-    "./fonts/*": "./fonts/*"
+    "./fonts/*": "./fonts/*",
+    "./primitives/*": "./primitives/*",
+    "./patterns/*": "./patterns/*",
+    "./interactive/*": "./interactive/*"
   },
   "scripts": {
     "tokens:build": "node build/cli.ts",
@@ -18,6 +21,9 @@
     "test:browser": "node --test \"test/**/*.browser.test.ts\"",
     "typecheck": "tsc -p tsconfig.json",
     "tokens:proof": "node scripts/proof-sheet.cjs"
+  },
+  "dependencies": {
+    "@tram/formats": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

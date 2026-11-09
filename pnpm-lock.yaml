@@ -13,10 +13,16 @@ importers:
       '@tram/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
+      '@tram/formats':
+        specifier: workspace:*
+        version: link:../../packages/formats
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.12
         version: 0.9.12(@emnapi/runtime@1.11.3)(prettier@3.9.10)(typescript@5.9.3)
+      '@playwright/test':
+        specifier: 1.63.0
+        version: 1.63.0
       astro:
         specifier: 6.4.8
         version: 6.4.8(@types/node@22.20.5)(rollup@4.68.1)(yaml@2.9.1)
@@ -25,6 +31,10 @@ importers:
         version: 5.9.3
 
   packages/design-system:
+    dependencies:
+      '@tram/formats':
+        specifier: workspace:*
+        version: link:../formats
     devDependencies:
       '@types/node':
         specifier: ^22.20.5
@@ -32,6 +42,15 @@ importers:
       playwright:
         specifier: 1.63.0
         version: 1.63.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
+  packages/formats:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.20.5
+        version: 22.20.5
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -444,6 +463,11 @@ packages:
 
   '@oslojs/encoding@1.1.0':
     resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
+
+  '@playwright/test@1.63.0':
+    resolution: {integrity: sha512-oxMK4vllB9RK5NQ2l1pq1IfOf2AvnEuj/vYGDj0H2nMtmtZpKtCwt/l00GEO6xjGfpBNAvjovvYdCm50dRQkpQ==}
+    engines: {node: '>=20'}
+    hasBin: true
 
   '@rollup/pluginutils@5.5.1':
     resolution: {integrity: sha512-P9ZvnfouRu4MSC+ilERaw6FmZs8zqKhpHxEs4aGDGWQAMzQGXnhvCSvoNwokfNvdt7t3Y5Y4p6gStQgezeIqug==}
@@ -2122,6 +2146,10 @@ snapshots:
       '@tybys/wasm-util': 0.10.4
 
   '@oslojs/encoding@1.1.0': {}
+
+  '@playwright/test@1.63.0':
+    dependencies:
+      playwright: 1.63.0
 
   '@rollup/pluginutils@5.5.1(rollup@4.68.1)':
     dependencies:

@@ -1,0 +1,31 @@
+---
+export interface Props {
+  theme: 'light' | 'night';
+  terrain: 'road' | 'trail';
+}
+
+const { theme, terrain } = Astro.props;
+---
+
+<div class="mode" data-theme={theme} data-terrain={terrain}>
+  <p class="name" data-type="text-xs">{theme} · {terrain}</p>
+  <slot />
+</div>
+
+<style>
+  .mode {
+    display: grid;
+    justify-items: start;
+    gap: var(--tram-sys-space-3);
+    padding: var(--tram-sys-space-4);
+    min-inline-size: 0;
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface);
+  }
+
+  .name {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+  }
+</style>

@@ -1,0 +1,18 @@
+---
+import type { GetStaticPaths } from 'astro';
+import DsLayout from '../../ds/DsLayout.astro';
+import { FICHES } from '../../ds/registry';
+
+// CLAUDE.md 6.7: the catalogue is left out of the production build.
+export const getStaticPaths = (() => {
+  if (import.meta.env.PROD && process.env['TRAM_DS'] !== '1') return [];
+  return FICHES.map((fiche) => ({ params: { slug: fiche.slug }, props: { fiche } }));
+}) satisfies GetStaticPaths;
+
+const { fiche } = Astro.props;
+const { Page, title } = fiche;
+---
+
+<DsLayout title={title}>
+  <Page />
+</DsLayout>

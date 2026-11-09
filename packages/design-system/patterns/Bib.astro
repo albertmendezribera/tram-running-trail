@@ -1,0 +1,78 @@
+---
+import type { Locale } from '@tram/formats';
+
+type Terrain = 'road' | 'trail' | 'mixed';
+
+export interface Props {
+  /** The bib number. Null or undefined shows it as absent. */
+  number: number | null | undefined;
+  terrain: Terrain;
+  /** Usually the race or the distance. */
+  label?: string;
+  size?: 'lg' | 'md';
+  locale?: Locale;
+}
+
+const TERRAIN_LABEL: Record<Locale, Record<Terrain, string>> = {
+  ca: { road: 'Asfalt', trail: 'Muntanya', mixed: 'Mixt' },
+  es: { road: 'Asfalto', trail: 'Montaña', mixed: 'Mixto' },
+  en: { road: 'Road', trail: 'Trail', mixed: 'Mixed' },
+};
+const BIB_LABEL: Record<Locale, string> = { ca: 'Dorsal', es: 'Dorsal', en: 'Bib' };
+
+const { number, terrain, label, size = 'lg', locale = 'ca' } = Astro.props;
+const absent = number === null || number === undefined;
+---
+
+<figure class="bib" data-size={size} data-terrain={terrain}>
+  <figcaption data-type="text-xs">{label ?? BIB_LABEL[locale]}</figcaption>
+  <span class="number" data-type={size === 'lg' ? 'display-xl' : 'display-md'} data-absent={absent ? '' : undefined}>
+    {absent ? '—' : number}
+  </span>
+  <span class="terrain" data-type="text-xs">{TERRAIN_LABEL[locale][terrain]}</span>
+</figure>
+
+<style>
+  .bib {
+    --hole: radial-gradient(circle closest-side, var(--tram-sys-surface) 96%, transparent);
+    --hole-size: var(--tram-sys-space-3);
+    --hole-inset: var(--tram-sys-space-2);
+
+    display: inline-grid;
+    gap: var(--tram-sys-space-2);
+    margin: 0;
+    padding: var(--tram-sys-space-5) var(--tram-sys-space-7);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    border-radius: var(--tram-sys-radius-soft);
+    background:
+      var(--hole) left var(--hole-inset) top var(--hole-inset) / var(--hole-size) var(--hole-size) no-repeat,
+      var(--hole) right var(--hole-inset) top var(--hole-inset) / var(--hole-size) var(--hole-size) no-repeat,
+      var(--hole) left var(--hole-inset) bottom var(--hole-inset) / var(--hole-size) var(--hole-size) no-repeat,
+      var(--hole) right var(--hole-inset) bottom var(--hole-inset) / var(--hole-size) var(--hole-size) no-repeat,
+      var(--tram-sys-surface-alt);
+    color: var(--tram-sys-text);
+  }
+
+  figcaption,
+  .terrain {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .number[data-absent] {
+    color: var(--tram-sys-text-muted);
+  }
+
+  /* Road and trail never differ by colour alone (CLAUDE.md 7.3). */
+  .terrain {
+    padding-block-start: var(--tram-sys-space-2);
+    border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-data-primary);
+  }
+
+  [data-terrain='trail'] > .terrain {
+    border-block-start-style: dashed;
+  }
+
+  [data-terrain='mixed'] > .terrain {
+    border-block-start-style: dotted;
+  }
+</style>

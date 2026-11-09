@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import { ABSENT, absentLabel, formatMeasure } from './index.ts';
+
+const clean = (s: string): string => s.replaceAll(' ', ' ');
+
+describe('formatMeasure', () => {
+  it('matches the Catalan examples of CLAUDE.md 7.9', () => {
+    assert.equal(clean(formatMeasure(42.195, 'km', 'ca')), '42,195 km');
+    assert.equal(clean(formatMeasure(1250, 'm-gain', 'ca')), '1.250 m D+');
+    assert.equal(clean(formatMeasure(255, 'pace', 'ca')), '4:15 /km');
+  });
+
+  it('groups thousands in every locale, four digits included', () => {
+    assert.equal(clean(formatMeasure(1250, 'm', 'es')), '1.250 m');
+    assert.equal(clean(formatMeasure(1250, 'm', 'en')), '1,250 m');
+  });
+
+  it('uses the decimal separator of the locale', () => {
+    assert.equal(clean(formatMeasure(42.195, 'km', 'en')), '42.195 km');
+  });
+
+  it('keeps the value and its unit on one line', () => {
+    assert.ok(formatMeasure(10, 'km', 'ca').includes(' '));
+  });
+
+  it('formats durations as hh:mm:ss and carries rounded seconds', () => {
+    assert.equal(formatMeasure(12461, 'duration', 'ca'), '03:27:41');
+    assert.equal(clean(formatMeasure(299.6, 'pace', 'ca')), '5:00 /km');
+  });
+
+  it('translates km-effort', () => {
+    assert.equal(clean(formatMeasure(54.5, 'km-effort', 'ca')), '54,5 km-esforç');
+    assert.equal(clean(formatMeasure(54.5, 'km-effort', 'en')), '54.5 km-effort');
+  });
+
+  it('shows a missing value as absent, and keeps a real zero', () => {
+    for (const v of [null, undefined, Number.NaN, Number.POSITIVE_INFINITY]) assert.equal(formatMeasure(v, 'km', 'ca'), ABSENT);
+    assert.equal(clean(formatMeasure(0, 'm-gain', 'ca')), '0 m D+');
+  });
+
+  it('labels the absent value for screen readers', () => {
+    assert.equal(absentLabel('ca'), 'Sense dada');
+  });
+});

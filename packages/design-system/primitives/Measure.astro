@@ -1,0 +1,50 @@
+---
+import { ABSENT, absentLabel, formatMeasure, type Locale, type Unit } from '@tram/formats';
+
+type MeasureType = 'display-xl' | 'display-lg' | 'display-md' | 'display-sm' | 'data-lg' | 'data-md' | 'data-sm';
+
+export interface Props {
+  /** Null or undefined shows the value as absent; it is never estimated. */
+  value: number | null | undefined;
+  unit: Unit;
+  locale?: Locale;
+  type?: MeasureType;
+  /** Forces tabular figures on a display role, to align a column. */
+  tabular?: boolean;
+}
+
+const { value, unit, locale = 'ca', type = 'data-md', tabular = false } = Astro.props;
+const text = formatMeasure(value, unit, locale);
+const numeric = tabular ? 'tabular' : undefined;
+---
+
+{
+  text === ABSENT ? (
+    <span class="measure" data-type={type} data-numeric={numeric} data-absent>
+      <span aria-hidden="true">{ABSENT}</span>
+      <span class="label">{absentLabel(locale)}</span>
+    </span>
+  ) : (
+    <data class="measure" data-type={type} data-numeric={numeric} value={String(value)}>
+      {text}
+    </data>
+  )
+}
+
+<style>
+  .measure {
+    white-space: nowrap;
+  }
+
+  [data-absent] {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .label {
+    position: absolute;
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-line-hairline);
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+</style>

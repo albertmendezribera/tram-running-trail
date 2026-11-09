@@ -9,7 +9,7 @@ Plataforma de running d'asfalt i trail running. Abans d'escriure codi, llegiu [`
 | Peça | Estat |
 |---|---|
 | E16 · Pipeline de tokens | Fet: [`docs/explorations/E16-token-pipeline.md`](docs/explorations/E16-token-pipeline.md) |
-| E17 · Catàleg `/ds/` i regressió visual | Pendent |
+| E17 · Catàleg `/ds/` i regressió visual | Fet, pendent de veure'l a la CI: [`docs/explorations/E17-catalog-visual-regression.md`](docs/explorations/E17-catalog-visual-regression.md) |
 | E08 · Tipografia | Decidida (Sofia Sans), pendent de la prova amb dades reals: [`docs/explorations/E08-typography.md`](docs/explorations/E08-typography.md) |
 | Tokens de tipografia | Fet: rols `[data-type]` i fonts a `packages/design-system/fonts/` |
 | E09 · Color i mode nit | Pendent (hipòtesis i problemes oberts a E16) |
@@ -29,6 +29,7 @@ pnpm test
 
 ```
 apps/web/                  Astro 6 (encara sense pàgines)
-packages/design-system/    tokens DTCG → CSS, ECharts, Three.js, OG
+packages/design-system/    tokens DTCG → CSS, ECharts, Three.js, OG, i components
+packages/formats/          formatació de xifres per idioma
 docs/explorations/         resultats de les exploracions E01–E17
 ```

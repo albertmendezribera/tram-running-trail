@@ -1,0 +1,56 @@
+---
+import SegmentedControl from '@tram/design-system/interactive/SegmentedControl.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const TERRAIN = [
+  { value: 'all', label: 'Tots' },
+  { value: 'road', label: 'Asfalt' },
+  { value: 'trail', label: 'Muntanya' },
+];
+const code = `<SegmentedControl
+  name="terrain"
+  legend="Terreny"
+  value="road"
+  options={[{ value: 'road', label: 'Asfalt' }, { value: 'trail', label: 'Muntanya' }]}
+/>`;
+---
+
+<Fiche
+  title="SegmentedControl"
+  use="Triar una opció entre poques, totes visibles: terreny, unitats o mode de vista."
+  avoid="Més de quatre opcions, o accions que no canvien una selecció."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Estats</h2>
+    <div class="fiche-row" data-testid="states">
+      <SegmentedControl name="states" legend="Terreny" value="road" options={TERRAIN} />
+    </div>
+    <p class="fiche-note">Amb el teclat: Tab entra al grup i les fletxes canvien l'opció. La selecció només canvia en interactuar; no té estats de càrrega ni d'error propis.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Desactivat</h2>
+    <div class="fiche-row" data-testid="disabled">
+      <SegmentedControl
+        name="disabled"
+        legend="Distància"
+        value="short"
+        options={[
+          { value: 'short', label: 'Curta' },
+          { value: 'mid', label: 'Mitjana', disabled: true },
+          { value: 'long', label: 'Llarga' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Modes</h2>
+    <div class="fiche-grid">
+      {MODES.map((m, i) => <Mode {...m}><SegmentedControl name={`mode-${i}`} legend="Terreny" value="trail" options={TERRAIN} /></Mode>)}
+    </div>
+  </section>
+</Fiche>

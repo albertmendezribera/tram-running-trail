@@ -1,0 +1,21 @@
+---
+export interface Props {
+  title: string;
+  use: string;
+  avoid: string;
+  code: string;
+}
+
+const { title, use, avoid, code } = Astro.props;
+---
+
+<h1 data-type="display-md" style="margin: 0">{title}</h1>
+<section class="fiche-block">
+  <h2 data-type="text-sm">Quan fer-lo servir</h2>
+  <p style="margin: 0">{use}</p>
+  <h2 data-type="text-sm">Quan no</h2>
+  <p style="margin: 0">{avoid}</p>
+  <h2 data-type="text-sm">Ús</h2>
+  <pre class="fiche-code" data-type="data-sm"><code>{code}</code></pre>
+</section>
+<slot />

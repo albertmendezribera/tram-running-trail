@@ -1,0 +1,59 @@
+---
+import StatBlock from '@tram/design-system/patterns/StatBlock.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const ROAD = [
+  { label: 'Distància', value: 42.195, unit: 'km' },
+  { label: 'Ritme', value: 255, unit: 'pace' },
+  { label: 'Temps', value: 12461, unit: 'duration' },
+] as const;
+const TRAIL = [
+  { label: 'Distància', value: 28.4, unit: 'km' },
+  { label: 'Desnivell positiu', value: 1250, unit: 'm-gain' },
+  { label: 'Velocitat vertical', value: 820, unit: 'vertical-speed' },
+  { label: 'Km-esforç', value: 40.9, unit: 'km-effort' },
+] as const;
+const ABSENT = [
+  { label: 'Distància', value: 42.195, unit: 'km' },
+  { label: 'Desnivell positiu', value: null, unit: 'm-gain' },
+] as const;
+const code = `<StatBlock
+  lead
+  stats={[
+    { label: 'Distància', value: 42.195, unit: 'km' },
+    { label: 'Ritme', value: 255, unit: 'pace' },
+  ]}
+/>`;
+---
+
+<Fiche
+  title="StatBlock"
+  use="Les xifres principals d'una cursa o d'una sabatilla, a la part alta d'una fitxa."
+  avoid="Comparar moltes files: per a això hi ha DataTable."
+  code={code}
+>
+  <section class="fiche-block" data-testid="road">
+    <h2 data-type="text-sm">Asfalt, amb xifra principal</h2>
+    <StatBlock stats={ROAD} lead />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Muntanya</h2>
+    <p class="fiche-note">En muntanya el ritme enganya: es mostren també la velocitat vertical i el km-esforç.</p>
+    <StatBlock stats={TRAIL} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Dada absent</h2>
+    <StatBlock stats={ABSENT} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Modes</h2>
+    <div class="fiche-grid">
+      {MODES.map((m) => <Mode {...m}><div style="inline-size: 100%"><StatBlock stats={m.terrain === 'road' ? ROAD.slice(0, 2) : TRAIL.slice(0, 2)} /></div></Mode>)}
+    </div>
+  </section>
+</Fiche>

@@ -4,6 +4,7 @@ export const NAV = [
   { href: '/ds/primitives/measure/', title: 'Measure' },
   { href: '/ds/primitives/data-table/', title: 'DataTable' },
   { href: '/ds/patterns/bib/', title: 'Bib' },
+  { href: '/ds/patterns/stat-block/', title: 'StatBlock' },
   { href: '/ds/interactive/segmented-control/', title: 'SegmentedControl' },
 ] as const;
 

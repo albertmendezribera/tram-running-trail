@@ -6,6 +6,7 @@ const PAGES = {
   measure: '/ds/primitives/measure/',
   'data-table': '/ds/primitives/data-table/',
   bib: '/ds/patterns/bib/',
+  'stat-block': '/ds/patterns/stat-block/',
   'segmented-control': '/ds/interactive/segmented-control/',
 };
 
@@ -84,6 +85,13 @@ test.describe('DataTable', () => {
     await open(page, PAGES['data-table']);
     await expect(page.getByTestId('empty').getByText('Sense dades')).toBeVisible();
   });
+});
+
+test('StatBlock pairs each label with its figure', async ({ page }) => {
+  await open(page, PAGES['stat-block']);
+  const block = page.getByTestId('road');
+  await expect(block.getByRole('term').first()).toHaveText('Distància');
+  await expect(block.getByRole('definition').first()).toContainText('42,195');
 });
 
 test('Measure gives screen readers a name for an absent value', async ({ page }) => {

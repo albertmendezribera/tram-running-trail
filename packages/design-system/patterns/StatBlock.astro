@@ -1,0 +1,63 @@
+---
+import type { Locale, Unit } from '@tram/formats';
+import Measure from '../primitives/Measure.astro';
+
+export interface Stat {
+  label: string;
+  /** Null or undefined shows the figure as absent. */
+  value: number | null | undefined;
+  unit: Unit;
+}
+
+export interface Props {
+  stats: readonly Stat[];
+  /** Gives the first figure the main role, for the headline number of a page. */
+  lead?: boolean;
+  locale?: Locale;
+}
+
+const { stats, lead = false, locale = 'ca' } = Astro.props;
+---
+
+<dl class="stats" data-lead={lead ? '' : undefined}>
+  {
+    stats.map((s, i) => (
+      <div class="stat">
+        <dt class="label" data-type="text-xs">{s.label}</dt>
+        <dd class="value">
+          <Measure value={s.value} unit={s.unit} locale={locale} type={lead && i === 0 ? 'display-lg' : 'display-md'} />
+        </dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--tram-sys-space-12) * 2.5)), 1fr));
+    margin: 0;
+    border-block-start: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+  }
+
+  .stat {
+    display: grid;
+    align-content: start;
+    gap: var(--tram-sys-space-1);
+    min-inline-size: 0;
+    padding-block: var(--tram-sys-space-3);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+  }
+
+  [data-lead] > .stat:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .label {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .value {
+    margin: 0;
+  }
+</style>

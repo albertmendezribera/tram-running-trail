@@ -1,0 +1,59 @@
+---
+import DataTable from '@tram/design-system/primitives/DataTable.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const COLUMNS = [
+  { key: 'km', label: 'Km', numeric: true },
+  { key: 'time', label: 'Temps', unit: 'duration' },
+  { key: 'split', label: 'Parcial', unit: 'pace' },
+  { key: 'gain', label: 'D+', unit: 'm-gain' },
+] as const;
+const ROWS = [
+  { km: 1, time: 252, split: 252, gain: 8 },
+  { km: 2, time: 511, split: 259, gain: 21 },
+  { km: 3, time: 778, split: 267, gain: 47 },
+  { km: 10, time: 2646, split: 251, gain: null },
+];
+const MANY = Array.from({ length: 24 }, (_, i) => ({ km: i + 1, time: (i + 1) * 255, split: 255, gain: 10 + i }));
+const code = `<DataTable
+  caption="Parcials"
+  columns={[{ key: 'km', label: 'Km', numeric: true }, { key: 'split', label: 'Parcial', unit: 'pace' }]}
+  rows={[{ km: 1, split: 252 }]}
+/>`;
+---
+
+<Fiche
+  title="DataTable"
+  use="Fulls de resultats, parcials i especificacions: dades denses que es comparen per columnes."
+  avoid="Llistes sense columnes que es comparin, o una cursa al calendari: per a això hi ha RaceRow."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Per defecte</h2>
+    <DataTable caption="Parcials de mostra" columns={COLUMNS} rows={ROWS} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Compacta</h2>
+    <DataTable caption="Parcials de mostra, compacta" columns={COLUMNS} rows={ROWS} density="compact" />
+  </section>
+
+  <section class="fiche-block" data-testid="sticky">
+    <h2 data-type="text-sm">Capçalera enganxosa</h2>
+    <DataTable caption="Quilòmetres de mostra" columns={COLUMNS} rows={MANY} density="compact" sticky />
+  </section>
+
+  <section class="fiche-block" data-testid="empty">
+    <h2 data-type="text-sm">Buida</h2>
+    <DataTable caption="Sense resultats" columns={COLUMNS} rows={[]} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="text-sm">Modes</h2>
+    <div class="fiche-grid">
+      {MODES.map((m) => <Mode {...m}><DataTable caption={`Mode ${m.theme} ${m.terrain}`} columns={COLUMNS} rows={ROWS.slice(0, 2)} density="compact" /></Mode>)}
+    </div>
+  </section>
+</Fiche>

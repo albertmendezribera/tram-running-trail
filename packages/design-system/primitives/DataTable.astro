@@ -1,0 +1,124 @@
+---
+import type { Locale, Unit } from '@tram/formats';
+import Measure from './Measure.astro';
+
+type Cell = number | string | null | undefined;
+
+export interface Column {
+  key: string;
+  label: string;
+  /** Renders the cell with Measure, aligned to the right. */
+  unit?: Unit;
+  /** Aligns a figure without a unit to the right, such as a position. */
+  numeric?: boolean;
+}
+
+export interface Props {
+  /** Names the table for everyone, screen readers included. */
+  caption: string;
+  columns: readonly Column[];
+  rows: ReadonlyArray<Record<string, Cell>>;
+  density?: 'comfortable' | 'compact';
+  /** Limits the height so that the header stays visible while scrolling. */
+  sticky?: boolean;
+  locale?: Locale;
+}
+
+const EMPTY: Record<Locale, string> = { ca: 'Sense dades', es: 'Sin datos', en: 'No data' };
+
+const { caption, columns, rows, density = 'comfortable', sticky = false, locale = 'ca' } = Astro.props;
+const measureType = density === 'compact' ? 'data-sm' : 'data-md';
+const isNumeric = (c: Column): boolean => c.unit !== undefined || c.numeric === true;
+const text = (v: Cell): string => (v === null || v === undefined || v === '' ? '—' : String(v));
+---
+
+<div class="scroller" data-density={density} data-sticky={sticky ? '' : undefined} tabindex="0" role="region" aria-label={caption}>
+  <table class="table" data-type={measureType}>
+    <caption class="caption" data-type="text-sm">{caption}</caption>
+    <thead>
+      <tr>{columns.map((c) => <th scope="col" data-numeric-column={isNumeric(c) ? '' : undefined}>{c.label}</th>)}</tr>
+    </thead>
+    <tbody>
+      {
+        rows.length === 0 ? (
+          <tr>
+            <td class="empty" colspan={columns.length}>{EMPTY[locale]}</td>
+          </tr>
+        ) : (
+          rows.map((row) => (
+            <tr>
+              {columns.map((c, i) => {
+                const Tag = i === 0 ? 'th' : 'td';
+                const value = row[c.key];
+                return (
+                  <Tag scope={i === 0 ? 'row' : undefined} data-numeric-column={isNumeric(c) ? '' : undefined}>
+                    {c.unit && (typeof value === 'number' || value === null || value === undefined) ? (
+                      <Measure value={value} unit={c.unit} locale={locale} type={measureType} />
+                    ) : (
+                      text(value)
+                    )}
+                  </Tag>
+                );
+              })}
+            </tr>
+          ))
+        )
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .scroller {
+    min-inline-size: 0;
+    overflow-x: auto;
+  }
+
+  .scroller[data-sticky] {
+    max-block-size: 70dvh;
+    overflow: auto;
+  }
+
+  .scroller:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  /* `separate` keeps the borders attached to a sticky header. */
+  .table {
+    inline-size: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .caption {
+    padding-block-end: var(--tram-sys-space-2);
+    color: var(--tram-sys-text-muted);
+    text-align: start;
+  }
+
+  th,
+  td {
+    padding: var(--tram-sys-space-cell-y) var(--tram-sys-space-cell-x);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+    font-weight: inherit;
+    text-align: start;
+  }
+
+  [data-numeric-column] {
+    text-align: end;
+  }
+
+  thead th {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    border-block-end-color: var(--tram-sys-rule-strong);
+    color: var(--tram-sys-text-muted);
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .empty {
+    color: var(--tram-sys-text-muted);
+  }
+</style>

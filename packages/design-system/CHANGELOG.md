@@ -17,7 +17,7 @@ Tipografia (E08).
 Catàleg i primers components (E17).
 
 - Tokens de forma: `line-hairline`, `line-strong`, `radius-none` i `radius-soft`.
-- Components: `Measure`, `DataTable`, `Bib`, `StatBlock`, `ElevationProfile` i `SegmentedControl`, amb fitxa a `/ds/`.
+- Components: `Measure`, `DataTable`, `Bib`, `StatBlock`, `ElevationProfile`, `SegmentedControl` i `Viewer3DShell`, amb fitxa a `/ds/`.
 - Captures de regressió: `apps/web/tests/__screenshots__/`.
 
 ## 0.1.0 · 2026-11-09

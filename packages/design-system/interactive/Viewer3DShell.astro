@@ -1,0 +1,134 @@
+---
+import type { Locale } from '@tram/formats';
+
+export interface Props {
+  /** Names the 3D view for screen readers. */
+  label: string;
+  /** `visible` starts when on screen and the browser is idle; `interaction` waits for the button. */
+  load?: 'visible' | 'interaction';
+  locale?: Locale;
+  /** Lets a page find this viewer to give it a scene. */
+  id?: string;
+}
+
+const COPY = {
+  ca: { start: 'Veure en 3D', retry: 'Torna-ho a provar', loading: 'Carregant la vista 3D…', ready: 'Vista 3D a punt. Fes servir les fletxes per avançar i retrocedir.', error: 'No s’ha pogut carregar la vista 3D.' },
+  es: { start: 'Ver en 3D', retry: 'Volver a intentarlo', loading: 'Cargando la vista 3D…', ready: 'Vista 3D lista. Usa las flechas para avanzar y retroceder.', error: 'No se ha podido cargar la vista 3D.' },
+  en: { start: 'View in 3D', retry: 'Try again', loading: 'Loading the 3D view…', ready: '3D view ready. Use the arrow keys to move forward and back.', error: 'The 3D view could not be loaded.' },
+};
+
+const { label, load = 'visible', locale = 'ca', id } = Astro.props;
+const copy = COPY[locale];
+---
+
+<tram-viewer-3d
+  class="viewer"
+  id={id}
+  data-state="poster"
+  data-load={load}
+  data-text-loading={copy.loading}
+  data-text-ready={copy.ready}
+  data-text-error={copy.error}
+>
+  <div class="frame">
+    <div class="stage" data-part="stage" role="group" aria-label={label} aria-roledescription="3D" tabindex="0"></div>
+    <div class="poster"><slot name="poster" /></div>
+    <div class="bar">
+      <button class="button start" data-part="start" data-type="text-sm" type="button">{copy.start}</button>
+      <button class="button retry" data-part="retry" data-type="text-sm" type="button">{copy.retry}</button>
+      <p class="status" data-part="status" data-type="text-xs" role="status"></p>
+    </div>
+  </div>
+  <div class="text"><slot name="text" /></div>
+</tram-viewer-3d>
+
+<script>
+  import './viewer-3d-shell.ts';
+</script>
+
+<style>
+  .viewer {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    min-inline-size: 0;
+  }
+
+  /* The frame reserves the space from the start: the 3D never moves the page. */
+  .frame {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    border-radius: var(--tram-sys-radius-soft);
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .stage,
+  .poster {
+    position: absolute;
+    inset: 0;
+  }
+
+  .stage:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: calc(var(--tram-sys-line-strong) * -1);
+  }
+
+  [data-state='ready'] .poster {
+    display: none;
+  }
+
+  /* Without a scene there is nothing to focus or to read in the stage. */
+  .viewer:not([data-state='ready']) .stage {
+    visibility: hidden;
+  }
+
+  .bar {
+    position: absolute;
+    inset-block-end: var(--tram-sys-space-3);
+    inset-inline: var(--tram-sys-space-3);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--tram-sys-space-3);
+    pointer-events: none;
+  }
+
+  .button {
+    min-block-size: var(--tram-sys-space-9);
+    padding-inline: var(--tram-sys-space-4);
+    border: 0;
+    border-radius: var(--tram-sys-radius-soft);
+    color: var(--tram-sys-on-accent);
+    background: var(--tram-sys-accent);
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  .button:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .viewer:not([data-state='poster']) .start,
+  .viewer:not([data-state='error']) .retry {
+    display: none;
+  }
+
+  .status {
+    margin: 0;
+    padding: var(--tram-sys-space-1) var(--tram-sys-space-2);
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface);
+  }
+
+  .status:empty {
+    display: none;
+  }
+
+  @media (width >= 48rem) {
+    .frame {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>

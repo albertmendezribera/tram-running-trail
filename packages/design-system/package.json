@@ -13,8 +13,7 @@
     "./primitives/*": "./primitives/*",
     "./patterns/*": "./patterns/*",
     "./interactive/*": "./interactive/*"
-  },
-  "scripts": {
+  },  "scripts": {
     "tokens:build": "node build/cli.ts",
     "tokens:check": "node build/cli.ts --check",
     "test": "node --test \"build/**/*.test.ts\" \"patterns/**/*.test.ts\"",

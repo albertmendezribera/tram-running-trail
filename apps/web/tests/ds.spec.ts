@@ -9,6 +9,7 @@ const PAGES = {
   'stat-block': '/ds/patterns/stat-block/',
   'elevation-profile': '/ds/patterns/elevation-profile/',
   'segmented-control': '/ds/interactive/segmented-control/',
+  viewer: '/ds/interactive/viewer-3d-shell/',
 };
 
 const open = async (page: Page, path: string): Promise<void> => {
@@ -19,6 +20,13 @@ const open = async (page: Page, path: string): Promise<void> => {
 for (const [name, path] of Object.entries(PAGES)) {
   test(`${name} matches its baseline`, async ({ page }) => {
     await open(page, path);
+    if (name === 'viewer') {
+      // The scene starts when it comes into view: the capture has to wait for it.
+      const auto = page.locator('#demo-auto');
+      await auto.scrollIntoViewIfNeeded();
+      await expect(auto).toHaveAttribute('data-state', 'ready');
+      await page.evaluate(() => window.scrollTo(0, 0));
+    }
     await expect(page).toHaveScreenshot(`${name}.png`, { fullPage: true });
   });
 
@@ -108,6 +116,75 @@ test.describe('ElevationProfile', () => {
   test('says so when there is no route', async ({ page }) => {
     await open(page, PAGES['elevation-profile']);
     await expect(page.getByTestId('absent').getByText('Sense perfil')).toBeVisible();
+  });
+});
+
+test.describe('Viewer3DShell', () => {
+  const start = async (page: Page, id: string) => {
+    const viewer = page.locator(`#${id}`);
+    await viewer.getByRole('button', { name: 'Veure en 3D' }).click();
+    return viewer;
+  };
+
+  test('starts on its own when it comes into view', async ({ page }) => {
+    await open(page, PAGES.viewer);
+    const viewer = page.locator('#demo-auto');
+    await viewer.scrollIntoViewIfNeeded();
+    await expect(viewer).toHaveAttribute('data-state', 'ready');
+    await expect(viewer.locator('canvas')).toBeVisible();
+  });
+
+  test('keeps the poster until asked, when set to interaction', async ({ page }) => {
+    await open(page, PAGES.viewer);
+    const viewer = page.locator('#demo-manual');
+    await viewer.scrollIntoViewIfNeeded();
+    await expect(viewer).toHaveAttribute('data-state', 'poster');
+    await expect(viewer.locator('canvas')).toHaveCount(0);
+    await start(page, 'demo-manual');
+    await expect(viewer).toHaveAttribute('data-state', 'ready');
+  });
+
+  test('keeps the poster on error and can retry', async ({ page }) => {
+    await open(page, PAGES.viewer);
+    const viewer = await start(page, 'demo-error');
+    await expect(viewer).toHaveAttribute('data-state', 'error');
+    await expect(viewer.getByRole('status')).toHaveText('No s’ha pogut carregar la vista 3D.');
+    await expect(viewer).toHaveScreenshot('viewer-error.png');
+    await viewer.getByRole('button', { name: 'Torna-ho a provar' }).click();
+    await expect(viewer).toHaveAttribute('data-state', 'ready');
+  });
+
+  test('moves with the arrow keys and announces it', async ({ page }) => {
+    await open(page, PAGES.viewer);
+    const viewer = await start(page, 'demo-manual');
+    await expect(viewer).toHaveAttribute('data-state', 'ready');
+    await viewer.getByRole('group', { name: 'Escena manual' }).focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(viewer.getByRole('status')).toHaveText('Km 1');
+  });
+
+  test('does not start on its own with reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.viewer);
+    const viewer = page.locator('#demo-auto');
+    await viewer.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(2500);
+    await expect(viewer).toHaveAttribute('data-state', 'poster');
+    await start(page, 'demo-auto');
+    await expect(viewer).toHaveAttribute('data-state', 'ready');
+  });
+
+  test('has its text equivalent in the HTML', async ({ page }) => {
+    await open(page, PAGES.viewer);
+    await expect(page.getByTestId('auto').getByText('Text equivalent')).toBeAttached();
+  });
+
+  test('cleans up when it leaves the page', async ({ page }) => {
+    await open(page, PAGES.viewer);
+    const viewer = await start(page, 'demo-manual');
+    await expect(viewer).toHaveAttribute('data-state', 'ready');
+    await viewer.evaluate((el) => el.remove());
+    expect(await page.evaluate(() => (window as Window & { tramDemoDisposed?: number }).tramDemoDisposed)).toBe(1);
   });
 });
 

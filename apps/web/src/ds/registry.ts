@@ -6,6 +6,7 @@ import Index from './fiches/Index.astro';
 import MeasureFiche from './fiches/MeasureFiche.astro';
 import SegmentedFiche from './fiches/SegmentedFiche.astro';
 import StatBlockFiche from './fiches/StatBlockFiche.astro';
+import ViewerFiche from './fiches/ViewerFiche.astro';
 
 export const FICHES = [
   { slug: undefined, title: 'Catàleg', Page: Index },
@@ -16,4 +17,5 @@ export const FICHES = [
   { slug: 'patterns/stat-block', title: 'StatBlock', Page: StatBlockFiche },
   { slug: 'patterns/elevation-profile', title: 'ElevationProfile', Page: ElevationFiche },
   { slug: 'interactive/segmented-control', title: 'SegmentedControl', Page: SegmentedFiche },
+  { slug: 'interactive/viewer-3d-shell', title: 'Viewer3DShell', Page: ViewerFiche },
 ];

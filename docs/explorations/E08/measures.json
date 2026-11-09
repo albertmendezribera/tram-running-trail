@@ -1,0 +1,281 @@
+[
+  {
+    "id": "A",
+    "name": "Carretera",
+    "totalKb": 87.3,
+    "displayKb": 21.9,
+    "files": 4,
+    "fonts": {
+      "display": {
+        "family": "Barlow Condensed",
+        "weight": 700,
+        "runs": 2,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.07,
+          "left": 0.07,
+          "right": 0.07,
+          "span": 0.295,
+          "stretch": 4.214,
+          "dotHeight": 0.414
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.498
+      },
+      "text": {
+        "family": "Barlow",
+        "weight": 400,
+        "runs": 2,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.16,
+          "left": 0.13,
+          "right": 0.13,
+          "span": 0.37,
+          "stretch": 2.313,
+          "dotHeight": 0.396
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.527
+      },
+      "textStrong": {
+        "family": "Barlow",
+        "weight": 600,
+        "runs": 2,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.12,
+          "left": 0.1,
+          "right": 0.1,
+          "span": 0.345,
+          "stretch": 2.875,
+          "dotHeight": 0.406
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.538
+      },
+      "data": {
+        "family": "Overpass Mono",
+        "weight": 400,
+        "runs": 3,
+        "natural": 0.235,
+        "left": 0.365,
+        "right": 0.35,
+        "span": 0.85,
+        "stretch": 3.617,
+        "dotHeight": 0.486,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.235,
+          "left": 0.365,
+          "right": 0.35,
+          "span": 0.85,
+          "stretch": 3.617,
+          "dotHeight": 0.486
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.616
+      }
+    },
+    "reach": 132.5,
+    "charsPerLine": 53.7
+  },
+  {
+    "id": "B",
+    "name": "Una sola família",
+    "totalKb": 79,
+    "displayKb": 39.6,
+    "files": 2,
+    "fonts": {
+      "display": {
+        "family": "Sofia Sans Extra Condensed",
+        "weight": 800,
+        "runs": 3,
+        "natural": 0.065,
+        "left": 0.07,
+        "right": 0.065,
+        "span": 0.295,
+        "stretch": 4.538,
+        "dotHeight": 0.39,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.065,
+          "left": 0.07,
+          "right": 0.065,
+          "span": 0.295,
+          "stretch": 4.538,
+          "dotHeight": 0.39
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.46
+      },
+      "text": {
+        "family": "Sofia Sans",
+        "weight": 400,
+        "runs": 3,
+        "natural": 0.15,
+        "left": 0.14,
+        "right": 0.145,
+        "span": 0.395,
+        "stretch": 2.633,
+        "dotHeight": 0.375,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.15,
+          "left": 0.14,
+          "right": 0.145,
+          "span": 0.395,
+          "stretch": 2.633,
+          "dotHeight": 0.375
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.63
+      },
+      "textStrong": {
+        "family": "Sofia Sans",
+        "weight": 600,
+        "runs": 3,
+        "natural": 0.14,
+        "left": 0.135,
+        "right": 0.13,
+        "span": 0.395,
+        "stretch": 2.821,
+        "dotHeight": 0.379,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.14,
+          "left": 0.135,
+          "right": 0.13,
+          "span": 0.395,
+          "stretch": 2.821,
+          "dotHeight": 0.379
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.63
+      },
+      "data": {
+        "family": "Sofia Sans",
+        "weight": 500,
+        "runs": 3,
+        "natural": 0.145,
+        "left": 0.135,
+        "right": 0.135,
+        "span": 0.395,
+        "stretch": 2.724,
+        "dotHeight": 0.375,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.145,
+          "left": 0.135,
+          "right": 0.135,
+          "span": 0.395,
+          "stretch": 2.724,
+          "dotHeight": 0.375
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.63
+      }
+    },
+    "reach": 141,
+    "charsPerLine": 53.7
+  },
+  {
+    "id": "C",
+    "name": "Plànol",
+    "totalKb": 74.2,
+    "displayKb": 26,
+    "files": 3,
+    "fonts": {
+      "display": {
+        "family": "Antonio",
+        "weight": 700,
+        "runs": 3,
+        "natural": 0.13,
+        "left": 0.055,
+        "right": 0.055,
+        "span": 0.225,
+        "stretch": 1.731,
+        "dotHeight": 0.468,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.13,
+          "left": 0.065,
+          "right": 0.06,
+          "span": 0.24,
+          "stretch": 1.846,
+          "dotHeight": 0.491
+        },
+        "tabularSpread": 16.313,
+        "digitEm": 0.493
+      },
+      "text": {
+        "family": "Hanken Grotesk",
+        "weight": 400,
+        "runs": 3,
+        "natural": 0.095,
+        "left": 0.005,
+        "right": 0.15,
+        "span": 0.255,
+        "stretch": 2.684,
+        "dotHeight": 0.507,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.095,
+          "left": 0.135,
+          "right": 0.195,
+          "span": 0.43,
+          "stretch": 4.526,
+          "dotHeight": 0.507
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.56
+      },
+      "textStrong": {
+        "family": "Hanken Grotesk",
+        "weight": 600,
+        "runs": 3,
+        "natural": 0.085,
+        "left": 0.015,
+        "right": 0.095,
+        "span": 0.225,
+        "stretch": 2.647,
+        "dotHeight": 0.507,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.085,
+          "left": 0.12,
+          "right": 0.165,
+          "span": 0.4,
+          "stretch": 4.706,
+          "dotHeight": 0.507
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.56
+      },
+      "data": {
+        "family": "IBM Plex Mono",
+        "weight": 400,
+        "runs": 3,
+        "natural": 0.16,
+        "left": 0.305,
+        "right": 0.305,
+        "span": 0.76,
+        "stretch": 4.75,
+        "dotHeight": 0.412,
+        "withoutCaLang": {
+          "runs": 3,
+          "natural": 0.16,
+          "left": 0.305,
+          "right": 0.305,
+          "span": 0.76,
+          "stretch": 4.75,
+          "dotHeight": 0.412
+        },
+        "tabularSpread": 0,
+        "digitEm": 0.6
+      }
+    },
+    "reach": 149.1,
+    "charsPerLine": 51
+  }
+]

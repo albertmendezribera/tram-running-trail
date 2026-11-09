@@ -10,7 +10,7 @@ Plataforma de running d'asfalt i trail running. Abans d'escriure codi, llegiu [`
 |---|---|
 | E16 · Pipeline de tokens | Fet: [`docs/explorations/E16-token-pipeline.md`](docs/explorations/E16-token-pipeline.md) |
 | E17 · Catàleg `/ds/` i regressió visual | Pendent |
-| E08 · Tipografia | Pendent |
+| E08 · Tipografia | Decidida (Sofia Sans), pendent de la prova amb dades reals: [`docs/explorations/E08-typography.md`](docs/explorations/E08-typography.md) |
 | E09 · Color i mode nit | Pendent (hipòtesis i problemes oberts a E16) |
 | Lint (Stylelint, ESLint) | Pendent |
 

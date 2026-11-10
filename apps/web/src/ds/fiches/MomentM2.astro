@@ -1,0 +1,105 @@
+---
+import DataTable from '@tram/design-system/primitives/DataTable.astro';
+import RouteScroller from '@tram/design-system/interactive/RouteScroller.astro';
+import ClimbList from '@tram/design-system/patterns/ClimbList.astro';
+import StatBlock from '@tram/design-system/patterns/StatBlock.astro';
+import { kmStretches, summarize } from '@tram/design-system/patterns/elevation.ts';
+import { CALONGE } from '../real-profile';
+
+// Every figure comes from a real GPX: distance and elevation only.
+const summary = summarize(CALONGE);
+const distance = Number(summary.distanceKm.toFixed(2));
+const gain = Math.round(summary.gainM);
+const stats = [
+  { label: 'Distància', value: distance, unit: 'km' },
+  { label: 'Desnivell positiu', value: gain, unit: 'm-gain' },
+  { label: 'Altitud màxima', value: summary.highest[1], unit: 'm' },
+  { label: 'Km-esforç', value: Number((distance + gain / 100).toFixed(1)), unit: 'km-effort' },
+] as const;
+const rows = kmStretches(CALONGE).map((r) => ({ km: r.km, gain: Math.round(r.gainM), loss: Math.round(r.lossM), grade: Math.round(r.grade) }));
+---
+
+<header class="intro">
+  <p class="kicker" data-type="text-xs">Moment firma · M2 · prototip</p>
+  <h1 class="title" data-type="display-lg">Recórrer el tram</h1>
+  <p class="lede" data-type="text-lg">
+    Una sortida real a Calonge, quilòmetre a quilòmetre. El perfil queda enganxat a baix i les xifres canvien com en un marcador. El vol 3D pel terreny s'hi afegirà a la Fase 1.
+  </p>
+</header>
+
+<RouteScroller points={CALONGE} name="Calonge · sortida real" />
+
+<section class="sheet">
+  <h2 class="sheet-title" data-type="display-sm">Full de resultats</h2>
+  <StatBlock stats={stats} lead />
+  <div class="pair">
+    <div class="block">
+      <h3 class="block-title" data-type="text-xs">Pujades</h3>
+      <ClimbList label="Pujades de la sortida a Calonge" points={CALONGE} />
+    </div>
+    <div class="block">
+      <DataTable
+        caption="Trams per quilòmetre"
+        density="compact"
+        columns={[
+          { key: 'km', label: 'Km', unit: 'km' },
+          { key: 'gain', label: 'D+', unit: 'm-gain' },
+          { key: 'loss', label: 'D−', unit: 'm' },
+          { key: 'grade', label: 'Pendent', diverging: { max: 20, suffix: '%' } },
+        ]}
+        rows={rows}
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    padding-block-end: var(--tram-sys-space-5);
+    border-block-end: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+  }
+
+  .kicker,
+  .block-title {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .title,
+  .sheet-title {
+    margin: 0;
+  }
+
+  .lede {
+    max-inline-size: 46ch;
+    margin: 0;
+  }
+
+  .sheet {
+    display: grid;
+    gap: var(--tram-sys-space-7);
+    padding-block-start: var(--tram-sys-space-7);
+    border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+  }
+
+  .pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--tram-sys-space-7);
+  }
+
+  .block {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    align-content: start;
+  }
+
+  @media (width >= 64rem) {
+    .pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

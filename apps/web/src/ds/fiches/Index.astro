@@ -27,7 +27,7 @@ const silhouette = createPlot(CALONGE, [summary.lowest[1] - span * 0.1, summary.
 const silhouetteArea = areaPath(CALONGE, silhouette);
 const silhouetteLine = linePath(CALONGE, silhouette);
 
-const KIND: Record<string, string> = { fonaments: 'Fonaments', primitives: 'Primitiva', patterns: 'Patró', interactive: 'Interactiu' };
+const KIND: Record<string, string> = { fonaments: 'Fonaments', primitives: 'Primitiva', patterns: 'Patró', interactive: 'Interactiu', moments: 'Moment firma' };
 const fiches = NAV.slice(1).map((n, i) => ({
   ...n,
   number: String(i + 1).padStart(2, '0'),

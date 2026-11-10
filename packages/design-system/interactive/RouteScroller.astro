@@ -1,0 +1,267 @@
+---
+import { formatNumber, type Locale } from '@tram/formats';
+import ElevationProfile from '../patterns/ElevationProfile.astro';
+import { areaPath, createPlot, detectClimbs, elevationAt, gradeAt, linePath, type ProfilePoint, summarize } from '../patterns/elevation.ts';
+
+export interface Props {
+  /** Kilometre and elevation in metres, ordered by distance. */
+  points: readonly ProfilePoint[];
+  /** Name of the route or race. */
+  name: string;
+  locale?: Locale;
+}
+
+const COPY = {
+  ca: { km: 'Quilòmetre', elevation: 'Altitud', gain: 'Desnivell positiu', grade: 'Pendent', climb: 'Pujada', start: 'Sortida', finish: 'Arribada', hint: 'Fes scroll per recórrer el tram. Clica el perfil per saltar a un punt.', profile: 'Perfil de' },
+  es: { km: 'Kilómetro', elevation: 'Altitud', gain: 'Desnivel positivo', grade: 'Pendiente', climb: 'Subida', start: 'Salida', finish: 'Llegada', hint: 'Haz scroll para recorrer el tramo. Pulsa el perfil para saltar a un punto.', profile: 'Perfil de' },
+  en: { km: 'Kilometre', elevation: 'Elevation', gain: 'Elevation gain', grade: 'Grade', climb: 'Climb', start: 'Start', finish: 'Finish', hint: 'Scroll to run the route. Click the profile to jump to a point.', profile: 'Profile of' },
+};
+
+const { points, name, locale = 'ca' } = Astro.props;
+const copy = COPY[locale];
+const summary = summarize(points);
+const first = points[0]![0];
+const climbs = detectClimbs(points);
+const n = (v: number, digits: number): string => formatNumber(v, locale, digits, digits);
+const chapters = climbs.map((c, i) => ({
+  from: c.from,
+  to: c.to,
+  text: `${copy.climb} ${i + 1} · ${n(c.to - c.from, 1)} km · +${n(c.gainM, 0)} m · ${n(c.grade, 0)} %`,
+}));
+
+// Silhouette fitted to its own range: the route as a shape, as on the catalogue cover.
+const span = summary.highest[1] - summary.lowest[1];
+const low = summary.lowest[1] - span * 0.15;
+const high = summary.highest[1] + span * 0.05;
+const plot = createPlot(points, [low, high], 1000, 300);
+const area = areaPath(points, plot);
+const line = linePath(points, plot);
+
+// The track is about 60 % of a screen per kilometre: steady pacing, whatever the length.
+const length = Math.min(16, Math.max(4, summary.distanceKm * 0.6));
+const data = { points, climbs: chapters, start: copy.start, finish: copy.finish, locale, low, high };
+---
+
+<tram-route-scroller class="scroller" style={`--track: ${length}`}>
+  <script type="application/json" data-route set:html={JSON.stringify(data)} />
+  <div class="track" data-track>
+    <div class="stage">
+      <div class="sky" aria-hidden="true">
+      <svg class="silhouette" viewBox="0 0 1000 300" preserveAspectRatio="none">
+        <g class="ahead">
+          <path class="area" d={area} />
+          <path class="line" d={line} />
+        </g>
+        <g class="done">
+          <path class="area" d={area} />
+          <path class="line" d={line} />
+        </g>
+      </svg>
+      <svg class="runner" viewBox="-7 -7 14 14"><circle r="5.5" /></svg>
+      </div>
+
+      <div class="readout">
+        <p class="name" data-type="text-xs">{name}</p>
+        <div class="km">
+          <span class="label" data-type="text-xs">{copy.km}</span>
+          <span class="figure" data-type="display-xl" data-numeric="tabular"><span data-out="km">{n(first, 2)}</span><span class="unit">{' km'}</span></span>
+        </div>
+        <dl class="stats">
+          <div>
+            <dt data-type="text-xs">{copy.elevation}</dt>
+            <dd data-type="display-md" data-numeric="tabular"><span data-out="elevation">{n(elevationAt(points, first), 0)}</span><span class="unit">{' m'}</span></dd>
+          </div>
+          <div>
+            <dt data-type="text-xs">{copy.gain}</dt>
+            <dd data-type="display-md" data-numeric="tabular"><span data-out="gain">{n(0, 0)}</span><span class="unit">{' m D+'}</span></dd>
+          </div>
+          <div>
+            <dt data-type="text-xs">{copy.grade}</dt>
+            <dd data-type="display-md" data-numeric="tabular"><span data-out="grade">{n(Math.round(gradeAt(points, first)), 0)}</span><span class="unit">{' %'}</span></dd>
+          </div>
+        </dl>
+        <p class="chapter" data-type="display-sm" data-out="chapter" role="status">{copy.start}</p>
+      </div>
+
+      <div class="foot">
+        <p class="hint" data-type="text-xs">{copy.hint}</p>
+        <ElevationProfile points={points} label={`${copy.profile} ${name}`} annotate={false} cursor />
+      </div>
+    </div>
+  </div>
+</tram-route-scroller>
+
+<script>
+  import './route-scroller.ts';
+</script>
+
+<style>
+  .scroller {
+    display: block;
+    --progress: 0;
+  }
+
+  /* Without JavaScript the route is a static sheet; the scroll run exists only when live. */
+  .scroller[data-live] .track {
+    block-size: calc(var(--track) * 100dvh);
+  }
+
+  /* Readout, silhouette and profile each get their own area: nothing is drawn under a figure. */
+  .stage {
+    position: relative;
+    display: grid;
+    grid-template-areas: 'readout' 'silhouette' 'foot';
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: var(--tram-sys-space-4);
+    min-block-size: 100dvh;
+    padding-block: var(--tram-sys-space-5);
+    overflow: hidden;
+  }
+
+  .scroller[data-live] .stage {
+    position: sticky;
+    inset-block-start: 0;
+    block-size: 100dvh;
+  }
+
+  .sky {
+    grid-area: silhouette;
+    position: relative;
+    min-block-size: var(--tram-sys-space-11);
+  }
+
+  .silhouette {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  /* The runner: signal colour with its mandatory outline (E09), at the edge of what has been run. */
+  .runner {
+    position: absolute;
+    inset-inline-start: calc(var(--progress) * 100%);
+    inset-block-start: var(--runner-y, 100%);
+    inline-size: var(--tram-sys-space-5);
+    block-size: var(--tram-sys-space-5);
+    transform: translate(-50%, -50%);
+    overflow: visible;
+    fill: var(--tram-sys-data-active);
+    stroke: var(--tram-sys-data-active-outline);
+    stroke-width: 2;
+  }
+
+  .ahead .area {
+    fill: var(--tram-sys-surface-alt);
+  }
+
+  .ahead .line {
+    fill: none;
+    stroke: var(--tram-sys-rule-strong);
+    stroke-width: var(--tram-sys-line-hairline);
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* What has been run: the same shape, revealed up to the runner. */
+  .done {
+    clip-path: inset(0 calc((1 - var(--progress)) * 100%) 0 0);
+  }
+
+  .done .area {
+    fill: var(--tram-sys-map-contour);
+    fill-opacity: 0.5;
+  }
+
+  .done .line {
+    fill: none;
+    stroke: var(--tram-sys-data-primary);
+    stroke-width: var(--tram-sys-line-strong);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .readout {
+    grid-area: readout;
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--tram-sys-space-3);
+  }
+
+  .name,
+  .label,
+  .stats dt,
+  .hint {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .km {
+    display: grid;
+  }
+
+  .figure,
+  .stats dd {
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  /* Units step back, as in Measure. */
+  .unit {
+    font-size: 0.36em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    vertical-align: 0.12em;
+    color: var(--tram-sys-text-muted);
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, max-content));
+    gap: var(--tram-sys-space-2) var(--tram-sys-space-7);
+    margin: 0;
+  }
+
+  /* The chapter is text, not the main action: no accent (7.3). */
+  .chapter:empty {
+    visibility: hidden;
+  }
+
+  .chapter {
+    min-block-size: 1.2em;
+    margin: 0;
+    padding-inline-start: var(--tram-sys-space-3);
+    border-inline-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+    color: var(--tram-sys-text);
+  }
+
+  .foot {
+    grid-area: foot;
+    position: relative;
+    display: grid;
+    gap: var(--tram-sys-space-2);
+    padding-block-start: var(--tram-sys-space-3);
+    border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+    background: var(--tram-sys-surface);
+  }
+
+  @media (width < 48rem) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, max-content));
+    }
+  }
+
+  @media (width >= 64rem) {
+    .stage {
+      grid-template-areas: 'readout silhouette' 'foot foot';
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      grid-template-rows: minmax(0, 1fr) auto;
+      column-gap: var(--tram-sys-space-7);
+    }
+
+    .sky {
+      block-size: 80%;
+      align-self: end;
+    }
+  }
+</style>

@@ -14,6 +14,7 @@ Plataforma de running d'asfalt i trail running. Abans d'escriure codi, llegiu [`
 | Tokens de tipografia | Fet: rols `[data-type]` i fonts a `packages/design-system/fonts/` |
 | E15 · Perfil altimètric | Decidida (SVG artesanal) i provada amb dos GPX reals: [`docs/explorations/E15-elevation-profile.md`](docs/explorations/E15-elevation-profile.md) |
 | E09 · Color i mode nit | Paleta validada, pendent de la prova a l'exterior: [`docs/explorations/E09-color-and-night.md`](docs/explorations/E09-color-and-night.md) |
+| M2 · Recórrer el tram | Prototip al catàleg (`/ds/moments/recorrer-el-tram/`), amb scroll i dades reals; el 3D, a la Fase 1 |
 | Lint (Stylelint, ESLint) | Fet: `pnpm lint`, regles de la secció 6.6 de `CLAUDE.md` |
 
 ## Requisits

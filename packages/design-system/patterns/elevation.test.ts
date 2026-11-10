@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { areaPath, createPlot, detectClimbs, elevationDomain, gradeBands, kmStretches, linePath, nearestPoint, type ProfilePoint, summarize, ticks } from './elevation.ts';
+import { areaPath, createPlot, cumulativeGain, detectClimbs, elevationAt, elevationDomain, gainAt, gradeAt, gradeBands, kmStretches, linePath, nearestPoint, type ProfilePoint, summarize, ticks } from './elevation.ts';
 
 /** A route made of [length in km, grade in %] stretches, one point every 50 m. */
 function route(stretches: Array<[number, number]>): ProfilePoint[] {
@@ -139,5 +139,24 @@ describe('detectClimbs', () => {
   it('measures the steepest 100 m inside the climb', () => {
     const [climb] = detectClimbs(route([[1, 5], [0.3, 20], [1, 5]]));
     assert.ok(climb!.maxGrade > 18);
+  });
+});
+
+describe('values along the route', () => {
+  const ramp = route([[1, 10]]);
+
+  it('interpolates the elevation between points', () => {
+    assert.ok(Math.abs(elevationAt(ramp, 0.525) - 552.5) < 0.01);
+  });
+
+  it('gives the grade around a kilometre', () => {
+    assert.ok(Math.abs(gradeAt(ramp, 0.5) - 10) < 0.01);
+  });
+
+  it('accumulates the gain, and it matches the summary at the end', () => {
+    const hill = route([[1, 10], [1, -10], [1, 6]]);
+    const gains = cumulativeGain(hill);
+    assert.equal(gainAt(hill, gains, 3), Math.round(summarize(hill).gainM));
+    assert.ok(gainAt(hill, gains, 1.5) <= gainAt(hill, gains, 3));
   });
 });

@@ -270,3 +270,55 @@ export function detectClimbs(points: readonly ProfilePoint[], minGainM = 40, min
   close();
   return climbs;
 }
+
+/** Index of the last point at or before `km`. */
+function indexAt(points: readonly ProfilePoint[], km: number): number {
+  let lo = 0;
+  let hi = points.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    if (points[mid]![0] <= km) lo = mid;
+    else hi = mid - 1;
+  }
+  return lo;
+}
+
+/** Elevation at `km`, interpolated between the two surrounding points. */
+export function elevationAt(points: readonly ProfilePoint[], km: number): number {
+  const i = indexAt(points, km);
+  const a = points[i]!;
+  const b = points[Math.min(i + 1, points.length - 1)]!;
+  if (b[0] === a[0]) return a[1];
+  const t = Math.min(1, Math.max(0, (km - a[0]) / (b[0] - a[0])));
+  return a[1] + (b[1] - a[1]) * t;
+}
+
+/** Grade at `km`, measured over `windowKm` centred on it, in %. */
+export function gradeAt(points: readonly ProfilePoint[], km: number, windowKm = 0.2): number {
+  const first = points[0]![0];
+  const last = points.at(-1)![0];
+  const from = Math.max(first, km - windowKm / 2);
+  const to = Math.min(last, km + windowKm / 2);
+  if (to <= from) return 0;
+  return ((elevationAt(points, to) - elevationAt(points, from)) / ((to - from) * 1000)) * 100;
+}
+
+/** Positive elevation gained up to each point, with the same noise threshold as `summarize`. */
+export function cumulativeGain(points: readonly ProfilePoint[], threshold = 3): number[] {
+  const out: number[] = [];
+  let gain = 0;
+  let reference = points[0]![1];
+  for (const [, e] of points) {
+    if (e - reference >= threshold) {
+      gain += e - reference;
+      reference = e;
+    } else if (reference - e >= threshold) {
+      reference = e;
+    }
+    out.push(gain);
+  }
+  return out;
+}
+
+/** Gain up to `km`, from `cumulativeGain`. */
+export const gainAt = (points: readonly ProfilePoint[], gains: readonly number[], km: number): number => gains[indexAt(points, km)]!;

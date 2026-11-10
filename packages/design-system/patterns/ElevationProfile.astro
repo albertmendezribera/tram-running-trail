@@ -21,6 +21,11 @@ export interface Props {
   pois?: readonly Poi[];
   /** Marks the highest point and the steepest stretch, computed from the points. */
   annotate?: boolean;
+  /**
+   * Adds a cursor that a script moves with `profileCursor()` from elevation-cursor.ts.
+   * The profile itself still ships no JavaScript: the page that wants the cursor imports it.
+   */
+  cursor?: boolean;
   locale?: Locale;
 }
 
@@ -47,7 +52,7 @@ const HATCH_GAP = [0, 9, 6, 4];
 const WIDTH = 1000;
 const HEIGHT = 300;
 
-const { points, label, pois = [], annotate = true, locale = 'ca' } = Astro.props;
+const { points, label, pois = [], annotate = true, cursor = false, locale = 'ca' } = Astro.props;
 const copy = COPY[locale];
 const hasRoute = points.length >= 2;
 
@@ -112,7 +117,8 @@ const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nea
   !plot ? (
     <p class="absent" data-type="text-sm">{copy.absent}</p>
   ) : (
-    <figure class="profile">
+    <figure class="profile" data-cursor={cursor ? '' : undefined}>
+      {cursor && <script type="application/json" data-points set:html={JSON.stringify({ points, low: domain[0], high: domain[1] })} />}
       <div class="chart">
         <span class="unit" data-type="text-xs">m</span>
         <span />
@@ -139,6 +145,15 @@ const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nea
                 <path d={PICTOGRAM[p.kind]} />
               </svg>
             ))
+          }
+          {
+            cursor && (
+              <div class="cursor" data-cursor-mark hidden aria-hidden="true">
+                <svg class="cursor-dot" viewBox="-7 -7 14 14">
+                  <circle r="5.5" />
+                </svg>
+              </div>
+            )
           }
           {
             summit && (
@@ -299,6 +314,30 @@ const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nea
     block-size: var(--tram-sys-space-4);
     transform: translate(-50%, -150%);
     fill: var(--tram-sys-text);
+  }
+
+  /* The active point: signal colour with its mandatory outline (E09). */
+  .cursor {
+    position: absolute;
+    inset-block: 0;
+    border-inline-start: var(--tram-sys-line-strong) solid var(--tram-sys-data-active-outline);
+    pointer-events: none;
+  }
+
+  .cursor-dot {
+    position: absolute;
+    inset-block-start: var(--dot, 50%);
+    inline-size: var(--tram-sys-space-4);
+    block-size: var(--tram-sys-space-4);
+    transform: translate(calc(-50% - var(--tram-sys-line-strong) / 2), -50%);
+    overflow: visible;
+    fill: var(--tram-sys-data-active);
+    stroke: var(--tram-sys-data-active-outline);
+    stroke-width: 2;
+  }
+
+  [data-cursor] .plot {
+    cursor: crosshair;
   }
 
   /* Annotations: computed from the points, never drawn by hand (CLAUDE.md 2.3). */

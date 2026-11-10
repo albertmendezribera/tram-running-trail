@@ -9,6 +9,7 @@ export const NAV = [
   { href: '/ds/patterns/climb-list/', title: 'ClimbList' },
   { href: '/ds/interactive/segmented-control/', title: 'SegmentedControl' },
   { href: '/ds/interactive/viewer-3d-shell/', title: 'Viewer3DShell' },
+  { href: '/ds/moments/recorrer-el-tram/', title: 'M2 · Recórrer el tram' },
 ] as const;
 
 export const MODES = [

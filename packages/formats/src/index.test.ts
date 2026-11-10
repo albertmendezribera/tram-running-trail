@@ -50,6 +50,7 @@ describe('formatMeasure', () => {
     assert.equal(formatNumber(1400, 'ca'), '1.400');
     assert.equal(formatNumber(1400, 'en'), '1,400');
     assert.equal(formatNumber(2.5, 'ca'), '2,5');
+    assert.equal(formatNumber(4.2, 'ca', 2, 2), '4,20');
   });
 
   it('labels the absent value for screen readers', () => {

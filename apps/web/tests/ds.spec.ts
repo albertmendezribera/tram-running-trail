@@ -223,6 +223,65 @@ test.describe('ClimbList', () => {
   });
 });
 
+test.describe('M2 · Recórrer el tram', () => {
+  const MOMENT = '/ds/moments/recorrer-el-tram/';
+  const runTo = async (page: Page, share: number): Promise<void> => {
+    await page.evaluate((s) => {
+      const track = document.querySelector('[data-track]')!;
+      const box = track.getBoundingClientRect();
+      window.scrollTo(0, window.scrollY + box.top + s * (box.height - window.innerHeight));
+    }, share);
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+  };
+  const out = (page: Page, name: string) => page.locator(`[data-out="${name}"]`);
+
+  test('runs the route with the scroll, from start to finish', async ({ page }) => {
+    await open(page, MOMENT);
+    await expect(page.locator('tram-route-scroller')).toHaveAttribute('data-live', '');
+    await expect(out(page, 'km')).toHaveText('0,00');
+    await runTo(page, 0.3);
+    await expect(out(page, 'chapter')).toContainText('Pujada 1');
+    expect(Number((await out(page, 'gain').textContent())!.replace('.', ''))).toBeGreaterThan(0);
+    await runTo(page, 1);
+    await expect(out(page, 'km')).toHaveText('12,41');
+    await expect(out(page, 'chapter')).toHaveText('Arribada');
+  });
+
+  test('matches its baseline in the middle of the climb', async ({ page }) => {
+    await open(page, MOMENT);
+    await runTo(page, 0.3);
+    await expect(page).toHaveScreenshot('moment-climb.png');
+  });
+
+  test('jumps to a kilometre when the profile is clicked', async ({ page }) => {
+    await open(page, MOMENT);
+    await runTo(page, 0.1);
+    const plot = page.locator('tram-route-scroller .plot');
+    const box = (await plot.boundingBox())!;
+    await page.mouse.click(box.x + box.width * 0.75, box.y + box.height / 2);
+    await expect.poll(async () => Number((await out(page, 'km').textContent())!.replace(',', '.'))).toBeGreaterThan(8);
+  });
+
+  test('has no horizontal overflow and is not indexable', async ({ page }) => {
+    await open(page, MOMENT);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+  });
+});
+
+test.describe('M2 without JavaScript', () => {
+  test.use({ javaScriptEnabled: false });
+
+  test('is a readable static sheet, without the long scroll', async ({ page }) => {
+    await page.goto('/ds/moments/recorrer-el-tram/');
+    await expect(page.locator('tram-route-scroller')).not.toHaveAttribute('data-live', '');
+    await expect(page.locator('[data-out="km"]')).toHaveText('0,00');
+    await expect(page.getByText('Full de resultats')).toBeVisible();
+    const track = await page.locator('[data-track]').boundingBox();
+    expect(track!.height).toBeLessThan(2 * (page.viewportSize()!.height));
+  });
+});
+
 test('StatBlock pairs each label with its figure', async ({ page }) => {
   await open(page, PAGES['stat-block']);
   const block = page.getByTestId('road');

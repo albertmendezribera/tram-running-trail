@@ -38,6 +38,13 @@ Passada visual.
 - Portada del catàleg composta amb una sortida real.
 - Captures: `docs/explorations/visual-pass/`.
 
+Moment firma M2, "Recórrer el tram" (prototip al catàleg).
+
+- `RouteScroller` (interactiu): el recorregut es fa amb el scroll. Té un marcador en directe (km, altitud, desnivell acumulat i pendent), una silueta que s'omple amb el punt del corredor, capítols per pujada i un perfil enganxat a sota. Clicar el perfil salta a aquell punt. Sense JavaScript queda com un full estàtic.
+- `ElevationProfile` admet `cursor`. El controla `elevation-cursor.ts`, que emet `tram:km` per sincronitzar-lo, per exemple amb el 3D. El perfil continua sense JavaScript si no es fa servir.
+- Funcions noves: `elevationAt`, `gradeAt`, `cumulativeGain` i `gainAt`. `formatNumber` accepta un mínim de decimals.
+- El vol 3D (Three.js i terreny) arriba a la Fase 1: E01, E02 i E04.
+
 ## 0.1.0 · 2026-11-09
 
 Primera versió del pipeline (E16).

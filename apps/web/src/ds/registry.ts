@@ -5,6 +5,7 @@ import ElevationFiche from './fiches/ElevationFiche.astro';
 import Foundations from './fiches/Foundations.astro';
 import Index from './fiches/Index.astro';
 import MeasureFiche from './fiches/MeasureFiche.astro';
+import MomentM2 from './fiches/MomentM2.astro';
 import SegmentedFiche from './fiches/SegmentedFiche.astro';
 import StatBlockFiche from './fiches/StatBlockFiche.astro';
 import ViewerFiche from './fiches/ViewerFiche.astro';
@@ -20,4 +21,5 @@ export const FICHES = [
   { slug: 'patterns/climb-list', title: 'ClimbList', Page: ClimbFiche },
   { slug: 'interactive/segmented-control', title: 'SegmentedControl', Page: SegmentedFiche },
   { slug: 'interactive/viewer-3d-shell', title: 'Viewer3DShell', Page: ViewerFiche },
+  { slug: 'moments/recorrer-el-tram', title: 'M2 · Recórrer el tram', Page: MomentM2 },
 ];

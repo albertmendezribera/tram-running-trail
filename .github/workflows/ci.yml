@@ -3,7 +3,9 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    # ccr-675b03db-ncu0p6 is the repository's default branch until it is renamed to main.
+    branches: [main, ccr-675b03db-ncu0p6]
+  workflow_dispatch:
 
 jobs:
   design-system:

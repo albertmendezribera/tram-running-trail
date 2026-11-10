@@ -135,10 +135,10 @@ export const tramEchartsThemes = {
       },
       "axisPointer": {
         "lineStyle": {
-          "color": "#ff5a1f"
+          "color": "#141518"
         },
         "crossStyle": {
-          "color": "#ff5a1f"
+          "color": "#141518"
         }
       }
     }
@@ -275,10 +275,10 @@ export const tramEchartsThemes = {
       },
       "axisPointer": {
         "lineStyle": {
-          "color": "#ff5a1f"
+          "color": "#e8e5dc"
         },
         "crossStyle": {
-          "color": "#ff5a1f"
+          "color": "#e8e5dc"
         }
       }
     }

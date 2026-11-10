@@ -20,6 +20,14 @@ Catàleg i primers components (E17).
 - Components: `Measure`, `DataTable`, `Bib`, `StatBlock`, `ElevationProfile`, `SegmentedControl` i `Viewer3DShell`, amb fitxa a `/ds/`.
 - Captures de regressió: `apps/web/tests/__screenshots__/`.
 
+Color (E09).
+
+- `ref.signal-ink`: de `#c52e00` a `#bc2300`, perquè `sys.accent.text` arribi a 4,5:1 també sobre `surface.alt`.
+- Rol nou `sys.data.active.outline`: contorn obligatori del punt actiu, que resol el 2,64:1 de `--signal` sobre paper. El cursor d'ECharts el fa servir.
+- Regles de contrast noves: `accent.text` sobre `surface.alt` i el contorn del punt actiu. La build ja no mostra cap avís.
+- Els 6 colors derivats d'E16 queden validats.
+- Captures: `docs/explorations/E09/`.
+
 ## 0.1.0 · 2026-11-09
 
 Primera versió del pipeline (E16).

@@ -79,7 +79,7 @@ const BASE: Record<string, unknown> = {
         trail: { $value: '{ref.contour}' },
         primary: { $value: '{sys.text}' },
         road: { $value: '{ref.ink}' },
-        active: { $value: '{ref.contour}' },
+        active: { $root: { $value: '{ref.contour}' }, outline: { $value: '{sys.text}' } },
       },
       map: { water: { $value: '{ref.contour}' }, vegetation: { $value: '{ref.contour}' } },
       space: {
@@ -333,8 +333,15 @@ describe('TRAM tokens', () => {
     }
   });
 
-  it('surface the open signal-on-paper contrast issue as a warning (E09)', () => {
-    assert.ok(r.diagnostics.warnings.some((w) => /sys\.data\.active on sys\.surface is 2\.64:1/.test(w.message)));
+  it('build without contrast warnings: the active point relies on its outline (E09)', () => {
+    assert.deepEqual(r.diagnostics.warnings.map(formatDiagnostic), []);
+    assert.ok(r.set!.manifest.contrast.some((c) => c.fg === 'sys.data.active.outline' && c.min === 3 && c.level === 'error'));
+  });
+
+  it('keep the text accent legible on both surfaces (E09)', () => {
+    for (const bg of ['sys.surface', 'sys.surface.alt']) {
+      assert.ok(r.set!.manifest.contrast.some((c) => c.fg === 'sys.accent.text' && c.bg === bg && c.min === 4.5));
+    }
   });
 
   it('never use slate blue for night (CLAUDE.md 7.8)', () => {

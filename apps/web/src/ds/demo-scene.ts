@@ -25,7 +25,7 @@ export function createDemoScene({ container }: SceneContext): Scene {
     return value;
   };
   const surface = color('--tram-sys-surface-alt');
-  const line = color('--tram-sys-text');
+  const line = color('--tram-sys-data-active-outline');
   const active = color('--tram-sys-data-active');
 
   const KM = 10;

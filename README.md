@@ -13,7 +13,7 @@ Plataforma de running d'asfalt i trail running. Abans d'escriure codi, llegiu [`
 | E08 · Tipografia | Decidida (Sofia Sans), pendent de la prova amb dades reals: [`docs/explorations/E08-typography.md`](docs/explorations/E08-typography.md) |
 | Tokens de tipografia | Fet: rols `[data-type]` i fonts a `packages/design-system/fonts/` |
 | E15 · Perfil altimètric | Decidida (SVG artesanal), pendent de la prova amb un GPX real: [`docs/explorations/E15-elevation-profile.md`](docs/explorations/E15-elevation-profile.md) |
-| E09 · Color i mode nit | Pendent (hipòtesis i problemes oberts a E16) |
+| E09 · Color i mode nit | Paleta validada, pendent de la prova a l'exterior: [`docs/explorations/E09-color-and-night.md`](docs/explorations/E09-color-and-night.md) |
 | Lint (Stylelint, ESLint) | Fet: `pnpm lint`, regles de la secció 6.6 de `CLAUDE.md` |
 
 ## Requisits

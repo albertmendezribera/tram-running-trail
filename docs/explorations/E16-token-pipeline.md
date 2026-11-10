@@ -72,8 +72,8 @@ Làmina de prova (no és UI de producte) generada amb `pnpm --filter @tram/desig
 Observacions de les captures (per a E09):
 - **`data-road` i `data-primary` (mixt) gairebé no es distingeixen:** #2b2d31 contra #141518 en clar, i #f2eee3 contra #e8e5dc en nit. És una confirmació visual de 7.3: asfalt i trail s'han de diferenciar per patró (traç continu o discontinu, trama), no per color. Els components de dades ho han de garantir.
 - **`--signal` sobre `--paper` fa 2,64:1.** Queda per sota del 3:1 de WCAG 1.4.11 per a elements gràfics i lluny del 4,5:1 per a text. Per això:
-  - `sys.accent-text` fa servir `ref.signal-ink` (#c52e00, 4,72:1) per a text sobre paper. De nit, `--signal` ja arriba a 6,15:1.
-  - El punt actiu (`sys.data-active`) ha de portar un contorn `sys.text`. La build en mostra un avís perquè no quedi oblidat fins que E09 ho tanqui.
+  - `sys.accent-text` fa servir `ref.signal-ink` (#c52e00, 4,72:1) per a text sobre paper; E09 el va enfosquir a #bc2300 perquè també complís sobre `surface.alt`. De nit, `--signal` ja arriba a 6,15:1.
+  - El punt actiu (`sys.data-active`) ha de portar un contorn `sys.text`. La build en mostrava un avís fins que E09 ho va tancar amb el contorn obligatori `sys.data.active.outline`.
 - Els colors derivats (`ink-muted`, `paper-shade`, `paper-rule`, `carbon`, `night-rule`, `night-text-muted`, `signal-ink`) surten de barreges OKLab a partir de la paleta 7.3. La derivació és al `$extensions.com.tramrun` de cada token.
 
 ## Recomanació

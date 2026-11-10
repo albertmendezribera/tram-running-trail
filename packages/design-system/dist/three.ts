@@ -2,7 +2,7 @@
 
 export type TramTheme = "light" | "night";
 export type TramTerrain = "mixed" | "road" | "trail";
-export type TramColorName = "surface" | "surface-alt" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "map-contour" | "map-vegetation" | "map-water";
+export type TramColorName = "surface" | "surface-alt" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "data-active-outline" | "map-contour" | "map-vegetation" | "map-water";
 
 export interface TramThreeColor {
   readonly hex: number;
@@ -49,9 +49,9 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [1, 0.10224, 0.0137]
       },
       "accent-text": {
-        "hex": 0xc52e00,
-        "srgb": [0.7725, 0.1804, 0],
-        "linear": [0.55834, 0.02732, 0]
+        "hex": 0xbc2300,
+        "srgb": [0.7373, 0.1373, 0],
+        "linear": [0.50289, 0.01681, 0]
       },
       "on-accent": {
         "hex": 0x141518,
@@ -82,6 +82,11 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "hex": 0xff5a1f,
         "srgb": [1, 0.3529, 0.1216],
         "linear": [1, 0.10224, 0.0137]
+      },
+      "data-active-outline": {
+        "hex": 0x141518,
+        "srgb": [0.0784, 0.0824, 0.0941],
+        "linear": [0.007, 0.0075, 0.00913]
       },
       "map-contour": {
         "hex": 0x9c6237,
@@ -136,9 +141,9 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [1, 0.10224, 0.0137]
       },
       "accent-text": {
-        "hex": 0xc52e00,
-        "srgb": [0.7725, 0.1804, 0],
-        "linear": [0.55834, 0.02732, 0]
+        "hex": 0xbc2300,
+        "srgb": [0.7373, 0.1373, 0],
+        "linear": [0.50289, 0.01681, 0]
       },
       "on-accent": {
         "hex": 0x141518,
@@ -169,6 +174,11 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "hex": 0xff5a1f,
         "srgb": [1, 0.3529, 0.1216],
         "linear": [1, 0.10224, 0.0137]
+      },
+      "data-active-outline": {
+        "hex": 0x141518,
+        "srgb": [0.0784, 0.0824, 0.0941],
+        "linear": [0.007, 0.0075, 0.00913]
       },
       "map-contour": {
         "hex": 0x9c6237,
@@ -223,9 +233,9 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [1, 0.10224, 0.0137]
       },
       "accent-text": {
-        "hex": 0xc52e00,
-        "srgb": [0.7725, 0.1804, 0],
-        "linear": [0.55834, 0.02732, 0]
+        "hex": 0xbc2300,
+        "srgb": [0.7373, 0.1373, 0],
+        "linear": [0.50289, 0.01681, 0]
       },
       "on-accent": {
         "hex": 0x141518,
@@ -256,6 +266,11 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "hex": 0xff5a1f,
         "srgb": [1, 0.3529, 0.1216],
         "linear": [1, 0.10224, 0.0137]
+      },
+      "data-active-outline": {
+        "hex": 0x141518,
+        "srgb": [0.0784, 0.0824, 0.0941],
+        "linear": [0.007, 0.0075, 0.00913]
       },
       "map-contour": {
         "hex": 0x9c6237,
@@ -346,6 +361,11 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "srgb": [1, 0.3529, 0.1216],
         "linear": [1, 0.10224, 0.0137]
       },
+      "data-active-outline": {
+        "hex": 0xe8e5dc,
+        "srgb": [0.9098, 0.898, 0.8627],
+        "linear": [0.80695, 0.78354, 0.71569]
+      },
       "map-contour": {
         "hex": 0x9c6237,
         "srgb": [0.6118, 0.3843, 0.2157],
@@ -433,6 +453,11 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "srgb": [1, 0.3529, 0.1216],
         "linear": [1, 0.10224, 0.0137]
       },
+      "data-active-outline": {
+        "hex": 0xe8e5dc,
+        "srgb": [0.9098, 0.898, 0.8627],
+        "linear": [0.80695, 0.78354, 0.71569]
+      },
       "map-contour": {
         "hex": 0x9c6237,
         "srgb": [0.6118, 0.3843, 0.2157],
@@ -519,6 +544,11 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "hex": 0xff5a1f,
         "srgb": [1, 0.3529, 0.1216],
         "linear": [1, 0.10224, 0.0137]
+      },
+      "data-active-outline": {
+        "hex": 0xe8e5dc,
+        "srgb": [0.9098, 0.898, 0.8627],
+        "linear": [0.80695, 0.78354, 0.71569]
       },
       "map-contour": {
         "hex": 0x9c6237,

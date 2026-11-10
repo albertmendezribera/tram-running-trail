@@ -37,6 +37,7 @@
     { "fg": "sys.text.muted", "bg": "sys.surface", "min": 4.5 },
     { "fg": "sys.text.muted", "bg": "sys.surface.alt", "min": 4.5 },
     { "fg": "sys.accent.text", "bg": "sys.surface", "min": 4.5 },
+    { "fg": "sys.accent.text", "bg": "sys.surface.alt", "min": 4.5 },
     { "fg": "sys.on-accent", "bg": "sys.accent", "min": 4.5 },
     { "fg": "sys.focus", "bg": "sys.surface", "min": 3 },
     { "fg": "sys.data.road", "bg": "sys.surface", "min": 3 },
@@ -45,6 +46,7 @@
     { "fg": "sys.map.contour", "bg": "sys.surface", "min": 3 },
     { "fg": "sys.map.vegetation", "bg": "sys.surface", "min": 3 },
     { "fg": "sys.map.water", "bg": "sys.surface", "min": 3 },
-    { "fg": "sys.data.active", "bg": "sys.surface", "min": 3, "level": "warn", "note": "Obert a E09: el punt actiu ha de portar contorn sys.text sobre paper." }
+    { "fg": "sys.data.active.outline", "bg": "sys.surface", "min": 3 },
+    { "fg": "sys.data.active.outline", "bg": "sys.surface.alt", "min": 3 }
   ]
 }

@@ -140,9 +140,9 @@
       "$description": "Text secundari sobre paper. Barreja OKLab ink→paper al 35 %: 6,12:1 sobre paper.",
       "$extensions": {
         "com.tramrun": {
-          "status": "hypothesis",
-          "validateIn": "E09",
-          "derivedFrom": "mix(ink, paper, 0.35) in OKLab"
+          "status": "validated",
+          "derivedFrom": "mix(ink, paper, 0.35) in OKLab",
+          "validatedIn": "E09"
         }
       }
     },
@@ -155,9 +155,9 @@
       "$description": "Superfície alternativa (bandes de taula). Barreja OKLab paper→ink al 5 %.",
       "$extensions": {
         "com.tramrun": {
-          "status": "hypothesis",
-          "validateIn": "E09",
-          "derivedFrom": "mix(paper, ink, 0.05) in OKLab"
+          "status": "validated",
+          "derivedFrom": "mix(paper, ink, 0.05) in OKLab",
+          "validatedIn": "E09"
         }
       }
     },
@@ -170,24 +170,24 @@
       "$description": "Filet fi sobre paper. Barreja OKLab ink→paper al 80 %.",
       "$extensions": {
         "com.tramrun": {
-          "status": "hypothesis",
-          "validateIn": "E09",
-          "derivedFrom": "mix(ink, paper, 0.80) in OKLab"
+          "status": "validated",
+          "derivedFrom": "mix(ink, paper, 0.80) in OKLab",
+          "validatedIn": "E09"
         }
       }
     },
     "signal-ink": {
       "$value": {
         "colorSpace": "srgb",
-        "components": [0.7725, 0.1804, 0],
-        "hex": "#c52e00"
+        "components": [0.7373, 0.1373, 0],
+        "hex": "#bc2300"
       },
-      "$description": "Senyal fosc per a text sobre paper: --signal només fa 2,64:1. Aquest fa 4,72:1.",
+      "$description": "Senyal fosc per a text sobre paper: --signal només fa 2,64:1. Aquest fa 5,26:1 sobre paper i 4,70:1 sobre paper-shade.",
       "$extensions": {
         "com.tramrun": {
-          "status": "hypothesis",
-          "validateIn": "E09",
-          "derivedFrom": "signal darkened in OKLab L until >= 4.7:1 on paper"
+          "status": "validated",
+          "validatedIn": "E09",
+          "derivedFrom": "signal darkened in OKLab L, keeping hue and chroma, until >= 4.6:1 on paper-shade"
         }
       }
     },
@@ -200,9 +200,9 @@
       "$description": "Superfície alternativa del mode nit. Barreja OKLab night→night-text al 6 %.",
       "$extensions": {
         "com.tramrun": {
-          "status": "hypothesis",
-          "validateIn": "E09",
-          "derivedFrom": "mix(night, night-text, 0.06) in OKLab"
+          "status": "validated",
+          "derivedFrom": "mix(night, night-text, 0.06) in OKLab",
+          "validatedIn": "E09"
         }
       }
     },
@@ -215,9 +215,9 @@
       "$description": "Filet fi del mode nit. Barreja OKLab night→night-text al 18 %.",
       "$extensions": {
         "com.tramrun": {
-          "status": "hypothesis",
-          "validateIn": "E09",
-          "derivedFrom": "mix(night, night-text, 0.18) in OKLab"
+          "status": "validated",
+          "derivedFrom": "mix(night, night-text, 0.18) in OKLab",
+          "validatedIn": "E09"
         }
       }
     },
@@ -230,9 +230,9 @@
       "$description": "Text secundari del mode nit: 6,10:1 sobre night.",
       "$extensions": {
         "com.tramrun": {
-          "status": "hypothesis",
-          "validateIn": "E09",
-          "derivedFrom": "mix(night-text, night, 0.35) in OKLab"
+          "status": "validated",
+          "derivedFrom": "mix(night-text, night, 0.35) in OKLab",
+          "validatedIn": "E09"
         }
       }
     }

@@ -16,7 +16,7 @@
     --tram-ref-ink-muted: #575757;
     --tram-ref-paper-shade: #e2e0d8;
     --tram-ref-paper-rule: #bebcb6;
-    --tram-ref-signal-ink: #c52e00;
+    --tram-ref-signal-ink: #bc2300;
     --tram-ref-carbon: #18191b;
     --tram-ref-night-rule: #2e2f2f;
     --tram-ref-night-text-muted: #93918d;
@@ -75,6 +75,7 @@
     --tram-sys-data-trail: var(--tram-ref-contour);
     --tram-sys-data-primary: var(--tram-sys-text);
     --tram-sys-data-active: var(--tram-ref-signal);
+    --tram-sys-data-active-outline: var(--tram-sys-text);
     --tram-sys-map-contour: var(--tram-ref-contour);
     --tram-sys-map-vegetation: var(--tram-ref-moss);
     --tram-sys-map-water: var(--tram-ref-water);

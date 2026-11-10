@@ -8,7 +8,7 @@ const outDir = process.argv[2] ?? path.join(__dirname, '../../../docs/exploratio
 const groups = {
   'Superfície i text': ['surface','surface-alt','text','text-muted','rule','rule-strong','focus'],
   'Accent (únic)': ['accent','accent-text','on-accent'],
-  'Dades': ['data-road','data-trail','data-primary','data-active'],
+  'Dades': ['data-road','data-trail','data-primary','data-active','data-active-outline'],
   'Mapa': ['map-contour','map-vegetation','map-water'],
 };
 const html = (theme) => `<!doctype html><html data-theme="${theme}"><meta charset="utf-8"><style>${css}
@@ -28,7 +28,7 @@ const html = (theme) => `<!doctype html><html data-theme="${theme}"><meta charse
   .mode { background: var(--tram-sys-surface); color: var(--tram-sys-text); padding: var(--tram-sys-space-4); border-bottom: 1px solid var(--tram-sys-rule); }
   .mode svg { display: block; width: 100%; height: 56px; }
   .mode path { fill: none; stroke: var(--tram-sys-data-primary); stroke-width: 2; }
-  .mode circle { fill: var(--tram-sys-data-active); stroke: var(--tram-sys-text); stroke-width: 1.5; }
+  .mode circle { fill: var(--tram-sys-data-active); stroke: var(--tram-sys-data-active-outline); stroke-width: 1.5; }
   table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
   th, td { padding: var(--tram-sys-space-cell-y) var(--tram-sys-space-cell-x); border-bottom: 1px solid var(--tram-sys-rule); text-align: right; }
   th:first-child, td:first-child { text-align: left; }

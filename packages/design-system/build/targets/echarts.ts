@@ -11,7 +11,7 @@ const COLOR_TOKENS = [
   'sys.rule.strong',
   'sys.data.road',
   'sys.data.trail',
-  'sys.data.active',
+  'sys.data.active.outline',
   'sys.map.water',
   'sys.map.vegetation',
 ] as const;
@@ -69,7 +69,8 @@ export function emitEcharts(set: TokenSet): string {
         borderColor: c('sys.rule.strong'),
         padding: [s('sys.space.2'), s('sys.space.3')],
         textStyle: { color: c('sys.text') },
-        axisPointer: { lineStyle: { color: c('sys.data.active') }, crossStyle: { color: c('sys.data.active') } },
+        // The cursor line is thin: the signal colour alone is 2.64:1 on paper (E09).
+        axisPointer: { lineStyle: { color: c('sys.data.active.outline') }, crossStyle: { color: c('sys.data.active.outline') } },
       },
     };
   }

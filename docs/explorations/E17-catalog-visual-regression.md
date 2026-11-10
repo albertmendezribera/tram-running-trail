@@ -1,6 +1,6 @@
 # E17 · Catàleg i regressió visual
 
-**Estat:** recomanació feta i implementada; falta veure-la funcionar a GitHub Actions · **Data:** 2026-11-09 · **Recomanació:** catàleg intern `/ds/` amb Astro + Playwright
+**Estat:** implementada i en marxa a GitHub Actions · **Data:** 2026-11-09 · **Recomanació:** catàleg intern `/ds/` amb Astro + Playwright
 
 ## Pregunta
 
@@ -72,7 +72,7 @@ Els estats de càrrega i d'error no s'apliquen a aquests tres components, i la f
 
 ## Pendent
 
-- **Veure el job `visual` a GitHub Actions.** Només s'ha provat la mateixa imatge en local.
+- ~~Veure el job `visual` a GitHub Actions.~~ Fet el 2026-11-10: la primera execució passa, i les captures generades en local amb emulació x86 coincideixen amb les de GitHub. En un Mac de 8 GB, l'emulació pot quedar-se sense memòria: per a les proves de funcionament es pot fer servir `playwright test --ignore-snapshots` sense Docker.
 - URL de previsualització del catàleg.
 - Regles de Stylelint i ESLint (6.6).
 - Resta de components i fonaments de F0: moviment, capes, breakpoints i graella.

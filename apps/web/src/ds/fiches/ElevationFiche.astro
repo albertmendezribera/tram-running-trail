@@ -1,8 +1,10 @@
 ---
 import ElevationProfile from '@tram/design-system/patterns/ElevationProfile.astro';
+import Measure from '@tram/design-system/primitives/Measure.astro';
 import Fiche from '../Fiche.astro';
 import Mode from '../Mode.astro';
 import { MODES } from '../nav';
+import { CALONGE, SILS } from '../real-profile';
 import { ROAD, TRAIL, TRAIL_POIS } from '../sample-profile';
 
 const code = `<ElevationProfile
@@ -18,6 +20,18 @@ const code = `<ElevationProfile
   avoid="Gràfics de ritme o de parcials: per a això hi ha els gràfics d'ECharts."
   code={code}
 >
+  <section class="fiche-block" data-testid="real-trail">
+    <h2 data-type="text-sm">Recorregut real: sortida a Calonge</h2>
+    <p class="fiche-note">Dades reals d'un GPX de COROS, amb el mateix tractament: un recorregut de muntanya amb bandes de pendent de veritat.</p>
+    <ElevationProfile label="Perfil de la sortida a Calonge" points={CALONGE} />
+  </section>
+
+  <section class="fiche-block" data-testid="real">
+    <h2 data-type="text-sm">Recorregut real: sortida a Sils</h2>
+    <p class="fiche-note">Dades reals d'un GPX de COROS: només distància i altitud, un punt cada <Measure value={20} unit="m" type="data-sm" />. És gairebé pla, i l'escala mínima evita que sembli una muntanya.</p>
+    <ElevationProfile label="Perfil de la sortida a Sils" points={SILS} />
+  </section>
+
   <section class="fiche-block" data-testid="trail">
     <h2 data-type="text-sm">Muntanya, amb punts d'interès</h2>
     <ElevationProfile label="Perfil de mostra de muntanya" points={TRAIL} pois={TRAIL_POIS} />

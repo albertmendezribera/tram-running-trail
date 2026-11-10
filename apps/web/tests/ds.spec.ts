@@ -113,6 +113,21 @@ test.describe('ElevationProfile', () => {
     expect(await page.locator('script[src]').count()).toBe(0);
   });
 
+  test('reads the grades of a real mountain route', async ({ page }) => {
+    await open(page, PAGES['elevation-profile']);
+    const block = page.getByTestId('real-trail');
+    await expect(block.getByRole('img', { name: 'Perfil de la sortida a Calonge' })).toBeVisible();
+    expect(await block.locator('path.band').count()).toBeGreaterThanOrEqual(2);
+  });
+
+  test('keeps a real flat route flat', async ({ page }) => {
+    await open(page, PAGES['elevation-profile']);
+    const block = page.getByTestId('real');
+    await expect(block.getByRole('img', { name: 'Perfil de la sortida a Sils' })).toBeVisible();
+    // 56–68 m of real elevation: the 100 m minimum span, rounded, keeps it flat.
+    await expect(block.locator('.y .tick')).toHaveText(['0', '50', '100', '150']);
+  });
+
   test('says so when there is no route', async ({ page }) => {
     await open(page, PAGES['elevation-profile']);
     await expect(page.getByTestId('absent').getByText('Sense perfil')).toBeVisible();

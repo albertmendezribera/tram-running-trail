@@ -1,6 +1,6 @@
 # E15 · El perfil altimètric firma: ECharts o SVG artesanal
 
-**Estat:** decidida, pendent de la prova amb un GPX real · **Data:** 2026-11-09 · **Decisió:** SVG artesanal per a `ElevationProfile`; ECharts per a la resta de gràfics
+**Estat:** decidida i provada amb dos GPX reals · **Data:** 2026-11-09 · **Decisió:** SVG artesanal per a `ElevationProfile`; ECharts per a la resta de gràfics
 
 ## Pregunta
 
@@ -58,7 +58,7 @@ Observacions:
 
 ## Pendent
 
-- **Prova amb un GPX real** i regla de longitud mínima de les bandes.
+- ~~Prova amb un GPX real i regla de longitud mínima de les bandes.~~ Fet: dues sortides reals (COROS) al catàleg, convertides amb `apps/web/scripts/gpx-to-profile.mjs`, que només conserva distància i altitud. Calonge (12,41 km, entre 23 i 314 m) dona 9 trams en 3 nivells de pendent, ben llegibles. Sils (9,99 km, entre 56 i 68 m) queda pla gràcies a l'escala mínima.
 - Sincronia real amb el 3D: aquí les actualitzacions del cursor són simulades.
 - Mesura en dispositius reals (E04).
 - Easings derivats de perfils reals: no s'han provat.

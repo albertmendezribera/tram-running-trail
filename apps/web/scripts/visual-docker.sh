@@ -9,6 +9,7 @@ exec docker run --rm --platform linux/amd64 \
   -v "$ROOT:/source" \
   -e CI=1 \
   -e HOME=/root \
+  -e TRAM_EMULATED=1 \
   mcr.microsoft.com/playwright:v1.63.0-noble \
   sh -c '
     set -e

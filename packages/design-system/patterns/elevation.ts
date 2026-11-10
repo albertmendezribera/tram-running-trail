@@ -136,3 +136,137 @@ let instances = 0;
 
 /** SVG patterns take their colours from where they are defined, so each chart needs its own. */
 export const nextPatternPrefix = (): string => `elevation-${++instances}`;
+
+export interface ProfileSummary {
+  distanceKm: number;
+  gainM: number;
+  lossM: number;
+  highest: ProfilePoint;
+  lowest: ProfilePoint;
+  /** The stretch of at least `windowKm` with the largest grade, climbing or descending. */
+  steepest: { from: number; to: number; grade: number } | undefined;
+}
+
+/** Positive and negative elevation, ignoring changes smaller than `threshold` (GPS noise). */
+function gainAndLoss(points: readonly ProfilePoint[], threshold: number): [number, number] {
+  let gain = 0;
+  let loss = 0;
+  let reference = points[0]![1];
+  for (const [, e] of points) {
+    if (e - reference >= threshold) {
+      gain += e - reference;
+      reference = e;
+    } else if (reference - e >= threshold) {
+      loss += reference - e;
+      reference = e;
+    }
+  }
+  return [gain, loss];
+}
+
+export function summarize(points: readonly ProfilePoint[], windowKm = 0.5, threshold = 3): ProfileSummary {
+  const [gainM, lossM] = gainAndLoss(points, threshold);
+  const highest = points.reduce((a, b) => (b[1] > a[1] ? b : a));
+  const lowest = points.reduce((a, b) => (b[1] < a[1] ? b : a));
+  let steepest: ProfileSummary['steepest'];
+  let j = 0;
+  for (let i = 0; i < points.length; i++) {
+    while (j < points.length - 1 && points[j]![0] - points[i]![0] < windowKm) j++;
+    const length = points[j]![0] - points[i]![0];
+    if (length < windowKm) break;
+    const grade = ((points[j]![1] - points[i]![1]) / (length * 1000)) * 100;
+    if (!steepest || Math.abs(grade) > Math.abs(steepest.grade)) steepest = { from: points[i]![0], to: points[j]![0], grade };
+  }
+  return { distanceKm: points.at(-1)![0] - points[0]![0], gainM, lossM, highest, lowest, steepest };
+}
+
+export interface KmStretch {
+  /** Kilometre where the stretch ends, as on a course marker. */
+  km: number;
+  gainM: number;
+  lossM: number;
+  /** Net grade of the stretch, in %. */
+  grade: number;
+}
+
+/** One row per kilometre, the last one shorter if the route does not end on a whole km. */
+export function kmStretches(points: readonly ProfilePoint[], threshold = 3): KmStretch[] {
+  const end = points.at(-1)![0];
+  const out: KmStretch[] = [];
+  for (let start = 0; start < end - 1e-9; start++) {
+    const stop = Math.min(start + 1, end);
+    const inside = points.filter(([km]) => km >= start && km <= stop);
+    if (inside.length < 2) continue;
+    const [gainM, lossM] = gainAndLoss(inside, threshold);
+    const first = inside[0]!;
+    const last = inside.at(-1)!;
+    out.push({ km: Number(stop.toFixed(2)), gainM, lossM, grade: ((last[1] - first[1]) / ((last[0] - first[0]) * 1000)) * 100 });
+  }
+  return out;
+}
+
+export interface Climb {
+  from: number;
+  to: number;
+  gainM: number;
+  /** Average grade over the whole climb, in %. */
+  grade: number;
+  /** Steepest 100 m inside the climb, in %. */
+  maxGrade: number;
+}
+
+/**
+ * Climbs worth naming: from a low point to the highest point before the route
+ * drops by more than `tolerance` (10 m, or 20 % of what was gained). Short dips
+ * inside a climb do not split it, as on a real course.
+ */
+export function detectClimbs(points: readonly ProfilePoint[], minGainM = 40, minGrade = 3): Climb[] {
+  const climbs: Climb[] = [];
+  let start = 0;
+  let peak = 0;
+  const close = (): void => {
+    // The foot of the climb: where the next 300 m reach the minimum grade. A flat
+    // approach is not part of the climb, and would dilute its grade.
+    let foot = start;
+    while (foot < peak) {
+      let k = foot;
+      while (k < peak && points[k]![0] - points[foot]![0] < 0.3) k++;
+      const run = points[k]![0] - points[foot]![0];
+      if (run <= 0 || ((points[k]![1] - points[foot]![1]) / (run * 1000)) * 100 >= minGrade) break;
+      foot++;
+    }
+    // Then start exactly where the ground begins to rise.
+    while (foot < peak && points[foot + 1]![1] <= points[foot]![1]) foot++;
+    const [fromKm, fromEle] = points[foot]!;
+    const [toKm, toEle] = points[peak]!;
+    const gain = toEle - fromEle;
+    const length = toKm - fromKm;
+    if (gain < minGainM || length <= 0) return;
+    const grade = (gain / (length * 1000)) * 100;
+    if (grade < minGrade) return;
+    const inside = points.slice(foot, peak + 1);
+    let maxGrade = 0;
+    let j = 0;
+    for (let i = 0; i < inside.length; i++) {
+      while (j < inside.length - 1 && inside[j]![0] - inside[i]![0] < 0.1) j++;
+      const run = inside[j]![0] - inside[i]![0];
+      if (run >= 0.1) maxGrade = Math.max(maxGrade, ((inside[j]![1] - inside[i]![1]) / (run * 1000)) * 100);
+    }
+    climbs.push({ from: fromKm, to: toKm, gainM: gain, grade, maxGrade: Math.max(maxGrade, grade) });
+  };
+  for (let i = 1; i < points.length; i++) {
+    const e = points[i]![1];
+    if (e > points[peak]![1]) peak = i;
+    const gained = points[peak]![1] - points[start]![1];
+    if (points[peak]![1] - e > Math.max(10, gained * 0.2)) {
+      close();
+      start = i;
+      peak = i;
+    } else if (e < points[start]![1] && peak === start) {
+      start = i;
+      peak = i;
+    }
+  }
+  close();
+  return climbs;
+}

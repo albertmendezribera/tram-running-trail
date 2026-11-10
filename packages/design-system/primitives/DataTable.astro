@@ -1,5 +1,5 @@
 ---
-import type { Locale, Unit } from '@tram/formats';
+import { formatNumber, type Locale, type Unit } from '@tram/formats';
 import Measure from './Measure.astro';
 
 type Cell = number | string | null | undefined;
@@ -11,6 +11,12 @@ export interface Column {
   unit?: Unit;
   /** Aligns a figure without a unit to the right, such as a position. */
   numeric?: boolean;
+  /**
+   * Draws the figure as a bar from a central zero: positive to the right,
+   * negative to the left, as for the grade of each kilometre. `max` is the
+   * value that fills half the cell; `suffix` follows the figure, such as "%".
+   */
+  diverging?: { max: number; suffix?: string };
 }
 
 export interface Props {
@@ -28,7 +34,9 @@ const EMPTY: Record<Locale, string> = { ca: 'Sense dades', es: 'Sin datos', en: 
 
 const { caption, columns, rows, density = 'comfortable', sticky = false, locale = 'ca' } = Astro.props;
 const measureType = density === 'compact' ? 'data-sm' : 'data-md';
-const isNumeric = (c: Column): boolean => c.unit !== undefined || c.numeric === true;
+const isNumeric = (c: Column): boolean => c.unit !== undefined || c.numeric === true || c.diverging !== undefined;
+const share = (v: number, max: number): number => Number(Math.min(1, Math.abs(v) / max).toFixed(3));
+const signed = (v: number, suffix?: string): string => `${formatNumber(v === 0 ? 0 : v, locale, 0)}${suffix ? `\u00a0${suffix}` : ''}`;
 const text = (v: Cell): string => (v === null || v === undefined || v === '' ? '—' : String(v));
 ---
 
@@ -52,7 +60,12 @@ const text = (v: Cell): string => (v === null || v === undefined || v === '' ? '
                 const value = row[c.key];
                 return (
                   <Tag scope={i === 0 ? 'row' : undefined} data-numeric-column={isNumeric(c) ? '' : undefined}>
-                    {c.unit && (typeof value === 'number' || value === null || value === undefined) ? (
+                    {c.diverging && typeof value === 'number' ? (
+                      <span class="diverging">
+                        <span class="bar" data-sign={value < 0 ? 'negative' : 'positive'} style={`--share: ${share(value, c.diverging.max)}`} aria-hidden="true" />
+                        <span>{signed(value, c.diverging.suffix)}</span>
+                      </span>
+                    ) : c.unit && (typeof value === 'number' || value === null || value === undefined) ? (
                       <Measure value={value} unit={c.unit} locale={locale} type={measureType} />
                     ) : (
                       text(value)
@@ -116,6 +129,37 @@ const text = (v: Cell): string => (v === null || v === undefined || v === '' ? '
     border-block-end-color: var(--tram-sys-rule-strong);
     color: var(--tram-sys-text-muted);
     background: var(--tram-sys-surface-alt);
+  }
+
+  /* Direction is read from the side of the bar and the sign, not from colour. */
+  .diverging {
+    display: grid;
+    grid-template-columns: minmax(var(--tram-sys-space-11), 1fr) var(--tram-sys-space-9);
+    align-items: center;
+    gap: var(--tram-sys-space-3);
+  }
+
+  .bar {
+    position: relative;
+    block-size: var(--tram-sys-space-3);
+    background: linear-gradient(90deg, transparent calc(50% - var(--tram-sys-line-hairline) / 2), var(--tram-sys-rule-strong) 0 calc(50% + var(--tram-sys-line-hairline) / 2), transparent 0);
+  }
+
+  .bar::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inline-size: calc(var(--share) * 50%);
+    background: var(--tram-sys-data-trail);
+  }
+
+  .bar[data-sign='positive']::before {
+    inset-inline-start: 50%;
+  }
+
+  .bar[data-sign='negative']::before {
+    inset-inline-end: 50%;
+    background: repeating-linear-gradient(135deg, var(--tram-sys-data-trail) 0 var(--tram-sys-line-strong), transparent 0 calc(var(--tram-sys-line-strong) * 2));
   }
 
   .empty {

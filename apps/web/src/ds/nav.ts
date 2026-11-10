@@ -6,6 +6,7 @@ export const NAV = [
   { href: '/ds/patterns/bib/', title: 'Bib' },
   { href: '/ds/patterns/stat-block/', title: 'StatBlock' },
   { href: '/ds/patterns/elevation-profile/', title: 'ElevationProfile' },
+  { href: '/ds/patterns/climb-list/', title: 'ClimbList' },
   { href: '/ds/interactive/segmented-control/', title: 'SegmentedControl' },
   { href: '/ds/interactive/viewer-3d-shell/', title: 'Viewer3DShell' },
 ] as const;

@@ -27,7 +27,38 @@ function clock(totalSeconds: number): string {
 
 function pace(secondsPerKm: number): string {
   const s = Math.round(secondsPerKm);
-  return `${Math.floor(s / 60)}:${pad(s % 60)}${NBSP}/km`;
+  return `${Math.floor(s / 60)}:${pad(s % 60)}`;
+}
+
+export interface MeasureParts {
+  value: string;
+  /** Empty when the unit is implicit, as in a duration. */
+  unit: string;
+}
+
+/** The figure and its unit apart, so that a display can set them at different sizes. Null when absent. */
+export function formatMeasureParts(value: number | null | undefined, unit: Unit, locale: Locale): MeasureParts | null {
+  if (value === null || value === undefined || !Number.isFinite(value)) return null;
+  switch (unit) {
+    case 'km':
+      return { value: number(value, locale, 3), unit: 'km' };
+    case 'm':
+      return { value: number(value, locale, 0), unit: 'm' };
+    case 'm-gain':
+      return { value: number(value, locale, 0), unit: `m${NBSP}D+` };
+    case 'pace':
+      return { value: pace(value), unit: '/km' };
+    case 'duration':
+      return { value: clock(value), unit: '' };
+    case 'vertical-speed':
+      return { value: number(value, locale, 0), unit: 'm/h' };
+    case 'km-effort':
+      return { value: number(value, locale, 1), unit: KM_EFFORT[locale] };
+    case 'g':
+      return { value: number(value, locale, 0), unit: 'g' };
+    case 'mm':
+      return { value: number(value, locale, 1), unit: 'mm' };
+  }
 }
 
 /**
@@ -35,25 +66,7 @@ function pace(secondsPerKm: number): string {
  * every other unit takes the value in that unit.
  */
 export function formatMeasure(value: number | null | undefined, unit: Unit, locale: Locale): string {
-  if (value === null || value === undefined || !Number.isFinite(value)) return ABSENT;
-  switch (unit) {
-    case 'km':
-      return `${number(value, locale, 3)}${NBSP}km`;
-    case 'm':
-      return `${number(value, locale, 0)}${NBSP}m`;
-    case 'm-gain':
-      return `${number(value, locale, 0)}${NBSP}m${NBSP}D+`;
-    case 'pace':
-      return pace(value);
-    case 'duration':
-      return clock(value);
-    case 'vertical-speed':
-      return `${number(value, locale, 0)}${NBSP}m/h`;
-    case 'km-effort':
-      return `${number(value, locale, 1)}${NBSP}${KM_EFFORT[locale]}`;
-    case 'g':
-      return `${number(value, locale, 0)}${NBSP}g`;
-    case 'mm':
-      return `${number(value, locale, 1)}${NBSP}mm`;
-  }
+  const parts = formatMeasureParts(value, unit, locale);
+  if (!parts) return ABSENT;
+  return parts.unit ? `${parts.value}${NBSP}${parts.unit}` : parts.value;
 }

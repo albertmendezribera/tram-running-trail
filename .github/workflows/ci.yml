@@ -43,6 +43,8 @@ jobs:
       - run: test ! -e apps/web/dist/ds
 
   visual:
+    # A commit tagged [update-visual] gets new baselines from visual-baselines.yml instead.
+    if: ${{ !contains(github.event.head_commit.message, '[update-visual]') }}
     runs-on: ubuntu-latest
     # The baselines are generated in this same image: see E17.
     container: mcr.microsoft.com/playwright:v1.63.0-noble

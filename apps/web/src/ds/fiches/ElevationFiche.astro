@@ -51,7 +51,7 @@ const code = `<ElevationProfile
   <section class="fiche-block">
     <h2 data-type="text-sm">Modes</h2>
     <div class="fiche-grid">
-      {MODES.map((m) => <Mode {...m}><div style="inline-size: 100%"><ElevationProfile label={`Mode ${m.theme} ${m.terrain}`} points={m.terrain === 'road' ? ROAD : TRAIL} /></div></Mode>)}
+      {MODES.map((m) => <Mode {...m}><div style="inline-size: 100%"><ElevationProfile label={`Mode ${m.theme} ${m.terrain}`} points={m.terrain === 'road' ? ROAD : TRAIL} annotate={false} /></div></Mode>)}
     </div>
   </section>
 </Fiche>

@@ -17,7 +17,7 @@ Tipografia (E08).
 Catàleg i primers components (E17).
 
 - Tokens de forma: `line-hairline`, `line-strong`, `radius-none` i `radius-soft`.
-- Components: `Measure`, `DataTable`, `Bib`, `StatBlock`, `ElevationProfile`, `SegmentedControl` i `Viewer3DShell`, amb fitxa a `/ds/`.
+- Components: `Measure`, `DataTable`, `Bib`, `StatBlock`, `ElevationProfile`, `ClimbList`, `SegmentedControl` i `Viewer3DShell`, amb fitxa a `/ds/`.
 - Captures de regressió: `apps/web/tests/__screenshots__/`.
 
 Color (E09).
@@ -27,6 +27,16 @@ Color (E09).
 - Regles de contrast noves: `accent.text` sobre `surface.alt` i el contorn del punt actiu. La build ja no mostra cap avís.
 - Els 6 colors derivats d'E16 queden validats.
 - Captures: `docs/explorations/E09/`.
+
+Passada visual.
+
+- `Measure` separa la xifra de la unitat (`formatMeasureParts`). En els rols `display-*`, la unitat va més petita, com en un marcador de resultats.
+- `Bib` redissenyat com un dorsal real: el número omple el full, té anelles de reforç i una línia de trencat que marca el terreny.
+- `ElevationProfile` anota el punt més alt i la pujada més dura, calculats de les dades (`annotate`).
+- `DataTable` admet columnes amb barra divergent (`diverging`), com els parcials per quilòmetre.
+- Nou patró `ClimbList`: pujades detectades del perfil (`detectClimbs`), totes a la mateixa escala.
+- Portada del catàleg composta amb una sortida real.
+- Captures: `docs/explorations/visual-pass/`.
 
 ## 0.1.0 · 2026-11-09
 

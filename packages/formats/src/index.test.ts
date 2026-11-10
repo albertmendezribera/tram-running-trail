@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { ABSENT, absentLabel, formatMeasure, formatNumber } from './index.ts';
+import { ABSENT, absentLabel, formatMeasure, formatMeasureParts, formatNumber } from './index.ts';
 
 const clean = (s: string): string => s.replaceAll(' ', ' ');
 
@@ -37,6 +37,13 @@ describe('formatMeasure', () => {
   it('shows a missing value as absent, and keeps a real zero', () => {
     for (const v of [null, undefined, Number.NaN, Number.POSITIVE_INFINITY]) assert.equal(formatMeasure(v, 'km', 'ca'), ABSENT);
     assert.equal(clean(formatMeasure(0, 'm-gain', 'ca')), '0 m D+');
+  });
+
+  it('gives the figure and its unit apart, for large displays', () => {
+    assert.deepEqual(formatMeasureParts(42.195, 'km', 'ca'), { value: '42,195', unit: 'km' });
+    assert.deepEqual(formatMeasureParts(255, 'pace', 'ca'), { value: '4:15', unit: '/km' });
+    assert.deepEqual(formatMeasureParts(12461, 'duration', 'ca'), { value: '03:27:41', unit: '' });
+    assert.equal(formatMeasureParts(null, 'km', 'ca'), null);
   });
 
   it('formats bare figures for axes', () => {

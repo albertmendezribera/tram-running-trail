@@ -8,6 +8,7 @@ const PAGES = {
   bib: '/ds/patterns/bib/',
   'stat-block': '/ds/patterns/stat-block/',
   'elevation-profile': '/ds/patterns/elevation-profile/',
+  'climb-list': '/ds/patterns/climb-list/',
   'segmented-control': '/ds/interactive/segmented-control/',
   viewer: '/ds/interactive/viewer-3d-shell/',
 };
@@ -200,6 +201,25 @@ test.describe('Viewer3DShell', () => {
     await expect(viewer).toHaveAttribute('data-state', 'ready');
     await viewer.evaluate((el) => el.remove());
     expect(await page.evaluate(() => (window as Window & { tramDemoDisposed?: number }).tramDemoDisposed)).toBe(1);
+  });
+});
+
+test.describe('ClimbList', () => {
+  test('finds the climb of a real mountain route', async ({ page }) => {
+    await open(page, PAGES['climb-list']);
+    const list = page.getByTestId('real').getByRole('list', { name: 'Pujades de la sortida a Calonge' });
+    await expect(list.getByRole('listitem')).toHaveCount(1);
+    await expect(list).toContainText('m D+');
+  });
+
+  test('lists several climbs in order', async ({ page }) => {
+    await open(page, PAGES['climb-list']);
+    expect(await page.getByTestId('many').getByRole('listitem').count()).toBeGreaterThan(1);
+  });
+
+  test('does not invent climbs on a flat route', async ({ page }) => {
+    await open(page, PAGES['climb-list']);
+    await expect(page.getByTestId('flat')).toContainText('Cap pujada destacada');
   });
 });
 

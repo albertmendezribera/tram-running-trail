@@ -1,12 +1,330 @@
 ---
+import DataTable from '@tram/design-system/primitives/DataTable.astro';
+import Measure from '@tram/design-system/primitives/Measure.astro';
+import Bib from '@tram/design-system/patterns/Bib.astro';
+import ClimbList from '@tram/design-system/patterns/ClimbList.astro';
+import ElevationProfile from '@tram/design-system/patterns/ElevationProfile.astro';
+import StatBlock from '@tram/design-system/patterns/StatBlock.astro';
+import { areaPath, createPlot, kmStretches, linePath, summarize } from '@tram/design-system/patterns/elevation.ts';
 import { NAV } from '../nav';
+import { CALONGE } from '../real-profile';
+
+// Every figure on this page is computed from a real GPX (distance and elevation only).
+const summary = summarize(CALONGE);
+const distance = Number(summary.distanceKm.toFixed(2));
+const gain = Math.round(summary.gainM);
+const stats = [
+  { label: 'Distància', value: distance, unit: 'km' },
+  { label: 'Desnivell positiu', value: gain, unit: 'm-gain' },
+  { label: 'Altitud màxima', value: summary.highest[1], unit: 'm' },
+  { label: 'Km-esforç', value: Number((distance + gain / 100).toFixed(1)), unit: 'km-effort' },
+] as const;
+const rows = kmStretches(CALONGE).map((r) => ({ km: r.km, gain: Math.round(r.gainM), loss: Math.round(r.lossM), grade: Math.round(r.grade) }));
+
+// The hero silhouette is the real profile, fitted to its own range: a shape made of data (CLAUDE.md 2.3).
+const span = summary.highest[1] - summary.lowest[1];
+const silhouette = createPlot(CALONGE, [summary.lowest[1] - span * 0.1, summary.highest[1]], 1000, 300);
+const silhouetteArea = areaPath(CALONGE, silhouette);
+const silhouetteLine = linePath(CALONGE, silhouette);
+
+const KIND: Record<string, string> = { fonaments: 'Fonaments', primitives: 'Primitiva', patterns: 'Patró', interactive: 'Interactiu' };
+const fiches = NAV.slice(1).map((n, i) => ({
+  ...n,
+  number: String(i + 1).padStart(2, '0'),
+  kind: KIND[n.href.split('/')[2] ?? ''] ?? '',
+}));
 ---
 
-<h1 data-type="display-md" style="margin: 0">Catàleg</h1>
-<p style="margin: 0">Els components reals del paquet <code>@tram/design-system</code>. Aquesta ruta no arriba mai a producció.</p>
-<section class="fiche-block">
-  <h2 data-type="text-sm">Fitxes</h2>
-  <ul style="margin: 0; padding: 0; list-style: none">
-    {NAV.slice(1).map((n) => <li><a href={n.href}>{n.title}</a></li>)}
-  </ul>
+<section class="hero">
+  <svg class="silhouette" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
+    <path class="silhouette-area" d={silhouetteArea} />
+    <path class="silhouette-line" d={silhouetteLine} />
+  </svg>
+  <div class="hero-text">
+    <p class="kicker" data-type="text-xs">TRAM · design system · Fase 0</p>
+    <h1 class="title" data-type="display-xl">Recórrer<br />el tram</h1>
+    <p class="lede" data-type="text-lg">
+      Una sortida real a Calonge, composta només amb components del sistema: el mateix dorsal, les mateixes xifres i el mateix perfil que veurà qui corre.
+    </p>
+  </div>
+  <p class="silhouette-caption" data-type="text-xs">Silueta real · Calonge · <Measure value={distance} unit="km" type="data-sm" /></p>
 </section>
+
+<section class="sheet">
+  <div class="bib">
+    <Bib number={1427} terrain="trail" label="Calonge" />
+    <p class="source" data-type="text-xs">Dorsal de mostra. Les xifres i el perfil surten d'un GPX real: només distància i altitud.</p>
+  </div>
+  <div class="stats">
+    <StatBlock stats={stats} lead />
+  </div>
+  <div class="profile">
+    <ElevationProfile label="Perfil de la sortida a Calonge" points={CALONGE} />
+  </div>
+  <div class="climbs">
+    <h2 class="method-title" data-type="text-xs">Pujades</h2>
+    <ClimbList label="Pujades de la sortida a Calonge" points={CALONGE} />
+  </div>
+  <div class="method">
+    <h2 class="method-title" data-type="text-xs">Com es calcula</h2>
+    <ul class="method-list" data-type="text-sm">
+      <li>Distància i altitud d'un GPX real, un punt cada <Measure value={20} unit="m" type="data-sm" />. Res més: ni coordenades ni hores.</li>
+      <li>El desnivell ignora variacions de menys de <Measure value={3} unit="m" type="data-sm" />, que són soroll del GPS.</li>
+      <li>La pujada més dura es mesura en trams de <Measure value={0.5} unit="km" type="data-sm" />.</li>
+    </ul>
+  </div>
+  <div class="table">
+    <DataTable
+      caption="Trams per quilòmetre"
+      density="compact"
+      columns={[
+        { key: 'km', label: 'Km', unit: 'km' },
+        { key: 'gain', label: 'D+', unit: 'm-gain' },
+        { key: 'loss', label: 'D−', unit: 'm' },
+        { key: 'grade', label: 'Pendent', diverging: { max: 20, suffix: '%' } },
+      ]}
+      rows={rows}
+    />
+  </div>
+</section>
+
+<section class="index">
+  <h2 class="index-title" data-type="text-xs">Fitxes del sistema</h2>
+  <ol class="list">
+    {
+      fiches.map((f) => (
+        <li>
+          <a class="row" href={f.href}>
+            <span class="number" data-type="display-md" data-numeric="tabular">{f.number}</span>
+            <span class="name" data-type="display-sm">{f.title}</span>
+            <span class="kind" data-type="text-xs">{f.kind}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  /* The page grid of a map: hairlines every 96 px, behind the title only. */
+  .hero {
+    position: relative;
+    display: grid;
+    gap: var(--tram-sys-space-4);
+    padding-block: var(--tram-sys-space-8) var(--tram-sys-space-9);
+    overflow: hidden;
+    background-image:
+      linear-gradient(var(--tram-sys-rule) var(--tram-sys-line-hairline), transparent 0),
+      linear-gradient(90deg, var(--tram-sys-rule) var(--tram-sys-line-hairline), transparent 0);
+    background-size: var(--tram-sys-space-12) var(--tram-sys-space-12);
+    border-block-end: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+  }
+
+  /* On a phone the silhouette follows the text: it never crosses a letter. */
+  .silhouette {
+    order: 2;
+    display: block;
+    inline-size: 100%;
+    block-size: var(--tram-sys-space-12);
+  }
+
+  /*
+   * The route is drawn as it is run, from start to finish (CLAUDE.md 7.5). Distance
+   * grows from left to right, so revealing the drawing in that direction follows
+   * the course. With reduced motion the silhouette is simply there.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    .silhouette {
+      animation: run-the-route 2400ms cubic-bezier(0.3, 0, 0.2, 1) 200ms both;
+    }
+
+    @keyframes run-the-route {
+      from {
+        clip-path: inset(0 100% 0 0);
+      }
+
+      to {
+        clip-path: inset(0 0 0 0);
+      }
+    }
+  }
+
+  .silhouette-area {
+    fill: var(--tram-sys-surface-alt);
+  }
+
+  .silhouette-line {
+    fill: none;
+    stroke: var(--tram-sys-data-primary);
+    stroke-width: var(--tram-sys-line-strong);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .hero-text {
+    position: relative;
+    display: grid;
+    gap: var(--tram-sys-space-4);
+  }
+
+  .silhouette-caption {
+    order: 3;
+    justify-self: end;
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .climbs {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+  }
+
+  .method {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    align-content: start;
+  }
+
+  .method-title {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .method-list {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-inline-size: 40ch;
+  }
+
+  .method-list li {
+    padding-inline-start: var(--tram-sys-space-3);
+    border-inline-start: var(--tram-sys-line-strong) solid var(--tram-sys-rule-strong);
+  }
+
+  .kicker {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .title {
+    margin: 0;
+  }
+
+  .lede {
+    max-inline-size: 38ch;
+    margin: 0;
+  }
+
+  .sheet {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--tram-sys-space-8);
+  }
+
+  .source {
+    margin: var(--tram-sys-space-2) 0 0;
+    max-inline-size: 32rem;
+    color: var(--tram-sys-text-muted);
+  }
+
+  .index {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+  }
+
+  .index-title {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: var(--tram-sys-space-11) minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: var(--tram-sys-space-4);
+    padding-block: var(--tram-sys-space-3);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+    color: var(--tram-sys-text);
+    text-decoration: none;
+  }
+
+  .row:hover .name,
+  .row:focus-visible .name {
+    text-decoration: underline;
+    text-decoration-thickness: var(--tram-sys-line-strong);
+  }
+
+  .row:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .number,
+  .kind {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .kind {
+    text-transform: uppercase;
+  }
+
+  @media (width >= 64rem) {
+    .sheet {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--tram-sys-space-7);
+    }
+
+    .bib {
+      grid-column: 1 / span 5;
+    }
+
+    .stats {
+      grid-column: 6 / span 7;
+      align-self: end;
+    }
+
+    .profile {
+      grid-column: 1 / -1;
+    }
+
+    .climbs {
+      grid-column: 1 / -1;
+    }
+
+    .method {
+      grid-column: 1 / span 5;
+    }
+
+    .table {
+      grid-column: 6 / span 7;
+    }
+
+    /* On a wide screen it rises beside the title, from where the words end. */
+    .silhouette {
+      position: absolute;
+      inset-inline-start: 40%;
+      inset-block-end: 0;
+      inline-size: 60%;
+      block-size: 72%;
+    }
+
+    .silhouette-caption {
+      position: absolute;
+      inset-block-end: var(--tram-sys-space-2);
+      inset-inline-end: var(--tram-sys-space-2);
+    }
+  }
+</style>

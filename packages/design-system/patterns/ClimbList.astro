@@ -1,0 +1,161 @@
+---
+import { formatNumber, type Locale } from '@tram/formats';
+import Measure from '../primitives/Measure.astro';
+import { areaPath, createPlot, detectClimbs, linePath, type ProfilePoint, pointsIn } from './elevation.ts';
+
+export interface Props {
+  /** Kilometre and elevation in metres, ordered by distance. */
+  points: readonly ProfilePoint[];
+  /** Names the list for screen readers. */
+  label: string;
+  locale?: Locale;
+}
+
+const COPY = {
+  ca: { none: 'Cap pujada destacada: tot el recorregut és gairebé pla.', from: 'Del km', to: 'al', average: 'mitjana', max: 'màx. en 100 m', climb: 'Pujada' },
+  es: { none: 'Ninguna subida destacada: todo el recorrido es casi llano.', from: 'Del km', to: 'al', average: 'media', max: 'máx. en 100 m', climb: 'Subida' },
+  en: { none: 'No climbs worth naming: the whole route is almost flat.', from: 'From km', to: 'to', average: 'average', max: 'max. over 100 m', climb: 'Climb' },
+};
+
+const { points, label, locale = 'ca' } = Astro.props;
+const copy = COPY[locale];
+const climbs = points.length >= 2 ? detectClimbs(points) : [];
+
+// One scale for every climb, in height and in length: they can be compared at a glance.
+const WIDTH = 1000;
+const HEIGHT = 200;
+const longest = Math.max(...climbs.map((c) => c.to - c.from), 0);
+const highest = Math.max(...climbs.map((c) => c.gainM), 0);
+const shapes = climbs.map((c) => {
+  const inside = pointsIn(points, { from: c.from, to: c.to, level: 0 });
+  const base = inside[0]![1];
+  const plot = createPlot(inside, [base, base + highest], WIDTH, HEIGHT);
+  return { area: areaPath(inside, plot), line: linePath(inside, plot), share: `${Number((((c.to - c.from) / longest) * 100).toFixed(1))}%` };
+});
+const percent = (v: number): string => `${formatNumber(v, locale, 0)} %`;
+const km = (v: number): string => formatNumber(v, locale, 1);
+---
+
+{
+  climbs.length === 0 ? (
+    <p class="none" data-type="text-sm">{copy.none}</p>
+  ) : (
+    <ol class="climbs" aria-label={label}>
+      {climbs.map((c, i) => (
+        <li class="climb">
+          <span class="number" data-type="display-md" data-numeric="tabular" aria-label={`${copy.climb} ${i + 1}`}>{String(i + 1).padStart(2, '0')}</span>
+          <div class="shape" aria-hidden="true">
+            <svg class="svg" style={`inline-size: ${shapes[i]!.share}`} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} preserveAspectRatio="none">
+              <path class="area" d={shapes[i]!.area} />
+              <path class="line" d={shapes[i]!.line} />
+            </svg>
+          </div>
+          <div class="facts">
+            <p class="where" data-type="text-xs">{`${copy.from} ${km(c.from)} ${copy.to} ${km(c.to)}`}</p>
+            <div class="figures">
+              <Measure value={Number((c.to - c.from).toFixed(2))} unit="km" locale={locale} type="display-sm" />
+              <Measure value={Math.round(c.gainM)} unit="m-gain" locale={locale} type="display-sm" />
+            </div>
+            <p class="grades" data-type="data-sm">
+              <span><strong>{percent(c.grade)}</strong>{`\u00a0${copy.average}`}</span>
+              <span><strong>{percent(c.maxGrade)}</strong>{`\u00a0${copy.max}`}</span>
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+<style>
+  .none {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+  }
+
+  .climbs {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+  }
+
+  .climb {
+    display: grid;
+    grid-template-columns: var(--tram-sys-space-10) minmax(0, 1fr);
+    gap: var(--tram-sys-space-3) var(--tram-sys-space-4);
+    padding-block: var(--tram-sys-space-4);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+  }
+
+  .number {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .shape {
+    grid-column: 2;
+    block-size: var(--tram-sys-space-11);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+  }
+
+  .svg {
+    display: block;
+    block-size: 100%;
+  }
+
+  .area {
+    fill: var(--tram-sys-map-contour);
+    fill-opacity: 0.45;
+  }
+
+  .line {
+    fill: none;
+    stroke: var(--tram-sys-data-primary);
+    stroke-width: var(--tram-sys-line-strong);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .facts {
+    grid-column: 2;
+    display: grid;
+    gap: var(--tram-sys-space-1);
+  }
+
+  .where,
+  .grades {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+  }
+
+  .where {
+    text-transform: uppercase;
+  }
+
+  .figures {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tram-sys-space-1) var(--tram-sys-space-6);
+  }
+
+  .grades {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tram-sys-space-1) var(--tram-sys-space-4);
+  }
+
+  .grades strong {
+    color: var(--tram-sys-text);
+    font-weight: inherit;
+  }
+
+  @media (width >= 48rem) {
+    .climb {
+      grid-template-columns: var(--tram-sys-space-11) minmax(0, 3fr) minmax(0, 2fr);
+      align-items: end;
+    }
+
+    .facts {
+      grid-column: 3;
+    }
+  }
+</style>

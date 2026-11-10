@@ -1,5 +1,5 @@
 ---
-import { ABSENT, absentLabel, formatMeasure, type Locale, type Unit } from '@tram/formats';
+import { ABSENT, absentLabel, formatMeasureParts, type Locale, type Unit } from '@tram/formats';
 
 type MeasureType = 'display-xl' | 'display-lg' | 'display-md' | 'display-sm' | 'data-lg' | 'data-md' | 'data-sm';
 
@@ -14,19 +14,20 @@ export interface Props {
 }
 
 const { value, unit, locale = 'ca', type = 'data-md', tabular = false } = Astro.props;
-const text = formatMeasure(value, unit, locale);
+const parts = formatMeasureParts(value, unit, locale);
 const numeric = tabular ? 'tabular' : undefined;
 ---
 
 {
-  text === ABSENT ? (
+  parts === null ? (
     <span class="measure" data-type={type} data-numeric={numeric} data-absent>
       <span aria-hidden="true">{ABSENT}</span>
       <span class="label">{absentLabel(locale)}</span>
     </span>
   ) : (
     <data class="measure" data-type={type} data-numeric={numeric} value={String(value)}>
-      {text}
+      <span class="value">{parts.value}</span>
+      {parts.unit && <span class="unit">{` ${parts.unit}`}</span>}
     </data>
   )
 }
@@ -34,6 +35,15 @@ const numeric = tabular ? 'tabular' : undefined;
 <style>
   .measure {
     white-space: nowrap;
+  }
+
+  /* On a large figure the unit steps back, like on a results board: the number leads. */
+  [data-type^='display-'] > .unit {
+    font-size: 0.36em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    vertical-align: 0.12em;
+    color: var(--tram-sys-text-muted);
   }
 
   [data-absent] {

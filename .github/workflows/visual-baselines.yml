@@ -1,0 +1,46 @@
+name: Visual baselines
+
+# Regenerates the screenshots the visual regression compares against, in the same
+# image as CI, and commits them. Runs on a push whose message contains
+# [update-visual], or by hand from the Actions tab. Local emulation on an 8 GB
+# Mac can run out of memory (E17), so this is the reliable way to update them.
+
+on:
+  push:
+    branches: [main, ccr-675b03db-ncu0p6]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[update-visual]') }}
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    env:
+      HOME: /root
+    steps:
+      - run: apt-get update && apt-get install -y --no-install-recommends git
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tram/web exec playwright test --update-snapshots
+      # The new baselines have to pass a normal run too: an unstable capture fails here.
+      - run: pnpm --filter @tram/web test:visual
+      - name: Commit the new baselines
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web/tests/__screenshots__
+          if git diff --cached --quiet; then echo "Baselines already up to date."; exit 0; fi
+          git commit -m "Update visual baselines"
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: visual-baselines-report
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results

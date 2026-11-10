@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { areaPath, createPlot, elevationDomain, gradeBands, linePath, nearestPoint, type ProfilePoint, ticks } from './elevation.ts';
+import { areaPath, createPlot, detectClimbs, elevationDomain, gradeBands, kmStretches, linePath, nearestPoint, type ProfilePoint, summarize, ticks } from './elevation.ts';
 
 /** A route made of [length in km, grade in %] stretches, one point every 50 m. */
 function route(stretches: Array<[number, number]>): ProfilePoint[] {
@@ -90,5 +90,54 @@ describe('paths', () => {
 
   it('finds the nearest point', () => {
     assert.deepEqual(nearestPoint(points, 6), [5, 50]);
+  });
+});
+
+describe('summaries', () => {
+  const hill = route([[2, 0], [1, 12], [1, -6], [2, 0]]);
+
+  it('finds the highest point, the gain and the steepest stretch', () => {
+    const s = summarize(hill);
+    assert.equal(s.highest[1], 620);
+    assert.ok(Math.abs(s.gainM - 120) <= 3);
+    assert.ok(Math.abs(s.steepest!.grade - 12) < 0.5);
+    assert.ok(s.steepest!.from >= 2 - 1e-9 && s.steepest!.to <= 3 + 1e-9);
+  });
+
+  it('ignores GPS noise below the threshold', () => {
+    const noisy: ProfilePoint[] = Array.from({ length: 200 }, (_, i) => [i * 0.05, 100 + (i % 2)]);
+    assert.equal(summarize(noisy).gainM, 0);
+  });
+
+  it('splits a route into kilometres, with a shorter last one', () => {
+    const rows = kmStretches(route([[2.5, 4]]));
+    assert.deepEqual(rows.map((r) => r.km), [1, 2, 2.5]);
+    assert.ok(rows.every((r) => Math.abs(r.grade - 4) < 0.2));
+  });
+});
+
+describe('detectClimbs', () => {
+  it('finds each climb with its gain, length and grade', () => {
+    const climbs = detectClimbs(route([[1, 0], [2, 8], [1, -10], [1, 0], [1.5, 12], [1, 0]]));
+    assert.equal(climbs.length, 2);
+    assert.ok(Math.abs(climbs[0]!.gainM - 160) <= 1);
+    assert.ok(Math.abs(climbs[0]!.grade - 8) < 0.2);
+    assert.ok(Math.abs(climbs[1]!.to - climbs[1]!.from - 1.5) < 0.06);
+  });
+
+  it('does not split a climb on a short dip', () => {
+    const climbs = detectClimbs(route([[1, 10], [0.1, -5], [1, 10]]));
+    assert.equal(climbs.length, 1);
+    assert.ok(climbs[0]!.gainM > 190);
+  });
+
+  it('ignores rises too small or too gentle to name', () => {
+    assert.deepEqual(detectClimbs(route([[1, 3]])), []);
+    assert.deepEqual(detectClimbs(route([[5, 2]])), []);
+  });
+
+  it('measures the steepest 100 m inside the climb', () => {
+    const [climb] = detectClimbs(route([[1, 5], [0.3, 20], [1, 5]]));
+    assert.ok(climb!.maxGrade > 18);
   });
 });

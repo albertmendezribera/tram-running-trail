@@ -54,6 +54,8 @@ Vol 3D a M2 (E01 i E02).
 - Amb el visor, el marcador de `RouteScroller` posa les tres xifres en una fila al mòbil.
 - L'escena és a `apps/web/src/three/` i pren els colors de `dist/three.ts`. No hi ha cap token nou.
 - Perfil i 3D assenyalen el mateix punt: `elevation-cursor.ts` emet `tram:km-leave` quan el punter surt del perfil, i `RouteScroller` emet `tram:preview` amb `{ share }` i exposa `preview()`, `goTo()` i `route`.
+- **Tokens nous: escala de pendent** (E09). `ref.grade-1` a `ref.grade-4` i `ref.night-grade-1` a `ref.night-grade-4`, i el rol `sys.data.grade.1` a `.4`. La build exigeix 3:1 a cada nivell sobre `surface` i `surface.alt`. Captures: `docs/explorations/E09/pendent-*.png`; abans el traçat per recórrer anava en `text.muted`.
+- `RouteScroller`: `viewer.grades` afegeix la llegenda de l'escala. `GRADE_LABELS` (a `elevation.ts`) dona els noms dels nivells al perfil i a la llegenda.
 - `Viewer3DShell` dona estil a les fites que una escena afegeix sobre el llenç: elements `data-scene-label` (`km` o `place`) dins de `data-scene-labels`.
 - Captures: `docs/explorations/E02/m2-*.png`.
 

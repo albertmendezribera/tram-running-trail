@@ -30,7 +30,7 @@ const f2 = (n: number): string => n.toFixed(2).replace('.', ',');
 
 // --- Contrast ---------------------------------------------------------------
 const TEXT = ['sys.text', 'sys.text.muted', 'sys.accent.text'];
-const GRAPHIC = ['sys.focus', 'sys.rule.strong', 'sys.data.road', 'sys.data.trail', 'sys.data.active', 'sys.data.active.outline', 'sys.map.contour', 'sys.map.vegetation', 'sys.map.water'];
+const GRAPHIC = ['sys.focus', 'sys.rule.strong', 'sys.data.road', 'sys.data.trail', 'sys.data.active', 'sys.data.active.outline', 'sys.map.contour', 'sys.map.vegetation', 'sys.map.water', 'sys.data.grade.1', 'sys.data.grade.2', 'sys.data.grade.3', 'sys.data.grade.4'];
 const BACKGROUNDS = ['sys.surface', 'sys.surface.alt'];
 
 console.log('## Contrast WCAG\n');
@@ -108,6 +108,13 @@ const CVD_PAIRS: Array<[string, string]> = [
   ['sys.map.contour', 'sys.map.vegetation'],
   ['sys.map.contour', 'sys.map.water'],
   ['sys.map.vegetation', 'sys.map.water'],
+  // The grade scale of the route: neighbouring levels, and what it must not be mistaken for.
+  ['sys.data.grade.1', 'sys.data.grade.2'],
+  ['sys.data.grade.2', 'sys.data.grade.3'],
+  ['sys.data.grade.3', 'sys.data.grade.4'],
+  ['sys.data.grade.1', 'sys.map.contour'],
+  ['sys.data.grade.4', 'sys.data.primary'],
+  ['sys.data.grade.2', 'sys.data.active'],
 ];
 console.log('\n## Distància de color amb daltonisme (ΔE OKLab × 100)\n');
 console.log('Per sota de 10, la parella es confon fàcilment; per sota de 5, gairebé no es distingeix.\n');

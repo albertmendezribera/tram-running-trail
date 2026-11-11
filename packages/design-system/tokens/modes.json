@@ -47,6 +47,14 @@
     { "fg": "sys.map.vegetation", "bg": "sys.surface", "min": 3 },
     { "fg": "sys.map.water", "bg": "sys.surface", "min": 3 },
     { "fg": "sys.data.active.outline", "bg": "sys.surface", "min": 3 },
-    { "fg": "sys.data.active.outline", "bg": "sys.surface.alt", "min": 3 }
+    { "fg": "sys.data.active.outline", "bg": "sys.surface.alt", "min": 3 },
+    { "fg": "sys.data.grade.1", "bg": "sys.surface", "min": 3 },
+    { "fg": "sys.data.grade.1", "bg": "sys.surface.alt", "min": 3 },
+    { "fg": "sys.data.grade.2", "bg": "sys.surface", "min": 3 },
+    { "fg": "sys.data.grade.2", "bg": "sys.surface.alt", "min": 3 },
+    { "fg": "sys.data.grade.3", "bg": "sys.surface", "min": 3 },
+    { "fg": "sys.data.grade.3", "bg": "sys.surface.alt", "min": 3 },
+    { "fg": "sys.data.grade.4", "bg": "sys.surface", "min": 3 },
+    { "fg": "sys.data.grade.4", "bg": "sys.surface.alt", "min": 3 }
   ]
 }

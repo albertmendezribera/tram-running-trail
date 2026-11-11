@@ -1,5 +1,5 @@
 import * as THREE from 'three/webgpu';
-import { float, fract, fwidth, max, mix, normalLocal, positionLocal, smoothstep, uniform } from 'three/tsl';
+import { attribute, float, fract, fwidth, max, mix, normalLocal, positionLocal, smoothstep, uniform } from 'three/tsl';
 import type { Scene, SceneContext } from '@tram/design-system/interactive/viewer-3d-shell.ts';
 import { createStage } from '../core/stage.ts';
 import { loadHeights, type TerrainMeta } from './heights.ts';
@@ -17,6 +17,8 @@ export interface RouteViewerOptions {
   share?: number;
   /** Arrow keys: the page decides what one step is and returns the text to announce. */
   onStep?(direction: -1 | 1): string | void;
+  /** Grade bands of the route, as shares of its length, with levels 0 to 3: the stretch ahead takes the colour of its grade. */
+  grades?: ReadonlyArray<{ from: number; to: number; level: number }>;
   /** Places to label on the terrain. `km` markers only show from close by. */
   marks?: ReadonlyArray<RouteMark>;
   /** The pointer is over a share of the route (null: it left). */
@@ -43,6 +45,8 @@ const FOLLOW = { back: 420, up: 260, ahead: 0.04, clearance: 60 };
 /** Seconds-scale smoothing of the camera, in milliseconds. Off with reduced motion. */
 const EASE_MS = 110;
 const RADIAL = 6;
+/** Grade levels, from under 5 % to 15 % or more, and the token of each. */
+const GRADES = ['data-grade-1', 'data-grade-2', 'data-grade-3', 'data-grade-4'] as const;
 /** Kilometre markers show within this distance of the camera, in metres: the overview stays clean. */
 const KM_MARK_RANGE = 1800;
 /** How close to the route the pointer has to be to point at it, in CSS pixels. */
@@ -137,15 +141,39 @@ export async function mountRouteViewer({ container, signal, reducedMotion }: Sce
   const tubular = track.length * 3;
   // Seen from far away the route would thin out to nothing: it swells with the distance.
   const swell = uniform(1);
-  const swollen = (radius: number): THREE.MeshBasicNodeMaterial => {
+  // Grade level of each ring of the tube. Rings are spaced by arc length, bands by map distance.
+  const levels = new Float32Array((tubular + 1) * (RADIAL + 1));
+  if (o.grades?.length) {
+    let share = 0;
+    let band = 0;
+    for (let ring = 0; ring <= tubular; ring++) {
+      while (share < 1 && tubeShare(along(share)) < ring / tubular) share += 1 / (tubular * 4);
+      while (band < o.grades.length - 1 && o.grades[band]!.to < share) band++;
+      levels.fill(o.grades[band]!.level, ring * (RADIAL + 1), (ring + 1) * (RADIAL + 1));
+    }
+  }
+  const level = attribute('level', 'float');
+  const tube = (radius: number): THREE.TubeGeometry => {
+    const geometry = new THREE.TubeGeometry(curve, tubular, radius, RADIAL);
+    geometry.setAttribute('level', new THREE.BufferAttribute(levels, 1));
+    return geometry;
+  };
+  /** `byGrade` also thickens the line with each grade level: the colour never says it alone (7.3). */
+  const swollen = (radius: number, byGrade = 0): THREE.MeshBasicNodeMaterial => {
     const material = new THREE.MeshBasicNodeMaterial();
-    material.positionNode = positionLocal.add(normalLocal.mul(swell.sub(1).mul(radius)));
+    material.positionNode = positionLocal.add(normalLocal.mul(swell.mul(level.mul(byGrade).add(1)).sub(1).mul(radius)));
     return material;
   };
-  const aheadMaterial = swollen(3);
+  const aheadMaterial = swollen(3, 0.12);
   const doneMaterial = swollen(4.5);
-  const aheadTube = new THREE.Mesh(new THREE.TubeGeometry(curve, tubular, 3, RADIAL), aheadMaterial);
-  const doneTube = new THREE.Mesh(new THREE.TubeGeometry(curve, tubular, 4.5, RADIAL), doneMaterial);
+  const aheadTube = new THREE.Mesh(tube(3), aheadMaterial);
+  const doneTube = new THREE.Mesh(tube(4.5), doneMaterial);
+  // What is left to run shows its grade (E09); what has been run is inked in.
+  const ramp = GRADES.map(() => uniform(new THREE.Color()));
+  if (o.grades?.length) {
+    const blend = (k: number) => smoothstep(k - 0.6, k - 0.4, level);
+    aheadMaterial.colorNode = mix(mix(mix(ramp[0]!, ramp[1]!, blend(1)), ramp[2]!, blend(2)), ramp[3]!, blend(3));
+  }
 
   // The runner: signal colour with its mandatory outline (E09), as a back-face shell.
   const activeMaterial = new THREE.MeshBasicNodeMaterial();
@@ -306,6 +334,7 @@ export async function mountRouteViewer({ container, signal, reducedMotion }: Sce
     tone.high.value.setRGB(low[0] + (contour[0] - low[0]) * 0.3, low[1] + (contour[1] - low[1]) * 0.3, low[2] + (contour[2] - low[2]) * 0.3, THREE.SRGBColorSpace);
     set(tone.contour.value, 'map-contour');
     set(aheadMaterial.color, 'text-muted');
+    ramp.forEach((color, k) => set(color.value, GRADES[k]!));
     set(doneMaterial.color, 'data-primary');
     set(activeMaterial.color, 'data-active');
     set(hollowMaterial.color, 'surface');

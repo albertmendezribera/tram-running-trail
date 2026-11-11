@@ -2,7 +2,7 @@
 import { formatNumber, type Locale } from '@tram/formats';
 import DataTable from '../primitives/DataTable.astro';
 import Measure from '../primitives/Measure.astro';
-import { areaPath, createPlot, elevationDomain, gradeBands, linePath, nearestPoint, nextPatternPrefix, type ProfilePoint, pointsIn, summarize, ticks } from './elevation.ts';
+import { areaPath, createPlot, elevationDomain, GRADE_LABELS, gradeBands, linePath, nearestPoint, nextPatternPrefix, type ProfilePoint, pointsIn, summarize, ticks } from './elevation.ts';
 
 type PoiKind = 'aid_station' | 'summit' | 'checkpoint' | 'km_marker' | 'landmark';
 
@@ -48,7 +48,6 @@ const PICTOGRAM: Record<PoiKind, string> = {
   km_marker: 'M-2 -7H2V7H-2Z',
   landmark: 'M0 -7L7 0L0 7L-7 0Z',
 };
-const LEVELS = ['< 5 %', '5–10 %', '10–15 %', '≥ 15 %'];
 const OPACITY = [0.22, 0.45, 0.7, 1];
 const HATCH_GAP = [0, 9, 6, 4];
 const WIDTH = 1000;
@@ -188,7 +187,7 @@ const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nea
       <figcaption class="legend" data-type="text-xs">
         <span>{copy.grade}</span>
         {
-          LEVELS.map((text, l) => (
+          GRADE_LABELS.map((text, l) => (
             <span class="key">
               <svg class="swatch" viewBox="0 0 16 16" aria-hidden="true">
                 <rect class="band" width="16" height="16" fill-opacity={OPACITY[l]} />

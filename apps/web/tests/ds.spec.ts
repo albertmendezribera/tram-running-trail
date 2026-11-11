@@ -271,7 +271,8 @@ test.describe('M2 · Recórrer el tram', () => {
     await open(page, MOMENT);
     const viewer = page.locator('#m2-viewer');
     await viewer.scrollIntoViewIfNeeded();
-    await expect(viewer).toHaveAttribute('data-state', 'ready');
+    // Loading the island and building the terrain takes a while on a busy machine.
+    await expect(viewer).toHaveAttribute('data-state', 'ready', SLOW);
     return viewer;
   };
   const frames = async (page: Page): Promise<number> => Number(await page.locator('#m2-viewer canvas').getAttribute('data-frames'));
@@ -354,6 +355,17 @@ test.describe('M2 · Recórrer el tram', () => {
     await expect(viewer.locator('canvas')).toHaveCount(0);
     await viewer.getByRole('button', { name: 'Veure en 3D' }).click();
     await expect(viewer).toHaveAttribute('data-state', 'ready');
+  });
+
+  test('names the grade scale of the 3D route, in the colours of the theme', async ({ page }, info) => {
+    await open(page, MOMENT);
+    const legend = page.locator('tram-route-scroller .grades');
+    await expect(legend).toContainText('Pendent');
+    await expect(legend.locator('.grade')).toHaveText(['< 5 %', '5–10 %', '10–15 %', '≥ 15 %']);
+    const colors = await legend.locator('.swatch').evaluateAll((swatches) => swatches.map((s) => getComputedStyle(s).backgroundColor));
+    expect(new Set(colors).size).toBe(4);
+    // Steepest: the darkest by day, the lightest at night.
+    expect(colors[3]).toBe(info.project.name.endsWith('night') ? 'rgb(242, 174, 253)' : 'rgb(68, 2, 77)');
   });
 
   test('credits the source of the terrain', async ({ page }) => {

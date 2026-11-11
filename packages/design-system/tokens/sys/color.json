@@ -27,6 +27,12 @@
       "active": {
         "$root": { "$value": "{ref.signal}", "$description": "Punt actiu del recorregut: el color de balisa. Sobre paper fa 2,64:1, i per això sempre va amb el contorn (E09)." },
         "outline": { "$value": "{sys.text}", "$description": "Contorn obligatori del punt actiu i línia del cursor. És el que dona el contrast de 3:1 en tots dos temes (E09)." }
+      },
+      "grade": {
+        "1": { "$value": "{ref.grade-1}", "$description": "Pendent del traçat sobre el relleu, de l'1 (menys del 5 %) al 4 (15 % o més). Sempre amb llegenda o xifra: mai només color (7.3)." },
+        "2": { "$value": "{ref.grade-2}" },
+        "3": { "$value": "{ref.grade-3}" },
+        "4": { "$value": "{ref.grade-4}" }
       }
     },
     "map": {

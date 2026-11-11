@@ -3,7 +3,7 @@ import { formatNumber, type Locale } from '@tram/formats';
 import ElevationProfile from '../patterns/ElevationProfile.astro';
 import RouteSilhouette from './RouteSilhouette.astro';
 import Viewer3DShell from './Viewer3DShell.astro';
-import { areaPath, createPlot, detectClimbs, elevationAt, gradeAt, linePath, type ProfilePoint, summarize } from '../patterns/elevation.ts';
+import { areaPath, createPlot, detectClimbs, elevationAt, GRADE_LABELS, gradeAt, linePath, type ProfilePoint, summarize } from '../patterns/elevation.ts';
 
 export interface Props {
   /** Kilometre and elevation in metres, ordered by distance. */
@@ -13,9 +13,10 @@ export interface Props {
   locale?: Locale;
   /**
    * Adds a 3D view over the silhouette, which stays as its poster. The page gives
-   * the scene to the viewer with this `id`; `credit` names the source of the terrain.
+   * the scene to the viewer with this `id`; `credit` names the source of the terrain,
+   * and `grades` adds the legend of a route coloured by grade.
    */
-  viewer?: { id: string; label: string; credit?: string };
+  viewer?: { id: string; label: string; credit?: string; grades?: boolean };
 }
 
 const COPY = {
@@ -58,7 +59,17 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
           viewer ? (
             <Viewer3DShell id={viewer.id} label={viewer.label} locale={locale} fill>
               <RouteSilhouette slot="poster" area={area} line={line} />
-              {viewer.credit && <p slot="text" class="credit" data-type="text-xs">{viewer.credit}</p>}
+              <div slot="text" class="notes" data-type="text-xs">
+                {viewer.grades && (
+                  <p class="grades">
+                    <span>{copy.grade}</span>
+                    {GRADE_LABELS.map((text, l) => (
+                      <span class="grade"><i class="swatch" data-level={l + 1} />{text}</span>
+                    ))}
+                  </p>
+                )}
+                {viewer.credit && <p class="credit">{viewer.credit}</p>}
+              </div>
             </Viewer3DShell>
           ) : (
             <RouteSilhouette area={area} line={line} />
@@ -136,9 +147,52 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
     min-block-size: var(--tram-sys-space-11);
   }
 
-  .credit {
-    margin: 0;
+  .notes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--tram-sys-space-1) var(--tram-sys-space-5);
     color: var(--tram-sys-text-muted);
+  }
+
+  .credit,
+  .grades {
+    margin: 0;
+  }
+
+  /* The route's grade is never colour alone (7.3): the scale is named next to it. */
+  .grades {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tram-sys-space-1) var(--tram-sys-space-3);
+  }
+
+  .grade {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tram-sys-space-1);
+    white-space: nowrap;
+  }
+
+  .swatch {
+    inline-size: var(--tram-sys-space-4);
+    block-size: var(--tram-sys-space-1);
+  }
+
+  .swatch[data-level='1'] {
+    background: var(--tram-sys-data-grade-1);
+  }
+
+  .swatch[data-level='2'] {
+    background: var(--tram-sys-data-grade-2);
+  }
+
+  .swatch[data-level='3'] {
+    background: var(--tram-sys-data-grade-3);
+  }
+
+  .swatch[data-level='4'] {
+    background: var(--tram-sys-data-grade-4);
   }
 
   .readout {

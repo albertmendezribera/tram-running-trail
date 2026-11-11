@@ -8,6 +8,9 @@ export interface GradeBand {
   level: 0 | 1 | 2 | 3;
 }
 
+/** Names of the grade levels, the same wherever they are shown. */
+export const GRADE_LABELS = ['< 5 %', '5–10 %', '10–15 %', '≥ 15 %'] as const;
+
 const levelFor = (grade: number): GradeBand['level'] => (grade < 5 ? 0 : grade < 10 ? 1 : grade < 15 ? 2 : 3);
 
 function mergeEqualNeighbours(bands: GradeBand[]): GradeBand[] {

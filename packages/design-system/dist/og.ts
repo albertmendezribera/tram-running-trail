@@ -2,7 +2,7 @@
 
 export type TramOgTheme = "light" | "night";
 export type TramOgTerrain = "mixed" | "road" | "trail";
-export type TramOgColorName = "surface" | "surface-alt" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "data-active-outline" | "map-contour" | "map-vegetation" | "map-water";
+export type TramOgColorName = "surface" | "surface-alt" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "data-active-outline" | "data-grade-1" | "data-grade-2" | "data-grade-3" | "data-grade-4" | "map-contour" | "map-vegetation" | "map-water";
 export type TramOgSpaceName = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12" | "cell-y" | "cell-x";
 export type TramOgTypeRole = "display-xl" | "display-lg" | "display-md" | "display-sm" | "text-lg" | "text-md" | "text-sm" | "text-xs" | "data-lg" | "data-md" | "data-sm";
 
@@ -42,6 +42,10 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
         "data-primary": "#141518",
         "data-active": "#ff5a1f",
         "data-active-outline": "#141518",
+        "data-grade-1": "#6a657e",
+        "data-grade-2": "#60437e",
+        "data-grade-3": "#591277",
+        "data-grade-4": "#44024d",
         "map-contour": "#9c6237",
         "map-vegetation": "#5f6b3b",
         "map-water": "#3e6d8a"
@@ -81,6 +85,10 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
         "data-primary": "#2b2d31",
         "data-active": "#ff5a1f",
         "data-active-outline": "#141518",
+        "data-grade-1": "#6a657e",
+        "data-grade-2": "#60437e",
+        "data-grade-3": "#591277",
+        "data-grade-4": "#44024d",
         "map-contour": "#9c6237",
         "map-vegetation": "#5f6b3b",
         "map-water": "#3e6d8a"
@@ -120,6 +128,10 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
         "data-primary": "#9c6237",
         "data-active": "#ff5a1f",
         "data-active-outline": "#141518",
+        "data-grade-1": "#6a657e",
+        "data-grade-2": "#60437e",
+        "data-grade-3": "#591277",
+        "data-grade-4": "#44024d",
         "map-contour": "#9c6237",
         "map-vegetation": "#5f6b3b",
         "map-water": "#3e6d8a"
@@ -161,6 +173,10 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
         "data-primary": "#e8e5dc",
         "data-active": "#ff5a1f",
         "data-active-outline": "#e8e5dc",
+        "data-grade-1": "#817798",
+        "data-grade-2": "#a385c7",
+        "data-grade-3": "#d095f0",
+        "data-grade-4": "#f2aefd",
         "map-contour": "#9c6237",
         "map-vegetation": "#5f6b3b",
         "map-water": "#3e6d8a"
@@ -200,6 +216,10 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
         "data-primary": "#f2eee3",
         "data-active": "#ff5a1f",
         "data-active-outline": "#e8e5dc",
+        "data-grade-1": "#817798",
+        "data-grade-2": "#a385c7",
+        "data-grade-3": "#d095f0",
+        "data-grade-4": "#f2aefd",
         "map-contour": "#9c6237",
         "map-vegetation": "#5f6b3b",
         "map-water": "#3e6d8a"
@@ -239,6 +259,10 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
         "data-primary": "#9c6237",
         "data-active": "#ff5a1f",
         "data-active-outline": "#e8e5dc",
+        "data-grade-1": "#817798",
+        "data-grade-2": "#a385c7",
+        "data-grade-3": "#d095f0",
+        "data-grade-4": "#f2aefd",
         "map-contour": "#9c6237",
         "map-vegetation": "#5f6b3b",
         "map-water": "#3e6d8a"

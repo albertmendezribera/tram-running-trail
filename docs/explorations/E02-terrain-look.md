@@ -32,7 +32,7 @@ Tots els colors surten dels tokens (`@tram/design-system/three`), de manera que 
 | Terreny baix | `sys.surface.alt` |
 | Terreny alt | `sys.surface.alt`, un 30 % cap a `sys.map.contour` |
 | Corbes de nivell | `sys.map.contour` |
-| Traçat per recórrer | `sys.text.muted` |
+| Traçat per recórrer | `sys.data.grade.1` a `.4`, segons el pendent (E09) |
 | Traçat recorregut | `sys.data.primary` |
 | Punt actiu i el seu contorn | `sys.data.active` i `sys.data.active.outline` (E09) |
 
@@ -47,6 +47,7 @@ Tots els colors surten dels tokens (`@tram/design-system/three`), de manera que 
 - **Només dibuixa quan canvia la posició.** Aturat no gasta res.
 - **Fletxes del teclat:** avancen i retrocedeixen un quilòmetre, i ho anuncien.
 - **Perfil i 3D assenyalen el mateix punt, en tots dos sentits.** Passar pel perfil marca aquell lloc al relleu amb un punt buit; passar pel traçat del 3D mou el cursor del perfil, i un clic o un toc hi porta el recorregut.
+- **El traçat diu el pendent.** El que queda per córrer va en l'escala lila d'E09, més fosc i més gruixut com més pendent, amb la seva llegenda. El que ja s'ha corregut queda en tinta.
 - **Fites sobre el relleu:** sortida, arribada i cim sempre; les de quilòmetre, només a menys d'1,8 km de la càmera. Totes es calculen de les dades i s'amaguen quan el terreny les tapa. Són HTML sobre el llenç, amb la tipografia i els colors dels tokens.
 - **Sense moviment automàtic** amb `prefers-reduced-motion` o estalvi de dades: la silueta es queda de pòster i el 3D espera el botó.
 - **Sense JavaScript** la pàgina és la mateixa fitxa estàtica d'abans.
@@ -65,7 +66,7 @@ L'illa es carrega en diferit, quan el visor és visible i el navegador està lli
 
 ## Proves
 
-Chromium amb renderitzat per programari: WebGL 2 i WebGPU donen la mateixa imatge, 200.072 triangles, primer fotograma en uns 85 ms, cap error. 7 proves a `apps/web/tests/ds.spec.ts`.
+Chromium amb renderitzat per programari: WebGL 2 i WebGPU donen la mateixa imatge, 200.072 triangles, primer fotograma en uns 85 ms, cap error. 8 proves a `apps/web/tests/ds.spec.ts`.
 
 ## Pendent
 
@@ -73,7 +74,8 @@ Chromium amb renderitzat per programari: WebGL 2 i WebGPU donen la mateixa imatg
 - **Fotogrames per segon reals.** Les mesures fetes només compten l'enviament d'ordres, no el dibuix: no valen. És E04, amb un iPhone de fa 3–4 anys i un Android de gamma mitjana.
 - **Safari i Firefox:** no s'hi ha provat.
 - **Regressió visual del 3D:** la captura de referència de M2 és el pòster, no l'escena.
-- **Color per pendent o per ritme** al traçat (8.1). No hi ha cap escala de color als tokens per fer-ho, i el taronja està reservat al punt actiu: cal decidir-la i validar-la com es va fer a E09.
+- **Color per ritme** al traçat (8.1): el GPX de prova no en porta.
+- **Dos llenguatges per al pendent:** lila al 3D i marró amb trames al perfil (vegeu E09).
 - **Punts d'interès amb dades pròpies** (avituallaments, controls): el GPX de prova no en porta.
 - **Variant realista** amb ortofoto.
 - **Mòbils baixos** (menys de 700 px d'alt): el 3D hi queda petit.

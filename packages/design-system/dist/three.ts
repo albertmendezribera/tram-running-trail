@@ -2,7 +2,7 @@
 
 export type TramTheme = "light" | "night";
 export type TramTerrain = "mixed" | "road" | "trail";
-export type TramColorName = "surface" | "surface-alt" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "data-active-outline" | "map-contour" | "map-vegetation" | "map-water";
+export type TramColorName = "surface" | "surface-alt" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "data-active-outline" | "data-grade-1" | "data-grade-2" | "data-grade-3" | "data-grade-4" | "map-contour" | "map-vegetation" | "map-water";
 
 export interface TramThreeColor {
   readonly hex: number;
@@ -87,6 +87,26 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "hex": 0x141518,
         "srgb": [0.0784, 0.0824, 0.0941],
         "linear": [0.007, 0.0075, 0.00913]
+      },
+      "data-grade-1": {
+        "hex": 0x6a657e,
+        "srgb": [0.4157, 0.3961, 0.4941],
+        "linear": [0.14413, 0.13014, 0.20864]
+      },
+      "data-grade-2": {
+        "hex": 0x60437e,
+        "srgb": [0.3765, 0.2627, 0.4941],
+        "linear": [0.11697, 0.05613, 0.20864]
+      },
+      "data-grade-3": {
+        "hex": 0x591277,
+        "srgb": [0.349, 0.0706, 0.4667],
+        "linear": [0.0999, 0.00605, 0.18447]
+      },
+      "data-grade-4": {
+        "hex": 0x44024d,
+        "srgb": [0.2667, 0.0078, 0.302],
+        "linear": [0.05781, 0.00061, 0.07421]
       },
       "map-contour": {
         "hex": 0x9c6237,
@@ -180,6 +200,26 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "srgb": [0.0784, 0.0824, 0.0941],
         "linear": [0.007, 0.0075, 0.00913]
       },
+      "data-grade-1": {
+        "hex": 0x6a657e,
+        "srgb": [0.4157, 0.3961, 0.4941],
+        "linear": [0.14413, 0.13014, 0.20864]
+      },
+      "data-grade-2": {
+        "hex": 0x60437e,
+        "srgb": [0.3765, 0.2627, 0.4941],
+        "linear": [0.11697, 0.05613, 0.20864]
+      },
+      "data-grade-3": {
+        "hex": 0x591277,
+        "srgb": [0.349, 0.0706, 0.4667],
+        "linear": [0.0999, 0.00605, 0.18447]
+      },
+      "data-grade-4": {
+        "hex": 0x44024d,
+        "srgb": [0.2667, 0.0078, 0.302],
+        "linear": [0.05781, 0.00061, 0.07421]
+      },
       "map-contour": {
         "hex": 0x9c6237,
         "srgb": [0.6118, 0.3843, 0.2157],
@@ -271,6 +311,26 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "hex": 0x141518,
         "srgb": [0.0784, 0.0824, 0.0941],
         "linear": [0.007, 0.0075, 0.00913]
+      },
+      "data-grade-1": {
+        "hex": 0x6a657e,
+        "srgb": [0.4157, 0.3961, 0.4941],
+        "linear": [0.14413, 0.13014, 0.20864]
+      },
+      "data-grade-2": {
+        "hex": 0x60437e,
+        "srgb": [0.3765, 0.2627, 0.4941],
+        "linear": [0.11697, 0.05613, 0.20864]
+      },
+      "data-grade-3": {
+        "hex": 0x591277,
+        "srgb": [0.349, 0.0706, 0.4667],
+        "linear": [0.0999, 0.00605, 0.18447]
+      },
+      "data-grade-4": {
+        "hex": 0x44024d,
+        "srgb": [0.2667, 0.0078, 0.302],
+        "linear": [0.05781, 0.00061, 0.07421]
       },
       "map-contour": {
         "hex": 0x9c6237,
@@ -366,6 +426,26 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "srgb": [0.9098, 0.898, 0.8627],
         "linear": [0.80695, 0.78354, 0.71569]
       },
+      "data-grade-1": {
+        "hex": 0x817798,
+        "srgb": [0.5059, 0.4667, 0.5961],
+        "linear": [0.21953, 0.18447, 0.31399]
+      },
+      "data-grade-2": {
+        "hex": 0xa385c7,
+        "srgb": [0.6392, 0.5216, 0.7804],
+        "linear": [0.36625, 0.23455, 0.57112]
+      },
+      "data-grade-3": {
+        "hex": 0xd095f0,
+        "srgb": [0.8157, 0.5843, 0.9412],
+        "linear": [0.63076, 0.30054, 0.87137]
+      },
+      "data-grade-4": {
+        "hex": 0xf2aefd,
+        "srgb": [0.949, 0.6824, 0.9922],
+        "linear": [0.88792, 0.42327, 0.98225]
+      },
       "map-contour": {
         "hex": 0x9c6237,
         "srgb": [0.6118, 0.3843, 0.2157],
@@ -458,6 +538,26 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "srgb": [0.9098, 0.898, 0.8627],
         "linear": [0.80695, 0.78354, 0.71569]
       },
+      "data-grade-1": {
+        "hex": 0x817798,
+        "srgb": [0.5059, 0.4667, 0.5961],
+        "linear": [0.21953, 0.18447, 0.31399]
+      },
+      "data-grade-2": {
+        "hex": 0xa385c7,
+        "srgb": [0.6392, 0.5216, 0.7804],
+        "linear": [0.36625, 0.23455, 0.57112]
+      },
+      "data-grade-3": {
+        "hex": 0xd095f0,
+        "srgb": [0.8157, 0.5843, 0.9412],
+        "linear": [0.63076, 0.30054, 0.87137]
+      },
+      "data-grade-4": {
+        "hex": 0xf2aefd,
+        "srgb": [0.949, 0.6824, 0.9922],
+        "linear": [0.88792, 0.42327, 0.98225]
+      },
       "map-contour": {
         "hex": 0x9c6237,
         "srgb": [0.6118, 0.3843, 0.2157],
@@ -549,6 +649,26 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "hex": 0xe8e5dc,
         "srgb": [0.9098, 0.898, 0.8627],
         "linear": [0.80695, 0.78354, 0.71569]
+      },
+      "data-grade-1": {
+        "hex": 0x817798,
+        "srgb": [0.5059, 0.4667, 0.5961],
+        "linear": [0.21953, 0.18447, 0.31399]
+      },
+      "data-grade-2": {
+        "hex": 0xa385c7,
+        "srgb": [0.6392, 0.5216, 0.7804],
+        "linear": [0.36625, 0.23455, 0.57112]
+      },
+      "data-grade-3": {
+        "hex": 0xd095f0,
+        "srgb": [0.8157, 0.5843, 0.9412],
+        "linear": [0.63076, 0.30054, 0.87137]
+      },
+      "data-grade-4": {
+        "hex": 0xf2aefd,
+        "srgb": [0.949, 0.6824, 0.9922],
+        "linear": [0.88792, 0.42327, 0.98225]
       },
       "map-contour": {
         "hex": 0x9c6237,

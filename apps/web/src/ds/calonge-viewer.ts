@@ -3,7 +3,7 @@
 import { formatMeasure, formatNumber } from '@tram/formats';
 import type { TramRouteScroller } from '@tram/design-system/interactive/route-scroller.ts';
 import type { Scene, SceneContext } from '@tram/design-system/interactive/viewer-3d-shell.ts';
-import { summarize } from '@tram/design-system/patterns/elevation.ts';
+import { gradeBands, summarize } from '@tram/design-system/patterns/elevation.ts';
 import { mountRouteViewer, type RouteMark } from '../three/route-viewer/scene.ts';
 import route from './terrain/calonge/route.json';
 import terrain from './terrain/calonge/terrain.json';
@@ -25,6 +25,14 @@ function marks(scroller: TramRouteScroller): RouteMark[] {
   return out;
 }
 
+/** The grade bands of the profile, as shares of the route: the 3D route shows the same ones. */
+function grades(scroller: TramRouteScroller): Array<{ from: number; to: number; level: number }> {
+  const { points } = scroller.route;
+  const first = points[0]![0];
+  const length = points.at(-1)![0] - first;
+  return gradeBands(points).map((band) => ({ from: (band.from - first) / length, to: (band.to - first) / length, level: band.level }));
+}
+
 /** The scroll runs the route: the camera follows the scroller, and both mark what the other points at. */
 export async function mount(context: SceneContext, scroller: TramRouteScroller): Promise<Scene> {
   const viewer = await mountRouteViewer(context, {
@@ -33,6 +41,7 @@ export async function mount(context: SceneContext, scroller: TramRouteScroller):
     route: route as Array<[number, number]>,
     share: scroller.share,
     marks: marks(scroller),
+    grades: grades(scroller),
     onStep: (direction) => scroller.stepKm(direction),
     onPoint: (share) => scroller.preview(share),
     onPick: (share) => scroller.goTo(share),

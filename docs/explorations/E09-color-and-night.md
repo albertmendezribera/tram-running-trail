@@ -60,6 +60,45 @@ El fons nit `#0e0f11` té una croma OKLCH de 0,004, davant del 0,040 del blau pi
 2. **`sys.data.active.outline`**, que equival a `sys.text`: el punt actiu sempre porta aquest contorn, i la build exigeix 3:1 en tots dos temes. L'avís obert des d'E16 desapareix. El cursor d'ECharts, que és una línia fina, fa servir aquest color, perquè el taronja sol no arriba a 3:1 sobre paper.
 3. **Els 6 colors derivats d'E16** passen de `hypothesis` a `validated`.
 
+## Escala de pendent del traçat (2026-11-11)
+
+El traçat 3D que queda per córrer pren el color del seu pendent, amb les mateixes quatre bandes del perfil (`gradeBands`). La paleta de 7.3 no tenia cap escala per fer-ho, i el taronja està reservat al punt actiu.
+
+Tres candidates provades sobre el relleu real de Calonge (de dalt a baix: vista general, pujada del 20 %, tram suau i nit):
+
+![](E09/pendent-candidates.png)
+
+| Candidata | Què és | Resultat |
+|---|---|---|
+| Terra | El marró del perfil, amb contorn de tinta | Els trams suaus desapareixen sobre el relleu: fa de 1,1:1 a 2,7:1 sobre el terreny |
+| **Lila** | Sobreimpressió lila, com el recorregut d'un mapa d'orientació | Es llegeix a totes les vistes i no es confon amb res |
+| Tinta | De gris a negre | El tram més dret queda igual que el tram ja recorregut |
+
+**Decisió: Lila**, triada sobre les captures. Queda així, després d'ajustar-la amb l'auditoria:
+
+![](E09/pendent-lila.png)
+
+| Token | Pendent | Clar | Nit |
+|---|---|---|---|
+| `sys.data.grade.1` | < 5 % | `#6a657e` | `#817798` |
+| `sys.data.grade.2` | 5–10 % | `#60437e` | `#a385c7` |
+| `sys.data.grade.3` | 10–15 % | `#591277` | `#d095f0` |
+| `sys.data.grade.4` | ≥ 15 % | `#44024d` | `#f2aefd` |
+
+De dia, més fosc i més viu com més pendent; de nit l'escala s'inverteix. Són valors OKLCH, anotats a cada token.
+
+Mesures de `scripts/color-audit.ts`:
+
+- **Contrast:** de 4,21:1 a 13,06:1 sobre `surface` i `surface.alt`, en tots dos temes. La build exigeix 3:1 a cada nivell. Sobre la part alta i tenyida del relleu, que no és un token, el nivell 1 fa 3,0:1.
+- **Daltonisme, contra el que no s'ha de confondre:** amb les corbes de nivell, ΔE d'11,1 o més; amb el tram recorregut, de 10,5 o més; amb el punt actiu, de 21,9 o més.
+- **Daltonisme, entre nivells veïns:** ΔE de 7,9 a 10,3. Queda per sota de 10 en la majoria de casos: dins del marge que deixen el contrast sobre el relleu i la distància amb la tinta no hi caben quatre passos més separats.
+
+Per això el color no va mai sol (7.3): el traçat també **s'engruixeix un 12 % a cada nivell**, la pàgina porta la **llegenda** de l'escala i el marcador diu el pendent en xifres.
+
+La primera versió de l'escala fallava de nit: el nivell 4 feia ΔE 2,9 amb el tram recorregut (tritanopia). L'auditoria ho va trobar i es va corregir mantenint el croma a dalt de l'escala.
+
+Pendent d'aquesta escala: el perfil continua amb el seu marró i les seves trames, de manera que el mateix pendent té dos llenguatges a la mateixa pantalla, cadascun amb la seva llegenda. Unificar-los és una decisió d'identitat.
+
 ## Recomanacions pendents de decisió
 
 Aquestes recomanacions no s'han aplicat perquè afecten la identitat o components que encara no existeixen:

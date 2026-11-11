@@ -20,6 +20,14 @@
     --tram-ref-carbon: #18191b;
     --tram-ref-night-rule: #2e2f2f;
     --tram-ref-night-text-muted: #93918d;
+    --tram-ref-grade-1: #6a657e;
+    --tram-ref-grade-2: #60437e;
+    --tram-ref-grade-3: #591277;
+    --tram-ref-grade-4: #44024d;
+    --tram-ref-night-grade-1: #817798;
+    --tram-ref-night-grade-2: #a385c7;
+    --tram-ref-night-grade-3: #d095f0;
+    --tram-ref-night-grade-4: #f2aefd;
     --tram-ref-space-0: 0rem;
     --tram-ref-space-1: 0.25rem;
     --tram-ref-space-2: 0.5rem;
@@ -76,6 +84,10 @@
     --tram-sys-data-primary: var(--tram-sys-text);
     --tram-sys-data-active: var(--tram-ref-signal);
     --tram-sys-data-active-outline: var(--tram-sys-text);
+    --tram-sys-data-grade-1: light-dark(var(--tram-ref-grade-1), var(--tram-ref-night-grade-1));
+    --tram-sys-data-grade-2: light-dark(var(--tram-ref-grade-2), var(--tram-ref-night-grade-2));
+    --tram-sys-data-grade-3: light-dark(var(--tram-ref-grade-3), var(--tram-ref-night-grade-3));
+    --tram-sys-data-grade-4: light-dark(var(--tram-ref-grade-4), var(--tram-ref-night-grade-4));
     --tram-sys-map-contour: var(--tram-ref-contour);
     --tram-sys-map-vegetation: var(--tram-ref-moss);
     --tram-sys-map-water: var(--tram-ref-water);

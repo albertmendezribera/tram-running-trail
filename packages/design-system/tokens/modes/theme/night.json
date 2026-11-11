@@ -17,7 +17,13 @@
       "text": { "$value": "{ref.signal}", "$description": "Sobre night, --signal ja fa 6,15:1." }
     },
     "data": {
-      "road": { "$value": "{ref.road-line}", "$description": "De nit, l'asfalt es llegeix per la pintura vial." }
+      "road": { "$value": "{ref.road-line}", "$description": "De nit, l'asfalt es llegeix per la pintura vial." },
+      "grade": {
+        "1": { "$value": "{ref.night-grade-1}", "$description": "De nit l'escala s'inverteix: més clar com més pendent." },
+        "2": { "$value": "{ref.night-grade-2}" },
+        "3": { "$value": "{ref.night-grade-3}" },
+        "4": { "$value": "{ref.night-grade-4}" }
+      }
     }
   }
 }

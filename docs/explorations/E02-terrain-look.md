@@ -75,7 +75,6 @@ Chromium amb renderitzat per programari: WebGL 2 i WebGPU donen la mateixa imatg
 - **Safari i Firefox:** no s'hi ha provat.
 - **Regressió visual del 3D:** la captura de referència de M2 és el pòster, no l'escena.
 - **Color per ritme** al traçat (8.1): el GPX de prova no en porta.
-- **Dos llenguatges per al pendent:** lila al 3D i marró amb trames al perfil (vegeu E09).
 - **Punts d'interès amb dades pròpies** (avituallaments, controls): el GPX de prova no en porta.
 - **Variant realista** amb ortofoto.
 - **Mòbils baixos** (menys de 700 px d'alt): el 3D hi queda petit.

@@ -97,7 +97,15 @@ Per això el color no va mai sol (7.3): el traçat també **s'engruixeix un 12 %
 
 La primera versió de l'escala fallava de nit: el nivell 4 feia ΔE 2,9 amb el tram recorregut (tritanopia). L'auditoria ho va trobar i es va corregir mantenint el croma a dalt de l'escala.
 
-Pendent d'aquesta escala: el perfil continua amb el seu marró i les seves trames, de manera que el mateix pendent té dos llenguatges a la mateixa pantalla, cadascun amb la seva llegenda. Unificar-los és una decisió d'identitat.
+**El perfil fa servir la mateixa escala** (decidit el 2026-11-11). Les bandes de `ElevationProfile` passen del marró de `map.contour` als quatre nivells lila, i conserven les trames, que diuen el nivell sense color:
+
+| Clar | Nit |
+|---|---|
+| ![](E09/perfil-lila-clar.png) | ![](E09/perfil-lila-nit.png) |
+
+Com a àrea, cada nivell és una tinta del seu color (22 %, 45 %, 70 % i 100 %), perquè el perfil no pesi a la pàgina: els trams suaus queden gairebé neutres i el més dret, ple. El marró queda per al que és terreny: corbes de nivell, tinta del relleu i les siluetes de `ClimbList` i del pòster de M2. Abans: `E15/profile-light-desktop.png`.
+
+Els pictogrames dels punts d'interès i les anotacions es dibuixen per sobre de la línia del perfil, fora de les bandes, de manera que el canvi no els treu contrast.
 
 ## Recomanacions pendents de decisió
 

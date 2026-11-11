@@ -114,6 +114,13 @@ test.describe('ElevationProfile', () => {
     expect(await page.locator('script[src]').count()).toBe(0);
   });
 
+  test('paints the bands in the grade scale, the same as the 3D route', async ({ page }, info) => {
+    await open(page, PAGES['elevation-profile']);
+    const steepest = page.getByTestId('trail').locator('.legend .band[data-level="4"]');
+    const fill = await steepest.evaluate((el) => getComputedStyle(el).fill);
+    expect(fill).toBe(info.project.name.endsWith('night') ? 'rgb(242, 174, 253)' : 'rgb(68, 2, 77)');
+  });
+
   test('reads the grades of a real mountain route', async ({ page }) => {
     await open(page, PAGES['elevation-profile']);
     const block = page.getByTestId('real-trail');
@@ -360,6 +367,10 @@ test.describe('M2 · Recórrer el tram', () => {
   test('names the grade scale of the 3D route, in the colours of the theme', async ({ page }, info) => {
     await open(page, MOMENT);
     const legend = page.locator('tram-route-scroller .grades');
+    // One legend at a time: the profile's own where it shows, the viewer's on narrow screens.
+    const narrow = info.project.name.startsWith('mobile');
+    await expect(legend).toBeVisible({ visible: narrow });
+    await expect(page.locator('tram-route-scroller figure.profile .legend')).toBeVisible({ visible: !narrow });
     await expect(legend).toContainText('Pendent');
     await expect(legend.locator('.grade')).toHaveText(['< 5 %', '5–10 %', '10–15 %', '≥ 15 %']);
     const colors = await legend.locator('.swatch').evaluateAll((swatches) => swatches.map((s) => getComputedStyle(s).backgroundColor));

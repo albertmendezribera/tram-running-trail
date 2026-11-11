@@ -48,7 +48,6 @@ const PICTOGRAM: Record<PoiKind, string> = {
   km_marker: 'M-2 -7H2V7H-2Z',
   landmark: 'M0 -7L7 0L0 7L-7 0Z',
 };
-const OPACITY = [0.22, 0.45, 0.7, 1];
 const HATCH_GAP = [0, 9, 6, 4];
 const WIDTH = 1000;
 const HEIGHT = 300;
@@ -136,7 +135,7 @@ const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nea
               ))}
             </defs>
             {yTicks.map((t) => <line class="grid" x1="0" x2={WIDTH} y1={plot.y(t)} y2={plot.y(t)} />)}
-            {areas.map((d, l) => d && <path class="band" fill-opacity={OPACITY[l]} d={d} />)}
+            {areas.map((d, l) => d && <path class="band" data-level={l + 1} d={d} />)}
             {areas.map((d, l) => d && l > 0 && <path d={d} fill={`url(#${prefix}-${l})`} />)}
             <path class="line" d={linePath(points, plot)} />
           </svg>
@@ -190,7 +189,7 @@ const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nea
           GRADE_LABELS.map((text, l) => (
             <span class="key">
               <svg class="swatch" viewBox="0 0 16 16" aria-hidden="true">
-                <rect class="band" width="16" height="16" fill-opacity={OPACITY[l]} />
+                <rect class="band" data-level={l + 1} width="16" height="16" />
                 {l > 0 && <rect width="16" height="16" fill={`url(#${prefix}-${l})`} />}
               </svg>
               {text}
@@ -292,8 +291,28 @@ const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nea
     vector-effect: non-scaling-stroke;
   }
 
-  .band {
-    fill: var(--tram-sys-map-contour);
+  /*
+   * Grade bands in the grade scale (E09), the same colours as the 3D route. As an
+   * area each level is a tint, lighter for the gentle ones, so the profile does not
+   * weigh on the page; the hatch still says the level without colour (7.3).
+   */
+  .band[data-level='1'] {
+    fill: var(--tram-sys-data-grade-1);
+    fill-opacity: 0.22;
+  }
+
+  .band[data-level='2'] {
+    fill: var(--tram-sys-data-grade-2);
+    fill-opacity: 0.45;
+  }
+
+  .band[data-level='3'] {
+    fill: var(--tram-sys-data-grade-3);
+    fill-opacity: 0.7;
+  }
+
+  .band[data-level='4'] {
+    fill: var(--tram-sys-data-grade-4);
   }
 
   .hatch {

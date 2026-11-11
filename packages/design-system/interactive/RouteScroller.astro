@@ -167,6 +167,13 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
     gap: var(--tram-sys-space-1) var(--tram-sys-space-3);
   }
 
+  /* On wide screens the profile below shows its own legend of the same scale: one is enough. */
+  @media (width >= 48rem) {
+    .grades {
+      display: none;
+    }
+  }
+
   .grade {
     display: inline-flex;
     align-items: center;

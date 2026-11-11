@@ -17,11 +17,25 @@ export interface RouteViewerOptions {
   share?: number;
   /** Arrow keys: the page decides what one step is and returns the text to announce. */
   onStep?(direction: -1 | 1): string | void;
+  /** Places to label on the terrain. `km` markers only show from close by. */
+  marks?: ReadonlyArray<RouteMark>;
+  /** The pointer is over a share of the route (null: it left). */
+  onPoint?(share: number | null): void;
+  /** A click or a tap on a share of the route. */
+  onPick?(share: number): void;
+}
+
+export interface RouteMark {
+  share: number;
+  text: string;
+  kind: 'km' | 'place';
 }
 
 export interface RouteViewer extends Scene {
   /** Moves the runner and the camera to a share of the route (0–1). */
   setShare(share: number): void;
+  /** Marks a share of the route that another view points at, without moving the camera (null: none). */
+  setPreview(share: number | null): void;
 }
 
 /** Follow camera, in metres: behind and above the runner, looking down the route. */
@@ -29,6 +43,10 @@ const FOLLOW = { back: 420, up: 260, ahead: 0.04, clearance: 60 };
 /** Seconds-scale smoothing of the camera, in milliseconds. Off with reduced motion. */
 const EASE_MS = 110;
 const RADIAL = 6;
+/** Kilometre markers show within this distance of the camera, in metres: the overview stays clean. */
+const KM_MARK_RANGE = 1800;
+/** How close to the route the pointer has to be to point at it, in CSS pixels. */
+const POINT_RADIUS = 28;
 
 const ease = (edge0: number, edge1: number, x: number): number => {
   const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)));
@@ -134,11 +152,16 @@ export async function mountRouteViewer({ container, signal, reducedMotion }: Sce
   const outlineMaterial = new THREE.MeshBasicNodeMaterial({ side: THREE.BackSide });
   const runner = new THREE.Group();
   runner.add(new THREE.Mesh(new THREE.SphereGeometry(13, 24, 16), activeMaterial), new THREE.Mesh(new THREE.SphereGeometry(17, 24, 16), outlineMaterial));
+  // Where another view points: a hollow dot, quieter than the runner.
+  const hollowMaterial = new THREE.MeshBasicNodeMaterial();
+  const pointer = new THREE.Group();
+  pointer.add(new THREE.Mesh(new THREE.SphereGeometry(8, 20, 12), hollowMaterial), new THREE.Mesh(new THREE.SphereGeometry(12, 20, 12), outlineMaterial));
+  pointer.visible = false;
 
   const scene = new THREE.Scene();
   const background = new THREE.Color();
   scene.background = background;
-  scene.add(terrain, aheadTube, doneTube, runner);
+  scene.add(terrain, aheadTube, doneTube, runner, pointer);
   const sun = new THREE.DirectionalLight(0xffffff, 2.2);
   sun.position.set(-1, 1.4, -1).multiplyScalar(4000); // from the north-west, as on a map
   scene.add(sun, new THREE.HemisphereLight(0xffffff, 0xffffff, 1.1));
@@ -155,6 +178,42 @@ export async function mountRouteViewer({ container, signal, reducedMotion }: Sce
   const heading = new THREE.Vector3();
   const follow = new THREE.Vector3();
   const target = new THREE.Vector3();
+
+  // Labels are HTML over the canvas, styled by Viewer3DShell: crisp type, the same tokens.
+  const labels = document.createElement('div');
+  labels.dataset['sceneLabels'] = '';
+  labels.setAttribute('aria-hidden', 'true');
+  const marks = (o.marks ?? []).map((mark) => {
+    const element = document.createElement('div');
+    element.dataset['sceneLabel'] = mark.kind;
+    const text = document.createElement('span');
+    text.dataset['type'] = mark.kind === 'km' ? 'data-sm' : 'text-xs';
+    text.textContent = mark.text;
+    element.append(text);
+    element.hidden = true;
+    labels.append(element);
+    return { ...mark, element, at: curve.getPoint(along(mark.share)) };
+  });
+  const size = { width: 1, height: 1 };
+  const screen = new THREE.Vector3();
+  const ray = new THREE.Vector3();
+  /** True when the terrain stands between the camera and a point. */
+  const hidden = (point: THREE.Vector3): boolean => {
+    for (let i = 1; i <= 24; i++) {
+      ray.lerpVectors(camera.position, point, i / 25);
+      if (groundAt(ray.x, -ray.z) > ray.y + 2) return true;
+    }
+    return false;
+  };
+  const placeLabels = (): void => {
+    for (const mark of marks) {
+      screen.copy(mark.at).project(camera);
+      const far = mark.kind === 'km' && camera.position.distanceTo(mark.at) > KM_MARK_RANGE;
+      const show = !far && screen.z < 1 && Math.abs(screen.x) < 1 && Math.abs(screen.y) < 1 && !hidden(mark.at);
+      mark.element.hidden = !show;
+      if (show) mark.element.style.transform = `translate(${((screen.x + 1) / 2) * size.width}px, ${((1 - screen.y) / 2) * size.height}px) translate(-50%, -100%)`;
+    }
+  };
 
   /** Places runner and camera at a share of the route. Returns true once the camera has settled. */
   const place = (share: number, k: number): boolean => {
@@ -179,9 +238,13 @@ export async function mountRouteViewer({ container, signal, reducedMotion }: Sce
     target.lerpVectors(centre, target, near);
     camera.lookAt(target);
 
-    runner.position.copy(here);
+    // On top of the line, so a slope never swallows half of it.
+    runner.position.copy(here).y += 9;
     swell.value = 1 + Math.max(0, camera.position.distanceTo(here) / 480 - 1) * 0.45;
     runner.scale.setScalar(swell.value);
+    pointer.scale.setScalar(1 + Math.max(0, camera.position.distanceTo(pointer.position) / 480 - 1) * 0.45);
+    camera.updateMatrixWorld();
+    placeLabels();
     doneTube.geometry.setDrawRange(0, Math.round(tubeShare(along(share)) * tubular) * RADIAL * 6);
     return settled;
   };
@@ -191,6 +254,8 @@ export async function mountRouteViewer({ container, signal, reducedMotion }: Sce
   let last = 0;
   const stage = await createStage(container, {
     resize(w, h) {
+      size.width = w;
+      size.height = h;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       // Overview: the closest point that holds the whole terrain, with its long side across a wide frame.
@@ -243,24 +308,65 @@ export async function mountRouteViewer({ container, signal, reducedMotion }: Sce
     set(aheadMaterial.color, 'text-muted');
     set(doneMaterial.color, 'data-primary');
     set(activeMaterial.color, 'data-active');
+    set(hollowMaterial.color, 'surface');
     set(outlineMaterial.color, 'data-active-outline');
     stage.invalidate();
   });
   // First frame before the poster goes away.
+  container.append(labels);
   place(shown, 1);
   stage.renderer.render(scene, camera);
+
+  // Pointing at the route: the nearest point on screen, within reach of a finger.
+  const samples = Array.from({ length: 400 }, (_, i) => ({ share: i / 399, at: curve.getPoint(along(i / 399)) }));
+  const shareAt = (event: MouseEvent): number | null => {
+    const box = stage.canvas.getBoundingClientRect();
+    let best: number | null = null;
+    let reach = POINT_RADIUS;
+    for (const sample of samples) {
+      screen.copy(sample.at).project(camera);
+      if (screen.z >= 1) continue;
+      const d = Math.hypot(((screen.x + 1) / 2) * box.width - (event.clientX - box.left), ((1 - screen.y) / 2) * box.height - (event.clientY - box.top));
+      if (d < reach) [reach, best] = [d, sample.share];
+    }
+    return best;
+  };
+  let pointed: number | null = null;
+  const point = (share: number | null): void => {
+    if (share === pointed) return;
+    pointed = share;
+    stage.canvas.style.cursor = share === null ? '' : 'pointer';
+    o.onPoint?.(share);
+  };
+  stage.canvas.addEventListener('pointermove', (event) => event.pointerType === 'mouse' && point(shareAt(event)), { signal: local.signal });
+  stage.canvas.addEventListener('pointerleave', () => point(null), { signal: local.signal });
+  stage.canvas.addEventListener(
+    'click',
+    (event) => {
+      const share = shareAt(event);
+      if (share !== null) o.onPick?.(share);
+    },
+    { signal: local.signal },
+  );
 
   return {
     setShare(share) {
       wanted = Math.min(1, Math.max(0, share));
       stage.invalidate();
     },
+    setPreview(share) {
+      pointer.visible = share !== null;
+      if (share !== null) curve.getPoint(along(share), pointer.position).y += 6;
+      stage.canvas.dataset['preview'] = share === null ? '' : share.toFixed(4);
+      stage.invalidate();
+    },
     setActive: (active) => stage.setActive(active),
     step: (direction) => o.onStep?.(direction),
     dispose() {
       local.abort();
+      labels.remove();
       stage.dispose();
-      for (const mesh of [terrain, aheadTube, doneTube, ...runner.children as THREE.Mesh[]]) {
+      for (const mesh of [terrain, aheadTube, doneTube, ...(runner.children as THREE.Mesh[]), ...(pointer.children as THREE.Mesh[])]) {
         mesh.geometry.dispose();
         (mesh.material as THREE.Material).dispose();
       }

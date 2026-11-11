@@ -306,6 +306,44 @@ test.describe('M2 · Recórrer el tram', () => {
     await expect(out(page, 'km')).toHaveText('2,00', SLOW);
   });
 
+  test('labels the kilometres and the places on the terrain', async ({ page }) => {
+    test.slow();
+    const viewer = await startViewer(page);
+    const label = (text: string) => viewer.locator('[data-scene-label]:not([hidden])').filter({ hasText: text });
+    // From afar only the places; the kilometre markers come with the camera.
+    await expect(label('Cim · 313 m')).toBeVisible();
+    await expect(label('Sortida · Arribada')).toBeVisible();
+    await expect(viewer.locator('[data-scene-label="km"]:not([hidden])')).toHaveCount(0);
+    await runTo(page, 0.3);
+    await expect(viewer.locator('[data-scene-label="km"]:not([hidden])').filter({ hasText: /^4$/ })).toBeVisible(SLOW);
+  });
+
+  test('marks the same place on the profile and in the 3D, both ways', async ({ page }) => {
+    test.slow();
+    const viewer = await startViewer(page);
+    const canvas = viewer.locator('canvas');
+    const cursor = page.locator('tram-route-scroller [data-cursor-mark]');
+    const left = async (): Promise<number> => Number.parseFloat(await cursor.evaluate((el) => (el as HTMLElement).style.left));
+    await runTo(page, 0.3);
+    await expect(canvas).toHaveAttribute('data-moving', 'false', SLOW);
+
+    // Profile → 3D: pointing at the profile marks that place on the terrain.
+    const plot = (await page.locator('tram-route-scroller .plot').boundingBox())!;
+    await page.mouse.move(plot.x + plot.width * 0.6, plot.y + plot.height / 2);
+    await expect.poll(async () => Number(await canvas.getAttribute('data-preview'))).toBeCloseTo(0.6, 2);
+    await page.mouse.move(1, 1);
+    await expect(canvas).toHaveAttribute('data-preview', '');
+    await expect.poll(left).toBeCloseTo(30, 0);
+
+    // 3D → profile: pointing at the route moves the profile cursor, and a click runs there.
+    const marker = (await viewer.locator('[data-scene-label="km"]:not([hidden])').filter({ hasText: /^4$/ }).boundingBox())!;
+    const foot = { x: marker.x + marker.width / 2, y: marker.y + marker.height + 1 };
+    await page.mouse.move(foot.x, foot.y);
+    await expect.poll(left).toBeCloseTo((4 / 12.41) * 100, 0);
+    await page.mouse.click(foot.x, foot.y);
+    await expect.poll(async () => Number((await out(page, 'km').textContent())!.replace(',', '.')), SLOW).toBeCloseTo(4, 1);
+  });
+
   test('keeps the silhouette and waits for the button with reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await open(page, MOMENT);

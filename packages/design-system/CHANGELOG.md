@@ -53,6 +53,8 @@ Vol 3D a M2 (E01 i E02).
 - `ElevationProfile` admet `compact`: en pantalles estretes, un perfil més baix i sense llegenda, per quan acompanya una altra vista.
 - Amb el visor, el marcador de `RouteScroller` posa les tres xifres en una fila al mòbil.
 - L'escena és a `apps/web/src/three/` i pren els colors de `dist/three.ts`. No hi ha cap token nou.
+- Perfil i 3D assenyalen el mateix punt: `elevation-cursor.ts` emet `tram:km-leave` quan el punter surt del perfil, i `RouteScroller` emet `tram:preview` amb `{ share }` i exposa `preview()`, `goTo()` i `route`.
+- `Viewer3DShell` dona estil a les fites que una escena afegeix sobre el llenç: elements `data-scene-label` (`km` o `place`) dins de `data-scene-labels`.
 - Captures: `docs/explorations/E02/m2-*.png`.
 
 ## 0.1.0 · 2026-11-09

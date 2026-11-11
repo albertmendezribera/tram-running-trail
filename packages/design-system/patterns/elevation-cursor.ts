@@ -11,6 +11,7 @@ const controllers = new WeakMap<HTMLElement, ProfileCursor>();
  * The cursor of an ElevationProfile rendered with `cursor`. Moving the pointer
  * over the chart emits `tram:km` (bubbling, detail: { km, commit }) so a page
  * can keep a 3D view or a scroll position in sync, both ways (CLAUDE.md 8.1).
+ * When the pointer leaves it emits `tram:km-leave`: the preview is over.
  */
 export function profileCursor(figure: HTMLElement): ProfileCursor | undefined {
   const existing = controllers.get(figure);
@@ -43,6 +44,7 @@ export function profileCursor(figure: HTMLElement): ProfileCursor | undefined {
   };
   plot.addEventListener('pointermove', (e) => emit(e, false));
   plot.addEventListener('click', (e) => emit(e, true));
+  plot.addEventListener('pointerleave', () => figure.dispatchEvent(new CustomEvent('tram:km-leave', { bubbles: true })));
 
   controllers.set(figure, controller);
   return controller;

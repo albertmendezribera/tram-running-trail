@@ -28,6 +28,8 @@ const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
  * JavaScript the route is a static sheet: the tall scroll track only exists here.
  *
  * Each change emits `tram:progress` with `{ share, km }`, for a 3D view to follow.
+ * Pointing at a place, on the profile or on another view, emits `tram:preview`
+ * with `{ share }` (null when it ends): every view marks the same point.
  */
 export class TramRouteScroller extends HTMLElement {
   #data!: RouteData;
@@ -36,6 +38,8 @@ export class TramRouteScroller extends HTMLElement {
   #chapter = '';
   /** Kilometre a key step is scrolling to, so that quick presses add up. */
   #goal: { km: number; until: number } | undefined;
+  /** Share another view or the pointer is on: the profile cursor stays there while it lasts. */
+  #pointed: number | null = null;
 
   connectedCallback(): void {
     const json = this.querySelector<HTMLScriptElement>('script[data-route]');
@@ -48,6 +52,7 @@ export class TramRouteScroller extends HTMLElement {
     window.addEventListener('wheel', this.#release, { passive: true });
     window.addEventListener('touchstart', this.#release, { passive: true });
     this.addEventListener('tram:km', this.#onProfileKm);
+    this.addEventListener('tram:km-leave', this.#onProfileLeave);
     this.#update();
   }
 
@@ -57,6 +62,7 @@ export class TramRouteScroller extends HTMLElement {
     window.removeEventListener('wheel', this.#release);
     window.removeEventListener('touchstart', this.#release);
     this.removeEventListener('tram:km', this.#onProfileKm);
+    this.removeEventListener('tram:km-leave', this.#onProfileLeave);
     cancelAnimationFrame(this.#frame);
   }
 
@@ -81,6 +87,46 @@ export class TramRouteScroller extends HTMLElement {
   /** Share of the route run so far (0–1). */
   get share(): number {
     return this.#data ? this.#progress() : 0;
+  }
+
+  /** The route this scroller runs, for a view that draws it too. */
+  get route(): Pick<RouteData, 'points' | 'start' | 'finish' | 'locale'> {
+    return this.#data;
+  }
+
+  /**
+   * Another view points at a share of the route (null: it stopped). The profile
+   * cursor goes there and every view is told, without moving the scroll.
+   */
+  preview(share: number | null): void {
+    this.#cursor()?.setKm(share === null ? this.#km() : this.#kmOf(share));
+    this.#emitPreview(share);
+  }
+
+  /** Scrolls to a share of the route. */
+  goTo(share: number): void {
+    this.#goal = undefined;
+    this.#scrollToKm(this.#kmOf(share));
+  }
+
+  #kmOf(share: number): number {
+    const points = this.#data.points;
+    const first = points[0]![0];
+    return first + Math.min(1, Math.max(0, share)) * (points.at(-1)![0] - first);
+  }
+
+  #km(): number {
+    return this.#kmOf(this.#progress());
+  }
+
+  #cursor(): ReturnType<typeof profileCursor> {
+    const figure = this.querySelector<HTMLElement>('figure[data-cursor]');
+    return figure ? profileCursor(figure) : undefined;
+  }
+
+  #emitPreview(share: number | null): void {
+    this.#pointed = share;
+    this.dispatchEvent(new CustomEvent('tram:preview', { detail: { share } }));
   }
 
   /** Scrolls to the next or the previous whole kilometre. Returns the text to announce. */
@@ -138,15 +184,27 @@ export class TramRouteScroller extends HTMLElement {
       this.#out('chapter').textContent = chapter;
     }
 
-    const figure = this.querySelector<HTMLElement>('figure[data-cursor]');
-    if (figure) profileCursor(figure)?.setKm(km);
+    this.#cursor()?.setKm(this.#pointed === null ? km : this.#kmOf(this.#pointed));
     this.dispatchEvent(new CustomEvent('tram:progress', { detail: { share: progress, km } }));
   }
 
   /** A click on the profile scrolls to that kilometre; hovering only previews it. */
   #onProfileKm = (event: Event): void => {
     const { km, commit } = (event as CustomEvent<{ km: number; commit: boolean }>).detail;
-    if (commit) this.#scrollToKm(km);
+    if (commit) {
+      this.#goal = undefined;
+      this.#scrollToKm(km);
+      return;
+    }
+    const points = this.#data.points;
+    const first = points[0]![0];
+    this.#emitPreview((km - first) / (points.at(-1)![0] - first));
+  };
+
+  /** The pointer left the profile: the cursor goes back to where the runner is. */
+  #onProfileLeave = (): void => {
+    this.#cursor()?.setKm(this.#km());
+    this.#emitPreview(null);
   };
 }
 

@@ -89,6 +89,51 @@ const copy = COPY[locale];
     background: none;
   }
 
+  /*
+   * Labels a scene adds over its canvas: elements with `data-scene-label` inside the
+   * stage, which the scene places with a transform. `km` is a course marker, `place` a name.
+   */
+  .stage :global([data-scene-labels]) {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .stage :global([data-scene-label]) {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    display: grid;
+    justify-items: center;
+    white-space: nowrap;
+    color: var(--tram-sys-text);
+  }
+
+  .stage :global([data-scene-label] > span) {
+    padding: 0 var(--tram-sys-space-1);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    background: var(--tram-sys-surface);
+  }
+
+  /* The stem ties the label to its point on the ground. */
+  .stage :global([data-scene-label])::after {
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-space-3);
+    background: var(--tram-sys-rule-strong);
+    content: '';
+  }
+
+  .stage :global([data-scene-label='place'] > span) {
+    padding: var(--tram-sys-space-1) var(--tram-sys-space-2);
+    color: var(--tram-sys-surface);
+    background: var(--tram-sys-text);
+  }
+
+  .stage :global([data-scene-label][hidden]) {
+    display: none;
+  }
+
   /* Over a full-size scene the keyboard hint is only shown to who is using the keyboard; screen readers always get it. */
   .viewer[data-fill][data-state='ready']:not(:focus-within) .status {
     position: absolute;

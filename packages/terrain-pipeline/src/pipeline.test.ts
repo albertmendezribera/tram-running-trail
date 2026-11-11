@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import { decodeTerrainRgb, encodeTerrainRgb } from './terrain-rgb.ts';
 import { parseGpx } from './gpx.ts';
 import { planTiles } from './icgc.ts';
-import { toUtm } from './utm.ts';
+import { toLngLat, toUtm } from './utm.ts';
 
 describe('toUtm', () => {
   it('puts the central meridian of zone 31 at x = 500,000 m', () => {
@@ -18,6 +18,15 @@ describe('toUtm', () => {
   it('places Calonge east of the central meridian', () => {
     const [x, y] = toUtm(41.86, 3.08);
     assert.ok(x > 500000 && x < 520000 && y > 4630000 && y < 4640000, `${x} ${y}`);
+  });
+});
+
+describe('toLngLat', () => {
+  it('undoes toUtm to a fraction of a millimetre across Catalonia', () => {
+    for (const [lat, lon] of [[41.86, 3.08], [40.6, 0.5], [42.8, 1.2], [41.4, 2.17]] as const) {
+      const [lng2, lat2] = toLngLat(...toUtm(lat, lon));
+      assert.ok(Math.abs(lat2 - lat) < 1e-8 && Math.abs(lng2 - lon) < 1e-8, `${lat},${lon} → ${lat2},${lng2}`);
+    }
   });
 });
 

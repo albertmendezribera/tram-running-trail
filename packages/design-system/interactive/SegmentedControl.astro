@@ -13,20 +13,22 @@ export interface Props {
   options: readonly Option[];
   /** The selected option. */
   value: string;
+  /** Smaller, for a control laid over other content, as on a map. */
+  compact?: boolean;
 }
 
 // Native radios: arrow keys, focus and form state come from the browser, and
 // the `change` event works with any island framework (E10 is still open).
-const { name, legend, options, value } = Astro.props;
+const { name, legend, options, value, compact = false } = Astro.props;
 ---
 
-<fieldset class="control">
+<fieldset class="control" data-compact={compact ? '' : undefined}>
   <legend class="legend">{legend}</legend>
   {
     options.map((o) => (
       <label class="option">
         <input class="input" type="radio" name={name} value={o.value} checked={o.value === value} disabled={o.disabled} />
-        <span class="face" data-type="text-sm">
+        <span class="face" data-type={compact ? 'text-xs' : 'text-sm'}>
           {o.label}
         </span>
       </label>
@@ -77,6 +79,11 @@ const { name, legend, options, value } = Astro.props;
     color: var(--tram-sys-text);
     background: var(--tram-sys-surface);
     cursor: pointer;
+  }
+
+  [data-compact] .face {
+    min-block-size: var(--tram-sys-space-7);
+    padding-inline: var(--tram-sys-space-3);
   }
 
   .input:not(:disabled, :checked) + .face:hover {

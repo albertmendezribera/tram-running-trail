@@ -73,6 +73,48 @@ La mateixa prova va trobar un problema d'ús: per arribar al que hi ha sota cali
 
 Chromium amb renderitzat per programari: WebGL 2 i WebGPU donen la mateixa imatge, 200.072 triangles, primer fotograma en uns 85 ms, cap error. 8 proves a `apps/web/tests/ds.spec.ts`.
 
+## Variant realista (2026-11-11)
+
+Després de provar-lo al mòbil, es demana un visor hiperrealista, més que el de Relive, potser amb MapLibre GL JS. Prototip fet fora del repositori, amb la mateixa ruta:
+
+![](E02/realista-vs-cartografic.png)
+
+- **Motor:** MapLibre GL JS 6.17.0 (BSD-3-Clause), amb relleu 3D, cel i boira.
+- **Dades, totes de l'ICGC (CC BY 4.0) i sense clau:**
+  - Ortofoto: `geoserveis.icgc.cat/servei/catalunya/mapa-base/wmts/orto/MON3857NW/{z}/{x}/{y}.png`, fins al zoom 20.
+  - Relleu de 5 m en terrain-RGB: `geoserveis.icgc.cat/servei/catalunya/contextmaps-terreny-5m-rgb/wmts/{z}/{x}/{y}.png`, zooms 7 a 14.
+- **Resultat:** l'ortofoto sobre el relleu real es veu a totes les vistes, amb pistes i camins reconeixibles. Cap error.
+
+**Decisió:** realista per defecte, amb un commutador per passar al cartogràfic. Integrat a M2:
+
+| Escriptori | Mòbil |
+|---|---|
+| ![](E02/m2-realista-escriptori.png) | ![](E02/m2-realista-mobil.png) |
+
+- **Fa el mateix que el cartogràfic:** la càmera segueix el scroll, el traçat per recórrer diu el pendent, hi ha fites, i perfil i vista assenyalen el mateix punt en tots dos sentits.
+- **Colors:** sobre la fotografia el terra és fosc, i el traçat fa servir els colors de nit dels tokens en tots dos temes.
+- **Commutador "Realista / Cartogràfic"** a la cantonada de la vista. Cada motor es carrega només quan es tria, el canvi conserva el punt del recorregut i la tria es recorda. Amb estalvi de dades activat, es comença pel cartogràfic.
+- **El mapa no agafa gestos:** el scroll de la pàgina continua manant, també al mòbil.
+- **Exageració vertical:** × 1,3 (el cartogràfic va a × 1,5).
+- **Proves:** les tessel·les de l'ICGC se simulen, de manera que no depenen dels seus servidors. No comproven que l'ortofoto real carregui.
+
+| Mesura | Realista (MapLibre) | Cartogràfic (actual) |
+|---|---|---|
+| Codi del motor, gzip, mesurat a la build | 452 KB (295 KB + 148 KB del *worker* + 10 KB de CSS) | 225 KB |
+| Dades del terreny | Unes 14 MB per recórrer tota la ruta en un mòbil a 3× (8,4 MB d'ortofoto i 5,8 MB de relleu) | 63 KB |
+| Primera vista | 3,4 MB | 63 KB |
+| Servidors en ús | Els de l'ICGC, mentre es mira | Cap de tercers |
+| Mode nit | L'ortofoto no en té | Sí |
+| Cobertura | Catalunya | On hi hagi model d'elevacions |
+
+El que això obre:
+
+- **Pressupost:** el motor realista supera els 250 KB de CLAUDE.md. Excepció acceptada l'11-11-2026: es carrega en diferit i només si es tria.
+- **Sense provar en un dispositiu real**, ni la fluïdesa ni el consum de dades. Dibuixat per programari és força més lent que el cartogràfic.
+- **Dades:** 14 MB per ruta és molt amb dades mòbils. Es pot reduir preparant en build només el corredor de la ruta (ortofoto en WebP o AVIF i el relleu de 10 m que ja tenim) i servint-lo des de R2.
+- **Fora de Catalunya:** el relleu obert existeix (Mapterhorn); la imatge de satèl·lit de qualitat acostuma a ser de pagament o amb clau.
+- **"Més que Relive":** a Catalunya l'ortofoto de l'ICGC té més detall que la imatge de satèl·lit habitual. Arbres i edificis en volum demanarien malles fotogramètriques (Google Photorealistic 3D Tiles), de pagament i amb cobertura rural incerta.
+
 ## Pendent
 
 - **Renderitzat per programari:** a Chromium sense GPU (les proves i la CI) cada fotograma triga uns 250 ms, i un scroll suau amb l'escena en marxa dura segons. Les proves ho toleren; no diu res d'un dispositiu amb GPU.

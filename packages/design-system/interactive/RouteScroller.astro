@@ -2,6 +2,7 @@
 import { formatNumber, type Locale } from '@tram/formats';
 import ElevationProfile from '../patterns/ElevationProfile.astro';
 import RouteSilhouette from './RouteSilhouette.astro';
+import SegmentedControl, { type Option } from './SegmentedControl.astro';
 import Viewer3DShell from './Viewer3DShell.astro';
 import { areaPath, createPlot, detectClimbs, elevationAt, GRADE_LABELS, gradeAt, linePath, type ProfilePoint, summarize } from '../patterns/elevation.ts';
 
@@ -16,9 +17,10 @@ export interface Props {
   /**
    * Adds a 3D view over the silhouette, which stays as its poster. The page gives
    * the scene to the viewer with this `id`; `credit` names the source of the terrain,
-   * and `grades` adds the legend of a route coloured by grade.
+   * `grades` adds the legend of a route coloured by grade, and `modes` a switch
+   * between ways of seeing the terrain: the page listens to its `change` event.
    */
-  viewer?: { id: string; label: string; credit?: string; grades?: boolean };
+  viewer?: { id: string; label: string; credit?: string; grades?: boolean; modes?: { name: string; legend: string; value: string; options: readonly Option[] } };
 }
 
 const COPY = {
@@ -60,6 +62,7 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
       <div class:list={['sky', viewer && 'sky-viewer']}>
         {
           viewer ? (
+            <>
             <Viewer3DShell id={viewer.id} label={viewer.label} locale={locale} fill>
               <RouteSilhouette slot="poster" area={area} line={line} />
               <div slot="text" class="notes" data-type="text-xs">
@@ -74,6 +77,12 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
                 {viewer.credit && <p class="credit">{viewer.credit}</p>}
               </div>
             </Viewer3DShell>
+            {viewer.modes && (
+              <div class="modes">
+                <SegmentedControl name={viewer.modes.name} legend={viewer.modes.legend} options={viewer.modes.options} value={viewer.modes.value} compact />
+              </div>
+            )}
+            </>
           ) : (
             <RouteSilhouette area={area} line={line} />
           )
@@ -152,6 +161,18 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
     grid-area: silhouette;
     position: relative;
     min-block-size: var(--tram-sys-space-11);
+  }
+
+  /* Over the corner of the view, as the layer switch of a map. It only works with JavaScript. */
+  .modes {
+    position: absolute;
+    inset-block-start: var(--tram-sys-space-2);
+    inset-inline-end: var(--tram-sys-space-2);
+    background: var(--tram-sys-surface);
+  }
+
+  .scroller:not([data-live]) .modes {
+    display: none;
   }
 
   .notes {

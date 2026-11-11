@@ -232,6 +232,17 @@ test.describe('ClimbList', () => {
 
 test.describe('M2 · Recórrer el tram', () => {
   const MOMENT = '/ds/moments/recorrer-el-tram/';
+  // The realistic view draws ICGC tiles: the tests serve a flat stand-in, so they need no one else's servers.
+  // Only the tests about the realistic view (and the baseline, which shows the default) start in it:
+  // drawn in software it is several times heavier than the cartographic one.
+  test.beforeEach(async ({ page }, info) => {
+    await page.route(/geoserveis\.icgc\.cat/, (route) => route.fulfill({ path: 'tests/fixtures/tile.png' }));
+    if (/realistic|baseline/.test(info.title)) return;
+    await page.addInitScript(() => {
+      if (!sessionStorage.getItem('tram-test')) localStorage.setItem('tram-viewer-mode', 'map');
+      sessionStorage.setItem('tram-test', '1');
+    });
+  });
   const runTo = async (page: Page, share: number): Promise<void> => {
     await page.evaluate((s) => {
       const track = document.querySelector('[data-track]')!;
@@ -321,6 +332,38 @@ test.describe('M2 · Recórrer el tram', () => {
     await expect(out(page, 'km')).toHaveText('2,00', SLOW);
   });
 
+  test('flies the realistic view with the scroll, as the first choice', async ({ page }) => {
+    test.slow();
+    await open(page, MOMENT);
+    await expect(page.getByRole('radio', { name: 'Realista' })).toBeChecked();
+    const viewer = page.locator('#m2-viewer');
+    await viewer.scrollIntoViewIfNeeded();
+    await expect(viewer).toHaveAttribute('data-state', 'ready', SLOW);
+    const canvas = viewer.locator('canvas');
+    await expect(canvas).toHaveAttribute('data-engine', 'maplibre');
+    await runTo(page, 0.3);
+    await expect.poll(async () => Number(await canvas.getAttribute('data-share')), SLOW).toBeCloseTo(0.3, 2);
+    await expect(viewer.locator('[data-scene-label="km"]:not([hidden])').filter({ hasText: /^4$/ })).toBeAttached();
+  });
+
+  test('switches between the realistic and the cartographic view, keeps the place and remembers the choice', async ({ page }) => {
+    test.slow();
+    const viewer = await startViewer(page);
+    const canvas = viewer.locator('canvas');
+    await runTo(page, 0.3);
+    await page.getByRole('radio', { name: 'Cartogràfic' }).check({ force: true });
+    await expect(canvas).toHaveAttribute('data-engine', /^three/, SLOW);
+    await expect(canvas).toHaveCount(1);
+    await expect.poll(async () => Number(await canvas.getAttribute('data-share')), SLOW).toBeCloseTo(0.3, 2);
+    // A new visit starts in the view chosen last. From the top of the page, where software rendering has less to draw.
+    await open(page, MOMENT);
+    await expect(page.getByRole('radio', { name: 'Cartogràfic' })).toBeChecked();
+    await page.getByRole('radio', { name: 'Realista' }).check({ force: true });
+    await viewer.scrollIntoViewIfNeeded();
+    await expect(viewer.locator('canvas[data-engine="maplibre"]')).toBeVisible(SLOW);
+    await expect(canvas).toHaveCount(1, SLOW);
+  });
+
   test('labels the kilometres and the places on the terrain', async ({ page }) => {
     test.slow();
     const viewer = await startViewer(page);
@@ -407,7 +450,8 @@ test.describe('M2 without JavaScript', () => {
     await expect(page.locator('[data-out="km"]')).toHaveText('0,00');
     await expect(page.getByText('Full de resultats')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Salta el recorregut' })).toBeVisible();
-    // The 3D button would do nothing here: only the silhouette shows.
+    // Neither the 3D button nor the switch of views would do anything here: only the silhouette shows.
+    await expect(page.getByRole('radio', { name: 'Realista' })).toBeHidden();
     await expect(page.getByRole('button', { name: 'Veure en 3D' })).toBeHidden();
     const track = await page.locator('[data-track]').boundingBox();
     expect(track!.height).toBeLessThan(2 * (page.viewportSize()!.height));

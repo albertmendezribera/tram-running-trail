@@ -66,6 +66,7 @@ Un "tram" és la unitat de qualsevol corredor: un tram ràpid d'asfalt o un tram
 | Hosting | **Cloudflare** (Workers + R2) | R2 per als assets 3D (terrenys, splats, pòsters) |
 | Dades | **Supabase (Postgres + PostGIS)** | Consultes geogràfiques del calendari. Content Layer d'Astro amb loaders propis |
 | 3D | **Three.js** "vanilla" dins d'illes | `WebGPURenderer` amb fallback automàtic a WebGL 2; shaders en **TSL** |
+| Visor de rutes realista | **MapLibre GL JS** | Ortofoto i relleu de l'ICGC sobre terreny 3D; mode per defecte del visor, amb commutador al cartogràfic (E02) |
 | Gràfics 2D | **Apache ECharts 6**, importació modular i renderitzat SVG al servidor | Vegeu la secció 9 |
 | UI interactiva | Illes lleugeres (framework pendent: vegeu E10) | Sense React, llevat que E10 en demostri la necessitat |
 | Design system | Paquet propi `packages/design-system`: tokens en format DTCG (JSON) → CSS custom properties, tema ECharts, constants per a Three.js i estils de les imatges OG | Única font de veritat visual. Vegeu la secció 6 |
@@ -519,7 +520,7 @@ Mesurats en un mòbil de gamma mitjana amb 4G:
 | CLS | < 0,05 |
 | INP | < 150 ms |
 | JS inicial en pàgines sense 3D | < 30 KB gzip |
-| Illa 3D (Three.js inclòs) | < 250 KB gzip, carregada en diferit |
+| Illa 3D (Three.js inclòs) | < 250 KB gzip, carregada en diferit. Excepció: el mode realista del visor de rutes (MapLibre GL JS), 452 KB, que només es carrega si es tria (E02, 11-11-2026) |
 | Assets de terreny, primera vista | < 1,5 MB, amb nivells de detall progressius |
 | Primer fotograma 3D després d'hidratar | < 2 s |
 

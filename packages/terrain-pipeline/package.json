@@ -6,7 +6,8 @@
   "description": "GPX \u2192 ICGC elevation model \u2192 terrain-RGB WebP and route, for the 3D route viewer (CLAUDE.md 8.1, E01).",
   "exports": {
     ".": "./src/index.ts",
-    "./terrain-rgb": "./src/terrain-rgb.ts"
+    "./terrain-rgb": "./src/terrain-rgb.ts",
+    "./utm": "./src/utm.ts"
   },
   "scripts": {
     "build-route": "node src/cli.ts",

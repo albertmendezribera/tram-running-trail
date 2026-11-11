@@ -5,7 +5,8 @@ import ClimbList from '@tram/design-system/patterns/ClimbList.astro';
 import StatBlock from '@tram/design-system/patterns/StatBlock.astro';
 import { kmStretches, summarize } from '@tram/design-system/patterns/elevation.ts';
 import { CALONGE } from '../real-profile';
-import terrain from '../terrain/calonge/terrain.json';
+// Both views draw ICGC data: the orthophoto and the elevation model.
+const CREDIT = 'Ortofoto i model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
 
 // Every figure comes from a real GPX: distance and elevation only.
 const summary = summarize(CALONGE);
@@ -31,7 +32,13 @@ const rows = kmStretches(CALONGE).map((r) => ({ km: r.km, gain: Math.round(r.gai
 <RouteScroller
   points={CALONGE}
   name="Calonge · sortida real"
-  viewer={{ id: 'm2-viewer', label: 'Vol en 3D pel recorregut de Calonge', credit: terrain.attribution, grades: true }}
+  viewer={{
+    id: 'm2-viewer',
+    label: 'Vol en 3D pel recorregut de Calonge',
+    credit: CREDIT,
+    grades: true,
+    modes: { name: 'm2-viewer-mode', legend: 'Com es veu el terreny', value: 'real', options: [{ value: 'real', label: 'Realista' }, { value: 'map', label: 'Cartogràfic' }] },
+  }}
 />
 
 <section class="sheet">
@@ -61,12 +68,22 @@ const rows = kmStretches(CALONGE).map((r) => ({ km: r.km, gain: Math.round(r.gai
 <script>
   import type { TramRouteScroller } from '@tram/design-system/interactive/route-scroller.ts';
   import type { SceneLoader } from '@tram/design-system/interactive/viewer-3d-shell.ts';
+  import { MODE_FIELD, preferredMode, rememberMode } from '../viewer-mode';
 
   // Three.js and the terrain load only when the viewer asks for its scene.
   void customElements.whenDefined('tram-viewer-3d').then(() => {
     const viewer = document.getElementById('m2-viewer') as (HTMLElement & { loader: SceneLoader }) | null;
     const scroller = viewer?.closest<TramRouteScroller>('tram-route-scroller');
-    if (viewer && scroller) viewer.loader = (context) => import('../calonge-viewer').then((m) => m.mount(context, scroller));
+    if (!viewer || !scroller) return;
+    // The switch shows the mode this reader last chose.
+    const chosen = scroller.querySelector<HTMLInputElement>(`input[name="${MODE_FIELD}"][value="${preferredMode()}"]`);
+    if (chosen) chosen.checked = true;
+    // Remembered at once, whether or not the 3D is running yet.
+    scroller.addEventListener('change', (event) => {
+      const input = event.target as HTMLInputElement;
+      if (input.name === MODE_FIELD && (input.value === 'real' || input.value === 'map')) rememberMode(input.value);
+    });
+    viewer.loader = (context) => import('../calonge-viewer').then((m) => m.mount(context, scroller));
   });
 </script>
 

@@ -3,11 +3,13 @@
 import { formatMeasure, formatNumber } from '@tram/formats';
 import type { TramRouteScroller } from '@tram/design-system/interactive/route-scroller.ts';
 import type { Scene, SceneContext } from '@tram/design-system/interactive/viewer-3d-shell.ts';
-import { gradeBands, summarize } from '@tram/design-system/patterns/elevation.ts';
-import { mountRouteViewer, type RouteMark } from '../three/route-viewer/scene.ts';
+import { elevationAt, gradeBands, summarize } from '@tram/design-system/patterns/elevation.ts';
+import { toLngLat } from '@tram/terrain-pipeline/utm';
+import type { RouteMark, RouteViewer } from '../three/route-viewer/scene.ts';
 import route from './terrain/calonge/route.json';
 import terrain from './terrain/calonge/terrain.json';
 import terrainUrl from './terrain/calonge/terrain.webp?url';
+import { MODE_FIELD, preferredMode, rememberMode, type ViewerMode } from './viewer-mode.ts';
 
 /** Course markers, computed from the profile: each kilometre, start, finish and the highest point. */
 function marks(scroller: TramRouteScroller): RouteMark[] {
@@ -33,21 +35,85 @@ function grades(scroller: TramRouteScroller): Array<{ from: number; to: number; 
   return gradeBands(points).map((band) => ({ from: (band.from - first) / length, to: (band.to - first) / length, level: band.level }));
 }
 
-/** The scroll runs the route: the camera follows the scroller, and both mark what the other points at. */
-export async function mount(context: SceneContext, scroller: TramRouteScroller): Promise<Scene> {
-  const viewer = await mountRouteViewer(context, {
-    terrainUrl,
-    terrain,
-    route: route as Array<[number, number]>,
+async function start(mode: ViewerMode, context: SceneContext, scroller: TramRouteScroller): Promise<RouteViewer> {
+  const shared = {
     share: scroller.share,
     marks: marks(scroller),
     grades: grades(scroller),
-    onStep: (direction) => scroller.stepKm(direction),
-    onPoint: (share) => scroller.preview(share),
-    onPick: (share) => scroller.goTo(share),
+    onStep: (direction: -1 | 1) => scroller.stepKm(direction),
+    onPoint: (share: number | null) => scroller.preview(share),
+    onPick: (share: number) => scroller.goTo(share),
+  };
+  if (mode === 'map') {
+    const { mountRouteViewer } = await import('../three/route-viewer/scene.ts');
+    return mountRouteViewer(context, { ...shared, terrainUrl, terrain, route: route as Array<[number, number]> });
+  }
+  const { mountRealRouteViewer } = await import('../map/route-viewer/scene.ts');
+  const { points } = scroller.route;
+  const first = points[0]![0];
+  const length = points.at(-1)![0] - first;
+  return mountRealRouteViewer(context, {
+    ...shared,
+    path: (route as Array<[number, number]>).map(([x, y]) => toLngLat(terrain.x0 + x, terrain.y0 + y)),
+    elevationAt: (share) => elevationAt(points, first + share * length),
   });
-  const on = <T,>(type: string, handle: (detail: T) => void): void => scroller.addEventListener(type, (event) => handle((event as CustomEvent<T>).detail), { signal: context.signal });
-  on<{ share: number }>('tram:progress', ({ share }) => viewer.setShare(share));
-  on<{ share: number | null }>('tram:preview', ({ share }) => viewer.setPreview(share));
-  return viewer;
+}
+
+/**
+ * The scroll runs the route: the camera follows the scroller, and both mark what
+ * the other points at. The mode switch swaps the engine without losing the place.
+ */
+export async function mount(context: SceneContext, scroller: TramRouteScroller): Promise<Scene> {
+  // The switch is the truth: it may have been used before the 3D was asked for.
+  const chosen = (): ViewerMode => (scroller.querySelector<HTMLInputElement>(`input[name="${MODE_FIELD}"]:checked`)?.value as ViewerMode | undefined) ?? preferredMode();
+  let mode = chosen();
+  let viewer = await start(mode, context, scroller);
+  let active = true;
+  const on = <T,>(target: EventTarget, type: string, handle: (detail: T, event: Event) => void): void =>
+    target.addEventListener(type, (event) => handle((event as CustomEvent<T>).detail, event), { signal: context.signal });
+  on<{ share: number }>(scroller, 'tram:progress', ({ share }) => viewer.setShare(share));
+  on<{ share: number | null }>(scroller, 'tram:preview', ({ share }) => viewer.setPreview(share));
+
+  // Brings the view in line with the switch, however many times it changed meanwhile.
+  let swapping = false;
+  const reconcile = async (): Promise<void> => {
+    if (swapping) return;
+    swapping = true;
+    context.container.setAttribute('aria-busy', 'true');
+    try {
+      while (chosen() !== mode && !context.signal.aborted) {
+        const next = chosen();
+        try {
+          // The new view is ready before the old one goes: no empty frame in between.
+          const fresh = await start(next, context, scroller);
+          viewer.dispose();
+          viewer = fresh;
+          mode = next;
+          viewer.setActive?.(active);
+        } catch (error) {
+          console.error(error);
+          const previous = scroller.querySelector<HTMLInputElement>(`input[name="${MODE_FIELD}"][value="${mode}"]`);
+          if (previous) previous.checked = true;
+          rememberMode(mode);
+        }
+      }
+    } finally {
+      swapping = false;
+      context.container.removeAttribute('aria-busy');
+    }
+  };
+  on<undefined>(scroller, 'change', (_, event) => {
+    if ((event.target as HTMLInputElement).name === MODE_FIELD) void reconcile();
+  });
+  // The switch may have moved while the first view was loading.
+  void reconcile();
+
+  return {
+    step: (direction) => viewer.step?.(direction),
+    setActive(next) {
+      active = next;
+      viewer.setActive?.(next);
+    },
+    dispose: () => viewer.dispose(),
+  };
 }

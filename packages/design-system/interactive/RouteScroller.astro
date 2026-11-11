@@ -1,6 +1,8 @@
 ---
 import { formatNumber, type Locale } from '@tram/formats';
 import ElevationProfile from '../patterns/ElevationProfile.astro';
+import RouteSilhouette from './RouteSilhouette.astro';
+import Viewer3DShell from './Viewer3DShell.astro';
 import { areaPath, createPlot, detectClimbs, elevationAt, gradeAt, linePath, type ProfilePoint, summarize } from '../patterns/elevation.ts';
 
 export interface Props {
@@ -9,6 +11,11 @@ export interface Props {
   /** Name of the route or race. */
   name: string;
   locale?: Locale;
+  /**
+   * Adds a 3D view over the silhouette, which stays as its poster. The page gives
+   * the scene to the viewer with this `id`; `credit` names the source of the terrain.
+   */
+  viewer?: { id: string; label: string; credit?: string };
 }
 
 const COPY = {
@@ -17,7 +24,7 @@ const COPY = {
   en: { km: 'Kilometre', elevation: 'Elevation', gain: 'Elevation gain', grade: 'Grade', climb: 'Climb', start: 'Start', finish: 'Finish', hint: 'Scroll to run the route. Click the profile to jump to a point.', profile: 'Profile of' },
 };
 
-const { points, name, locale = 'ca' } = Astro.props;
+const { points, name, locale = 'ca', viewer } = Astro.props;
 const copy = COPY[locale];
 const summary = summarize(points);
 const first = points[0]![0];
@@ -42,22 +49,21 @@ const length = Math.min(16, Math.max(4, summary.distanceKm * 0.6));
 const data = { points, climbs: chapters, start: copy.start, finish: copy.finish, locale, low, high };
 ---
 
-<tram-route-scroller class="scroller" style={`--track: ${length}`}>
+<tram-route-scroller class="scroller" style={`--track: ${length}`} data-viewer={viewer ? '' : undefined}>
   <script type="application/json" data-route set:html={JSON.stringify(data)} />
   <div class="track" data-track>
     <div class="stage">
-      <div class="sky" aria-hidden="true">
-      <svg class="silhouette" viewBox="0 0 1000 300" preserveAspectRatio="none">
-        <g class="ahead">
-          <path class="area" d={area} />
-          <path class="line" d={line} />
-        </g>
-        <g class="done">
-          <path class="area" d={area} />
-          <path class="line" d={line} />
-        </g>
-      </svg>
-      <svg class="runner" viewBox="-7 -7 14 14"><circle r="5.5" /></svg>
+      <div class:list={['sky', viewer && 'sky-viewer']}>
+        {
+          viewer ? (
+            <Viewer3DShell id={viewer.id} label={viewer.label} locale={locale} fill>
+              <RouteSilhouette slot="poster" area={area} line={line} />
+              {viewer.credit && <p slot="text" class="credit" data-type="text-xs">{viewer.credit}</p>}
+            </Viewer3DShell>
+          ) : (
+            <RouteSilhouette area={area} line={line} />
+          )
+        }
       </div>
 
       <div class="readout">
@@ -85,7 +91,7 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
 
       <div class="foot">
         <p class="hint" data-type="text-xs">{copy.hint}</p>
-        <ElevationProfile points={points} label={`${copy.profile} ${name}`} annotate={false} cursor />
+        <ElevationProfile points={points} label={`${copy.profile} ${name}`} annotate={false} cursor compact={Boolean(viewer)} locale={locale} />
       </div>
     </div>
   </div>
@@ -130,53 +136,9 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
     min-block-size: var(--tram-sys-space-11);
   }
 
-  .silhouette {
-    position: absolute;
-    inset: 0;
-    inline-size: 100%;
-    block-size: 100%;
-  }
-
-  /* The runner: signal colour with its mandatory outline (E09), at the edge of what has been run. */
-  .runner {
-    position: absolute;
-    inset-inline-start: calc(var(--progress) * 100%);
-    inset-block-start: var(--runner-y, 100%);
-    inline-size: var(--tram-sys-space-5);
-    block-size: var(--tram-sys-space-5);
-    transform: translate(-50%, -50%);
-    overflow: visible;
-    fill: var(--tram-sys-data-active);
-    stroke: var(--tram-sys-data-active-outline);
-    stroke-width: 2;
-  }
-
-  .ahead .area {
-    fill: var(--tram-sys-surface-alt);
-  }
-
-  .ahead .line {
-    fill: none;
-    stroke: var(--tram-sys-rule-strong);
-    stroke-width: var(--tram-sys-line-hairline);
-    vector-effect: non-scaling-stroke;
-  }
-
-  /* What has been run: the same shape, revealed up to the runner. */
-  .done {
-    clip-path: inset(0 calc((1 - var(--progress)) * 100%) 0 0);
-  }
-
-  .done .area {
-    fill: var(--tram-sys-map-contour);
-    fill-opacity: 0.5;
-  }
-
-  .done .line {
-    fill: none;
-    stroke: var(--tram-sys-data-primary);
-    stroke-width: var(--tram-sys-line-strong);
-    vector-effect: non-scaling-stroke;
+  .credit {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
   }
 
   .readout {
@@ -249,6 +211,12 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
     .stats {
       grid-template-columns: repeat(2, minmax(0, max-content));
     }
+
+    /* With the 3D view the figures keep to one row: the relief gets the room. */
+    .scroller[data-viewer] .stats {
+      grid-template-columns: repeat(3, minmax(0, max-content));
+      column-gap: var(--tram-sys-space-4);
+    }
   }
 
   @media (width >= 64rem) {
@@ -259,7 +227,7 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
       column-gap: var(--tram-sys-space-7);
     }
 
-    .sky {
+    .sky:not(.sky-viewer) {
       block-size: 80%;
       align-self: end;
     }

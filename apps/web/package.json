@@ -15,11 +15,14 @@
   },
   "dependencies": {
     "@tram/design-system": "workspace:*",
-    "@tram/formats": "workspace:*"
+    "@tram/formats": "workspace:*",
+    "@tram/terrain-pipeline": "workspace:*",
+    "three": "0.187.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
     "@playwright/test": "1.63.0",
+    "@types/three": "0.187.0",
     "astro": "6.4.8",
     "typescript": "5.9.3"
   }

@@ -45,6 +45,16 @@ Moment firma M2, "Recórrer el tram" (prototip al catàleg).
 - Funcions noves: `elevationAt`, `gradeAt`, `cumulativeGain` i `gainAt`. `formatNumber` accepta un mínim de decimals.
 - El vol 3D (Three.js i terreny) arriba a la Fase 1: E01, E02 i E04.
 
+Vol 3D a M2 (E01 i E02).
+
+- `RouteScroller` admet `viewer`: afegeix una vista 3D sobre la silueta, que queda de pòster. Emet `tram:progress` amb `{ share, km }` a cada canvi, i exposa `share` i `stepKm()`.
+- La silueta passa a `RouteSilhouette`, una peça de `RouteScroller`.
+- `Viewer3DShell` admet `fill`: ocupa el seu contenidor, sense marc, i només mostra l'ajuda de teclat a qui fa servir el teclat. Sense JavaScript ja no ensenya un botó que no faria res.
+- `ElevationProfile` admet `compact`: en pantalles estretes, un perfil més baix i sense llegenda, per quan acompanya una altra vista.
+- Amb el visor, el marcador de `RouteScroller` posa les tres xifres en una fila al mòbil.
+- L'escena és a `apps/web/src/three/` i pren els colors de `dist/three.ts`. No hi ha cap token nou.
+- Captures: `docs/explorations/E02/m2-*.png`.
+
 ## 0.1.0 · 2026-11-09
 
 Primera versió del pipeline (E16).

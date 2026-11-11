@@ -14,7 +14,9 @@ Plataforma de running d'asfalt i trail running. Abans d'escriure codi, llegiu [`
 | Tokens de tipografia | Fet: rols `[data-type]` i fonts a `packages/design-system/fonts/` |
 | E15 · Perfil altimètric | Decidida (SVG artesanal) i provada amb dos GPX reals: [`docs/explorations/E15-elevation-profile.md`](docs/explorations/E15-elevation-profile.md) |
 | E09 · Color i mode nit | Paleta validada, pendent de la prova a l'exterior: [`docs/explorations/E09-color-and-night.md`](docs/explorations/E09-color-and-night.md) |
-| M2 · Recórrer el tram | Prototip al catàleg (`/ds/moments/recorrer-el-tram/`), amb scroll i dades reals; el 3D, a la Fase 1 |
+| E01 · Format del terreny | Decidit (heightmap de 10 m en WebP) per a muntanya a Catalunya: [`docs/explorations/E01-terrain-format.md`](docs/explorations/E01-terrain-format.md) |
+| E02 · Llenguatge visual del terreny | Decidit (cartogràfic amb color): [`docs/explorations/E02-terrain-look.md`](docs/explorations/E02-terrain-look.md) |
+| M2 · Recórrer el tram | Prototip al catàleg (`/ds/moments/recorrer-el-tram/`), amb scroll, dades reals i vol 3D pel relleu; falta provar-lo en dispositius reals (E04) |
 | Lint (Stylelint, ESLint) | Fet: `pnpm lint`, regles de la secció 6.6 de `CLAUDE.md` |
 
 ## Requisits
@@ -33,5 +35,6 @@ pnpm test
 apps/web/                  Astro 6 (encara sense pàgines)
 packages/design-system/    tokens DTCG → CSS, ECharts, Three.js, OG, i components
 packages/formats/          formatació de xifres per idioma
+packages/terrain-pipeline/ GPX → model d'elevacions de l'ICGC → terreny i traçat per al 3D
 docs/explorations/         resultats de les exploracions E01–E17
 ```

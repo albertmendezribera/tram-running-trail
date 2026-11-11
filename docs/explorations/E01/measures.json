@@ -1,0 +1,77 @@
+{
+ "areaKm2": 10.0533,
+ "results": [
+  {
+   "option": "heightmap",
+   "spacing": "5 m",
+   "grid": "564×713",
+   "vertices": 402132,
+   "pngKB": 476,
+   "webpKB": 171.1,
+   "kbPerKm2": 17,
+   "rmsM": 0,
+   "maxM": 0,
+   "buildMs": 458
+  },
+  {
+   "option": "heightmap",
+   "spacing": "10 m",
+   "grid": "282×357",
+   "vertices": 100674,
+   "pngKB": 136.1,
+   "webpKB": 62.7,
+   "kbPerKm2": 6.2,
+   "rmsM": 0.25,
+   "maxM": 7.97,
+   "buildMs": 279
+  },
+  {
+   "option": "heightmap",
+   "spacing": "20 m",
+   "grid": "141×179",
+   "vertices": 25239,
+   "pngKB": 38.4,
+   "webpKB": 22,
+   "kbPerKm2": 2.2,
+   "rmsM": 0.63,
+   "maxM": 8.57,
+   "buildMs": 93
+  },
+  {
+   "option": "rtin",
+   "spacing": "≈5.5 m base",
+   "tolerance": "1 m",
+   "vertices": 33803,
+   "triangles": 67116,
+   "gzipKB": 430.7,
+   "kbPerKm2": 42.8,
+   "rmsM": 0.66,
+   "maxM": 7.24,
+   "buildMs": 38
+  },
+  {
+   "option": "rtin",
+   "spacing": "≈5.5 m base",
+   "tolerance": "2 m",
+   "vertices": 13847,
+   "triangles": 27394,
+   "gzipKB": 177.2,
+   "kbPerKm2": 17.6,
+   "rmsM": 0.88,
+   "maxM": 7.24,
+   "buildMs": 35
+  },
+  {
+   "option": "rtin",
+   "spacing": "≈5.5 m base",
+   "tolerance": "5 m",
+   "vertices": 3694,
+   "triangles": 7240,
+   "gzipKB": 47.1,
+   "kbPerKm2": 4.7,
+   "rmsM": 1.77,
+   "maxM": 8.09,
+   "buildMs": 29
+  }
+ ]
+}

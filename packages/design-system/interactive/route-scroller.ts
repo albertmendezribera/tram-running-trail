@@ -26,12 +26,16 @@ const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
  * works like a results board, the silhouette fills behind the runner and the
  * profile cursor follows. Clicking the profile jumps to that kilometre. Without
  * JavaScript the route is a static sheet: the tall scroll track only exists here.
+ *
+ * Each change emits `tram:progress` with `{ share, km }`, for a 3D view to follow.
  */
 export class TramRouteScroller extends HTMLElement {
   #data!: RouteData;
   #gains: number[] = [];
   #frame = 0;
   #chapter = '';
+  /** Kilometre a key step is scrolling to, so that quick presses add up. */
+  #goal: { km: number; until: number } | undefined;
 
   connectedCallback(): void {
     const json = this.querySelector<HTMLScriptElement>('script[data-route]');
@@ -64,6 +68,33 @@ export class TramRouteScroller extends HTMLElement {
     cancelAnimationFrame(this.#frame);
     this.#frame = requestAnimationFrame(() => this.#update());
   };
+
+  /** Share of the route run so far (0–1). */
+  get share(): number {
+    return this.#data ? this.#progress() : 0;
+  }
+
+  /** Scrolls to the next or the previous whole kilometre. Returns the text to announce. */
+  stepKm(direction: -1 | 1): string {
+    const { points, locale } = this.#data;
+    const first = points[0]![0];
+    const last = points.at(-1)![0];
+    const now = performance.now();
+    const from = this.#goal && this.#goal.until > now ? this.#goal.km : first + this.#progress() * (last - first);
+    const km = Math.min(last, Math.max(first, direction > 0 ? Math.floor(from + 0.05) + 1 : Math.ceil(from - 0.05) - 1));
+    this.#goal = { km, until: now + 1200 };
+    this.#scrollToKm(km);
+    return `Km ${formatNumber(km, locale, 2)}`;
+  }
+
+  #scrollToKm(km: number): void {
+    const points = this.#data.points;
+    const first = points[0]![0];
+    const share = (km - first) / (points.at(-1)![0] - first);
+    const box = this.#track.getBoundingClientRect();
+    const top = window.scrollY + box.top + share * (box.height - window.innerHeight);
+    window.scrollTo({ top, behavior: matchMedia(REDUCED_MOTION).matches ? 'auto' : 'smooth' });
+  }
 
   /** Scroll offset inside the track, as a share of the route (0–1). */
   #progress(): number {
@@ -98,18 +129,13 @@ export class TramRouteScroller extends HTMLElement {
 
     const figure = this.querySelector<HTMLElement>('figure[data-cursor]');
     if (figure) profileCursor(figure)?.setKm(km);
+    this.dispatchEvent(new CustomEvent('tram:progress', { detail: { share: progress, km } }));
   }
 
   /** A click on the profile scrolls to that kilometre; hovering only previews it. */
   #onProfileKm = (event: Event): void => {
     const { km, commit } = (event as CustomEvent<{ km: number; commit: boolean }>).detail;
-    if (!commit) return;
-    const points = this.#data.points;
-    const first = points[0]![0];
-    const share = (km - first) / (points.at(-1)![0] - first);
-    const box = this.#track.getBoundingClientRect();
-    const top = window.scrollY + box.top + share * (box.height - window.innerHeight);
-    window.scrollTo({ top, behavior: matchMedia(REDUCED_MOTION).matches ? 'auto' : 'smooth' });
+    if (commit) this.#scrollToKm(km);
   };
 }
 

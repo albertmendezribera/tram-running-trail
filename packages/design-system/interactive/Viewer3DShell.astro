@@ -9,6 +9,8 @@ export interface Props {
   locale?: Locale;
   /** Lets a page find this viewer to give it a scene. */
   id?: string;
+  /** Takes the size of its container instead of its own proportions, without a frame. */
+  fill?: boolean;
 }
 
 const COPY = {
@@ -17,7 +19,7 @@ const COPY = {
   en: { start: 'View in 3D', retry: 'Try again', loading: 'Loading the 3D view…', ready: '3D view ready. Use the arrow keys to move forward and back.', error: 'The 3D view could not be loaded.' },
 };
 
-const { label, load = 'visible', locale = 'ca', id } = Astro.props;
+const { label, load = 'visible', locale = 'ca', id, fill = false } = Astro.props;
 const copy = COPY[locale];
 ---
 
@@ -26,6 +28,7 @@ const copy = COPY[locale];
   id={id}
   data-state="poster"
   data-load={load}
+  data-fill={fill ? '' : undefined}
   data-text-loading={copy.loading}
   data-text-ready={copy.ready}
   data-text-error={copy.error}
@@ -72,6 +75,33 @@ const copy = COPY[locale];
   .stage:focus-visible {
     outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
     outline-offset: calc(var(--tram-sys-line-strong) * -1);
+  }
+
+  .viewer[data-fill] {
+    grid-template-rows: minmax(0, 1fr) auto;
+    block-size: 100%;
+  }
+
+  .viewer[data-fill] .frame {
+    aspect-ratio: auto;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  /* Over a full-size scene the keyboard hint is only shown to who is using the keyboard; screen readers always get it. */
+  .viewer[data-fill][data-state='ready']:not(:focus-within) .status {
+    position: absolute;
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-line-hairline);
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  /* Without JavaScript the button would do nothing: the poster stands alone. */
+  .viewer:not(:defined) .bar {
+    display: none;
   }
 
   [data-state='ready'] .poster {
@@ -127,7 +157,7 @@ const copy = COPY[locale];
   }
 
   @media (width >= 48rem) {
-    .frame {
+    .viewer:not([data-fill]) .frame {
       aspect-ratio: 16 / 9;
     }
   }

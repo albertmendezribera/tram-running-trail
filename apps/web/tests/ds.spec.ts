@@ -247,7 +247,9 @@ test.describe('M2 · Recórrer el tram', () => {
     await expect(out(page, 'chapter')).toHaveText('Arribada');
   });
 
+  // With reduced motion the 3D waits for its button: the capture is the poster, the same on every machine.
   test('matches its baseline in the middle of the climb', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await open(page, MOMENT);
     await runTo(page, 0.3);
     await expect(page).toHaveScreenshot('moment-climb.png');
@@ -260,6 +262,61 @@ test.describe('M2 · Recórrer el tram', () => {
     const box = (await plot.boundingBox())!;
     await page.mouse.click(box.x + box.width * 0.75, box.y + box.height / 2);
     await expect.poll(async () => Number((await out(page, 'km').textContent())!.replace(',', '.'))).toBeGreaterThan(8);
+  });
+
+  const startViewer = async (page: Page) => {
+    await open(page, MOMENT);
+    const viewer = page.locator('#m2-viewer');
+    await viewer.scrollIntoViewIfNeeded();
+    await expect(viewer).toHaveAttribute('data-state', 'ready');
+    return viewer;
+  };
+  const frames = async (page: Page): Promise<number> => Number(await page.locator('#m2-viewer canvas').getAttribute('data-frames'));
+  const settled = async (page: Page): Promise<boolean> => {
+    const before = await frames(page);
+    await page.waitForTimeout(300);
+    return (await frames(page)) === before;
+  };
+
+  test('flies the 3D camera with the scroll and draws only when the position changes', async ({ page }) => {
+    const viewer = await startViewer(page);
+    const canvas = viewer.locator('canvas');
+    await expect.poll(() => settled(page)).toBe(true);
+    const still = await frames(page);
+    await runTo(page, 0.3);
+    await expect.poll(async () => Number(await canvas.getAttribute('data-share'))).toBeCloseTo(0.3, 2);
+    await expect.poll(() => settled(page)).toBe(true);
+    expect(await frames(page)).toBeGreaterThan(still);
+  });
+
+  test('moves one kilometre with each arrow key', async ({ page }) => {
+    const viewer = await startViewer(page);
+    await viewer.getByRole('group', { name: 'Vol en 3D pel recorregut de Calonge' }).focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(viewer.getByRole('status')).toHaveText('Km 1');
+    await expect(out(page, 'km')).toHaveText('1,00');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowRight');
+    await expect(viewer.getByRole('status')).toHaveText('Km 3');
+    await page.keyboard.press('ArrowLeft');
+    await expect(out(page, 'km')).toHaveText('2,00');
+  });
+
+  test('keeps the silhouette and waits for the button with reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, MOMENT);
+    const viewer = page.locator('#m2-viewer');
+    await viewer.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
+    await expect(viewer).toHaveAttribute('data-state', 'poster');
+    await expect(viewer.locator('canvas')).toHaveCount(0);
+    await viewer.getByRole('button', { name: 'Veure en 3D' }).click();
+    await expect(viewer).toHaveAttribute('data-state', 'ready');
+  });
+
+  test('credits the source of the terrain', async ({ page }) => {
+    await open(page, MOMENT);
+    await expect(page.locator('tram-route-scroller')).toContainText('Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0');
   });
 
   test('has no horizontal overflow and is not indexable', async ({ page }) => {
@@ -277,6 +334,8 @@ test.describe('M2 without JavaScript', () => {
     await expect(page.locator('tram-route-scroller')).not.toHaveAttribute('data-live', '');
     await expect(page.locator('[data-out="km"]')).toHaveText('0,00');
     await expect(page.getByText('Full de resultats')).toBeVisible();
+    // The 3D button would do nothing here: only the silhouette shows.
+    await expect(page.getByRole('button', { name: 'Veure en 3D' })).toBeHidden();
     const track = await page.locator('[data-track]').boundingBox();
     expect(track!.height).toBeLessThan(2 * (page.viewportSize()!.height));
   });

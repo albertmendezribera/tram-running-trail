@@ -5,6 +5,7 @@ import ClimbList from '@tram/design-system/patterns/ClimbList.astro';
 import StatBlock from '@tram/design-system/patterns/StatBlock.astro';
 import { kmStretches, summarize } from '@tram/design-system/patterns/elevation.ts';
 import { CALONGE } from '../real-profile';
+import terrain from '../terrain/calonge/terrain.json';
 
 // Every figure comes from a real GPX: distance and elevation only.
 const summary = summarize(CALONGE);
@@ -23,11 +24,15 @@ const rows = kmStretches(CALONGE).map((r) => ({ km: r.km, gain: Math.round(r.gai
   <p class="kicker" data-type="text-xs">Moment firma · M2 · prototip</p>
   <h1 class="title" data-type="display-lg">Recórrer el tram</h1>
   <p class="lede" data-type="text-lg">
-    Una sortida real a Calonge, quilòmetre a quilòmetre. El perfil queda enganxat a baix i les xifres canvien com en un marcador. El vol 3D pel terreny s'hi afegirà a la Fase 1.
+    Una sortida real a Calonge, quilòmetre a quilòmetre. La càmera vola pel relleu real mentre fas scroll, el perfil queda enganxat a baix i les xifres canvien com en un marcador.
   </p>
 </header>
 
-<RouteScroller points={CALONGE} name="Calonge · sortida real" />
+<RouteScroller
+  points={CALONGE}
+  name="Calonge · sortida real"
+  viewer={{ id: 'm2-viewer', label: 'Vol en 3D pel recorregut de Calonge', credit: terrain.attribution }}
+/>
 
 <section class="sheet">
   <h2 class="sheet-title" data-type="display-sm">Full de resultats</h2>
@@ -52,6 +57,18 @@ const rows = kmStretches(CALONGE).map((r) => ({ km: r.km, gain: Math.round(r.gai
     </div>
   </div>
 </section>
+
+<script>
+  import type { TramRouteScroller } from '@tram/design-system/interactive/route-scroller.ts';
+  import type { SceneLoader } from '@tram/design-system/interactive/viewer-3d-shell.ts';
+
+  // Three.js and the terrain load only when the viewer asks for its scene.
+  void customElements.whenDefined('tram-viewer-3d').then(() => {
+    const viewer = document.getElementById('m2-viewer') as (HTMLElement & { loader: SceneLoader }) | null;
+    const scroller = viewer?.closest<TramRouteScroller>('tram-route-scroller');
+    if (viewer && scroller) viewer.loader = (context) => import('../calonge-viewer').then((m) => m.mount(context, scroller));
+  });
+</script>
 
 <style>
   .intro {

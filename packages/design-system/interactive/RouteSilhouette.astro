@@ -1,0 +1,76 @@
+---
+export interface Props {
+  /** SVG paths in a 1000 × 300 box, from `areaPath` and `linePath`. */
+  area: string;
+  line: string;
+}
+
+const { area, line } = Astro.props;
+---
+
+<!-- Part of RouteScroller: reads --progress and --runner-y from it. Decorative: the figures are in the readout. -->
+<div class="route-silhouette" aria-hidden="true">
+  <svg class="silhouette" viewBox="0 0 1000 300" preserveAspectRatio="none">
+    <g class="ahead">
+      <path class="area" d={area}></path>
+      <path class="line" d={line}></path>
+    </g>
+    <g class="done">
+      <path class="area" d={area}></path>
+      <path class="line" d={line}></path>
+    </g>
+  </svg>
+  <svg class="runner" viewBox="-7 -7 14 14"><circle r="5.5"></circle></svg>
+</div>
+
+<style>
+  .route-silhouette,
+  .silhouette {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  /* The runner: signal colour with its mandatory outline (E09), at the edge of what has been run. */
+  .runner {
+    position: absolute;
+    inset-inline-start: calc(var(--progress) * 100%);
+    inset-block-start: var(--runner-y, 100%);
+    inline-size: var(--tram-sys-space-5);
+    block-size: var(--tram-sys-space-5);
+    transform: translate(-50%, -50%);
+    overflow: visible;
+    fill: var(--tram-sys-data-active);
+    stroke: var(--tram-sys-data-active-outline);
+    stroke-width: 2;
+  }
+
+  .ahead .area {
+    fill: var(--tram-sys-surface-alt);
+  }
+
+  .ahead .line {
+    fill: none;
+    stroke: var(--tram-sys-rule-strong);
+    stroke-width: var(--tram-sys-line-hairline);
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* What has been run: the same shape, revealed up to the runner. */
+  .done {
+    clip-path: inset(0 calc((1 - var(--progress)) * 100%) 0 0);
+  }
+
+  .done .area {
+    fill: var(--tram-sys-map-contour);
+    fill-opacity: 0.5;
+  }
+
+  .done .line {
+    fill: none;
+    stroke: var(--tram-sys-data-primary);
+    stroke-width: var(--tram-sys-line-strong);
+    vector-effect: non-scaling-stroke;
+  }
+</style>

@@ -17,7 +17,8 @@ export default defineConfig({
   // No platform in the path: baselines are only generated in the CI image (E17).
   snapshotPathTemplate: '{testDir}/__screenshots__/{projectName}/{arg}{ext}',
   expect: { toHaveScreenshot: { animations: 'disabled' }, ...(emulated ? { timeout: 15_000 } : {}) },
-  use: { baseURL: `http://localhost:${PORT}` },
+  // The 3D scenes need WebGL, which headless Chromium only gives through its software renderer.
+  use: { baseURL: `http://localhost:${PORT}`, launchOptions: { args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] } },
   projects: Object.entries(VIEWPORTS).flatMap(([size, viewport]) =>
     Object.entries(SCHEMES).map(([theme, colorScheme]) => ({
       name: `${size}-${theme}`,

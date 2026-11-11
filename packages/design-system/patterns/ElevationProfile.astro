@@ -26,6 +26,8 @@ export interface Props {
    * The profile itself still ships no JavaScript: the page that wants the cursor imports it.
    */
   cursor?: boolean;
+  /** On narrow screens, a shorter plot without the legend: for a profile that accompanies another view. */
+  compact?: boolean;
   locale?: Locale;
 }
 
@@ -52,7 +54,7 @@ const HATCH_GAP = [0, 9, 6, 4];
 const WIDTH = 1000;
 const HEIGHT = 300;
 
-const { points, label, pois = [], annotate = true, cursor = false, locale = 'ca' } = Astro.props;
+const { points, label, pois = [], annotate = true, cursor = false, compact = false, locale = 'ca' } = Astro.props;
 const copy = COPY[locale];
 const hasRoute = points.length >= 2;
 
@@ -117,7 +119,7 @@ const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nea
   !plot ? (
     <p class="absent" data-type="text-sm">{copy.absent}</p>
   ) : (
-    <figure class="profile" data-cursor={cursor ? '' : undefined}>
+    <figure class="profile" data-cursor={cursor ? '' : undefined} data-compact={compact ? '' : undefined}>
       {cursor && <script type="application/json" data-points set:html={JSON.stringify({ points, low: domain[0], high: domain[1] })} />}
       <div class="chart">
         <span class="unit" data-type="text-xs">m</span>
@@ -432,6 +434,14 @@ const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nea
 
   @media (width < 48rem) {
     .x [data-minor] {
+      display: none;
+    }
+
+    [data-compact] .chart {
+      grid-template-rows: auto 7rem var(--tram-sys-space-6);
+    }
+
+    [data-compact] .legend {
       display: none;
     }
   }

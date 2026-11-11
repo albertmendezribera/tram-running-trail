@@ -1,0 +1,11 @@
+{
+  "crs": "EPSG:25831",
+  "x0": 506100,
+  "y0": 4633920,
+  "cell": 10,
+  "cols": 282,
+  "rows": 357,
+  "min": 7.8,
+  "max": 357.2,
+  "attribution": "Model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0"
+}

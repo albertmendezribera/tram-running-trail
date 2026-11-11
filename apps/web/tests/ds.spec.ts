@@ -254,6 +254,9 @@ test.describe('M2 · Recórrer el tram', () => {
   const out = (page: Page, name: string) => page.locator(`[data-out="${name}"]`);
   // Headless Chromium draws the 3D in software, a few frames per second: a smooth scroll with the scene running takes seconds.
   const SLOW = { timeout: 30_000 };
+  // The realistic view is several times slower again, most of all on the shared machines of CI.
+  const REAL = { timeout: 90_000 };
+  const REAL_TEST = 300_000;
 
   test('runs the route with the scroll, from start to finish', async ({ page }) => {
     await open(page, MOMENT);
@@ -297,7 +300,7 @@ test.describe('M2 · Recórrer el tram', () => {
     const viewer = page.locator('#m2-viewer');
     await viewer.scrollIntoViewIfNeeded();
     // Loading the island and building the terrain takes a while on a busy machine.
-    await expect(viewer).toHaveAttribute('data-state', 'ready', SLOW);
+    await expect(viewer).toHaveAttribute('data-state', 'ready', REAL);
     return viewer;
   };
   const frames = async (page: Page): Promise<number> => Number(await page.locator('#m2-viewer canvas').getAttribute('data-frames'));
@@ -332,36 +335,50 @@ test.describe('M2 · Recórrer el tram', () => {
     await expect(out(page, 'km')).toHaveText('2,00', SLOW);
   });
 
-  test('flies the realistic view with the scroll, as the first choice', async ({ page }) => {
-    test.slow();
+  // The realistic view drawn in software manages about a frame per second in flight. These tests keep it
+  // to single frames: from the top of the page, or with reduced motion, where the camera jumps instead of easing.
+  test('starts in the realistic view', async ({ page }) => {
+    test.setTimeout(REAL_TEST);
     await open(page, MOMENT);
     await expect(page.getByRole('radio', { name: 'Realista' })).toBeChecked();
     const viewer = page.locator('#m2-viewer');
     await viewer.scrollIntoViewIfNeeded();
-    await expect(viewer).toHaveAttribute('data-state', 'ready', SLOW);
+    await expect(viewer).toHaveAttribute('data-state', 'ready', REAL);
+    await expect(viewer.locator('canvas')).toHaveAttribute('data-engine', 'maplibre');
+  });
+
+  test('moves the realistic view with the scroll and keeps the place when the view changes', async ({ page }) => {
+    test.setTimeout(REAL_TEST);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, MOMENT);
+    const viewer = page.locator('#m2-viewer');
+    await viewer.getByRole('button', { name: 'Veure en 3D' }).click();
+    await expect(viewer).toHaveAttribute('data-state', 'ready', REAL);
     const canvas = viewer.locator('canvas');
     await expect(canvas).toHaveAttribute('data-engine', 'maplibre');
     await runTo(page, 0.3);
-    await expect.poll(async () => Number(await canvas.getAttribute('data-share')), SLOW).toBeCloseTo(0.3, 2);
+    await expect.poll(async () => Number(await canvas.getAttribute('data-share')), REAL).toBeCloseTo(0.3, 2);
     await expect(viewer.locator('[data-scene-label="km"]:not([hidden])').filter({ hasText: /^4$/ })).toBeAttached();
+    await page.getByRole('radio', { name: 'Cartogràfic' }).check({ force: true });
+    await expect(viewer.locator('canvas[data-engine^="three"]')).toBeVisible(REAL);
+    await expect(canvas).toHaveCount(1, REAL);
+    await expect.poll(async () => Number(await canvas.getAttribute('data-share')), REAL).toBeCloseTo(0.3, 2);
   });
 
-  test('switches between the realistic and the cartographic view, keeps the place and remembers the choice', async ({ page }) => {
-    test.slow();
+  test('remembers the view chosen, realistic or cartographic, on the next visit', async ({ page }) => {
+    test.setTimeout(REAL_TEST);
     const viewer = await startViewer(page);
     const canvas = viewer.locator('canvas');
-    await runTo(page, 0.3);
     await page.getByRole('radio', { name: 'Cartogràfic' }).check({ force: true });
-    await expect(canvas).toHaveAttribute('data-engine', /^three/, SLOW);
-    await expect(canvas).toHaveCount(1);
-    await expect.poll(async () => Number(await canvas.getAttribute('data-share')), SLOW).toBeCloseTo(0.3, 2);
-    // A new visit starts in the view chosen last. From the top of the page, where software rendering has less to draw.
+    await expect(viewer.locator('canvas[data-engine^="three"]')).toBeVisible(REAL);
+    await expect(canvas).toHaveCount(1, REAL);
     await open(page, MOMENT);
     await expect(page.getByRole('radio', { name: 'Cartogràfic' })).toBeChecked();
+    // The switch also works before the 3D has started.
     await page.getByRole('radio', { name: 'Realista' }).check({ force: true });
     await viewer.scrollIntoViewIfNeeded();
-    await expect(viewer.locator('canvas[data-engine="maplibre"]')).toBeVisible(SLOW);
-    await expect(canvas).toHaveCount(1, SLOW);
+    await expect(viewer.locator('canvas[data-engine="maplibre"]')).toBeVisible(REAL);
+    await expect(canvas).toHaveCount(1, REAL);
   });
 
   test('labels the kilometres and the places on the terrain', async ({ page }) => {

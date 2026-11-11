@@ -13,7 +13,8 @@ export default defineConfig({
   fullyParallel: true,
   ...(emulated ? { workers: 2, timeout: 90_000 } : {}),
   forbidOnly: Boolean(process.env['CI']),
-  reporter: [['list'], ['html', { open: 'never' }]],
+  // On GitHub a failed test also becomes an annotation on the run, readable without downloading the log.
+  reporter: [['list'], ['html', { open: 'never' }], ...(process.env['CI'] ? [['github'] as ['github']] : [])],
   // No platform in the path: baselines are only generated in the CI image (E17).
   snapshotPathTemplate: '{testDir}/__screenshots__/{projectName}/{arg}{ext}',
   expect: { toHaveScreenshot: { animations: 'disabled' }, ...(emulated ? { timeout: 15_000 } : {}) },

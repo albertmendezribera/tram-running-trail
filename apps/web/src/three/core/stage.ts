@@ -38,6 +38,7 @@ export async function createStage(container: HTMLElement, hooks: StageHooks): Pr
     if (!active) return;
     const moving = hooks.frame();
     canvas.dataset['frames'] = String(++frames);
+    canvas.dataset['moving'] = String(moving);
     if (moving) invalidate();
   };
   const invalidate = (): void => {

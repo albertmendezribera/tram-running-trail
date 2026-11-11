@@ -234,6 +234,8 @@ test.describe('M2 · Recórrer el tram', () => {
     await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
   };
   const out = (page: Page, name: string) => page.locator(`[data-out="${name}"]`);
+  // Headless Chromium draws the 3D in software, a few frames per second: a smooth scroll with the scene running takes seconds.
+  const SLOW = { timeout: 30_000 };
 
   test('runs the route with the scroll, from start to finish', async ({ page }) => {
     await open(page, MOMENT);
@@ -256,12 +258,13 @@ test.describe('M2 · Recórrer el tram', () => {
   });
 
   test('jumps to a kilometre when the profile is clicked', async ({ page }) => {
+    test.slow();
     await open(page, MOMENT);
     await runTo(page, 0.1);
     const plot = page.locator('tram-route-scroller .plot');
     const box = (await plot.boundingBox())!;
     await page.mouse.click(box.x + box.width * 0.75, box.y + box.height / 2);
-    await expect.poll(async () => Number((await out(page, 'km').textContent())!.replace(',', '.'))).toBeGreaterThan(8);
+    await expect.poll(async () => Number((await out(page, 'km').textContent())!.replace(',', '.')), SLOW).toBeGreaterThan(8);
   });
 
   const startViewer = async (page: Page) => {
@@ -272,34 +275,35 @@ test.describe('M2 · Recórrer el tram', () => {
     return viewer;
   };
   const frames = async (page: Page): Promise<number> => Number(await page.locator('#m2-viewer canvas').getAttribute('data-frames'));
-  const settled = async (page: Page): Promise<boolean> => {
-    const before = await frames(page);
-    await page.waitForTimeout(300);
-    return (await frames(page)) === before;
-  };
 
   test('flies the 3D camera with the scroll and draws only when the position changes', async ({ page }) => {
     const viewer = await startViewer(page);
+    test.slow();
     const canvas = viewer.locator('canvas');
-    await expect.poll(() => settled(page)).toBe(true);
-    const still = await frames(page);
+    const start = await frames(page);
     await runTo(page, 0.3);
-    await expect.poll(async () => Number(await canvas.getAttribute('data-share'))).toBeCloseTo(0.3, 2);
-    await expect.poll(() => settled(page)).toBe(true);
-    expect(await frames(page)).toBeGreaterThan(still);
+    await expect.poll(async () => Number(await canvas.getAttribute('data-share')), SLOW).toBeCloseTo(0.3, 2);
+    await expect(canvas).toHaveAttribute('data-moving', 'false', SLOW);
+    const arrived = await frames(page);
+    expect(arrived).toBeGreaterThan(start);
+    // Standing still costs nothing: no frame is drawn until the position changes again.
+    await page.waitForTimeout(600);
+    expect(await frames(page)).toBe(arrived);
   });
 
   test('moves one kilometre with each arrow key', async ({ page }) => {
+    test.slow();
     const viewer = await startViewer(page);
     await viewer.getByRole('group', { name: 'Vol en 3D pel recorregut de Calonge' }).focus();
     await page.keyboard.press('ArrowRight');
     await expect(viewer.getByRole('status')).toHaveText('Km 1');
-    await expect(out(page, 'km')).toHaveText('1,00');
+    await expect(out(page, 'km')).toHaveText('1,00', SLOW);
     await page.keyboard.press('ArrowRight');
     await page.keyboard.press('ArrowRight');
     await expect(viewer.getByRole('status')).toHaveText('Km 3');
     await page.keyboard.press('ArrowLeft');
-    await expect(out(page, 'km')).toHaveText('2,00');
+    await expect(viewer.getByRole('status')).toHaveText('Km 2');
+    await expect(out(page, 'km')).toHaveText('2,00', SLOW);
   });
 
   test('keeps the silhouette and waits for the button with reduced motion', async ({ page }) => {

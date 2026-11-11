@@ -67,6 +67,7 @@ Chromium amb renderitzat per programari: WebGL 2 i WebGPU donen la mateixa imatg
 
 ## Pendent
 
+- **Renderitzat per programari:** a Chromium sense GPU (les proves i la CI) cada fotograma triga uns 250 ms, i un scroll suau amb l'escena en marxa dura segons. Les proves ho toleren; no diu res d'un dispositiu amb GPU.
 - **Fotogrames per segon reals.** Les mesures fetes només compten l'enviament d'ordres, no el dibuix: no valen. És E04, amb un iPhone de fa 3–4 anys i un Android de gamma mitjana.
 - **Safari i Firefox:** no s'hi ha provat.
 - **Regressió visual del 3D:** la captura de referència de M2 és el pòster, no l'escena.

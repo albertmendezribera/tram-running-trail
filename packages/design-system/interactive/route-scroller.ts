@@ -45,6 +45,8 @@ export class TramRouteScroller extends HTMLElement {
     this.dataset['live'] = '';
     window.addEventListener('scroll', this.#schedule, { passive: true });
     window.addEventListener('resize', this.#schedule);
+    window.addEventListener('wheel', this.#release, { passive: true });
+    window.addEventListener('touchstart', this.#release, { passive: true });
     this.addEventListener('tram:km', this.#onProfileKm);
     this.#update();
   }
@@ -52,6 +54,8 @@ export class TramRouteScroller extends HTMLElement {
   disconnectedCallback(): void {
     window.removeEventListener('scroll', this.#schedule);
     window.removeEventListener('resize', this.#schedule);
+    window.removeEventListener('wheel', this.#release);
+    window.removeEventListener('touchstart', this.#release);
     this.removeEventListener('tram:km', this.#onProfileKm);
     cancelAnimationFrame(this.#frame);
   }
@@ -63,6 +67,11 @@ export class TramRouteScroller extends HTMLElement {
   #out(name: string): HTMLElement {
     return this.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
   }
+
+  /** The reader scrolls by hand: the next key step starts from where they are. */
+  #release = (): void => {
+    this.#goal = undefined;
+  };
 
   #schedule = (): void => {
     cancelAnimationFrame(this.#frame);
@@ -82,7 +91,8 @@ export class TramRouteScroller extends HTMLElement {
     const now = performance.now();
     const from = this.#goal && this.#goal.until > now ? this.#goal.km : first + this.#progress() * (last - first);
     const km = Math.min(last, Math.max(first, direction > 0 ? Math.floor(from + 0.05) + 1 : Math.ceil(from - 0.05) - 1));
-    this.#goal = { km, until: now + 1200 };
+    // Kept until the scroll gets there, however long a slow machine takes.
+    this.#goal = { km, until: now + 10_000 };
     this.#scrollToKm(km);
     return `Km ${formatNumber(km, locale, 2)}`;
   }
@@ -114,6 +124,7 @@ export class TramRouteScroller extends HTMLElement {
     this.style.setProperty('--progress', String(progress));
     const { low, high } = this.#data;
     this.style.setProperty('--runner-y', `${(1 - (elevationAt(points, km) - low) / (high - low)) * 100}%`);
+    if (this.#goal && Math.abs(km - this.#goal.km) < 0.02) this.#goal = undefined;
     this.#out('km').textContent = n(km, 2);
     this.#out('elevation').textContent = n(elevationAt(points, km), 0);
     this.#out('gain').textContent = n(gainAt(points, this.#gains, km), 0);

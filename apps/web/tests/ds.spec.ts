@@ -264,6 +264,13 @@ test.describe('M2 · Recórrer el tram', () => {
     await expect(page).toHaveScreenshot('moment-climb.png');
   });
 
+  test('offers a way past the route without running it', async ({ page }) => {
+    await open(page, MOMENT);
+    await page.getByRole('link', { name: 'Salta el recorregut' }).click();
+    await expect(page.getByRole('heading', { name: 'Full de resultats' })).toBeInViewport();
+    await expect(out(page, 'km')).toHaveText('12,41');
+  });
+
   test('jumps to a kilometre when the profile is clicked', async ({ page }) => {
     test.slow();
     await open(page, MOMENT);
@@ -399,6 +406,7 @@ test.describe('M2 without JavaScript', () => {
     await expect(page.locator('tram-route-scroller')).not.toHaveAttribute('data-live', '');
     await expect(page.locator('[data-out="km"]')).toHaveText('0,00');
     await expect(page.getByText('Full de resultats')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Salta el recorregut' })).toBeVisible();
     // The 3D button would do nothing here: only the silhouette shows.
     await expect(page.getByRole('button', { name: 'Veure en 3D' })).toBeHidden();
     const track = await page.locator('[data-track]').boundingBox();

@@ -57,6 +57,7 @@ Vol 3D a M2 (E01 i E02).
 - **Tokens nous: escala de pendent** (E09). `ref.grade-1` a `ref.grade-4` i `ref.night-grade-1` a `ref.night-grade-4`, i el rol `sys.data.grade.1` a `.4`. La build exigeix 3:1 a cada nivell sobre `surface` i `surface.alt`. Captures: `docs/explorations/E09/pendent-*.png`; abans el traçat per recórrer anava en `text.muted`.
 - **`ElevationProfile`: les bandes de pendent passen del marró de `map.contour` a l'escala lila**, la mateixa del traçat 3D, i conserven les trames. Abans: `docs/explorations/E15/profile-light-desktop.png`. Després: `docs/explorations/E09/perfil-lila-*.png`.
 - `RouteScroller`: `viewer.grades` afegeix la llegenda de l'escala, que només es mostra en pantalles estretes (a les amples ja hi ha la del perfil). `GRADE_LABELS` (a `elevation.ts`) dona els noms dels nivells al perfil i a la llegenda.
+- `RouteScroller`: enllaç "Salta el recorregut", sempre visible, que porta al final del component (`id` per a pàgines amb més d'un). En pantalles estretes l'ajuda es queda en una frase.
 - `Viewer3DShell` dona estil a les fites que una escena afegeix sobre el llenç: elements `data-scene-label` (`km` o `place`) dins de `data-scene-labels`.
 - Captures: `docs/explorations/E02/m2-*.png`.
 

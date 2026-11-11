@@ -11,6 +11,8 @@ export interface Props {
   /** Name of the route or race. */
   name: string;
   locale?: Locale;
+  /** Needed when a page has more than one scroller: names the place the skip link jumps to. */
+  id?: string;
   /**
    * Adds a 3D view over the silhouette, which stays as its poster. The page gives
    * the scene to the viewer with this `id`; `credit` names the source of the terrain,
@@ -20,12 +22,13 @@ export interface Props {
 }
 
 const COPY = {
-  ca: { km: 'Quilòmetre', elevation: 'Altitud', gain: 'Desnivell positiu', grade: 'Pendent', climb: 'Pujada', start: 'Sortida', finish: 'Arribada', hint: 'Fes scroll per recórrer el tram. Clica el perfil per saltar a un punt.', profile: 'Perfil de' },
-  es: { km: 'Kilómetro', elevation: 'Altitud', gain: 'Desnivel positivo', grade: 'Pendiente', climb: 'Subida', start: 'Salida', finish: 'Llegada', hint: 'Haz scroll para recorrer el tramo. Pulsa el perfil para saltar a un punto.', profile: 'Perfil de' },
-  en: { km: 'Kilometre', elevation: 'Elevation', gain: 'Elevation gain', grade: 'Grade', climb: 'Climb', start: 'Start', finish: 'Finish', hint: 'Scroll to run the route. Click the profile to jump to a point.', profile: 'Profile of' },
+  ca: { km: 'Quilòmetre', elevation: 'Altitud', gain: 'Desnivell positiu', grade: 'Pendent', climb: 'Pujada', start: 'Sortida', finish: 'Arribada', hint: 'Fes scroll per recórrer el tram.', jump: 'Clica el perfil per saltar a un punt.', skip: 'Salta el recorregut', profile: 'Perfil de' },
+  es: { km: 'Kilómetro', elevation: 'Altitud', gain: 'Desnivel positivo', grade: 'Pendiente', climb: 'Subida', start: 'Salida', finish: 'Llegada', hint: 'Haz scroll para recorrer el tramo.', jump: 'Pulsa el perfil para saltar a un punto.', skip: 'Saltar el recorrido', profile: 'Perfil de' },
+  en: { km: 'Kilometre', elevation: 'Elevation', gain: 'Elevation gain', grade: 'Grade', climb: 'Climb', start: 'Start', finish: 'Finish', hint: 'Scroll to run the route.', jump: 'Click the profile to jump to a point.', skip: 'Skip the route', profile: 'Profile of' },
 };
 
-const { points, name, locale = 'ca', viewer } = Astro.props;
+const { points, name, locale = 'ca', viewer, id = 'route' } = Astro.props;
+const endId = `${id}-end`;
 const copy = COPY[locale];
 const summary = summarize(points);
 const first = points[0]![0];
@@ -101,11 +104,15 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
       </div>
 
       <div class="foot">
-        <p class="hint" data-type="text-xs">{copy.hint}</p>
+        <div class="foot-head">
+          <p class="hint" data-type="text-xs">{copy.hint}<span class="hint-more">{` ${copy.jump}`}</span></p>
+          <a class="skip" data-type="text-xs" href={`#${endId}`}>{copy.skip}<span aria-hidden="true">{' ↓'}</span></a>
+        </div>
         <ElevationProfile points={points} label={`${copy.profile} ${name}`} annotate={false} cursor compact={Boolean(viewer)} locale={locale} />
       </div>
     </div>
   </div>
+  <span id={endId} tabindex="-1"></span>
 </tram-route-scroller>
 
 <script>
@@ -268,7 +275,36 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
     background: var(--tram-sys-surface);
   }
 
+  .foot-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--tram-sys-space-4);
+  }
+
+  /* Running the route is an invitation, not a toll: what follows is always one tap away. */
+  .skip {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    /* A finger-sized target that takes one line of the layout: the room goes to the route. */
+    margin-block: calc(var(--tram-sys-space-3) * -1);
+    padding-block: var(--tram-sys-space-3);
+    color: var(--tram-sys-text);
+    text-transform: uppercase;
+    text-underline-offset: 0.25em;
+  }
+
+  .skip:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
   @media (width < 48rem) {
+    .hint-more {
+      display: none;
+    }
+
     .stats {
       grid-template-columns: repeat(2, minmax(0, max-content));
     }

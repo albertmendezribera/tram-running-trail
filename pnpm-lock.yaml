@@ -35,6 +35,9 @@ importers:
       '@tram/formats':
         specifier: workspace:*
         version: link:../../packages/formats
+      '@tram/shoe-geometry':
+        specifier: workspace:*
+        version: link:../../packages/shoe-geometry
       '@tram/terrain-pipeline':
         specifier: workspace:*
         version: link:../../packages/terrain-pipeline
@@ -66,6 +69,9 @@ importers:
       '@tram/formats':
         specifier: workspace:*
         version: link:../formats
+      '@tram/shoe-geometry':
+        specifier: workspace:*
+        version: link:../shoe-geometry
     devDependencies:
       '@types/node':
         specifier: ^22.20.5
@@ -78,6 +84,15 @@ importers:
         version: 5.9.3
 
   packages/formats:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.20.5
+        version: 22.20.5
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
+  packages/shoe-geometry:
     devDependencies:
       '@types/node':
         specifier: ^22.20.5

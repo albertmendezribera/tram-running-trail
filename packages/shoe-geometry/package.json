@@ -1,0 +1,18 @@
+{
+  "name": "@tram/shoe-geometry",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Parametric side profile of a running shoe from its measured specs, for the X-ray drawing (CLAUDE.md 8.2, E05).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node --test \"src/**/*.test.ts\"",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "5.9.3"
+  }
+}

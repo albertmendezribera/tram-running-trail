@@ -1,0 +1,44 @@
+---
+import SiteFooter from '@tram/design-system/patterns/SiteFooter.astro';
+import SiteHeader from '@tram/design-system/patterns/SiteHeader.astro';
+import Fiche from '../Fiche.astro';
+
+const links = [
+  { href: '/ca/curses/', label: 'Curses' },
+  { href: '/ca/rutes/', label: 'Rutes' },
+  { href: '/ca/sabatilles/', label: 'Sabatilles' },
+];
+const code = `<SiteFrame>
+  <SiteHeader slot="header" home="/ca/" links={links} current={Astro.url.pathname} />
+  …
+  <SiteFooter slot="footer" credits={[…]} notice="…" />
+</SiteFrame>`;
+---
+
+<Fiche
+  group="Patró"
+  title="SiteFrame, SiteHeader i SiteFooter"
+  js="ThemeToggle: 0,4 KB"
+  use="El marc de totes les pàgines del web: la barra de dalt amb les seccions i el mode nit, el contingut amb el marge de la graella, i el peu amb els crèdits de les dades."
+  avoid="Menús desplegables o barres enganxoses: la barra és una sola línia i es queda a dalt de la pàgina."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Capçalera</h2>
+    <p class="fiche-note">La secció on és el lector porta l'accent. En un mòbil les seccions passen a una segona línia, i la barra no es trenca mai per atzar.</p>
+    <div class="fiche-chrome"><SiteHeader home="/ca/" links={links} current="/ca/curses/cursa/" /></div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Peu</h2>
+    <p class="fiche-note">Els crèdits de les dades de la pàgina i, si n'hi ha, l'avís que el contingut és de mostra.</p>
+    <SiteFooter credits={['Recorregut: GPX d’una sortida real.', 'Model d’elevacions: © ICGC, CC BY 4.0']} notice="Cursa de mostra: el recorregut és real, però el nom i la data són inventats." />
+  </section>
+</Fiche>
+
+<style>
+  /* The header undoes the page margin of the site: here it gets it back. */
+  .fiche-chrome {
+    padding-inline: var(--tram-sys-grid-margin);
+  }
+</style>

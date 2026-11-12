@@ -18,6 +18,7 @@
   "dependencies": {
     "@tram/design-system": "workspace:*",
     "@tram/formats": "workspace:*",
+    "@tram/shoe-geometry": "workspace:*",
     "@tram/terrain-pipeline": "workspace:*",
     "maplibre-gl": "6.17.0",
     "three": "0.187.0"

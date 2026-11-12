@@ -1,0 +1,31 @@
+---
+import ShoeRow from '@tram/design-system/patterns/ShoeRow.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { pairSlug, SHOE_NOTICE, shoeName, shoePath, visiblePairs, visibleShoes } from '../../../content/shoes';
+import Site from '../../../layouts/Site.astro';
+
+const shoes = visibleShoes();
+const pairs = visiblePairs();
+---
+
+<Site title="Sabatilles" description="Sabatilles de running d'asfalt i de muntanya en radiografia: el perfil amb cotes, la fitxa tècnica i la comparació entre models." placeholder notice={SHOE_NOTICE}>
+  <Stack gap={4}>
+    <Heading level={1} size="lg" kicker="Radiografia">Sabatilles</Heading>
+    <Text size="lg" measure>Cada sabatilla dibuixada a partir de les seves mesures, com un plànol tècnic: l'alçada de l'escuma, el drop, la placa i els tacs. Totes les soles són a la mateixa escala.</Text>
+  </Stack>
+  {
+    shoes.length > 0 ? (
+      <Stack gap={0} as="ul">
+        {shoes.map((shoe) => (
+          <li><ShoeRow href={shoePath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.specs.weightG} specs={shoe.specs} /></li>
+        ))}
+      </Stack>
+    ) : (
+      <Text tone="muted">Encara no hi ha cap sabatilla publicada.</Text>
+    )
+  }
+  {pairs.map(([a, b]) => <div><Button variant="primary" href={`/ca/comparar/${pairSlug(a, b)}/`}>{`Compara ${shoeName(a)} i ${shoeName(b)}`}</Button></div>)}
+</Site>

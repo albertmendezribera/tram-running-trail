@@ -11,6 +11,12 @@ insert into shoe_specs (shoe_id, size_ref, stack_heel_mm, stack_forefoot_mm, sou
 values
   ('00000000-0000-0000-0000-000000000011', 'EU 42', 32.5, 26.5, 'lab'),
   ('00000000-0000-0000-0000-000000000012', 'EU 42', null, null, 'manufacturer');
+update shoe_specs set length_mm = 270.4, outsole_thickness_mm = 3.1, insole_thickness_mm = 4.3, toebox_height_mm = 26.1
+where shoe_id = '00000000-0000-0000-0000-000000000011';
+insert into shoe_review_scores (shoe_id, source_name, source_url, score, scale, reviewed_on, accessed_on)
+values
+  ('00000000-0000-0000-0000-000000000011', 'Comparador', 'https://example.com/real', 84, 100, '2025-07-04', '2026-11-12'),
+  ('00000000-0000-0000-0000-000000000012', 'Comparador', 'https://example.com/placeholder', 8, 10, null, '2026-11-12');
 
 insert into routes (id, slug, geom, source)
 values ('00000000-0000-0000-0000-000000000021', 'ruta', 'SRID=4326;LINESTRING Z (3.08 41.86 23, 3.09 41.87 120)', 'gpx');
@@ -59,12 +65,33 @@ begin
   exception when unique_violation then null;
   end;
 
+  -- A shoe has a length or none, and a score never exceeds its own scale.
+  begin
+    update shoe_specs set length_mm = 0 where shoe_id = '00000000-0000-0000-0000-000000000011';
+    raise exception 'a shoe of no length was accepted';
+  exception when check_violation then null;
+  end;
+  begin
+    insert into shoe_review_scores (shoe_id, source_name, source_url, score, scale, accessed_on)
+    values ('00000000-0000-0000-0000-000000000011', 'Comparador', 'https://example.com/other', 11, 10, '2026-11-12');
+    raise exception 'a score above its scale was accepted';
+  exception when check_violation then null;
+  end;
+  begin
+    insert into shoe_review_scores (shoe_id, source_name, source_url, score, scale, accessed_on)
+    values ('00000000-0000-0000-0000-000000000011', 'Comparador', 'https://example.com/real', 80, 100, '2026-11-12');
+    raise exception 'the same review was accepted twice for one shoe';
+  exception when unique_violation then null;
+  end;
+
   -- The public role reads real rows only: placeholders cannot reach the site.
   set local role anon;
   select count(*) into n from shoes;
   if n <> 1 then raise exception 'anon sees % shoes, expected the real one only', n; end if;
   select count(*) into n from shoe_specs;
   if n <> 1 then raise exception 'anon sees % spec sheets, expected 1', n; end if;
+  select count(*) into n from shoe_review_scores;
+  if n <> 1 then raise exception 'anon sees % review scores, expected 1', n; end if;
   select count(*) into n from races;
   if n <> 1 then raise exception 'anon sees % races, expected 1', n; end if;
   select count(*) into n from race_editions;

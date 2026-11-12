@@ -1,0 +1,51 @@
+---
+import RoutePlate from '@tram/design-system/patterns/RoutePlate.astro';
+import { DEM_CREDIT, routeOf } from '../../content';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const calonge = routeOf('calonge');
+const sils = routeOf('sils');
+const code = `<RoutePlate plate={route.plate} label={route.name} credit={DEM_CREDIT} />
+<RoutePlate plate={route.plate} label={route.name} bare />`;
+---
+
+<Fiche
+  group="Patró"
+  title="RoutePlate"
+  use="La ruta vista des de dalt sobre les seves corbes de nivell: a la portada, a la fitxa d'una cursa o d'una ruta. És un dibuix en SVG, sense script ni imatge."
+  avoid="Navegar pel territori: no és un mapa de tessel·les ni es pot moure. Per recórrer la ruta hi ha el visor 3D."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Una ruta de muntanya</h2>
+    <p class="fiche-note">Les corbes tenen el mateix interval a totes les rutes: el relleu es llegeix per la densitat de línies, i una ruta plana es veu plana (E03).</p>
+    <div class="fiche-plate"><RoutePlate plate={calonge.plate} label={calonge.name} credit={DEM_CREDIT} /></div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Una ruta plana, d'anada i tornada</h2>
+    <p class="fiche-note">Els quilòmetres de tornada que cauen sobre els d'anada es marquen amb el punt, sense repetir el número.</p>
+    <RoutePlate plate={sils.plate} label={sils.name} credit={DEM_CREDIT} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Nua</h2>
+    <p class="fiche-note">Sense números, escala ni peu, per quan és una figura petita al costat de les seves xifres.</p>
+    <div class="fiche-plate"><RoutePlate plate={sils.plate} label={sils.name} bare /></div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">
+      {MODES.map((m) => <Mode {...m}><RoutePlate plate={sils.plate} label={sils.name} /></Mode>)}
+    </div>
+  </section>
+</Fiche>
+
+<style>
+  .fiche-plate {
+    max-inline-size: calc(var(--tram-sys-space-12) * 5);
+  }
+</style>

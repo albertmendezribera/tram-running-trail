@@ -1,0 +1,126 @@
+---
+import { formatDate, formatNumber, type Locale } from '@tram/formats';
+
+export interface ReviewScore {
+  /** Who publishes the review. */
+  source: string;
+  url: string;
+  /** The score on the source's own scale: never converted, never averaged with others. */
+  value: number;
+  scale: number;
+  /** ISO date of the review, as its page gives it. */
+  reviewed: string;
+  note?: string | null | undefined;
+}
+
+export interface Props {
+  scores: readonly ReviewScore[];
+  /** ISO date the sources were read. */
+  accessed: string;
+  locale?: Locale;
+}
+
+const COPY = {
+  ca: { of: 'sobre', reviewed: 'Anàlisi del', accessed: 'Consultat el', scales: 'Cada puntuació és a l’escala de qui la dona: no es poden sumar ni fer-ne la mitjana.', label: (s: string, v: string, m: string) => `${s}: ${v} sobre ${m}` },
+  es: { of: 'sobre', reviewed: 'Análisis del', accessed: 'Consultado el', scales: 'Cada puntuación está en la escala de quien la da: no se pueden sumar ni promediar.', label: (s: string, v: string, m: string) => `${s}: ${v} sobre ${m}` },
+  en: { of: 'out of', reviewed: 'Reviewed', accessed: 'Read on', scales: 'Each score is on the scale of who gives it: they cannot be added or averaged.', label: (s: string, v: string, m: string) => `${s}: ${v} out of ${m}` },
+};
+
+const { scores, accessed, locale = 'ca' } = Astro.props;
+const copy = COPY[locale];
+const n = (v: number): string => formatNumber(v, locale, 1);
+---
+
+<!-- What independent reviewers scored, each on its own scale and under its own name. Figures, never stars (6.4). -->
+<div class="scores">
+  <ul class="list">
+    {
+      scores.map((s) => (
+        <li class="score">
+          <a class="source" data-type="text-sm" href={s.url} rel="noopener external">{s.source}</a>
+          <p class="figure" aria-label={copy.label(s.source, n(s.value), n(s.scale))}>
+            <span class="value" data-type="display-md" data-numeric="tabular">{n(s.value)}</span>
+            <span class="scale" data-type="text-sm">{`${copy.of} ${n(s.scale)}`}</span>
+          </p>
+          <span class="bar" aria-hidden="true"><i style={`inline-size:${Number(((s.value / s.scale) * 100).toFixed(1))}%`} /></span>
+          <p class="meta" data-type="text-xs">
+            {`${copy.reviewed} ${formatDate(s.reviewed, locale)}.`}
+            {s.note && ` ${s.note}`}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="foot" data-type="text-xs">{`${copy.scales} ${copy.accessed} ${formatDate(accessed, locale)}.`}</p>
+</div>
+
+<style>
+  .scores {
+    display: grid;
+    gap: var(--tram-sys-space-4);
+    min-inline-size: 0;
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--tram-sys-space-12) * 2)), 1fr));
+    gap: var(--tram-sys-space-5) var(--tram-sys-grid-gutter);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .score {
+    display: grid;
+    align-content: start;
+    gap: var(--tram-sys-space-2);
+    padding-block-start: var(--tram-sys-space-3);
+    border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+  }
+
+  .source {
+    justify-self: start;
+    color: var(--tram-sys-text);
+    font-weight: 700;
+    text-underline-offset: 0.25em;
+  }
+
+  .source:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .figure {
+    display: flex;
+    align-items: baseline;
+    gap: var(--tram-sys-space-2);
+    margin: 0;
+  }
+
+  .scale,
+  .meta,
+  .foot {
+    color: var(--tram-sys-text-muted);
+  }
+
+  /* The share of its own scale: the one thing scores on different scales have in common. */
+  .bar {
+    block-size: var(--tram-sys-space-2);
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .bar i {
+    display: block;
+    block-size: 100%;
+    background: var(--tram-sys-text);
+  }
+
+  .meta,
+  .foot {
+    margin: 0;
+  }
+
+  .foot {
+    max-inline-size: var(--tram-sys-grid-measure);
+  }
+</style>

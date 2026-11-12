@@ -1,0 +1,66 @@
+---
+import Facts from '@tram/design-system/patterns/Facts.astro';
+import RaceRow from '@tram/design-system/patterns/RaceRow.astro';
+import TerrainTag from '@tram/design-system/patterns/TerrainTag.astro';
+import { CALONGE, SILS } from '../../content/profiles';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const code = `<RaceRow href="/ca/curses/…/" name="…" place="…" terrain="trail" date="2027-03-14"
+  distanceKm={12.41} gainM={340} profile={points} scaleM={290} />
+<TerrainTag terrain="road" />
+<Facts facts={[{ label: 'Data', value: '14 de març del 2027' }, { label: 'Organitza', value: null }]} />`;
+---
+
+<Fiche
+  group="Patró"
+  title="RaceRow, TerrainTag i Facts"
+  use="RaceRow és una línia d'una llista de curses o rutes. TerrainTag diu el terreny amb paraula, pictograma i traç. Facts són dades curtes en paraules: data, lloc, estat."
+  avoid="Targetes en graella per a curses (6.4). Xifres amb unitat dins de Facts: van a StatBlock o a Measure."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">RaceRow</h2>
+    <p class="fiche-note">Totes les siluetes d'una llista comparteixen escala vertical (`scaleM`): una cursa plana es veu plana al costat d'una de muntanya.</p>
+    <ul class="fiche-list">
+      <li><RaceRow href="#" name="Cursa de mostra de muntanya" place="Calonge, Baix Empordà" terrain="trail" date="2027-03-14" distanceKm={12.41} gainM={340} profile={CALONGE} scaleM={290} /></li>
+      <li><RaceRow href="#" name="Cursa de mostra d'asfalt" place="Sils, la Selva" terrain="road" date="2027-04-11" distanceKm={9.99} gainM={6} profile={SILS} scaleM={290} /></li>
+      <li><RaceRow href="#" name="Ruta sense data ni terreny" place="Sils, la Selva" distanceKm={9.99} gainM={null} profile={SILS} scaleM={290} /></li>
+    </ul>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">TerrainTag</h2>
+    <div class="fiche-row"><TerrainTag terrain="road" /><TerrainTag terrain="trail" /><TerrainTag terrain="mixed" /></div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Facts</h2>
+    <p class="fiche-note">Una dada que falta es mostra com a absent; un valor pot ser un enllaç.</p>
+    <Facts
+      facts={[
+        { label: 'Data', value: '14 de març del 2027' },
+        { label: 'Lloc', value: 'Calonge, Baix Empordà' },
+        { label: 'Estat', value: 'Programada' },
+        { label: 'Organitza', value: null },
+        { label: 'Inscripció', value: 'Oberta', href: '#' },
+      ]}
+    />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">
+      {MODES.map((m) => <Mode {...m}><TerrainTag terrain={m.terrain} /></Mode>)}
+    </div>
+  </section>
+</Fiche>
+
+<style>
+  .fiche-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

@@ -15,7 +15,8 @@
     "./primitives/*": "./primitives/*",
     "./patterns/*": "./patterns/*",
     "./interactive/*": "./interactive/*"
-  },  "scripts": {
+  },
+  "scripts": {
     "tokens:build": "node build/cli.ts",
     "tokens:check": "node build/cli.ts --check",
     "test": "node --test \"build/**/*.test.ts\" \"patterns/**/*.test.ts\"",
@@ -24,7 +25,8 @@
     "tokens:proof": "node scripts/proof-sheet.cjs"
   },
   "dependencies": {
-    "@tram/formats": "workspace:*"
+    "@tram/formats": "workspace:*",
+    "@tram/shoe-geometry": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

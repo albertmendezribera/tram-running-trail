@@ -10,7 +10,12 @@ import MediaFiche from './fiches/MediaFiche.astro';
 import MeasureFiche from './fiches/MeasureFiche.astro';
 import ModesFiche from './fiches/ModesFiche.astro';
 import MomentM2 from './fiches/MomentM2.astro';
+import RaceRowFiche from './fiches/RaceRowFiche.astro';
+import RoutePlateFiche from './fiches/RoutePlateFiche.astro';
 import SegmentedFiche from './fiches/SegmentedFiche.astro';
+import ShoeSheetFiche from './fiches/ShoeSheetFiche.astro';
+import ShoeXrayFiche from './fiches/ShoeXrayFiche.astro';
+import SiteChromeFiche from './fiches/SiteChromeFiche.astro';
 import StatBlockFiche from './fiches/StatBlockFiche.astro';
 import TextFiche from './fiches/TextFiche.astro';
 import ThemeToggleFiche from './fiches/ThemeToggleFiche.astro';
@@ -30,6 +35,11 @@ export const FICHES = [
   { slug: 'patterns/stat-block', title: 'StatBlock', Page: StatBlockFiche },
   { slug: 'patterns/elevation-profile', title: 'ElevationProfile', Page: ElevationFiche },
   { slug: 'patterns/climb-list', title: 'ClimbList', Page: ClimbFiche },
+  { slug: 'patterns/route-plate', title: 'RoutePlate', Page: RoutePlateFiche },
+  { slug: 'patterns/race-row', title: 'RaceRow, TerrainTag i Facts', Page: RaceRowFiche },
+  { slug: 'patterns/site-chrome', title: 'Capçalera i peu', Page: SiteChromeFiche },
+  { slug: 'patterns/shoe-xray', title: 'ShoeXray', Page: ShoeXrayFiche },
+  { slug: 'patterns/shoe-sheet', title: 'Fitxa de sabatilla', Page: ShoeSheetFiche },
   { slug: 'interactive/segmented-control', title: 'SegmentedControl', Page: SegmentedFiche },
   { slug: 'interactive/theme-toggle', title: 'ThemeToggle', Page: ThemeToggleFiche },
   { slug: 'interactive/viewer-3d-shell', title: 'Viewer3DShell', Page: ViewerFiche },

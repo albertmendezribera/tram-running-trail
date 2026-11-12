@@ -1,0 +1,47 @@
+---
+import { formatDate } from '@tram/formats';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { ACCESSED, type Shoe, shoeName } from '../content/shoes';
+
+export interface Props {
+  shoes: readonly Shoe[];
+}
+
+const KIND = { manufacturer: 'fabricant', lab: 'laboratori independent', review: 'anàlisi independent' } as const;
+const { shoes } = Astro.props;
+---
+
+<!-- Where every figure of the page comes from, by name and with its address. -->
+<Stack gap={4}>
+  {
+    shoes.map((shoe) => (
+      <Stack gap={2}>
+        {shoes.length > 1 && <Text size="sm" tone="muted">{shoeName(shoe)}</Text>}
+        <ul class="sources">
+          {shoe.sources.map((s) => (
+            <li data-type="text-sm">
+              <Link href={s.url}>{s.name}</Link><span class="kind">{` · ${KIND[s.kind]}`}</span>
+            </li>
+          ))}
+        </ul>
+      </Stack>
+    ))
+  }
+  <Text size="xs" tone="muted">{`Fonts consultades el ${formatDate(ACCESSED, 'ca')}. Les mesures són de la talla que cada font indica; una altra talla pesa i mesura diferent.`}</Text>
+</Stack>
+
+<style>
+  .sources {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kind {
+    color: var(--tram-sys-text-muted);
+  }
+</style>

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { ABSENT, absentLabel, formatDate, formatMeasure, formatMeasureParts, formatNumber } from './index.ts';
+import { ABSENT, absentLabel, formatDate, formatDelta, formatMeasure, formatMeasureParts, formatNumber } from './index.ts';
 
 const clean = (s: string): string => s.replaceAll(' ', ' ');
 
@@ -68,5 +68,20 @@ describe('formatDate', () => {
   it('shows a missing or malformed date as absent', () => {
     assert.equal(formatDate(null, 'ca'), '—');
     assert.equal(formatDate('14/03/2027', 'ca'), '—');
+  });
+});
+
+describe('formatDelta', () => {
+  it('writes a difference with its sign and unit', () => {
+    assert.equal(formatDelta(1.7, 'mm', 'ca'), '+1,7\u00a0mm');
+    assert.equal(formatDelta(-2, 'mm', 'ca'), '−2\u00a0mm');
+    assert.equal(formatDelta(112, 'g', 'en'), '+112\u00a0g');
+    assert.equal(formatDelta(-0.8, 'mm', 'ca'), '−0,8\u00a0mm');
+  });
+
+  it('gives no sign to a difference that rounds to nothing, and none at all to an unknown one', () => {
+    assert.equal(formatDelta(0, 'mm', 'ca'), '0\u00a0mm');
+    assert.equal(formatDelta(-0.04, 'mm', 'ca'), '0\u00a0mm');
+    assert.equal(formatDelta(null, 'mm', 'ca'), '—');
   });
 });

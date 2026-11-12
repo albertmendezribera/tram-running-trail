@@ -1,0 +1,249 @@
+---
+import { formatDelta, type Locale, type Unit } from '@tram/formats';
+import Measure from '../primitives/Measure.astro';
+
+export interface DiffRow {
+  label: string;
+  unit: Unit;
+  a: number | null | undefined;
+  b: number | null | undefined;
+}
+
+export interface Props {
+  /** Names the table: the two models compared. */
+  caption: string;
+  /** The two models, in the order of the columns. */
+  a: string;
+  b: string;
+  rows: readonly DiffRow[];
+  locale?: Locale;
+}
+
+const COPY = {
+  ca: { spec: 'Mesura', diff: 'Diferència', hint: (a: string, b: string) => `La diferència és ${b} menys ${a}.`, none: 'sense diferència', unknown: 'no es pot comparar' },
+  es: { spec: 'Medida', diff: 'Diferencia', hint: (a: string, b: string) => `La diferencia es ${b} menos ${a}.`, none: 'sin diferencia', unknown: 'no se puede comparar' },
+  en: { spec: 'Measure', diff: 'Difference', hint: (a: string, b: string) => `The difference is ${b} minus ${a}.`, none: 'no difference', unknown: 'cannot be compared' },
+};
+
+const { caption, a, b, rows, locale = 'ca' } = Astro.props;
+const copy = COPY[locale];
+const lines = rows.map((r) => {
+  // A difference is never taken against a figure that is not known.
+  const delta = r.a == null || r.b == null ? null : Number((r.b - r.a).toFixed(1));
+  const scale = Math.max(Math.abs(r.a ?? 0), Math.abs(r.b ?? 0), 1);
+  return { ...r, delta, text: formatDelta(delta, r.unit, locale), share: delta === null ? 0 : Number(Math.min(1, Math.abs(delta) / scale).toFixed(3)) };
+});
+---
+
+<!-- Two models, figure by figure: each difference with its unit and its sign, and a bar that grows towards the model that has more. -->
+<div class="diff">
+  <table class="table" data-type="data-md" role="table">
+    <caption class="caption" data-type="text-sm">{caption}</caption>
+    <thead role="rowgroup">
+      <tr data-type="text-xs" role="row">
+        <th scope="col" role="columnheader" class="spec">{copy.spec}</th>
+        <th scope="col" role="columnheader" class="figure"><span class="model" data-shoe="a"><i class="key" />{a}</span></th>
+        <th scope="col" role="columnheader" class="figure"><span class="model" data-shoe="b"><i class="key" />{b}</span></th>
+        <th scope="col" role="columnheader" class="figure">{copy.diff}</th>
+      </tr>
+    </thead>
+    <tbody role="rowgroup">
+      {
+        lines.map((r) => (
+          <tr role="row">
+            <th scope="row" role="rowheader" class="spec" data-type="text-sm">{r.label}</th>
+            <td role="cell" class="figure"><Measure value={r.a} unit={r.unit} locale={locale} type="data-md" /></td>
+            <td role="cell" class="figure"><Measure value={r.b} unit={r.unit} locale={locale} type="data-md" /></td>
+            <td role="cell" class="figure delta" data-sign={r.delta === null ? 'none' : r.delta > 0 ? 'more' : r.delta < 0 ? 'less' : 'same'}>
+              {r.delta === null ? (
+                <><span aria-hidden="true">{r.text}</span><span class="hidden">{copy.unknown}</span></>
+              ) : (
+                <>
+                  <span class="bar" aria-hidden="true"><i style={`inline-size:${r.share * 50}%`} /></span>
+                  <data value={String(r.delta)}>{r.text}</data>
+                </>
+              )}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  <p class="hint" data-type="text-xs">{copy.hint(a, b)}</p>
+</div>
+
+<style>
+  .diff {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    min-inline-size: 0;
+    overflow-x: auto;
+  }
+
+  .table {
+    inline-size: 100%;
+    border-collapse: collapse;
+  }
+
+  .caption {
+    padding-block-end: var(--tram-sys-space-3);
+    color: var(--tram-sys-text-muted);
+    text-align: start;
+  }
+
+  th,
+  td {
+    padding: var(--tram-sys-space-cell-y) var(--tram-sys-space-cell-x);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+    text-align: start;
+    vertical-align: baseline;
+  }
+
+  th:first-child {
+    padding-inline-start: 0;
+  }
+
+  td:last-child,
+  th:last-child {
+    padding-inline-end: 0;
+  }
+
+  thead th {
+    border-block-end: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+    color: var(--tram-sys-text);
+    vertical-align: bottom;
+  }
+
+  tbody th {
+    font-weight: 400;
+  }
+
+  .figure {
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  .model {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tram-sys-space-2);
+    white-space: normal;
+  }
+
+  /* The same keys as the drawing: the first model is the full line, the second the dashed one. */
+  .key {
+    flex: none;
+    inline-size: var(--tram-sys-space-4);
+    border-block-start: var(--tram-sys-line-contour) solid currentcolor;
+  }
+
+  [data-shoe='b'] > .key {
+    border-block-start-style: dashed;
+  }
+
+  .delta {
+    font-weight: 700;
+  }
+
+  .delta[data-sign='none'],
+  .delta[data-sign='same'] {
+    color: var(--tram-sys-text-muted);
+    font-weight: 400;
+  }
+
+  /* A bar from a central zero, as the grade of a kilometre: to the right when the second model has more. */
+  .bar {
+    position: relative;
+    display: inline-block;
+    inline-size: var(--tram-sys-space-12);
+    block-size: var(--tram-sys-space-2);
+    margin-inline-end: var(--tram-sys-space-3);
+    border-inline: 0;
+    background: linear-gradient(var(--tram-sys-rule-strong), var(--tram-sys-rule-strong)) center / var(--tram-sys-line-hairline) 100% no-repeat;
+    vertical-align: middle;
+  }
+
+  .bar i {
+    position: absolute;
+    inset-block: 0;
+    background: var(--tram-sys-text);
+  }
+
+  [data-sign='more'] .bar i {
+    inset-inline-start: 50%;
+  }
+
+  [data-sign='less'] .bar i {
+    inset-inline-end: 50%;
+  }
+
+  .hint {
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+  }
+
+  .hidden {
+    position: absolute;
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-line-hairline);
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  /*
+   * On a phone each measure takes two lines: its name, then the three figures in
+   * columns. The rows become grids, so the table roles are stated in the markup.
+   */
+  @media (width < 40rem) {
+    .bar {
+      display: none;
+    }
+
+    .table,
+    .caption,
+    thead,
+    tbody {
+      display: block;
+    }
+
+    tr {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+    }
+
+    thead tr {
+      border-block-end: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+    }
+
+    th,
+    td,
+    thead th {
+      padding-inline: 0;
+      border: 0;
+    }
+
+    .spec {
+      grid-column: 1 / -1;
+      padding-block-end: 0;
+    }
+
+    thead .spec {
+      position: absolute;
+      inline-size: var(--tram-sys-line-hairline);
+      block-size: var(--tram-sys-line-hairline);
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    tbody .spec {
+      color: var(--tram-sys-text-muted);
+    }
+
+    .model {
+      flex-direction: column;
+      align-items: end;
+      gap: var(--tram-sys-space-1);
+    }
+  }
+</style>

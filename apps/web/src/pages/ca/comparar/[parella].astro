@@ -1,0 +1,104 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ReviewScores from '@tram/design-system/patterns/ReviewScores.astro';
+import ShoeXray from '@tram/design-system/patterns/ShoeXray.astro';
+import SpecDiff from '@tram/design-system/patterns/SpecDiff.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Split from '@tram/design-system/primitives/Split.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { formatMeasure } from '@tram/formats';
+import { ACCESSED, pairSlug, type Shoe, SHOE_NOTICE, shoeName, shoePath, sourceOf, visiblePairs } from '../../../content/shoes';
+import Site from '../../../layouts/Site.astro';
+import ShoeSources from '../../../sections/ShoeSources.astro';
+
+// The canonical address has the two models in alphabetical order; the other order leads to it (CLAUDE.md 5).
+export const getStaticPaths = (() =>
+  visiblePairs().flatMap(([a, b]) => [
+    { params: { parella: pairSlug(a, b) }, props: { a, b, reversed: false } },
+    { params: { parella: `${b.brand.slug}-${b.slug}-vs-${a.brand.slug}-${a.slug}` }, props: { a, b, reversed: true } },
+  ])) satisfies GetStaticPaths;
+
+const { a, b, reversed } = Astro.props;
+if (reversed) return Astro.redirect(`/ca/comparar/${pairSlug(a, b)}/`, 301);
+const [nameA, nameB] = [shoeName(a), shoeName(b)];
+const drop = (s: Shoe): number => Number((s.specs.stackHeelMm - s.specs.stackForefootMm).toFixed(1));
+const rows = [
+  { label: 'Pes', unit: 'g', a: a.specs.weightG, b: b.specs.weightG },
+  { label: 'Alçada al taló', unit: 'mm', a: a.specs.stackHeelMm, b: b.specs.stackHeelMm },
+  { label: 'Alçada a l’avantpeu', unit: 'mm', a: a.specs.stackForefootMm, b: b.specs.stackForefootMm },
+  { label: 'Drop', unit: 'mm', a: drop(a), b: drop(b) },
+  { label: 'Profunditat dels tacs', unit: 'mm', a: a.specs.lugDepthMm, b: b.specs.lugDepthMm },
+  { label: 'Gruix de la sola', unit: 'mm', a: a.specs.outsoleThicknessMm, b: b.specs.outsoleThicknessMm },
+  { label: 'Gruix de la plantilla', unit: 'mm', a: a.specs.insoleThicknessMm, b: b.specs.insoleThicknessMm },
+  { label: 'Amplada de la mitjasola a l’avantpeu', unit: 'mm', a: a.specs.widthForefootMm, b: b.specs.widthForefootMm },
+  { label: 'Amplada de la mitjasola al taló', unit: 'mm', a: a.specs.widthHeelMm, b: b.specs.widthHeelMm },
+  { label: 'Alçada de la puntera', unit: 'mm', a: a.specs.toeboxHeightMm, b: b.specs.toeboxHeightMm },
+] as const;
+const PLATE = { none: 'sense placa', carbon: 'placa de carboni', nylon: 'placa de niló', pebax: 'placa de Pebax', rock_plate: 'placa de protecció' } as const;
+const xray = (s: Shoe) => ({ name: shoeName(s), terrain: s.terrain, specs: s.specs });
+// The comparison in words, from the same figures as the table.
+const weight = b.specs.weightG - a.specs.weightG;
+const sentences = [
+  weight === 0
+    ? `${nameA} i ${nameB} pesen el mateix: ${formatMeasure(a.specs.weightG, 'g', 'ca')} (${a.specs.sizeRef}).`
+    : `${nameB} pesa ${formatMeasure(b.specs.weightG, 'g', 'ca')}: ${formatMeasure(Math.abs(weight), 'g', 'ca')} ${weight < 0 ? 'menys' : 'més'} que ${nameA}, que en pesa ${formatMeasure(a.specs.weightG, 'g', 'ca')} (${a.specs.sizeRef}).`,
+  `Al taló, ${nameA} fa ${formatMeasure(a.specs.stackHeelMm, 'mm', 'ca')} i ${nameB}, ${formatMeasure(b.specs.stackHeelMm, 'mm', 'ca')}; el drop és de ${formatMeasure(drop(a), 'mm', 'ca')} i de ${formatMeasure(drop(b), 'mm', 'ca')}.`,
+  `${nameA}: ${PLATE[a.specs.plate]}${a.specs.lugDepthMm === null ? '' : `, tacs de ${formatMeasure(a.specs.lugDepthMm, 'mm', 'ca')}`}. ${nameB}: ${PLATE[b.specs.plate]}${b.specs.lugDepthMm === null ? '' : `, tacs de ${formatMeasure(b.specs.lugDepthMm, 'mm', 'ca')}`}.`,
+];
+const lab = sourceOf(a, a.specs.measuredBy).name;
+const scoresOf = (shoe: Shoe) => shoe.scores.map((s) => ({ ...s, source: sourceOf(shoe, s.source).name, url: sourceOf(shoe, s.source).url }));
+---
+
+<Site title={`${nameA} vs ${nameB}`} description={`${nameA} i ${nameB}, comparades: radiografia superposada amb cotes, diferències en mil·límetres i grams, i puntuacions de comparadors independents.`} placeholder notice={SHOE_NOTICE}>
+  <Stack gap={5}>
+    <Heading level={1} size="lg" kicker="Comparador · Radiografia">{`${nameA} vs ${nameB}`}</Heading>
+    <Stack gap={2}>{sentences.map((s) => <Text size="lg" measure>{s}</Text>)}</Stack>
+  </Stack>
+
+  <Band title="Radiografia superposada">
+    <Panel>
+      <ShoeXray id="xray" shoes={[xray(a), xray(b)]} />
+      <Text size="sm" tone="muted" measure>{`Les dues sabatilles es dibuixen a partir de les mesures de ${lab}, preses de la mateixa manera, i s'alineen al taló i a terra.`}</Text>
+    </Panel>
+  </Band>
+
+  <Band tone="tint" title="Diferències">
+    <Split ratio="3:2">
+      <Panel>
+        <SpecDiff caption={`Mesures de laboratori de ${nameA} i ${nameB}`} a={nameA} b={nameB} rows={rows} />
+      </Panel>
+      <Stack gap={6} slot="aside">
+        <Panel title="Les fitxes senceres">
+          <Stack gap={2}>
+            <Link href={shoePath(a)} variant="standalone">{nameA}</Link>
+            <Link href={shoePath(b)} variant="standalone">{nameB}</Link>
+          </Stack>
+        </Panel>
+        <Panel title="D’on surten les dades">
+          <ShoeSources shoes={[a, b]} />
+        </Panel>
+      </Stack>
+    </Split>
+  </Band>
+
+  <Band tone="alt" title="Què en diuen els comparadors">
+    <Split>
+      <Panel>
+      <Stack gap={4}>
+        <Heading level={3} size="sm">{nameA}</Heading>
+        <ReviewScores scores={scoresOf(a)} accessed={ACCESSED} />
+      </Stack>
+      </Panel>
+      <Panel slot="aside">
+      <Stack gap={4}>
+        <Heading level={3} size="sm">{nameB}</Heading>
+        <ReviewScores scores={scoresOf(b)} accessed={ACCESSED} />
+      </Stack>
+      </Panel>
+    </Split>
+  </Band>
+</Site>

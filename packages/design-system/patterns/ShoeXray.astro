@@ -1,0 +1,445 @@
+---
+import { formatDelta, type Locale } from '@tram/formats';
+import { buildShoeProfile, type Assumption, type ShoeSpecs, toCurve, toPath } from '@tram/shoe-geometry';
+import SegmentedControl from '../interactive/SegmentedControl.astro';
+import Measure from '../primitives/Measure.astro';
+
+export interface XrayShoe {
+  /** Brand and model, as text. */
+  name: string;
+  terrain: 'road' | 'trail' | 'mixed';
+  specs: ShoeSpecs;
+  /** Names of the layers, for the exploded view: the foam of the midsole, the rubber of the outsole. */
+  midsole?: string | undefined;
+  outsole?: string | undefined;
+}
+
+export interface Props {
+  /** One shoe, or two laid over each other and aligned at the heel (M3). */
+  shoes: readonly [XrayShoe] | readonly [XrayShoe, XrayShoe];
+  /** Unique in the page: it names the view switch. */
+  id: string;
+  locale?: Locale;
+}
+
+const COPY = {
+  ca: {
+    label: (names: string) => `Perfil lateral de ${names}, amb cotes en mil·límetres`,
+    heel: 'Taló', forefoot: 'Avantpeu', drop: 'Drop', lugs: 'Tacs', length: 'Llargada interior', view: 'Vista', whole: 'Muntada', exploded: 'Per capes',
+    insole: 'Plantilla', midsole: 'Mitjasola', outsoleName: 'Sola', upper: 'Empenya', ground: 'Terra', aligned: 'Alineades al taló',
+    plate: { carbon: 'Placa de carboni', nylon: 'Placa de niló', pebax: 'Placa de Pebax', rock_plate: 'Placa de protecció' },
+    assumedLead: 'Dibuixat sense dada:',
+    assumed: { rocker: 'inici de la curvatura', 'toe-spring': 'elevació de la puntera', 'heel-bevel': 'bisell del taló', outsole: 'gruix de la sola', insole: 'gruix de la plantilla', 'plate-position': 'posició de la placa', 'lug-pattern': 'nombre i amplada dels tacs', upper: 'empenya' },
+    assumedTail: 'La forma és la mateixa per a totes les sabatilles; les cotes sí que són dades.',
+  },
+  es: {
+    label: (names: string) => `Perfil lateral de ${names}, con cotas en milímetros`,
+    heel: 'Talón', forefoot: 'Antepié', drop: 'Drop', lugs: 'Tacos', length: 'Longitud interior', view: 'Vista', whole: 'Montada', exploded: 'Por capas',
+    insole: 'Plantilla', midsole: 'Mediasuela', outsoleName: 'Suela', upper: 'Upper', ground: 'Suelo', aligned: 'Alineadas en el talón',
+    plate: { carbon: 'Placa de carbono', nylon: 'Placa de nailon', pebax: 'Placa de Pebax', rock_plate: 'Placa de protección' },
+    assumedLead: 'Dibujado sin dato:',
+    assumed: { rocker: 'inicio de la curvatura', 'toe-spring': 'elevación de la puntera', 'heel-bevel': 'bisel del talón', outsole: 'grosor de la suela', insole: 'grosor de la plantilla', 'plate-position': 'posición de la placa', 'lug-pattern': 'número y anchura de los tacos', upper: 'upper' },
+    assumedTail: 'La forma es la misma para todas las zapatillas; las cotas sí son datos.',
+  },
+  en: {
+    label: (names: string) => `Side profile of ${names}, with dimensions in millimetres`,
+    heel: 'Heel', forefoot: 'Forefoot', drop: 'Drop', lugs: 'Lugs', length: 'Inside length', view: 'View', whole: 'Assembled', exploded: 'By layers',
+    insole: 'Insole', midsole: 'Midsole', outsoleName: 'Outsole', upper: 'Upper', ground: 'Ground', aligned: 'Aligned at the heel',
+    plate: { carbon: 'Carbon plate', nylon: 'Nylon plate', pebax: 'Pebax plate', rock_plate: 'Rock plate' },
+    assumedLead: 'Drawn without a figure:',
+    assumed: { rocker: 'start of the rocker', 'toe-spring': 'toe spring', 'heel-bevel': 'heel bevel', outsole: 'outsole thickness', insole: 'insole thickness', 'plate-position': 'position of the plate', 'lug-pattern': 'number and width of the lugs', upper: 'upper' },
+    assumedTail: 'The shape is the same for every shoe; the dimensions are data.',
+  },
+};
+
+const { shoes, id, locale = 'ca' } = Astro.props;
+const copy = COPY[locale];
+const drawn = shoes.map((shoe, i) => ({ ...shoe, key: i === 0 ? 'a' : 'b', profile: buildShoeProfile(shoe.specs) }));
+const pair = drawn.length === 2;
+const [a, b] = drawn;
+
+// The sheet, in millimetres: room above for the dimension labels, below for lugs and the length.
+const length = Math.max(...drawn.map((s) => s.profile.lengthMm));
+const height = Math.max(...drawn.map((s) => s.profile.heightMm));
+const depth = Math.max(...drawn.map((s) => s.profile.depthMm));
+const PAD = 14;
+const x0 = -PAD;
+const width = length + PAD * 2;
+const labelRow = height + 20;
+const y0 = -(labelRow + 26);
+const below = depth + 40;
+const sheetHeight = -y0 + below;
+const left = (x: number): string => `${Number((((x - x0) / width) * 100).toFixed(2))}%`;
+const top = (y: number): string => `${Number((((-y - y0) / sheetHeight) * 100).toFixed(2))}%`;
+
+const dim = (kind: string, of = a!) => of.profile.dimensions.find((d) => d.kind === kind);
+const heel = dim('stack-heel')!;
+const fore = dim('stack-forefoot')!;
+const stackTop = (kind: string): number => Math.max(...drawn.map((s) => s.profile.dimensions.find((d) => d.kind === kind)!.to[1]));
+const delta = (va: number | null | undefined, vb: number | null | undefined): string | null => (pair && va != null && vb != null ? formatDelta(Number((vb - va).toFixed(1)), 'mm', locale) : null);
+const lugged = drawn.filter((s) => s.profile.depthMm > 0);
+const assumed = [...new Set(drawn.flatMap((s) => s.profile.assumed))] as Assumption[];
+const plated = drawn.filter((s) => s.profile.plate);
+const names = drawn.map((s) => s.name).join(locale === 'en' ? ' and ' : ' i ');
+---
+
+<!-- The X-ray: a shoe as a technical drawing built from its figures. What is data carries a dimension; what is not is said under it. -->
+<figure class="xray" data-pair={pair ? '' : undefined}>
+  {
+    !pair && (
+      <div class="switch">
+        <SegmentedControl
+          name={`${id}-view`}
+          legend={copy.view}
+          value="whole"
+          options={[
+            { value: 'whole', label: copy.whole },
+            { value: 'exploded', label: copy.exploded },
+          ]}
+        />
+      </div>
+    )
+  }
+  <div class="sheet" style={`aspect-ratio:${width}/${sheetHeight}`}>
+    <svg class="drawing" viewBox={`${x0} ${y0} ${width} ${sheetHeight}`} role="img" aria-label={copy.label(names)}>
+      <line class="ground" x1={x0} x2={x0 + width} y1="0" y2="0"></line>
+      {
+        drawn.map((s) => (
+          <g class="shoe" data-shoe={s.key} data-terrain={s.terrain}>
+            <g class="part upper"><path class="ghost" d={toCurve(s.profile.upper)} /></g>
+            <g class="part insole"><path class="layer" d={toPath(s.profile.insole)} /></g>
+            <g class="part midsole">
+              <path class="layer" d={toPath(s.profile.midsole)} />
+              {s.profile.plate && <path class="plate" d={toCurve(s.profile.plate)} />}
+            </g>
+            <g class="part outsole">
+              <path class="layer" d={toPath(s.profile.outsole)} />
+              {s.profile.lugs.map((lug) => <path class="lug" d={toPath(lug)} />)}
+            </g>
+          </g>
+        ))
+      }
+      <g class="dims">
+        {
+          drawn.map((s) =>
+            s.profile.dimensions
+              .filter((d) => d.kind !== 'length')
+              .map((d) => (
+                <g class="dim" data-shoe={s.key} data-terrain={s.terrain}>
+                  <line x1={d.from[0]} y1={-d.from[1]} x2={d.to[0]} y2={-d.to[1]} />
+                  <line x1={d.from[0] - 4} y1={-d.from[1]} x2={d.from[0] + 4} y2={-d.from[1]} />
+                  <line x1={d.to[0] - 4} y1={-d.to[1]} x2={d.to[0] + 4} y2={-d.to[1]} />
+                </g>
+              )),
+          )
+        }
+        <!-- Leaders from each stack up to its label, and the line between them that the drop is read on. -->
+        <line class="leader" x1={heel.from[0]} y1={-stackTop('stack-heel')} x2={heel.from[0]} y2={-labelRow}></line>
+        <line class="leader" x1={fore.from[0]} y1={-stackTop('stack-forefoot')} x2={fore.from[0]} y2={-labelRow}></line>
+        <line class="leader" x1={heel.from[0]} y1={-labelRow} x2={fore.from[0]} y2={-labelRow}></line>
+        <!-- The length, under the shoe. -->
+        <line class="leader" x1="0" y1={depth + 22} x2={length} y2={depth + 22}></line>
+        <line class="leader" x1="0" y1={depth + 17} x2="0" y2={depth + 27}></line>
+        {drawn.map((s) => <line class="leader" x1={s.profile.lengthMm} y1={depth + 17} x2={s.profile.lengthMm} y2={depth + 27} />)}
+      </g>
+    </svg>
+
+    <div class="labels">
+      {
+        (
+          [
+            ['heel', heel.from[0], labelRow, drawn.map((s) => s.specs.stackHeelMm)],
+            ['forefoot', fore.from[0], labelRow, drawn.map((s) => s.specs.stackForefootMm)],
+            ['drop', (heel.from[0] + fore.from[0]) / 2, labelRow, drawn.map((s) => s.profile.dropMm)],
+          ] as const
+        ).map(([key, x, y, values]) => (
+          <div class="cote" style={`left:${left(x)};top:${top(y)}`}>
+            <span class="title" data-type="text-xs">{copy[key]}</span>
+            {values.map((v, i) => <span class="value" data-shoe={drawn[i]!.key} data-terrain={drawn[i]!.terrain}>{pair && <i class="key" />}<Measure value={v} unit="mm" locale={locale} type="data-md" /></span>)}
+            {delta(values[0], values[1]) && <span class="delta" data-type="data-sm">{`Δ ${delta(values[0], values[1])}`}</span>}
+          </div>
+        ))
+      }
+      {
+        lugged.length > 0 && (
+          <div class="cote under" style={`left:${left(length * 0.25)};top:${top(-(depth + 6))}`}>
+            <span class="title" data-type="text-xs">{copy.lugs}</span>
+            {lugged.map((s) => <span class="value" data-shoe={s.key} data-terrain={s.terrain}>{pair && <i class="key" />}<Measure value={s.specs.lugDepthMm} unit="mm" locale={locale} type="data-md" /></span>)}
+          </div>
+        )
+      }
+      <div class="cote under" style={`left:${left(length * 0.78)};top:${top(-(depth + 22))}`}>
+        <span class="title" data-type="text-xs">{copy.length}</span>
+        {drawn.map((s) => <span class="value" data-shoe={s.key} data-terrain={s.terrain}>{pair && <i class="key" />}<Measure value={s.specs.lengthMm} unit="mm" locale={locale} type="data-md" /></span>)}
+      </div>
+      {
+        !pair && (
+          <>
+            <div class="name n-upper" style={`left:${left(length * 0.3)};top:${top(a!.profile.heightMm * 0.72)}`} data-type="text-xs">{copy.upper}</div>
+            <div class="name n-insole" style={`left:${left(length * 0.3)};top:${top(a!.specs.stackHeelMm)}`} data-type="text-xs">
+              {copy.insole}{a!.specs.insoleThicknessMm !== null && <>{' · '}<Measure value={a!.specs.insoleThicknessMm} unit="mm" locale={locale} type="data-sm" /></>}
+            </div>
+            <div class="name n-midsole" style={`left:${left(length * 0.3)};top:${top(a!.specs.stackHeelMm * 0.5)}`} data-type="text-xs">
+              {copy.midsole}{a!.midsole && ` · ${a!.midsole}`}{a!.specs.plate !== 'none' && ` · ${copy.plate[a!.specs.plate]}`}
+            </div>
+            <div class="name n-outsole" style={`left:${left(length * 0.3)};top:${top(-depth)}`} data-type="text-xs">
+              {copy.outsoleName}{a!.outsole && ` · ${a!.outsole}`}{a!.specs.outsoleThicknessMm !== null && <>{' · '}<Measure value={a!.specs.outsoleThicknessMm} unit="mm" locale={locale} type="data-sm" /></>}
+            </div>
+          </>
+        )
+      }
+    </div>
+  </div>
+  <figcaption class="caption" data-type="text-xs">
+    {
+      pair && (
+        <p class="legend">
+          {drawn.map((s) => <span class="entry" data-shoe={s.key} data-terrain={s.terrain}><i class="key" />{s.name}</span>)}
+          <span>{copy.aligned}</span>
+        </p>
+      )
+    }
+    {plated.length > 0 && <p class="legend"><span class="entry"><i class="key plate-key" />{[...new Set(plated.map((s) => copy.plate[s.specs.plate as keyof typeof copy.plate]))].join(' / ')}</span></p>}
+    <p class="assumed">{`${copy.assumedLead} ${assumed.map((k) => copy.assumed[k]).join(', ')}. ${copy.assumedTail}`}</p>
+  </figcaption>
+</figure>
+
+<style>
+  .xray {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  .switch {
+    justify-self: start;
+  }
+
+  .sheet {
+    position: relative;
+    min-inline-size: 0;
+    /* The labels are text at its own size, whatever the scale of the drawing: on a phone they need this room around it. */
+    margin-block: var(--tram-sys-space-5) var(--tram-sys-space-8);
+  }
+
+  .drawing {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+  }
+
+  .drawing :global(*) {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .ground {
+    stroke: var(--tram-sys-rule-strong);
+    stroke-width: var(--tram-sys-line-hairline);
+  }
+
+  .shoe {
+    color: var(--tram-sys-data-primary);
+  }
+
+  .part {
+    transition: transform var(--tram-sys-motion-steady) var(--tram-sys-motion-ease-standard);
+  }
+
+  .layer {
+    fill: var(--tram-sys-surface);
+    stroke: currentcolor;
+    stroke-width: var(--tram-sys-line-contour);
+    stroke-linejoin: round;
+  }
+
+  /* One shoe: the layers are told apart by how full they are, from the rubber up. */
+  .outsole .layer,
+  .lug {
+    fill: currentcolor;
+  }
+
+  .lug {
+    stroke: currentcolor;
+    stroke-width: var(--tram-sys-line-hairline);
+    stroke-linejoin: round;
+  }
+
+  .midsole .layer {
+    fill: var(--tram-sys-surface-alt);
+  }
+
+  .insole .layer {
+    fill: var(--tram-sys-surface-tint);
+  }
+
+  /* The plate is what an X-ray is for: the heaviest line of the drawing. */
+  .plate {
+    fill: none;
+    stroke: var(--tram-sys-text);
+    stroke-width: var(--tram-sys-line-route);
+    stroke-linecap: round;
+  }
+
+  /* The upper is never data: a ghost line. */
+  .ghost {
+    fill: none;
+    stroke: currentcolor;
+    stroke-width: var(--tram-sys-line-hairline);
+    stroke-dasharray: 2 3;
+    opacity: 0.7;
+  }
+
+  /* Two shoes: outlines only, the second one dashed, so each is read without colour (7.3). */
+  [data-pair] .layer {
+    fill: none;
+  }
+
+  [data-pair] .midsole .layer {
+    fill: currentcolor;
+    fill-opacity: 0.08;
+  }
+
+  [data-pair] .outsole .layer,
+  [data-pair] .lug {
+    fill: currentcolor;
+    fill-opacity: 0.35;
+  }
+
+  [data-pair] [data-shoe='b'] .layer,
+  [data-pair] [data-shoe='b'] .plate,
+  [data-pair] .dim[data-shoe='b'] line {
+    stroke-dasharray: 5 3;
+  }
+
+  .dim {
+    color: var(--tram-sys-data-primary);
+  }
+
+  .dim line {
+    stroke: var(--tram-sys-text);
+    stroke-width: var(--tram-sys-line-mark);
+  }
+
+  .leader {
+    stroke: var(--tram-sys-text-muted);
+    stroke-width: var(--tram-sys-line-hairline);
+  }
+
+  .labels {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .cote {
+    position: absolute;
+    display: grid;
+    justify-items: center;
+    padding: var(--tram-sys-space-1) var(--tram-sys-space-2);
+    background: var(--tram-sys-surface);
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+  }
+
+  .cote.under {
+    transform: translate(-50%, 0);
+  }
+
+  .title {
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .value {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tram-sys-space-2);
+    font-weight: 700;
+  }
+
+  .delta {
+    padding-inline: var(--tram-sys-space-1);
+    color: var(--tram-sys-surface);
+    font-weight: 700;
+    background: var(--tram-sys-text);
+  }
+
+  /* The key of each shoe: its line, as drawn. */
+  .key {
+    inline-size: var(--tram-sys-space-5);
+    border-block-start: var(--tram-sys-line-contour) solid var(--tram-sys-data-primary);
+  }
+
+  [data-shoe='b'] > .key {
+    border-block-start-style: dashed;
+  }
+
+  .plate-key {
+    border-block-start: var(--tram-sys-line-route) solid var(--tram-sys-text);
+  }
+
+  .name {
+    position: absolute;
+    padding-inline: var(--tram-sys-space-1);
+    color: var(--tram-sys-text);
+    font-weight: 700;
+    background: var(--tram-sys-surface);
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity var(--tram-sys-motion-quick) var(--tram-sys-motion-ease-standard);
+    white-space: nowrap;
+  }
+
+  /* By layers: each part moves away from the foam and takes its name; the dimensions no longer apply, so they step out. */
+  .xray:has(input[value='exploded']:checked) .upper {
+    transform: translateY(-34px);
+  }
+
+  .xray:has(input[value='exploded']:checked) .insole {
+    transform: translateY(-17px);
+  }
+
+  .xray:has(input[value='exploded']:checked) .outsole {
+    transform: translateY(17px);
+  }
+
+  .xray:has(input[value='exploded']:checked) :is(.dims, .cote) {
+    visibility: hidden;
+  }
+
+  .xray:has(input[value='exploded']:checked) .name {
+    opacity: 1;
+  }
+
+  .caption {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+    color: var(--tram-sys-text-muted);
+  }
+
+  .legend,
+  .assumed {
+    margin: 0;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tram-sys-space-1) var(--tram-sys-space-5);
+  }
+
+  .entry {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tram-sys-space-2);
+    color: var(--tram-sys-text);
+    font-weight: 700;
+  }
+
+  .assumed {
+    max-inline-size: var(--tram-sys-grid-measure);
+  }
+</style>

@@ -1,0 +1,128 @@
+---
+import type { Locale } from '@tram/formats';
+import { buildShoeProfile, type ShoeSpecs, toPath } from '@tram/shoe-geometry';
+import Icon from '../primitives/Icon.astro';
+import Measure from '../primitives/Measure.astro';
+import TerrainTag from './TerrainTag.astro';
+
+export interface Props {
+  href: string;
+  brand: string;
+  model: string;
+  terrain: 'road' | 'trail' | 'mixed';
+  weightG: number | null;
+  specs: ShoeSpecs;
+  locale?: Locale;
+}
+
+const { href, brand, model, terrain, weightG, specs, locale = 'ca' } = Astro.props;
+const profile = buildShoeProfile(specs);
+// Every row at the same scale: a millimetre of foam is the same height in all of them.
+const BOX = { width: 300, height: 70 };
+---
+
+<!-- A line of the shoe list: the sole in profile, at the same scale in every row, next to its figures. -->
+<a class="row" href={href} data-terrain={terrain}>
+  <span class="what">
+    <span class="brand" data-type="text-sm">{brand}</span>
+    <span class="model" data-type="display-sm">{model}</span>
+  </span>
+  <span class="tag"><TerrainTag terrain={terrain} locale={locale} /></span>
+  <span class="figures">
+    <Measure value={weightG} unit="g" locale={locale} type="data-lg" />
+    <span class="drop"><Measure value={profile.dropMm} unit="mm" locale={locale} type="data-lg" /><span class="word" data-type="text-xs">drop</span></span>
+  </span>
+  <svg class="sole" viewBox={`-10 ${-(BOX.height - 8)} ${BOX.width} ${BOX.height}`} aria-hidden="true">
+    <path class="foam" d={toPath([...profile.midsole])} />
+    <path class="foam" d={toPath([...profile.insole])} />
+    <path class="rubber" d={toPath([...profile.outsole])} />
+    {profile.lugs.map((lug) => <path class="rubber" d={toPath(lug)} />)}
+  </svg>
+  <span class="go"><Icon name="arrow-right" /></span>
+</a>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'what go' 'tag tag' 'figures figures' 'sole sole';
+    gap: var(--tram-sys-space-3) var(--tram-sys-space-4);
+    align-items: center;
+    padding-block: var(--tram-sys-space-5);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    color: var(--tram-sys-text);
+    text-decoration: none;
+    transition: background-color var(--tram-sys-motion-quick) var(--tram-sys-motion-ease-standard);
+  }
+
+  .row:hover {
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .row:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .what {
+    grid-area: what;
+    display: grid;
+    gap: var(--tram-sys-space-1);
+    min-inline-size: 0;
+  }
+
+  .brand,
+  .word {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .tag {
+    grid-area: tag;
+    justify-self: start;
+  }
+
+  .figures {
+    grid-area: figures;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--tram-sys-space-2) var(--tram-sys-space-6);
+  }
+
+  .drop {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--tram-sys-space-2);
+  }
+
+  .sole {
+    grid-area: sole;
+    inline-size: 100%;
+    max-inline-size: calc(var(--tram-sys-space-12) * 3.5);
+    overflow: visible;
+  }
+
+  .foam {
+    fill: var(--tram-sys-surface-tint);
+    stroke: var(--tram-sys-data-primary);
+    stroke-width: var(--tram-sys-line-hairline);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .rubber {
+    fill: var(--tram-sys-data-primary);
+  }
+
+  .go {
+    grid-area: go;
+    display: grid;
+  }
+
+  @media (width >= 64rem) {
+    .row {
+      grid-template-columns: minmax(0, 2fr) calc(var(--tram-sys-space-12) * 1.5) minmax(0, 1.5fr) minmax(0, 2fr) auto;
+      grid-template-areas: 'what tag figures sole go';
+      column-gap: var(--tram-sys-space-6);
+    }
+  }
+</style>

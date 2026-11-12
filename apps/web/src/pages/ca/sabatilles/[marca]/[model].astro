@@ -1,0 +1,105 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ReviewScores from '@tram/design-system/patterns/ReviewScores.astro';
+import ShoeSpecSheet from '@tram/design-system/patterns/ShoeSpecSheet.astro';
+import ShoeXray from '@tram/design-system/patterns/ShoeXray.astro';
+import StatBlock from '@tram/design-system/patterns/StatBlock.astro';
+import TerrainTag from '@tram/design-system/patterns/TerrainTag.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Split from '@tram/design-system/primitives/Split.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { ACCESSED, pairSlug, SHOE_NOTICE, shoeName, sourceOf, visibleShoes } from '../../../../content/shoes';
+import Site from '../../../../layouts/Site.astro';
+import ShoeSources from '../../../../sections/ShoeSources.astro';
+
+export const getStaticPaths = (() => visibleShoes().map((shoe) => ({ params: { marca: shoe.brand.slug, model: shoe.slug }, props: { shoe } }))) satisfies GetStaticPaths;
+
+const { shoe } = Astro.props;
+const name = shoeName(shoe);
+const { specs, official } = shoe;
+const drop = Number((specs.stackHeelMm - specs.stackForefootMm).toFixed(1));
+const lab = sourceOf(shoe, specs.measuredBy).name;
+const maker = shoe.sources.find((s) => s.kind === 'manufacturer')!.name;
+const PLATE = { none: 'Sense placa', carbon: 'Placa de carboni', nylon: 'Placa de niló', pebax: 'Placa de Pebax', rock_plate: 'Placa de protecció' } as const;
+const stats = [
+  { label: `Pes · ${specs.sizeRef}`, value: specs.weightG, unit: 'g' },
+  { label: 'Alçada al taló', value: specs.stackHeelMm, unit: 'mm' },
+  { label: 'Alçada a l’avantpeu', value: specs.stackForefootMm, unit: 'mm' },
+  { label: 'Drop', value: drop, unit: 'mm' },
+  ...(specs.lugDepthMm === null ? [] : [{ label: 'Tacs', value: specs.lugDepthMm, unit: 'mm' } as const]),
+] as const;
+// The brand's own figure, with who quotes it when it was not read on the brand's page.
+const quoted = (f: { source: string | null; ref?: string }): string | undefined => (f.ref ? f.ref : undefined);
+const rows = [
+  { label: 'Pes', unit: 'g', measured: specs.weightG, official: official.weightG.value, note: `Mesurat: ${specs.sizeRef}${official.weightG.ref ? ` · Declarat: ${official.weightG.ref}` : ''}` },
+  { label: 'Alçada al taló', unit: 'mm', measured: specs.stackHeelMm, official: official.stackHeelMm.value, note: quoted(official.stackHeelMm) },
+  { label: 'Alçada a l’avantpeu', unit: 'mm', measured: specs.stackForefootMm, official: official.stackForefootMm.value, note: quoted(official.stackForefootMm) },
+  { label: 'Drop', unit: 'mm', measured: drop, official: official.dropMm.value },
+  { label: 'Profunditat dels tacs', unit: 'mm', measured: specs.lugDepthMm, official: official.lugDepthMm.value },
+  { label: 'Gruix de la sola', unit: 'mm', measured: specs.outsoleThicknessMm, official: null },
+  { label: 'Gruix de la plantilla', unit: 'mm', measured: specs.insoleThicknessMm, official: null },
+  { label: 'Amplada de la mitjasola a l’avantpeu', unit: 'mm', measured: specs.widthForefootMm, official: null },
+  { label: 'Amplada de la mitjasola al taló', unit: 'mm', measured: specs.widthHeelMm, official: null },
+  { label: 'Alçada de la puntera', unit: 'mm', measured: specs.toeboxHeightMm, official: null },
+  { label: 'Llargada interior', unit: 'mm', measured: specs.lengthMm, official: null, note: specs.lengthMm % 1 === 0 ? 'Llargada nominal de la talla: la font no la mesura' : undefined },
+] as const;
+const facts = [
+  { label: 'Mitjasola', value: shoe.midsole },
+  { label: 'Placa', value: PLATE[specs.plate] },
+  { label: 'Sola', value: shoe.outsole },
+  { label: 'Inici de la curvatura', value: null },
+  { label: 'Elevació de la puntera', value: null },
+];
+const others = visibleShoes().filter((s) => s !== shoe);
+const jsonLd = { '@context': 'https://schema.org', '@type': 'Product', name, brand: { '@type': 'Brand', name: shoe.brand.name }, category: shoe.terrain === 'trail' ? 'Sabatilles de trail running' : 'Sabatilles de running d’asfalt', weight: { '@type': 'QuantitativeValue', value: specs.weightG, unitCode: 'GRM' } };
+---
+
+<Site title={name} description={`${name}: ${shoe.summary} Radiografia amb cotes, fitxa tècnica mesurada i declarada, i puntuacions de comparadors independents.`} terrain={shoe.terrain} placeholder={shoe.isPlaceholder || shoe.legalReview !== 'cleared'} notice={SHOE_NOTICE} jsonLd={jsonLd}>
+  <Stack gap={5}>
+    <Heading level={1} size="lg" kicker={`Sabatilla · ${shoe.brand.name}`}>{shoe.model}</Heading>
+    <Cluster><TerrainTag terrain={shoe.terrain} /></Cluster>
+    <Text size="lg" measure>{shoe.summary}</Text>
+  </Stack>
+  <StatBlock stats={stats} lead />
+
+  <Band title="Radiografia">
+    <Panel>
+      <ShoeXray id="xray" shoes={[{ name, terrain: shoe.terrain, specs, midsole: shoe.midsole, outsole: shoe.outsole ?? undefined }]} />
+      <Text size="sm" tone="muted" measure>{`El perfil es dibuixa a partir de les mesures de ${lab}: les alçades es prenen al 12 % i al 75 % de la llargada interior, com fixa World Athletics.`}</Text>
+    </Panel>
+  </Band>
+
+  <Band tone="tint" title="Fitxa tècnica">
+    <Split ratio="3:2">
+      <Panel>
+        <ShoeSpecSheet caption={`Mesures de ${name}`} rows={rows} measuredBy={lab} officialBy={maker} facts={facts} />
+      </Panel>
+      <Stack gap={6} slot="aside">
+        <Panel title="D’on surten les dades">
+          <ShoeSources shoes={[shoe]} />
+        </Panel>
+        {
+          others.map((other) => (
+            <Panel title="Compara-la">
+              <Stack gap={3}>
+                <Text measure>{`${name} i ${shoeName(other)}, superposades i alineades al taló, amb les diferències en mil·límetres.`}</Text>
+                <div><Button variant="primary" href={`/ca/comparar/${pairSlug(shoe, other)}/`}>{`Compara amb ${shoeName(other)}`}</Button></div>
+              </Stack>
+            </Panel>
+          ))
+        }
+      </Stack>
+    </Split>
+  </Band>
+
+  <Band tone="alt" title="Què en diuen els comparadors">
+    <Panel>
+      <ReviewScores scores={shoe.scores.map((s) => ({ ...s, source: sourceOf(shoe, s.source).name, url: sourceOf(shoe, s.source).url }))} accessed={ACCESSED} />
+    </Panel>
+  </Band>
+</Site>

@@ -1,0 +1,172 @@
+---
+import type { Locale, Unit } from '@tram/formats';
+import Measure from '../primitives/Measure.astro';
+
+export interface SpecRow {
+  label: string;
+  unit: Unit;
+  /** Measured in a lab. Null shows as absent. */
+  measured: number | null | undefined;
+  /** Stated by the manufacturer. */
+  official: number | null | undefined;
+  /** What a figure refers to, when it matters to read it: the size weighed, who quotes it. */
+  note?: string | undefined;
+}
+
+export interface Props {
+  /** Names the table: the shoe. */
+  caption: string;
+  rows: readonly SpecRow[];
+  /** Who measured and who states, as column heads. */
+  measuredBy: string;
+  officialBy: string;
+  /** Facts in words: foam, plate, rubber. */
+  facts?: ReadonlyArray<{ label: string; value: string | null | undefined }>;
+  locale?: Locale;
+}
+
+const COPY = {
+  ca: { spec: 'Mesura', measured: 'Mesurat', official: 'Declarat', absent: 'Sense dada' },
+  es: { spec: 'Medida', measured: 'Medido', official: 'Declarado', absent: 'Sin dato' },
+  en: { spec: 'Measure', measured: 'Measured', official: 'Stated', absent: 'No data' },
+};
+
+const { caption, rows, measuredBy, officialBy, facts = [], locale = 'ca' } = Astro.props;
+const copy = COPY[locale];
+---
+
+<!-- The technical sheet of a shoe: what a lab measured next to what the brand states, each under the name of who says it. -->
+<div class="sheet">
+  <table class="table" data-type="data-md">
+    <caption class="caption" data-type="text-sm">{caption}</caption>
+    <thead>
+      <tr data-type="text-xs">
+        <th scope="col">{copy.spec}</th>
+        <th scope="col" class="figure"><span class="who">{copy.measured}</span><span class="by">{measuredBy}</span></th>
+        <th scope="col" class="figure"><span class="who">{copy.official}</span><span class="by">{officialBy}</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((r) => (
+          <tr>
+            <th scope="row" data-type="text-sm">
+              {r.label}
+              {r.note && <span class="note" data-type="text-xs">{r.note}</span>}
+            </th>
+            <td class="figure lead"><Measure value={r.measured} unit={r.unit} locale={locale} type="data-lg" /></td>
+            <td class="figure"><Measure value={r.official} unit={r.unit} locale={locale} type="data-md" /></td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {
+    facts.length > 0 && (
+      <dl class="facts">
+        {facts.map((f) => (
+          <div class="fact">
+            <dt data-type="text-xs">{f.label}</dt>
+            <dd data-type="text-md">{f.value ?? <span class="none">{copy.absent}</span>}</dd>
+          </div>
+        ))}
+      </dl>
+    )
+  }
+</div>
+
+<style>
+  .sheet {
+    display: grid;
+    gap: var(--tram-sys-space-5);
+    min-inline-size: 0;
+  }
+
+  .table {
+    inline-size: 100%;
+    border-collapse: collapse;
+  }
+
+  .caption {
+    padding-block-end: var(--tram-sys-space-3);
+    color: var(--tram-sys-text-muted);
+    text-align: start;
+  }
+
+  th,
+  td {
+    padding: var(--tram-sys-space-cell-y) var(--tram-sys-space-cell-x);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+    text-align: start;
+    vertical-align: baseline;
+  }
+
+  th:first-child {
+    padding-inline-start: 0;
+  }
+
+  td:last-child,
+  th:last-child {
+    padding-inline-end: 0;
+  }
+
+  thead th {
+    border-block-end: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+    color: var(--tram-sys-text-muted);
+    font-weight: 400;
+    vertical-align: bottom;
+  }
+
+  tbody th {
+    font-weight: 400;
+  }
+
+  .figure {
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  /* The measured figure leads: it is the one the drawing is built from. */
+  .lead {
+    font-weight: 700;
+  }
+
+  .who,
+  .by,
+  .note {
+    display: block;
+  }
+
+  .who {
+    color: var(--tram-sys-text);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .note {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--tram-sys-space-12) * 1.5)), 1fr));
+    gap: var(--tram-sys-space-3) var(--tram-sys-grid-gutter);
+    margin: 0;
+  }
+
+  .fact {
+    display: grid;
+    gap: var(--tram-sys-space-1);
+  }
+
+  .fact dt,
+  .none {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .fact dd {
+    margin: 0;
+    font-weight: 700;
+  }
+</style>

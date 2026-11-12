@@ -1,0 +1,52 @@
+---
+import ShoeXray from '@tram/design-system/patterns/ShoeXray.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+// Sample figures, to show the component: no shoe has them.
+const base = { lengthMm: 270, outsoleThicknessMm: 3, insoleThicknessMm: 4, rockerApexPct: null, toeSpringDeg: null, heelBevelDeg: null, toeboxHeightMm: 26 } as const;
+const road = { name: 'Mostra d’asfalt', terrain: 'road', midsole: 'Escuma de mostra', specs: { ...base, stackHeelMm: 38, stackForefootMm: 30, plate: 'carbon', lugDepthMm: null } } as const;
+const trail = { name: 'Mostra de muntanya', terrain: 'trail', midsole: 'Escuma de mostra', outsole: 'Goma de mostra', specs: { ...base, stackHeelMm: 31, stackForefootMm: 26, plate: 'rock_plate', lugDepthMm: 5 } } as const;
+const measured = { name: 'Mostra amb totes les dades', terrain: 'road', specs: { ...base, stackHeelMm: 36, stackForefootMm: 28, plate: 'none', lugDepthMm: null, rockerApexPct: 58, toeSpringDeg: 20, heelBevelDeg: 30 } } as const;
+const code = `<ShoeXray id="xray" shoes={[{ name, terrain, specs, midsole, outsole }]} />
+<ShoeXray id="compare" shoes={[a, b]} />`;
+---
+
+<Fiche
+  group="Patró"
+  title="ShoeXray"
+  use="Una sabatilla com a plànol tècnic, dibuixada a partir de les seves mesures (@tram/shoe-geometry). Amb dues sabatilles és M3: superposades, alineades al taló, amb la diferència a cada cota."
+  avoid="Fotos de producte o il·lustracions de marca. Tampoc sense les tres dades mínimes: llargada i les dues alçades."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Una sabatilla</h2>
+    <p class="fiche-note">Les cotes són dades. El que es dibuixa sense dada (l'empenya, la curvatura, on és la placa) es diu a sota, i és igual per a totes les sabatilles. «Per capes» separa plantilla, mitjasola i sola; funciona sense JavaScript.</p>
+    <ShoeXray id="fiche-road" shoes={[road]} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Amb tacs i placa de protecció</h2>
+    <ShoeXray id="fiche-trail" shoes={[trail]} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">M3 · Dues sabatilles superposades</h2>
+    <p class="fiche-note">La primera en línia contínua, la segona en discontínua: es distingeixen sense color (7.3). Cada cota porta les dues xifres i la diferència amb signe.</p>
+    <ShoeXray id="fiche-pair" shoes={[road, trail]} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Amb la curvatura mesurada</h2>
+    <p class="fiche-note">Quan la fitxa porta l'inici de la curvatura, l'elevació de la puntera i el bisell del taló, el perfil els fa servir i deixen de sortir a la llista del que no és dada.</p>
+    <ShoeXray id="fiche-measured" shoes={[measured]} />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">
+      {MODES.map((m, i) => <Mode {...m}><ShoeXray id={`fiche-mode-${i}`} shoes={[m.terrain === 'road' ? road : trail]} /></Mode>)}
+    </div>
+  </section>
+</Fiche>

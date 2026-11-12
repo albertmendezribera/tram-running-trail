@@ -19,6 +19,11 @@ export const GROUPS = [
       { href: '/ds/patterns/stat-block/', title: 'StatBlock' },
       { href: '/ds/patterns/elevation-profile/', title: 'ElevationProfile' },
       { href: '/ds/patterns/climb-list/', title: 'ClimbList' },
+      { href: '/ds/patterns/route-plate/', title: 'RoutePlate' },
+      { href: '/ds/patterns/race-row/', title: 'RaceRow, TerrainTag i Facts' },
+      { href: '/ds/patterns/site-chrome/', title: 'Capçalera i peu' },
+      { href: '/ds/patterns/shoe-xray/', title: 'ShoeXray' },
+      { href: '/ds/patterns/shoe-sheet/', title: 'Fitxa de sabatilla' },
     ],
   },
   {

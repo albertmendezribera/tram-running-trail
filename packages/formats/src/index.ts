@@ -73,6 +73,18 @@ export function formatMeasure(value: number | null | undefined, unit: Unit, loca
 }
 
 /**
+ * A difference with its sign, e.g. "+1,7 mm" or "−2 mm" (a true minus, not a hyphen).
+ * Zero is "0 mm": no sign. Absent when either side of the difference is unknown.
+ */
+export function formatDelta(delta: number | null | undefined, unit: Unit, locale: Locale): string {
+  if (delta === null || delta === undefined || !Number.isFinite(delta)) return ABSENT;
+  const magnitude = formatMeasure(Math.abs(delta), unit, locale);
+  // Rounded to nothing, a difference has no direction.
+  if (magnitude === formatMeasure(0, unit, locale)) return magnitude;
+  return `${delta > 0 ? '+' : '−'}${magnitude}`;
+}
+
+/**
  * A calendar date in words, e.g. "14 de març del 2027". Takes an ISO date
  * (`2027-03-14`) and reads it as that day everywhere: no time zone can move it.
  */

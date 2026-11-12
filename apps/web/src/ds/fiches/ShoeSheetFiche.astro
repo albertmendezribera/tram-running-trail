@@ -1,0 +1,86 @@
+---
+import ReviewScores from '@tram/design-system/patterns/ReviewScores.astro';
+import ShoeRow from '@tram/design-system/patterns/ShoeRow.astro';
+import ShoeSpecSheet from '@tram/design-system/patterns/ShoeSpecSheet.astro';
+import SpecDiff from '@tram/design-system/patterns/SpecDiff.astro';
+import Fiche from '../Fiche.astro';
+
+// Sample figures, to show the components: no shoe has them.
+const specs = { lengthMm: 270, stackHeelMm: 38, stackForefootMm: 30, outsoleThicknessMm: 3, insoleThicknessMm: 4, plate: 'carbon', lugDepthMm: null, rockerApexPct: null, toeSpringDeg: null, heelBevelDeg: null, toeboxHeightMm: 26 } as const;
+const trail = { ...specs, stackHeelMm: 31, stackForefootMm: 26, plate: 'none', lugDepthMm: 5 } as const;
+const code = `<ShoeSpecSheet caption="…" rows={[{ label: 'Pes', unit: 'g', measured: 200, official: 210 }]} measuredBy="…" officialBy="…" />
+<SpecDiff caption="…" a="…" b="…" rows={[{ label: 'Drop', unit: 'mm', a: 8, b: 5 }]} />
+<ReviewScores scores={[{ source: '…', url: '…', value: 90, scale: 100, reviewed: '2026-01-15' }]} accessed="2026-11-12" />
+<ShoeRow href="…" brand="…" model="…" terrain="road" weightG={200} specs={specs} />`;
+---
+
+<Fiche
+  group="Patró"
+  title="ShoeSpecSheet, SpecDiff, ReviewScores i ShoeRow"
+  use="La fitxa tècnica d'una sabatilla (mesurat i declarat, cadascú amb el seu nom), les diferències entre dos models amb unitat i signe, les puntuacions de tercers a la seva escala, i la línia d'una llista de sabatilles."
+  avoid="Estrelles, mitjanes de puntuacions d'escales diferents o gràfics de radar (6.4). Una diferència contra una dada que no se sap."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">ShoeSpecSheet</h2>
+    <p class="fiche-note">La xifra mesurada mana: és la que fa servir el dibuix. El que una font no dona es mostra com a absent.</p>
+    <ShoeSpecSheet
+      caption="Mesures d'una sabatilla de mostra"
+      measuredBy="Laboratori de mostra"
+      officialBy="Marca de mostra"
+      rows={[
+        { label: 'Pes', unit: 'g', measured: 200, official: 210, note: 'Mesurat: US 9 home · Declarat: US 10 home' },
+        { label: 'Alçada al taló', unit: 'mm', measured: 38, official: 39.5 },
+        { label: 'Drop', unit: 'mm', measured: 8, official: 8 },
+        { label: 'Profunditat dels tacs', unit: 'mm', measured: null, official: null },
+      ]}
+      facts={[{ label: 'Mitjasola', value: 'Escuma de mostra' }, { label: 'Placa', value: 'Placa de carboni' }, { label: 'Sola', value: null }]}
+    />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">SpecDiff</h2>
+    <p class="fiche-note">La diferència és el segon model menys el primer, amb un menys de debò. En un mòbil cada mesura ocupa dues línies.</p>
+    <SpecDiff
+      caption="Mesures de dues sabatilles de mostra"
+      a="Mostra d'asfalt"
+      b="Mostra de muntanya"
+      rows={[
+        { label: 'Pes', unit: 'g', a: 200, b: 290 },
+        { label: 'Alçada al taló', unit: 'mm', a: 38, b: 31 },
+        { label: 'Drop', unit: 'mm', a: 8, b: 5 },
+        { label: 'Alçada de la puntera', unit: 'mm', a: 26, b: 26 },
+        { label: 'Profunditat dels tacs', unit: 'mm', a: null, b: 5 },
+      ]}
+    />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">ReviewScores</h2>
+    <p class="fiche-note">Cada puntuació a l'escala de qui la dona, amb el nom, l'enllaç i la data. La barra és la part de la seva pròpia escala.</p>
+    <ReviewScores
+      accessed="2026-11-12"
+      scores={[
+        { source: 'Comparador de mostra A', url: 'https://example.com/a', value: 90, scale: 100, reviewed: '2026-01-15' },
+        { source: 'Comparador de mostra B', url: 'https://example.com/b', value: 7.5, scale: 10, reviewed: '2025-06-02', note: 'Prova del model de dona.' },
+      ]}
+    />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">ShoeRow</h2>
+    <p class="fiche-note">La sola de perfil, a la mateixa escala a totes les files: un mil·límetre d'escuma fa la mateixa alçada a totes.</p>
+    <ul class="fiche-list">
+      <li><ShoeRow href="#" brand="Marca de mostra" model="Model d'asfalt" terrain="road" weightG={200} specs={specs} /></li>
+      <li><ShoeRow href="#" brand="Marca de mostra" model="Model de muntanya" terrain="trail" weightG={null} specs={trail} /></li>
+    </ul>
+  </section>
+</Fiche>
+
+<style>
+  .fiche-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

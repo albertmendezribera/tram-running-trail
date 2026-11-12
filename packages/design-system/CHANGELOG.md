@@ -4,6 +4,15 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Fase 1: el web i les sabatilles.
+
+- `base.css`: els estils de pàgina que comparteixen el catàleg i el web.
+- Patrons nous: `SiteFrame`, `SiteHeader`, `SiteFooter`, `TerrainTag`, `RaceRow`, `Facts`, `RoutePlate` (E03), `ShoeXray` (E05, M3), `ShoeSpecSheet`, `SpecDiff`, `ReviewScores`, `ShoeRow` i `ShoeSilhouette`. Tots amb fitxa al catàleg.
+- `RouteScroller`: el pòster ja no estira la silueta d'una ruta plana (mínim de 100 m per caixa).
+- `ElevationProfile` compacte: l'alçada del gràfic depèn de l'alçada de la pantalla (26 %), i les xifres del recorregut ja no es tallen en un portàtil.
+- `Viewer3DShell`: propietat `ready`, per dir què fan les fletxes quan no avancen per una ruta.
+- `Facts`: dues columnes en mòbil.
+
 Tipografia (E08).
 
 - Tipus nous a la pipeline: `fontFamily`, `fontWeight` i `number`. Les dimensions admeten `$extensions["com.tramrun"].fluidMin` per a mides fluides.

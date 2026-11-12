@@ -16,6 +16,7 @@ import Text from '@tram/design-system/primitives/Text.astro';
 import { ACCESSED, pairSlug, SHOE_NOTICE, shoeName, sourceOf, visibleShoes } from '../../../../content/shoes';
 import Site from '../../../../layouts/Site.astro';
 import ShoeSources from '../../../../sections/ShoeSources.astro';
+import ShoeViewer from '../../../../sections/ShoeViewer.astro';
 
 export const getStaticPaths = (() => visibleShoes().map((shoe) => ({ params: { marca: shoe.brand.slug, model: shoe.slug }, props: { shoe } }))) satisfies GetStaticPaths;
 
@@ -60,12 +61,15 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'Product', name, bra
 ---
 
 <Site title={name} description={`${name}: ${shoe.summary} Radiografia amb cotes, fitxa tècnica mesurada i declarada, i puntuacions de comparadors independents.`} terrain={shoe.terrain} placeholder={shoe.isPlaceholder || shoe.legalReview !== 'cleared'} notice={SHOE_NOTICE} jsonLd={jsonLd}>
-  <Stack gap={5}>
-    <Heading level={1} size="lg" kicker={`Sabatilla · ${shoe.brand.name}`}>{shoe.model}</Heading>
-    <Cluster><TerrainTag terrain={shoe.terrain} /></Cluster>
-    <Text size="lg" measure>{shoe.summary}</Text>
-  </Stack>
-  <StatBlock stats={stats} lead />
+  <Split>
+    <Stack gap={5}>
+      <Heading level={1} size="lg" kicker={`Sabatilla · ${shoe.brand.name}`}>{shoe.model}</Heading>
+      <Cluster><TerrainTag terrain={shoe.terrain} /></Cluster>
+      <Text size="lg" measure>{shoe.summary}</Text>
+      <StatBlock stats={stats} lead />
+    </Stack>
+    <ShoeViewer slot="aside" shoe={shoe} />
+  </Split>
 
   <Band title="Radiografia">
     <Panel>

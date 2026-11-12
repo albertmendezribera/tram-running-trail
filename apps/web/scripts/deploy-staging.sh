@@ -7,7 +7,8 @@ cd "$(dirname "$0")/.."
 
 TRAM_DS=1 pnpm exec astro build
 
-printf '/ /ds/ 302\n' > dist/_redirects
+# The site now has a home: the root leads to it. The catalogue stays at /ds/.
+printf '/ /ca/ 302\n' > dist/_redirects
 printf '/*\n  X-Robots-Tag: noindex, nofollow\n' > dist/_headers
 
 pnpm dlx wrangler@4.159.0 deploy

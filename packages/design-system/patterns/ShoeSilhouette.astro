@@ -1,0 +1,71 @@
+---
+import { buildShoeProfile, type ShoeSpecs, toCurve, toPath } from '@tram/shoe-geometry';
+
+export interface Props {
+  specs: ShoeSpecs;
+}
+
+const { specs } = Astro.props;
+const profile = buildShoeProfile(specs);
+const pad = 8;
+const box = `${-pad} ${-(profile.heightMm + pad)} ${profile.lengthMm + pad * 2} ${profile.heightMm + profile.depthMm + pad * 2}`;
+---
+
+<!-- The shoe in profile, without dimensions: a picture of it, such as the poster of its 3D view. Decorative: its figures are next to it. -->
+<svg class="shoe" viewBox={box} aria-hidden="true">
+  <path class="ghost" d={toCurve(profile.upper)}></path>
+  <path class="insole" d={toPath(profile.insole)}></path>
+  <path class="midsole" d={toPath(profile.midsole)}></path>
+  {profile.plate && <path class="plate" d={toCurve(profile.plate)} />}
+  <path class="rubber" d={toPath(profile.outsole)}></path>
+  {profile.lugs.map((lug) => <path class="rubber" d={toPath(lug)} />)}
+</svg>
+
+<style>
+  .shoe {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    color: var(--tram-sys-data-primary);
+  }
+
+  .shoe :global(*) {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .ghost,
+  .plate {
+    fill: none;
+  }
+
+  .ghost {
+    stroke: currentcolor;
+    stroke-width: var(--tram-sys-line-hairline);
+    stroke-dasharray: 2 3;
+  }
+
+  .insole,
+  .midsole {
+    stroke: currentcolor;
+    stroke-width: var(--tram-sys-line-contour);
+    stroke-linejoin: round;
+  }
+
+  .insole {
+    fill: var(--tram-sys-surface-tint);
+  }
+
+  .midsole {
+    fill: var(--tram-sys-surface-alt);
+  }
+
+  .plate {
+    stroke: var(--tram-sys-text);
+    stroke-width: var(--tram-sys-line-route);
+    stroke-linecap: round;
+  }
+
+  .rubber {
+    fill: currentcolor;
+  }
+</style>

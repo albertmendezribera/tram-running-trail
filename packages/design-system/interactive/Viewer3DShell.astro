@@ -11,6 +11,8 @@ export interface Props {
   id?: string;
   /** Takes the size of its container instead of its own proportions, without a frame. */
   fill?: boolean;
+  /** What to say once the view is ready, when the arrow keys do something other than move along a route. */
+  ready?: string;
 }
 
 const COPY = {
@@ -19,7 +21,7 @@ const COPY = {
   en: { start: 'View in 3D', retry: 'Try again', loading: 'Loading the 3D view…', ready: '3D view ready. Use the arrow keys to move forward and back.', error: 'The 3D view could not be loaded.' },
 };
 
-const { label, load = 'visible', locale = 'ca', id, fill = false } = Astro.props;
+const { label, load = 'visible', locale = 'ca', id, fill = false, ready } = Astro.props;
 const copy = COPY[locale];
 ---
 
@@ -30,7 +32,7 @@ const copy = COPY[locale];
   data-load={load}
   data-fill={fill ? '' : undefined}
   data-text-loading={copy.loading}
-  data-text-ready={copy.ready}
+  data-text-ready={ready ?? copy.ready}
   data-text-error={copy.error}
 >
   <div class="frame">

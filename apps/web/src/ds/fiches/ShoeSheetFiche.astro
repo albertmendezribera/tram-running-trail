@@ -1,6 +1,7 @@
 ---
 import ReviewScores from '@tram/design-system/patterns/ReviewScores.astro';
 import ShoeRow from '@tram/design-system/patterns/ShoeRow.astro';
+import ShoeSilhouette from '@tram/design-system/patterns/ShoeSilhouette.astro';
 import ShoeSpecSheet from '@tram/design-system/patterns/ShoeSpecSheet.astro';
 import SpecDiff from '@tram/design-system/patterns/SpecDiff.astro';
 import Fiche from '../Fiche.astro';
@@ -75,9 +76,19 @@ const code = `<ShoeSpecSheet caption="…" rows={[{ label: 'Pes', unit: 'g', mea
       <li><ShoeRow href="#" brand="Marca de mostra" model="Model de muntanya" terrain="trail" weightG={null} specs={trail} /></li>
     </ul>
   </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">ShoeSilhouette</h2>
+    <p class="fiche-note">El perfil sol, sense cotes: el pòster de la vista 3D d'una sabatilla. Decoratiu: les xifres són al costat.</p>
+    <div class="fiche-shoe" data-terrain="trail"><ShoeSilhouette specs={trail} /></div>
+  </section>
 </Fiche>
 
 <style>
+  .fiche-shoe {
+    max-inline-size: calc(var(--tram-sys-space-12) * 5);
+  }
+
   .fiche-list {
     margin: 0;
     padding: 0;

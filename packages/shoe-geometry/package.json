@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Parametric side profile of a running shoe from its measured specs, for the X-ray drawing (CLAUDE.md 8.2, E05).",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./solid": "./src/solid.ts"
   },
   "scripts": {
     "test": "node --test \"src/**/*.test.ts\"",

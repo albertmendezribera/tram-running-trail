@@ -166,7 +166,8 @@ test.describe('Shoe sheet', () => {
     await expect(scores.nth(1)).toContainText('Prova del model de dona');
     await expect(scores.nth(2)).toContainText('sobre 10');
     await expect(main(page)).toContainText('no es poden sumar ni fer-ne la mitjana');
-    await expect(main(page).locator('[class*="star"]')).toHaveCount(0);
+    // Figures, never stars (6.4).
+    await expect(main(page)).not.toContainText(/[★☆⭐]/);
   });
 
   test('describes the shoe as a product, without ratings that are not ours', async ({ page }) => {
@@ -193,5 +194,50 @@ test.describe('Comparator', () => {
     await page.goto('/ca/comparar/nike-vaporfly-4-vs-hoka-speedgoat-6/');
     await expect(page).toHaveURL(new RegExp(`${COMPARE}$`));
     await expect(page.locator('h1')).toHaveText('Hoka Speedgoat 6 vs Nike Vaporfly 4');
+  });
+});
+
+test.describe('Shoe in 3D', () => {
+  // Software GL on CI: the scene takes its time to compile.
+  test.describe.configure({ timeout: 90_000 });
+  const READY = { timeout: 60_000 };
+
+  test('turns with a drag and with the arrow keys, and says where it is', async ({ page }) => {
+    await open(page, PAGES['shoe-trail']);
+    const viewer = page.locator('#shoe-3d');
+    await viewer.scrollIntoViewIfNeeded();
+    await expect(viewer).toHaveAttribute('data-state', 'ready', READY);
+    const canvas = viewer.locator('canvas');
+    await expect(canvas).toHaveAttribute('data-moving', 'false', READY);
+    const yaw = async (): Promise<number> => Number(await canvas.getAttribute('data-yaw'));
+    const start = await yaw();
+    const box = (await canvas.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width / 2 + 100, box.y + box.height / 2, { steps: 4 });
+    await page.mouse.up();
+    expect(await yaw()).toBeGreaterThan(start + 0.5);
+    // Still again once the hand lets go: a shoe at rest costs no frames.
+    await expect(canvas).toHaveAttribute('data-moving', 'false');
+    const frames = await canvas.getAttribute('data-frames');
+    await page.waitForTimeout(300);
+    expect(await canvas.getAttribute('data-frames')).toBe(frames);
+
+    const turned = await yaw();
+    await viewer.getByRole('group', { name: 'Hoka Speedgoat 6 en 3D' }).focus();
+    await page.keyboard.press('ArrowRight');
+    expect(await yaw()).toBeGreaterThan(turned + 0.3);
+    await expect(viewer.getByRole('status')).toContainText(/Sabatilla girada [\d.,]+ graus/);
+  });
+
+  test('keeps the profile as its poster and waits for the button with reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES['shoe-road']);
+    const viewer = page.locator('#shoe-3d');
+    await viewer.scrollIntoViewIfNeeded();
+    await expect(viewer).toHaveAttribute('data-state', 'poster');
+    await expect(viewer.locator('svg path').first()).toBeVisible();
+    await expect(viewer.getByRole('button', { name: 'Veure en 3D' })).toBeVisible();
+    await expect(viewer).toContainText('no un escaneig');
   });
 });

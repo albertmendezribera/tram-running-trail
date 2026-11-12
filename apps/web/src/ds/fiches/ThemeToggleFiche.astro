@@ -1,0 +1,41 @@
+---
+import ThemeToggle from '@tram/design-system/interactive/ThemeToggle.astro';
+import Fiche from '../Fiche.astro';
+
+const code = `<ThemeToggle />
+<!-- A <head>, abans de pintar: -->
+<script is:inline>
+  if (localStorage.getItem('tram-theme') === 'night') document.documentElement.dataset.theme = 'night';
+</script>`;
+---
+
+<Fiche
+  title="ThemeToggle"
+  group="Interactiu"
+  js="0,4 KB de JavaScript"
+  use="Un per pàgina, a la capçalera: és l'única manera d'entrar al mode nit. TRAM és clar per defecte, encara que el dispositiu estigui en fosc."
+  avoid="Canviar de tema sol, pel sistema o per l'hora. La nit la tria qui llegeix."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">El botó</h2>
+    <div class="fiche-specimen" data-testid="toggle"><div><ThemeToggle /></div></div>
+    <p class="fiche-note">Recorda la tria per a la visita següent. Sense JavaScript no es mostra, i la pàgina es queda en clar.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Sobre la barra de tinta</h2>
+    <div class="bar" data-theme="night"><ThemeToggle /></div>
+    <p class="fiche-note">Pren el color del text que l'envolta, de manera que funciona sobre qualsevol fons.</p>
+  </section>
+</Fiche>
+
+<style>
+  .bar {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--tram-sys-space-3) var(--tram-sys-space-4);
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface-alt);
+  }
+</style>

@@ -1,0 +1,84 @@
+---
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const code = `<Button variant="primary">Inscriu-t'hi</Button>
+<Button href="/ca/curses/">Totes les curses</Button>
+<Link href="/ca/rutes/calonge/" variant="standalone">Veure el recorregut</Link>`;
+---
+
+<Fiche
+  title="Enllaç i botó"
+  group="Primitiva"
+  use="Link porta a un altre lloc; Button fa una cosa. Amb href, Button és un enllaç amb aspecte de botó. Només hi ha un botó primari per vista: l'acció principal."
+  avoid="Dos botons primaris junts, o un botó per a una navegació dins d'un text: allà és un enllaç."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Button · variants</h2>
+    <div data-testid="variants">
+      <Cluster>
+        <Button variant="primary">Inscriu-t'hi</Button>
+        <Button>Desa la cursa</Button>
+        <Button variant="quiet">Ara no</Button>
+      </Cluster>
+    </div>
+    <p class="fiche-note">El primari és l'únic lloc on un botó porta l'accent. El secundari és un contorn de tinta, i el discret, text subratllat.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Button · mides</h2>
+    <Cluster>
+      <Button>Mida per defecte</Button>
+      <Button size="sm">Mida petita</Button>
+    </Cluster>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Button · estats</h2>
+    <div data-testid="states">
+      <Cluster>
+        <Button variant="primary" disabled>Inscripcions tancades</Button>
+        <Button disabled>No disponible</Button>
+        <Button loading>Desant…</Button>
+        <Button href="/ds/">És un enllaç</Button>
+      </Cluster>
+    </div>
+    <p class="fiche-note">Ocupat es diu amb una trama, no amb un cercle que gira, i el botó conserva l'amplada. Un botó desactivat diu per què en el seu text.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Link</h2>
+    <Text>
+      Dins d'una frase, com a <Link href="/ds/fonaments/">els fonaments del sistema</Link>, l'enllaç és text subratllat del mateix color.
+    </Text>
+    <Cluster gap={5}>
+      <Link href="/ds/" variant="standalone">Torna al catàleg</Link>
+      <Link href="https://www.icgc.cat/" variant="standalone">Institut Cartogràfic</Link>
+      <Link href="/ds/primitives/actions/" current>Pàgina actual</Link>
+    </Cluster>
+    <p class="fiche-note">Un enllaç sol porta una fletxa; si surt de TRAM, la fletxa apunta cap enfora.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">
+      {
+        MODES.map((m) => (
+          <Mode {...m}>
+            <Cluster>
+              <Button variant="primary" size="sm">Primari</Button>
+              <Button size="sm">Secundari</Button>
+            </Cluster>
+            <Link href="/ds/" variant="standalone">Enllaç</Link>
+          </Mode>
+        ))
+      }
+    </div>
+  </section>
+</Fiche>

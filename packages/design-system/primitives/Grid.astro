@@ -1,0 +1,35 @@
+---
+export interface Props {
+  /** Narrowest a column may get before the grid drops one: `sm` 12rem, `md` 18rem, `lg` 24rem. */
+  min?: 'sm' | 'md' | 'lg';
+  gap?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  as?: 'div' | 'ul' | 'ol' | 'section';
+}
+
+const { min = 'md', gap, as: Tag = 'div' } = Astro.props;
+---
+
+<!-- Equal columns, as many as fit. No breakpoints: the content decides. -->
+<Tag class="grid" data-min={min} style={gap === undefined ? undefined : `--gap: var(--tram-sys-space-${gap})`}><slot /></Tag>
+
+<style>
+  .grid {
+    --min: calc(var(--tram-sys-space-12) * 3);
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--min)), 1fr));
+    gap: var(--gap, var(--tram-sys-grid-gutter));
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .grid[data-min='sm'] {
+    --min: calc(var(--tram-sys-space-12) * 2);
+  }
+
+  .grid[data-min='lg'] {
+    --min: calc(var(--tram-sys-space-12) * 4);
+  }
+</style>

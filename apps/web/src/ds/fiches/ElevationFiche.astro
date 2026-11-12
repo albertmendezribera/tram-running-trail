@@ -15,41 +15,42 @@ const code = `<ElevationProfile
 ---
 
 <Fiche
+  group="Patró"
   title="ElevationProfile"
   use="El perfil d'una cursa o d'una ruta, generat en build. No porta JavaScript i s'adapta a qualsevol mode."
   avoid="Gràfics de ritme o de parcials: per a això hi ha els gràfics d'ECharts."
   code={code}
 >
   <section class="fiche-block" data-testid="real-trail">
-    <h2 data-type="text-sm">Recorregut real: sortida a Calonge</h2>
+    <h2 data-type="display-sm">Recorregut real: sortida a Calonge</h2>
     <p class="fiche-note">Dades reals d'un GPX de COROS, amb el mateix tractament: un recorregut de muntanya amb bandes de pendent de veritat.</p>
     <ElevationProfile label="Perfil de la sortida a Calonge" points={CALONGE} />
   </section>
 
   <section class="fiche-block" data-testid="real">
-    <h2 data-type="text-sm">Recorregut real: sortida a Sils</h2>
+    <h2 data-type="display-sm">Recorregut real: sortida a Sils</h2>
     <p class="fiche-note">Dades reals d'un GPX de COROS: només distància i altitud, un punt cada <Measure value={20} unit="m" type="data-sm" />. És gairebé pla, i l'escala mínima evita que sembli una muntanya.</p>
     <ElevationProfile label="Perfil de la sortida a Sils" points={SILS} />
   </section>
 
   <section class="fiche-block" data-testid="trail">
-    <h2 data-type="text-sm">Muntanya, amb punts d'interès</h2>
+    <h2 data-type="display-sm">Muntanya, amb punts d'interès</h2>
     <ElevationProfile label="Perfil de mostra de muntanya" points={TRAIL} pois={TRAIL_POIS} />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Asfalt</h2>
+    <h2 data-type="display-sm">Asfalt</h2>
     <p class="fiche-note">L'escala vertical té un mínim, perquè un recorregut pla no sembli una muntanya.</p>
     <ElevationProfile label="Perfil de mostra d'asfalt" points={ROAD} />
   </section>
 
   <section class="fiche-block" data-testid="absent">
-    <h2 data-type="text-sm">Dada absent</h2>
+    <h2 data-type="display-sm">Dada absent</h2>
     <ElevationProfile label="Sense recorregut" points={[]} />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Modes</h2>
+    <h2 data-type="display-sm">Modes</h2>
     <div class="fiche-grid">
       {MODES.map((m) => <Mode {...m}><div style="inline-size: 100%"><ElevationProfile label={`Mode ${m.theme} ${m.terrain}`} points={m.terrain === 'road' ? ROAD : TRAIL} annotate={false} /></div></Mode>)}
     </div>

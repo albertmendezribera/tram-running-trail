@@ -1,0 +1,107 @@
+---
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Figure from '@tram/design-system/primitives/Figure.astro';
+import Icon from '@tram/design-system/primitives/Icon.astro';
+import { ICONS, type IconName } from '@tram/design-system/primitives/icons.ts';
+import Rule from '@tram/design-system/primitives/Rule.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import VisuallyHidden from '@tram/design-system/primitives/VisuallyHidden.astro';
+import { areaPath, createPlot, linePath } from '@tram/design-system/patterns/elevation.ts';
+import Fiche from '../Fiche.astro';
+import { CALONGE } from '../real-profile';
+
+const names = Object.keys(ICONS) as IconName[];
+const plot = createPlot(CALONGE, [0, 340], 1000, 240);
+const code = `<Icon name="summit" label="Cim" />
+<Rule weight="strong" />
+<Figure caption="Perfil de la sortida" credit="GPX del corredor">…</Figure>
+<VisuallyHidden>Quilòmetre 4</VisuallyHidden>`;
+---
+
+<Fiche
+  title="Icona, filet i figura"
+  group="Primitiva"
+  use="Icon per als pictogrames propis de TRAM; Rule per separar; Figure per a tota imatge o gràfic amb el seu peu; VisuallyHidden per al text que només han de llegir els lectors de pantalla."
+  avoid="Icones d'altres col·leccions, ni icones soles sense nom. Un filet no fa de vora de targeta."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Icon · col·lecció</h2>
+    <ul class="icons">
+      {names.map((name) => <li><Icon name={name} size="lg" /><span data-type="data-sm">{name}</span></li>)}
+    </ul>
+    <p class="fiche-note">Pictogrames plans i geomètrics, dibuixats sobre una quadrícula de 16. Els de fita són els mateixos del perfil i del mapa.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Icon · mides i nom</h2>
+    <Cluster gap={5} align="end">
+      <Icon name="trail" size="sm" />
+      <Icon name="trail" size="md" />
+      <Icon name="trail" size="lg" />
+      <span data-testid="named"><Icon name="summit" label="Cim" /></span>
+    </Cluster>
+    <p class="fiche-note">Amb label, la icona té nom i es llegeix. Sense, és decoració i queda amagada als lectors de pantalla.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Rule</h2>
+    <Stack gap={5}>
+      <Stack gap={2}><Text size="xs" tone="muted">hairline · separa files i notes</Text><Rule /></Stack>
+      <Stack gap={2}><Text size="xs" tone="muted">strong · obre un bloc</Text><Rule weight="strong" /></Stack>
+      <Stack gap={2}><Text size="xs" tone="muted">mark · marca un inici, amb l'accent</Text><Rule weight="mark" tone="accent" decorative /></Stack>
+    </Stack>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Figure</h2>
+    <Figure caption="Silueta de la sortida a Calonge, de 8 a 313 m." credit="GPX del corredor · només distància i altitud">
+      <svg class="plate" viewBox="0 0 1000 240" preserveAspectRatio="none" role="img" aria-label="Silueta del perfil de la sortida a Calonge">
+        <path class="plate-area" d={areaPath(CALONGE, plot)}></path>
+        <path class="plate-line" d={linePath(CALONGE, plot)}></path>
+      </svg>
+    </Figure>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">VisuallyHidden</h2>
+    <p class="fiche-row" data-testid="hidden"><Icon name="km-marker" /><VisuallyHidden>Quilòmetre 4</VisuallyHidden><span data-type="data-md">4</span></p>
+    <p class="fiche-note">Aquí un lector de pantalla diu "Quilòmetre 4"; a la vista només hi ha el pictograma i la xifra.</p>
+  </section>
+</Fiche>
+
+<style>
+  .icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--tram-sys-space-12) * 1.5)), 1fr));
+    gap: var(--tram-sys-space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .icons li {
+    display: grid;
+    justify-items: start;
+    gap: var(--tram-sys-space-2);
+    padding: var(--tram-sys-space-4);
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .plate {
+    inline-size: 100%;
+    block-size: calc(var(--tram-sys-space-12) * 2);
+  }
+
+  .plate-area {
+    fill: var(--tram-sys-surface-tint);
+  }
+
+  .plate-line {
+    fill: none;
+    stroke: var(--tram-sys-data-primary);
+    stroke-width: var(--tram-sys-line-strong);
+    vector-effect: non-scaling-stroke;
+  }
+</style>

@@ -1,6 +1,6 @@
 {
   "$description": "Manifest del design system TRAM: quins fitxers formen la base i com s'apliquen els modes. Inspirat en el mòdul Resolver de DTCG; format propi (vegeu docs/explorations/E16-token-pipeline.md).",
-  "sources": ["ref/color.json", "ref/space.json", "ref/type.json", "ref/shape.json", "sys/color.json", "sys/space.json", "sys/type.json", "sys/shape.json"],
+  "sources": ["ref/color.json", "ref/space.json", "ref/type.json", "ref/shape.json", "ref/motion.json", "ref/layout.json", "sys/color.json", "sys/space.json", "sys/type.json", "sys/shape.json", "sys/motion.json", "sys/layout.json"],
   "modifiers": {
     "theme": {
       "attribute": "data-theme",

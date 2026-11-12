@@ -1,0 +1,53 @@
+---
+export interface Props {
+  /** What the figure shows. Every figure says it in words. */
+  caption: string;
+  /** Where the image or the data come from. */
+  credit?: string;
+}
+
+const { caption, credit } = Astro.props;
+---
+
+<figure class="figure">
+  <div class="media"><slot /></div>
+  <figcaption class="caption" data-type="text-xs">
+    <span>{caption}</span>
+    {credit && <span class="credit">{credit}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  .figure {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  .media {
+    min-inline-size: 0;
+  }
+
+  .media > :global(img),
+  .media > :global(svg) {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  /* The caption hangs from a rule, as under a plate in a guidebook. */
+  .caption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--tram-sys-space-1) var(--tram-sys-space-4);
+    padding-block-start: var(--tram-sys-space-2);
+    border-block-start: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    color: var(--tram-sys-text);
+  }
+
+  .credit {
+    color: var(--tram-sys-text-muted);
+  }
+</style>

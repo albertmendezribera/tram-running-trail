@@ -1,7 +1,7 @@
 import { srgbToLinear } from '../color.ts';
 import type { TokenSet } from '../model.ts';
-import { Resolver } from '../resolve.ts';
-import { GENERATED_NOTICE, matrix, modifierNamed, nest, sysName, sysIds, toSource, unionType } from './shared.ts';
+import { defaultSelection, Resolver } from '../resolve.ts';
+import { GENERATED_NOTICE, matrix, modifierNamed, nest, px, sysName, sysIds, toSource, unionType } from './shared.ts';
 
 const round = (n: number): number => Number(n.toFixed(5));
 
@@ -34,6 +34,9 @@ export function emitThree(set: TokenSet): string {
       }),
     ),
   }));
+  const defaults = defaultSelection(set);
+  const lineIds = sysIds(set, 'dimension').filter((id) => id.startsWith('sys.line.'));
+  const motionIds = [...set.base.values()].filter((d) => d.layer === 'sys' && d.type === 'duration').map((d) => d.id);
   const themes = Object.keys(modifierNamed(set, 'theme').contexts);
   const terrains = Object.keys(modifierNamed(set, 'terrain').contexts);
   // Hex integers are emitted as strings by toSource; unquote them.
@@ -51,5 +54,11 @@ export interface TramThreeColor {
 }
 
 export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramColorName, TramThreeColor>>> = ${body};
+
+/** Line weights in CSS pixels: a contour, a table rule and a route are one family. */
+export const tramThreeLines = ${toSource(Object.fromEntries(lineIds.map((id) => [id.slice('sys.line.'.length), px(r.dimension(id, defaults))])))} as const;
+
+/** Durations in milliseconds. A scene checks \`prefers-reduced-motion\` itself: these are the full values. */
+export const tramThreeMotion = ${toSource(Object.fromEntries(motionIds.map((id) => [id.slice('sys.motion.'.length), r.duration(id, defaults)])))} as const;
 `;
 }

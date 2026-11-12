@@ -1,21 +1,30 @@
 ---
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Split from '@tram/design-system/primitives/Split.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+
 export interface Props {
   title: string;
+  /** Where it sits in the inventory: "Primitiva", "Patró"… */
+  group?: string;
+  /** JavaScript it ships to the browser. Most components ship none. */
+  js?: string;
   use: string;
   avoid: string;
   code: string;
 }
 
-const { title, use, avoid, code } = Astro.props;
+const { title, group = 'Component', js = 'Sense JavaScript', use, avoid, code } = Astro.props;
 ---
 
-<h1 data-type="display-md" style="margin: 0">{title}</h1>
+<Heading level={1} size="lg" kicker={`${group} · ${js}`}>{title}</Heading>
+<Split>
+  <Panel title="Quan sí"><Text>{use}</Text></Panel>
+  <Panel slot="aside" title="Quan no"><Text>{avoid}</Text></Panel>
+</Split>
 <section class="fiche-block">
-  <h2 data-type="text-sm">Quan fer-lo servir</h2>
-  <p style="margin: 0">{use}</p>
-  <h2 data-type="text-sm">Quan no</h2>
-  <p style="margin: 0">{avoid}</p>
-  <h2 data-type="text-sm">Ús</h2>
-  <pre class="fiche-code" data-type="data-sm"><code>{code}</code></pre>
+  <h2 data-type="display-sm">Ús</h2>
+  <pre class="fiche-code" data-theme="night" data-type="data-sm"><code>{code}</code></pre>
 </section>
 <slot />

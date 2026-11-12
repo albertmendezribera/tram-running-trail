@@ -4,7 +4,10 @@
     "line": {
       "$type": "dimension",
       "hairline": { "$value": "{ref.line.1}" },
-      "strong": { "$value": "{ref.line.2}" }
+      "strong": { "$value": "{ref.line.2}" },
+      "contour": { "$value": "{ref.line.1}", "$description": "Corba de nivell. Les mestres van amb `strong`." },
+      "route": { "$value": "{ref.line.3}", "$description": "Traçat d'un recorregut sobre un mapa o un perfil." },
+      "mark": { "$value": "{ref.line.4}", "$description": "Barra d'accent que marca on comença una cosa." }
     },
     "radius": {
       "$type": "dimension",

@@ -134,6 +134,31 @@ function assertError(r: ReturnType<typeof buildWith>, pattern: RegExp): void {
 // Happy path
 // ---------------------------------------------------------------------------
 
+describe('motion tokens', () => {
+  const r = buildWith({
+    'ref.json': {
+      'ref.duration': { $type: 'duration', quick: { $value: { value: 160, unit: 'ms' } }, long: { $value: { value: 0.6, unit: 's' } } },
+      'ref.easing': { $type: 'cubicBezier', standard: { $value: [0.2, 0, 0, 1] } },
+    },
+    'sys.json': {
+      'sys.motion': { quick: { $type: 'duration', $value: '{ref.duration.quick}' }, ease: { $type: 'cubicBezier', $value: '{ref.easing.standard}' } },
+    },
+  });
+
+  it('emits durations in milliseconds and easings as cubic-bezier()', () => {
+    assert.deepEqual(errorsOf(r), []);
+    const css = r.files['tokens.css']!;
+    assert.match(css, /--tram-ref-duration-quick: 160ms;/);
+    assert.match(css, /--tram-ref-duration-long: 600ms;/);
+    assert.match(css, /--tram-ref-easing-standard: cubic-bezier\(0\.2, 0, 0, 1\);/);
+  });
+
+  it('gives every system duration its reduced version: none', () => {
+    assert.match(r.files['tokens.css']!, /@media \(prefers-reduced-motion: reduce\) \{\n\s+:root \{\n\s+--tram-sys-motion-quick: 0ms;/);
+  });
+});
+
+
 describe('fixture build', () => {
   // Built in a hook on purpose: an exception in a describe body is listed but does not fail the run.
   let r: ReturnType<typeof buildWith>;
@@ -263,7 +288,13 @@ describe('validation errors', () => {
     assertError(buildWith({ 'night.json': { 'sys.text.$root.$value': '{ref.night}' } }), /contrast sys\.text on sys\.surface is 1\.00:1, below 4\.5:1 \(theme=night/));
 
   it('unknown $type', () =>
-    assertError(buildWith({ 'ref.json': { 'ref.$type': 'colour' } }), /\$type "colour" is not supported \(supported: color, dimension, fontFamily, fontWeight, number\)/));
+    assertError(buildWith({ 'ref.json': { 'ref.$type': 'colour' } }), /\$type "colour" is not supported \(supported: color, dimension, fontFamily, fontWeight, number, duration, cubicBezier\)/));
+
+  it('rejects a malformed duration or easing', () => {
+    assertError(buildWith({ 'ref.json': { 'ref.slow': { $type: 'duration', $value: '320ms' } } }), /duration \$value must be/);
+    assertError(buildWith({ 'ref.json': { 'ref.ease': { $type: 'cubicBezier', $value: [1.2, 0, 0, 1] } } }), /cubicBezier \$value must be/);
+  });
+
 
   it('fluidMin has to be smaller than the size', () =>
     assertError(

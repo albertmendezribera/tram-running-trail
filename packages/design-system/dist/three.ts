@@ -718,3 +718,20 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
     }
   }
 };
+
+/** Line weights in CSS pixels: a contour, a table rule and a route are one family. */
+export const tramThreeLines = {
+  "hairline": 1,
+  "strong": 2,
+  "contour": 1,
+  "route": 3,
+  "mark": 4
+} as const;
+
+/** Durations in milliseconds. A scene checks `prefers-reduced-motion` itself: these are the full values. */
+export const tramThreeMotion = {
+  "quick": 160,
+  "steady": 240,
+  "slow": 320,
+  "route": 600
+} as const;

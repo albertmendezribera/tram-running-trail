@@ -73,6 +73,17 @@ Segona passada visual: llegibilitat, blocs i color (`docs/explorations/visual-pa
 - `StatBlock`: `tone: 'grade'` dona a una xifra el color de l'escala de pendent.
 - `RouteScroller`: el desnivell i el pendent prenen el lila del seu nivell, la pujada activa porta l'accent i les etiquetes deixen les majúscules.
 
+Tancament de la Fase 0, primera part: fonaments i primitives.
+
+- **Tipus nous a la pipeline:** `duration` i `cubicBezier`. Amb `prefers-reduced-motion`, la build posa totes les durades de sistema a 0.
+- **Fonaments nous** (6.3): moviment (`sys.motion.quick`, `steady`, `slow`, `route` i tres corbes), graella (`sys.grid.columns`, `gutter`, `margin`, `measure`), punts de tall (`sys.breakpoint.sm` a `xl`), capes (`sys.layer.base` a `modal`), mides d'icona (`sys.icon.sm` a `lg`) i línies amb nom (`sys.line.contour`, `route`, `mark`).
+- **Destí nou `dist/catalog.ts`:** tots els rols de sistema amb el valor resolt i la descripció. La pàgina de fonaments s'escriu d'aquí.
+- **`dist/three.ts`** exporta també `tramThreeLines` i `tramThreeMotion`.
+- **Primitives noves, sense JavaScript:** `Text`, `Heading`, `Link`, `Button`, `Rule`, `Icon` (amb 14 pictogrames propis a `icons.ts`), `Figure`, `VisuallyHidden`, `Stack`, `Cluster`, `Grid`, `Split` i `Bleed`.
+- `Band` desfà el marge de pàgina amb `sys.grid.margin`, i el seu títol és una barra fosca en tots dos temes.
+- `SegmentedControl` fa servir `sys.layer.raised` en lloc d'un `z-index` numèric.
+- Catàleg: navegació agrupada, plantilla de fitxa amb "quan sí / quan no" i fitxes noves per a les primitives i per a `ThemeToggle`.
+
 ## 0.1.0 · 2026-11-09
 
 Primera versió del pipeline (E16).

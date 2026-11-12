@@ -25,33 +25,34 @@ const code = `<DataTable
 ---
 
 <Fiche
+  group="Primitiva"
   title="DataTable"
   use="Fulls de resultats, parcials i especificacions: dades denses que es comparen per columnes."
   avoid="Llistes sense columnes que es comparin, o una cursa al calendari: per a això hi ha RaceRow."
   code={code}
 >
   <section class="fiche-block">
-    <h2 data-type="text-sm">Per defecte</h2>
+    <h2 data-type="display-sm">Per defecte</h2>
     <DataTable caption="Parcials de mostra" columns={COLUMNS} rows={ROWS} />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Compacta</h2>
+    <h2 data-type="display-sm">Compacta</h2>
     <DataTable caption="Parcials de mostra, compacta" columns={COLUMNS} rows={ROWS} density="compact" />
   </section>
 
   <section class="fiche-block" data-testid="sticky">
-    <h2 data-type="text-sm">Capçalera enganxosa</h2>
+    <h2 data-type="display-sm">Capçalera enganxosa</h2>
     <DataTable caption="Quilòmetres de mostra" columns={COLUMNS} rows={MANY} density="compact" sticky />
   </section>
 
   <section class="fiche-block" data-testid="empty">
-    <h2 data-type="text-sm">Buida</h2>
+    <h2 data-type="display-sm">Buida</h2>
     <DataTable caption="Sense resultats" columns={COLUMNS} rows={[]} />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Modes</h2>
+    <h2 data-type="display-sm">Modes</h2>
     <div class="fiche-grid">
       {MODES.map((m) => <Mode {...m}><DataTable caption={`Mode ${m.theme} ${m.terrain}`} columns={COLUMNS} rows={ROWS.slice(0, 2)} density="compact" /></Mode>)}
     </div>

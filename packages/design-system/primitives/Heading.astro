@@ -1,0 +1,49 @@
+---
+export interface Props {
+  level: 1 | 2 | 3 | 4;
+  /** Visual size, independent of the level: the outline says the structure, the size says the weight. */
+  size?: 'xl' | 'lg' | 'md' | 'sm';
+  /** A short line above the heading, opened by the accent mark. */
+  kicker?: string;
+}
+
+const { level, size = level === 1 ? 'lg' : level === 2 ? 'md' : 'sm', kicker } = Astro.props;
+const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4';
+---
+
+<div class="heading">
+  {kicker && <p class="kicker" data-type="text-xs">{kicker}</p>}
+  <Tag class="title" data-type={`display-${size}`}><slot /></Tag>
+</div>
+
+<style>
+  .heading {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    min-inline-size: 0;
+  }
+
+  /* The accent marks where something starts: it never decorates (7.3). */
+  .kicker {
+    display: flex;
+    align-items: center;
+    gap: var(--tram-sys-space-2);
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .kicker::before {
+    flex: none;
+    inline-size: var(--tram-sys-space-6);
+    block-size: var(--tram-sys-line-mark);
+    background: var(--tram-sys-accent);
+    content: '';
+  }
+
+  .title {
+    margin: 0;
+    color: var(--tram-sys-text);
+    text-wrap: balance;
+  }
+</style>

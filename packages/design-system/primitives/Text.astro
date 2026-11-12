@@ -1,0 +1,28 @@
+---
+export interface Props {
+  as?: 'p' | 'span' | 'div' | 'li';
+  size?: 'lg' | 'md' | 'sm' | 'xs';
+  tone?: 'default' | 'muted';
+  /** Keeps a running text to a readable line length. */
+  measure?: boolean;
+}
+
+const { as: Tag = 'p', size = 'md', tone = 'default', measure = false } = Astro.props;
+---
+
+<Tag class="text" data-type={`text-${size}`} data-tone={tone} data-measure={measure ? '' : undefined}><slot /></Tag>
+
+<style>
+  .text {
+    margin: 0;
+    color: var(--tram-sys-text);
+  }
+
+  .text[data-tone='muted'] {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .text[data-measure] {
+    max-inline-size: var(--tram-sys-grid-measure);
+  }
+</style>

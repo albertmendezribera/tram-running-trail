@@ -44,9 +44,10 @@ const { locale = 'ca' } = Astro.props;
     cursor: pointer;
   }
 
+  /* On: filled with the colour of its own text. */
   .toggle[aria-pressed='true'] {
-    color: var(--tram-sys-text);
-    background: var(--tram-sys-surface);
+    color: var(--tram-sys-surface);
+    background: var(--tram-sys-text);
   }
 
   .toggle:focus-visible {

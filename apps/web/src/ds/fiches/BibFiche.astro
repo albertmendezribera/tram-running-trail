@@ -9,13 +9,14 @@ const code = `<Bib number={1427} terrain="trail" label="Curs de mostra" />
 ---
 
 <Fiche
+  group="Patró"
   title="Bib"
   use="El dorsal d'un corredor o la identitat d'una cursa, com a element gràfic principal."
   avoid="Llistes denses: en una taula, el dorsal és una columna més."
   code={code}
 >
   <section class="fiche-block">
-    <h2 data-type="text-sm">Terreny</h2>
+    <h2 data-type="display-sm">Terreny</h2>
     <p class="fiche-note">El terreny es llegeix pel text i pel traç de la línia, no només pel color.</p>
     <div class="fiche-row">
       <Bib number={1427} terrain="road" size="md" />
@@ -25,17 +26,17 @@ const code = `<Bib number={1427} terrain="trail" label="Curs de mostra" />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Mida gran</h2>
+    <h2 data-type="display-sm">Mida gran</h2>
     <div class="fiche-row"><Bib number={1427} terrain="trail" label="Curs de mostra" /></div>
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Dada absent</h2>
+    <h2 data-type="display-sm">Dada absent</h2>
     <div class="fiche-row"><Bib number={null} terrain="road" size="md" /></div>
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Modes</h2>
+    <h2 data-type="display-sm">Modes</h2>
     <div class="fiche-grid">
       {MODES.map((m) => <Mode {...m}><Bib number={1427} terrain={m.terrain} size="md" /></Mode>)}
     </div>

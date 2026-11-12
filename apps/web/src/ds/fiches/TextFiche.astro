@@ -1,0 +1,62 @@
+---
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const code = `<Heading level={1} kicker="Cursa de muntanya">Calonge Trail</Heading>
+<Text size="lg" measure>Dotze quilòmetres per les Gavarres.</Text>
+<Text tone="muted" size="sm">Dades del GPX del corredor.</Text>`;
+const SIZES = ['lg', 'md', 'sm', 'xs'] as const;
+const DISPLAY = ['xl', 'lg', 'md', 'sm'] as const;
+---
+
+<Fiche
+  title="Text i títols"
+  group="Primitiva"
+  use="Tot text que es llegeix: paràgrafs, notes i titulars. Heading separa el nivell (l'esquema de la pàgina) de la mida (el pes visual)."
+  avoid="Xifres amb unitat, que van amb Measure, i etiquetes de dades, que porta cada component."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Text · mides</h2>
+    {SIZES.map((size) => <Text size={size}>{`${size} · El ritme per quilòmetre enganya a la muntanya: el que mana és el desnivell.`}</Text>)}
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Text · to i mesura</h2>
+    <Text tone="muted">Secundari: unitats, notes i procedència de les dades.</Text>
+    <div data-testid="measure">
+      <Text measure>
+        Amb mesura, una línia no passa d'unes setanta lletres, encara que la pantalla sigui molt ampla. Un text seguit sense límit cansa: l'ull es perd en tornar al començament de la línia següent, i qui llegeix ho deixa córrer abans d'hora.
+      </Text>
+    </div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Heading · mides</h2>
+    {DISPLAY.map((size) => <Heading level={2} size={size}>{`${size} · Recórrer el tram`}</Heading>)}
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Heading · avanttítol</h2>
+    <Heading level={2} size="md" kicker="Cursa de muntanya · 12 km">Calonge Trail</Heading>
+    <p class="fiche-note">La barra d'accent marca on comença una part de la pàgina. És un dels pocs llocs on surt el taronja.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">
+      {
+        MODES.map((m) => (
+          <Mode {...m}>
+            <Heading level={3} size="sm" kicker="Avanttítol">Títol de bloc</Heading>
+            <Text>Text principal.</Text>
+            <Text tone="muted" size="sm">Text secundari.</Text>
+          </Mode>
+        ))
+      }
+    </div>
+  </section>
+</Fiche>

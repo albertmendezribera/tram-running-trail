@@ -1,0 +1,21 @@
+---
+export interface Props {
+  /** Puts the page margin back inside, so the background reaches the edge and the content stays aligned. */
+  pad?: boolean;
+}
+
+const { pad = false } = Astro.props;
+---
+
+<!-- Breaks out of the page margin, edge to edge: for bands, maps and wide figures. -->
+<div class="bleed" data-pad={pad ? '' : undefined}><slot /></div>
+
+<style>
+  .bleed {
+    margin-inline: calc(var(--tram-sys-grid-margin) * -1);
+  }
+
+  .bleed[data-pad] {
+    padding-inline: var(--tram-sys-grid-margin);
+  }
+</style>

@@ -12,7 +12,8 @@
     "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
     "lint": "eslint . && stylelint \"apps/**/*.{astro,css}\"",
-    "test:lint": "node --test \"eslint/*.test.mjs\""
+    "test:lint": "node --test \"eslint/*.test.mjs\"",
+    "check": "pnpm tokens:check && pnpm typecheck && pnpm lint && pnpm test && pnpm test:lint && pnpm --filter @tram/design-system test:browser"
   },
   "devDependencies": {
     "astro-eslint-parser": "3.2.0",

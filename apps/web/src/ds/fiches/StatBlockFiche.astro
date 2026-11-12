@@ -29,29 +29,30 @@ const code = `<StatBlock
 ---
 
 <Fiche
+  group="Patró"
   title="StatBlock"
   use="Les xifres principals d'una cursa o d'una sabatilla, a la part alta d'una fitxa."
   avoid="Comparar moltes files: per a això hi ha DataTable."
   code={code}
 >
   <section class="fiche-block" data-testid="road">
-    <h2 data-type="text-sm">Asfalt, amb xifra principal</h2>
+    <h2 data-type="display-sm">Asfalt, amb xifra principal</h2>
     <StatBlock stats={ROAD} lead />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Muntanya</h2>
+    <h2 data-type="display-sm">Muntanya</h2>
     <p class="fiche-note">En muntanya el ritme enganya: es mostren també la velocitat vertical i el km-esforç.</p>
     <StatBlock stats={TRAIL} />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Dada absent</h2>
+    <h2 data-type="display-sm">Dada absent</h2>
     <StatBlock stats={ABSENT} />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Modes</h2>
+    <h2 data-type="display-sm">Modes</h2>
     <div class="fiche-grid">
       {MODES.map((m) => <Mode {...m}><div style="inline-size: 100%"><StatBlock stats={m.terrain === 'road' ? ROAD.slice(0, 2) : TRAIL.slice(0, 2)} /></div></Mode>)}
     </div>

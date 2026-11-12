@@ -10,28 +10,29 @@ const code = `<ClimbList label="Pujades del recorregut" points={profile} />`;
 ---
 
 <Fiche
+  group="Patró"
   title="ClimbList"
   use="Les pujades d'una cursa o d'una ruta, detectades del perfil: on comencen, quant pugen i com de dures són. Totes a la mateixa escala, per comparar-les."
   avoid="Recorreguts plans: el component ho diu i no inventa pujades."
   code={code}
 >
   <section class="fiche-block" data-testid="real">
-    <h2 data-type="text-sm">Recorregut real: Calonge</h2>
+    <h2 data-type="display-sm">Recorregut real: Calonge</h2>
     <ClimbList label="Pujades de la sortida a Calonge" points={CALONGE} />
   </section>
 
   <section class="fiche-block" data-testid="many">
-    <h2 data-type="text-sm">Diverses pujades (perfil de mostra)</h2>
+    <h2 data-type="display-sm">Diverses pujades (perfil de mostra)</h2>
     <ClimbList label="Pujades del perfil de mostra" points={TRAIL} />
   </section>
 
   <section class="fiche-block" data-testid="flat">
-    <h2 data-type="text-sm">Recorregut pla: Sils</h2>
+    <h2 data-type="display-sm">Recorregut pla: Sils</h2>
     <ClimbList label="Pujades de la sortida a Sils" points={SILS} />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Modes</h2>
+    <h2 data-type="display-sm">Modes</h2>
     <div class="fiche-grid">
       {MODES.map((m) => <Mode {...m}><div style="inline-size: 100%"><ClimbList label={`Mode ${m.theme} ${m.terrain}`} points={CALONGE} /></div></Mode>)}
     </div>

@@ -1,0 +1,39 @@
+{
+  "$description": "Rols de moviment. Amb prefers-reduced-motion totes les durades valen 0: la build ho genera.",
+  "sys": {
+    "motion": {
+      "quick": {
+        "$type": "duration",
+        "$value": "{ref.duration.1}",
+        "$description": "Resposta a un gest: hover, focus, prémer."
+      },
+      "steady": {
+        "$type": "duration",
+        "$value": "{ref.duration.2}",
+        "$description": "Canvi d'estat d'un component: obrir, seleccionar."
+      },
+      "slow": {
+        "$type": "duration",
+        "$value": "{ref.duration.3}",
+        "$description": "Canvi de vista o de bloc. El límit de les microinteraccions."
+      },
+      "route": {
+        "$type": "duration",
+        "$value": "{ref.duration.4}",
+        "$description": "Moviment al llarg d'un recorregut quan no el porta el scroll."
+      },
+      "ease": {
+        "$type": "cubicBezier",
+        "standard": {
+          "$value": "{ref.easing.standard}"
+        },
+        "out": {
+          "$value": "{ref.easing.out}"
+        },
+        "linear": {
+          "$value": "{ref.easing.linear}"
+        }
+      }
+    }
+  }
+}

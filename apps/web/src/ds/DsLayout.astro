@@ -2,7 +2,7 @@
 import { Font } from 'astro:assets';
 import '@tram/design-system/tokens.css';
 import ThemeToggle from '@tram/design-system/interactive/ThemeToggle.astro';
-import { NAV } from './nav';
+import { GROUPS } from './nav';
 
 export interface Props {
   title: string;
@@ -29,19 +29,34 @@ const current = Astro.url.pathname;
     </script>
   </head>
   <body data-type="text-md">
-    <header class="top">
-      <div class="top-row">
+    <header class="ds-top" data-theme="night">
+      <div class="ds-top-row">
         <strong data-type="display-sm">TRAM · design system</strong>
         <ThemeToggle />
       </div>
-      <nav aria-label="Catàleg">
-        {NAV.map((n) => <a data-type="text-sm" href={n.href} aria-current={n.href === current ? 'page' : undefined}>{n.title}</a>)}
-      </nav>
     </header>
-    <main class="main">
-      <slot />
-    </main>
-    <footer class="foot" data-type="text-xs">
+    <div class="ds-frame">
+      <nav class="ds-side" aria-label="Catàleg">
+        {
+          GROUPS.map((group) => (
+            <div class="ds-group">
+              <p class="ds-group-title" data-type="text-xs">{group.title}</p>
+              <ul>
+                {group.items.map((n) => (
+                  <li>
+                    <a data-type="text-sm" href={n.href} aria-current={n.href === current ? 'page' : undefined}>{n.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
+      <main class="ds-main">
+        <slot />
+      </main>
+    </div>
+    <footer class="ds-foot" data-type="text-xs">
       Dades de mostra (isPlaceholder): no corresponen a cap cursa ni cap sabatilla real.
     </footer>
   </body>
@@ -51,7 +66,7 @@ const current = Astro.url.pathname;
   @layer ds {
     body {
       margin: 0;
-      padding: 0 var(--tram-sys-space-4) var(--tram-sys-space-5);
+      padding: 0 var(--tram-sys-grid-margin) var(--tram-sys-space-5);
       color: var(--tram-sys-text);
       background: var(--tram-sys-surface);
     }
@@ -61,17 +76,15 @@ const current = Astro.url.pathname;
       font: inherit;
     }
 
-    /* An inked bar, edge to edge: the page has a clear top. */
-    .top {
-      display: grid;
-      gap: var(--tram-sys-space-3);
-      margin-inline: calc(var(--tram-sys-space-4) * -1);
-      padding: var(--tram-sys-space-4);
-      color: var(--tram-sys-surface);
-      background: var(--tram-sys-text);
+    /* An inked bar, edge to edge: the page has a clear top. It wears the night theme in both themes, so it is always dark. */
+    .ds-top {
+      margin-inline: calc(var(--tram-sys-grid-margin) * -1);
+      padding: var(--tram-sys-space-3) var(--tram-sys-grid-margin);
+      color: var(--tram-sys-text);
+      background: var(--tram-sys-surface-alt);
     }
 
-    .top-row {
+    .ds-top-row {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -79,50 +92,87 @@ const current = Astro.url.pathname;
       gap: var(--tram-sys-space-3);
     }
 
-    .top nav {
+    /* On a phone the index is one line that scrolls sideways; from `lg` up it is a column that stays in view. */
+    .ds-side {
       display: flex;
-      flex-wrap: wrap;
-      gap: var(--tram-sys-space-2) var(--tram-sys-space-4);
+      gap: var(--tram-sys-space-5);
+      margin-inline: calc(var(--tram-sys-grid-margin) * -1);
+      padding: var(--tram-sys-space-3) var(--tram-sys-grid-margin);
+      overflow-x: auto;
+      border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+      background: var(--tram-sys-surface-alt);
     }
 
-    .top a {
-      color: inherit;
-      text-underline-offset: 0.25em;
+    .ds-group {
+      display: flex;
+      flex: none;
+      align-items: baseline;
+      gap: var(--tram-sys-space-3);
     }
 
-    .top a:not([aria-current]) {
+    .ds-group-title {
+      margin: 0;
+      color: var(--tram-sys-text-muted);
+      text-transform: uppercase;
+    }
+
+    .ds-side ul {
+      display: flex;
+      gap: var(--tram-sys-space-3);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .ds-side a {
+      color: var(--tram-sys-text);
       text-decoration-color: transparent;
+      text-underline-offset: 0.25em;
+      white-space: nowrap;
     }
 
-    .top a[aria-current] {
+    .ds-side a:hover {
+      text-decoration-color: currentcolor;
+    }
+
+    .ds-side a:focus-visible {
+      outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+      outline-offset: var(--tram-sys-line-strong);
+    }
+
+    .ds-side a[aria-current] {
       font-weight: 700;
-      text-decoration-thickness: var(--tram-sys-line-strong);
+      text-decoration-color: var(--tram-sys-accent);
+      text-decoration-thickness: var(--tram-sys-line-mark);
     }
 
-    .main {
+    .ds-main {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
-      gap: var(--tram-sys-space-7);
-      padding-block: var(--tram-sys-space-6);
+      align-content: start;
+      gap: var(--tram-sys-space-8);
+      min-inline-size: 0;
+      padding-block: var(--tram-sys-space-7);
     }
 
-    .foot {
+    .ds-foot {
       padding-block-start: var(--tram-sys-space-3);
       border-block-start: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
       color: var(--tram-sys-text-muted);
     }
 
+    /* A section of a fiche: a strong rule, a title and what it shows. */
     .fiche-block {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
-      gap: var(--tram-sys-space-3);
+      gap: var(--tram-sys-space-4);
       min-inline-size: 0;
+      padding-block-start: var(--tram-sys-space-4);
+      border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
     }
 
     .fiche-block > h2 {
       margin: 0;
-      padding-block-end: var(--tram-sys-space-1);
-      border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
     }
 
     .fiche-row {
@@ -131,6 +181,7 @@ const current = Astro.url.pathname;
       align-items: flex-end;
       gap: var(--tram-sys-space-4);
       min-inline-size: 0;
+      margin: 0;
     }
 
     .fiche-grid {
@@ -138,6 +189,16 @@ const current = Astro.url.pathname;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--tram-sys-space-12) * 3)), 1fr));
       gap: var(--tram-sys-space-4);
       min-inline-size: 0;
+    }
+
+    /* A specimen: the component on the alternate surface, with room around it. */
+    .fiche-specimen {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--tram-sys-space-4);
+      min-inline-size: 0;
+      padding: var(--tram-sys-space-5);
+      background: var(--tram-sys-surface-alt);
     }
 
     .fiche-table {
@@ -152,26 +213,68 @@ const current = Astro.url.pathname;
       text-align: start;
     }
 
+    .fiche-table th {
+      border-block-end-color: var(--tram-sys-rule-strong);
+      color: var(--tram-sys-text-muted);
+      font-weight: 400;
+    }
+
     .fiche-scroll {
       min-inline-size: 0;
       overflow-x: auto;
     }
 
     .fiche-note {
+      max-inline-size: var(--tram-sys-grid-measure);
       margin: 0;
       color: var(--tram-sys-text-muted);
     }
 
+    /* Code on ink, in both themes (the block wears the night theme): a different material from the page. */
     .fiche-code {
       margin: 0;
-      padding: var(--tram-sys-space-3);
+      padding: var(--tram-sys-space-4);
       overflow-x: auto;
+      color: var(--tram-sys-text);
       background: var(--tram-sys-surface-alt);
     }
 
-    @media (width >= 48rem) {
-      body {
-        padding-inline: var(--tram-sys-space-8);
+    @media (width >= 64rem) {
+      .ds-frame {
+        display: grid;
+        grid-template-columns: calc(var(--tram-sys-space-12) * 2.5) minmax(0, 1fr);
+        gap: var(--tram-sys-space-9);
+        align-items: start;
+      }
+
+      .ds-side {
+        position: sticky;
+        inset-block-start: 0;
+        display: grid;
+        gap: var(--tram-sys-space-5);
+        max-block-size: 100dvh;
+        margin: 0;
+        padding: var(--tram-sys-space-7) 0;
+        overflow: hidden auto;
+        border: 0;
+        background: none;
+      }
+
+      .ds-group {
+        display: grid;
+        gap: var(--tram-sys-space-2);
+      }
+
+      .ds-side ul {
+        display: grid;
+        gap: var(--tram-sys-space-1);
+        padding-inline-start: var(--tram-sys-space-3);
+        border-inline-start: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+      }
+
+      .ds-side a[aria-current] {
+        text-decoration: none;
+        box-shadow: calc(var(--tram-sys-space-3) * -1 - var(--tram-sys-line-hairline)) 0 0 0 var(--tram-sys-surface), calc(var(--tram-sys-space-3) * -1 - var(--tram-sys-line-mark)) 0 0 0 var(--tram-sys-accent);
       }
     }
   }

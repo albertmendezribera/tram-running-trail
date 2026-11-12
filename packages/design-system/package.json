@@ -9,6 +9,7 @@
     "./echarts-theme": "./dist/echarts-theme.ts",
     "./three": "./dist/three.ts",
     "./og": "./dist/og.ts",
+    "./catalog": "./dist/catalog.ts",
     "./fonts/*": "./fonts/*",
     "./primitives/*": "./primitives/*",
     "./patterns/*": "./patterns/*",

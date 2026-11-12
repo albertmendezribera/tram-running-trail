@@ -69,8 +69,35 @@
     --tram-ref-size-4xl: clamp(7.5rem, 4.7143rem + 11.4286vw, 15rem);
     --tram-ref-line-1: 0.0625rem;
     --tram-ref-line-2: 0.125rem;
+    --tram-ref-line-3: 0.1875rem;
+    --tram-ref-line-4: 0.25rem;
     --tram-ref-radius-0: 0rem;
     --tram-ref-radius-2: 0.125rem;
+    --tram-ref-duration-0: 0ms;
+    --tram-ref-duration-1: 160ms;
+    --tram-ref-duration-2: 240ms;
+    --tram-ref-duration-3: 320ms;
+    --tram-ref-duration-4: 600ms;
+    --tram-ref-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+    --tram-ref-easing-out: cubic-bezier(0, 0, 0.2, 1);
+    --tram-ref-easing-linear: cubic-bezier(0, 0, 1, 1);
+    --tram-ref-breakpoint-sm: 30rem;
+    --tram-ref-breakpoint-md: 48rem;
+    --tram-ref-breakpoint-lg: 64rem;
+    --tram-ref-breakpoint-xl: 90rem;
+    --tram-ref-layer-0: 0;
+    --tram-ref-layer-1: 1;
+    --tram-ref-layer-2: 10;
+    --tram-ref-layer-3: 20;
+    --tram-ref-layer-4: 30;
+    --tram-ref-icon-sm: 1rem;
+    --tram-ref-icon-md: 1.25rem;
+    --tram-ref-icon-lg: 1.5rem;
+    --tram-ref-grid-columns-4: 4;
+    --tram-ref-grid-columns-12: 12;
+    --tram-ref-grid-gutter: clamp(1rem, 0.8143rem + 0.7619vw, 1.5rem);
+    --tram-ref-grid-margin: clamp(1rem, 0.4429rem + 2.2857vw, 2.5rem);
+    --tram-ref-grid-measure: 45rem;
     --tram-sys-surface: light-dark(var(--tram-ref-paper), var(--tram-ref-night));
     --tram-sys-surface-alt: light-dark(var(--tram-ref-paper-shade), var(--tram-ref-carbon));
     --tram-sys-surface-tint: light-dark(var(--tram-ref-paper-earth), var(--tram-ref-night-earth));
@@ -169,8 +196,35 @@
     --tram-sys-type-data-sm-tracking: var(--tram-ref-tracking-none);
     --tram-sys-line-hairline: var(--tram-ref-line-1);
     --tram-sys-line-strong: var(--tram-ref-line-2);
+    --tram-sys-line-contour: var(--tram-ref-line-1);
+    --tram-sys-line-route: var(--tram-ref-line-3);
+    --tram-sys-line-mark: var(--tram-ref-line-4);
     --tram-sys-radius-none: var(--tram-ref-radius-0);
     --tram-sys-radius-soft: var(--tram-ref-radius-2);
+    --tram-sys-motion-quick: var(--tram-ref-duration-1);
+    --tram-sys-motion-steady: var(--tram-ref-duration-2);
+    --tram-sys-motion-slow: var(--tram-ref-duration-3);
+    --tram-sys-motion-route: var(--tram-ref-duration-4);
+    --tram-sys-motion-ease-standard: var(--tram-ref-easing-standard);
+    --tram-sys-motion-ease-out: var(--tram-ref-easing-out);
+    --tram-sys-motion-ease-linear: var(--tram-ref-easing-linear);
+    --tram-sys-breakpoint-sm: var(--tram-ref-breakpoint-sm);
+    --tram-sys-breakpoint-md: var(--tram-ref-breakpoint-md);
+    --tram-sys-breakpoint-lg: var(--tram-ref-breakpoint-lg);
+    --tram-sys-breakpoint-xl: var(--tram-ref-breakpoint-xl);
+    --tram-sys-layer-base: var(--tram-ref-layer-0);
+    --tram-sys-layer-raised: var(--tram-ref-layer-1);
+    --tram-sys-layer-sticky: var(--tram-ref-layer-2);
+    --tram-sys-layer-overlay: var(--tram-ref-layer-3);
+    --tram-sys-layer-modal: var(--tram-ref-layer-4);
+    --tram-sys-icon-sm: var(--tram-ref-icon-sm);
+    --tram-sys-icon-md: var(--tram-ref-icon-md);
+    --tram-sys-icon-lg: var(--tram-ref-icon-lg);
+    --tram-sys-grid-columns: var(--tram-ref-grid-columns-12);
+    --tram-sys-grid-columns-narrow: var(--tram-ref-grid-columns-4);
+    --tram-sys-grid-gutter: var(--tram-ref-grid-gutter);
+    --tram-sys-grid-margin: var(--tram-ref-grid-margin);
+    --tram-sys-grid-measure: var(--tram-ref-grid-measure);
   }
 
   [data-theme="light"] {
@@ -201,6 +255,15 @@
   [data-density="compact"] {
     --tram-sys-space-cell-y: var(--tram-sys-space-1);
     --tram-sys-space-cell-x: var(--tram-sys-space-2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --tram-sys-motion-quick: 0ms;
+      --tram-sys-motion-steady: 0ms;
+      --tram-sys-motion-slow: 0ms;
+      --tram-sys-motion-route: 0ms;
+    }
   }
 }
 

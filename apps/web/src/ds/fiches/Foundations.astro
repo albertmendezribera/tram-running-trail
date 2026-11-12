@@ -1,105 +1,334 @@
 ---
-import { tramOg, tramOgType } from '@tram/design-system/og';
+import { tramTokens, type TramToken } from '@tram/design-system/catalog';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Icon from '@tram/design-system/primitives/Icon.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
 
-const light = tramOg.light.mixed;
-const night = tramOg.night.mixed;
-const colors = Object.keys(light.color) as Array<keyof typeof light.color>;
-const spaces = Object.keys(light.space) as Array<keyof typeof light.space>;
-const roles = Object.keys(tramOgType);
+// Everything on this page is read from the generated token catalogue: change a token and the page follows.
+const under = (prefix: string): TramToken[] => tramTokens.filter((t) => t.id.startsWith(`${prefix}.`) || t.id === prefix);
+const short = (t: TramToken, prefix: string): string => t.id.slice(prefix.length + 1) || 'base';
 
+const COLOR_GROUPS = [
+  { title: 'Superfícies', ids: ['sys.surface'] },
+  { title: 'Text i filets', ids: ['sys.text', 'sys.rule', 'sys.focus'] },
+  { title: 'Accent', ids: ['sys.accent', 'sys.on-accent'] },
+  { title: 'Dades', ids: ['sys.data.road', 'sys.data.trail', 'sys.data.primary', 'sys.data.active'] },
+  { title: 'Pendent', ids: ['sys.data.grade'] },
+  { title: 'Mapa', ids: ['sys.map'] },
+].map((g) => ({ ...g, tokens: g.ids.flatMap(under).filter((t) => t.type === 'color') }));
+
+const roles = [...new Set(under('sys.type').map((t) => t.id.split('.')[2]!))];
+const sizeOf = (role: string): string => tramTokens.find((t) => t.id === `sys.type.${role}.size`)!.value;
 const sample = (role: string): string => {
   if (role.startsWith('display-')) return 'Col·lecció 42,195';
   if (role.startsWith('data-')) return '4:12 · 12:58 · 44:06';
   return 'El ritme per quilòmetre enganya a la muntanya.';
 };
+
+const spaces = under('sys.space').filter((t) => /^sys\.space\.\d+$/.test(t.id));
+const breakpoints = under('sys.breakpoint');
+const grid = under('sys.grid');
+const columns = Number(grid.find((t) => t.id === 'sys.grid.columns')!.value);
+const lines = under('sys.line');
+const radii = under('sys.radius');
+const durations = under('sys.motion').filter((t) => t.type === 'duration');
+const easings = under('sys.motion.ease');
+const longest = Math.max(...durations.map((t) => Number.parseFloat(t.value)));
+const layers = under('sys.layer');
+const icons = under('sys.icon');
+const curve = (value: string): string => {
+  const [x1, y1, x2, y2] = value.split(',').map(Number) as [number, number, number, number];
+  return `M0 100C${x1 * 100} ${100 - y1 * 100} ${x2 * 100} ${100 - y2 * 100} 100 0`;
+};
 ---
 
-<h1 data-type="display-md" style="margin: 0">Fonaments</h1>
+<Heading level={1} size="lg" kicker={`Sistema · ${tramTokens.length} rols`}>Fonaments</Heading>
+<Text size="lg" measure>
+  Colors, lletra, espai, línies i moviment. Tot el que es veu a TRAM surt d'aquests rols, i aquesta pàgina es genera dels mateixos tokens: no es pot desquadrar.
+</Text>
 
-<section class="fiche-block">
-  <h2 data-type="text-sm">Color · clar i nit</h2>
-  <div class="fiche-grid">
+<section class="fiche-block" id="color">
+  <h2 data-type="display-sm">Color</h2>
+  <p class="fiche-note">Cada mostra ensenya el rol en clar i en nit. Els valors són els que resol la build.</p>
+  {
+    COLOR_GROUPS.map((group) => (
+      <div class="group">
+        <h3 class="group-title" data-type="text-sm">{group.title}</h3>
+        <div class="swatches">
+          {group.tokens.map((t) => (
+            <div class="swatch">
+              <div class="chips" aria-hidden="true">
+                <span class="chip" data-theme="light" style={`background: var(${t.css})`} />
+                <span class="chip" data-theme="night" style={`background: var(${t.css})`} />
+              </div>
+              <p class="token" data-type="data-sm">{t.id.slice(4)}</p>
+              <p class="value" data-type="data-sm">{t.value}{t.night ? ` · ${t.night}` : ''}</p>
+              {t.description && <p class="what" data-type="text-xs">{t.description}</p>}
+            </div>
+          ))}
+        </div>
+      </div>
+    ))
+  }
+</section>
+
+<section class="fiche-block" id="type">
+  <h2 data-type="display-sm">Tipografia</h2>
+  <p class="fiche-note">Sofia Sans Extra Condensed per a titulars i xifres grans; Sofia Sans per al text i les dades. Les mides creixen amb la pantalla, de 390 a 1440 px.</p>
+  {
+    roles.map((role) => (
+      <div class="type-row">
+        <p class="type-name" data-type="data-sm">{role} · {sizeOf(role)}</p>
+        <p class="type-sample" data-type={role}>{sample(role)}</p>
+      </div>
+    ))
+  }
+</section>
+
+<section class="fiche-block" id="space">
+  <h2 data-type="display-sm">Espai</h2>
+  <p class="fiche-note">Una escala sobre una base de 4 px. Cap valor fora de l'escala.</p>
+  <div class="spaces">
     {
-      colors.map((c) => (
-        <div class="swatch-row">
-          <span class="swatch" style={`background: var(--tram-sys-${c})`} />
-          <span data-type="data-sm">--tram-sys-{c}</span>
-          <span class="fiche-note" data-type="data-sm">{light.color[c]} · {night.color[c]}</span>
+      spaces.map((t) => (
+        <div class="space-row">
+          <span data-type="data-sm">{short(t, 'sys')}</span>
+          <span class="space-value" data-type="data-sm">{t.value}</span>
+          <span class="bar" style={`inline-size: var(${t.css})`} />
         </div>
       ))
     }
   </div>
 </section>
 
-<section class="fiche-block">
-  <h2 data-type="text-sm">Espai · base de 4 px</h2>
-  {
-    spaces.map((s) => (
-      <div class="space-row">
-        <span data-type="data-sm">space-{s}</span>
-        <span class="bar" style={`inline-size: var(--tram-sys-space-${s})`} />
-      </div>
-    ))
-  }
+<section class="fiche-block" id="grid">
+  <h2 data-type="display-sm">Graella i punts de tall</h2>
+  <div class="columns" aria-hidden="true" style={`--columns: ${columns}`}>
+    {Array.from({ length: columns }, (_, i) => <span class="column" data-type="data-sm">{i + 1}</span>)}
+  </div>
+  <div class="fiche-scroll">
+    <table class="fiche-table" data-type="text-sm">
+      <thead><tr><th>Rol</th><th>Valor</th><th>Per a què</th></tr></thead>
+      <tbody>
+        {[...grid, ...breakpoints].map((t) => <tr><td data-type="data-sm">{t.id.slice(4)}</td><td data-type="data-sm">{t.value}</td><td>{t.description ?? ''}</td></tr>)}
+      </tbody>
+    </table>
+  </div>
 </section>
 
-<section class="fiche-block">
-  <h2 data-type="text-sm">Tipografia</h2>
-  {
-    roles.map((r) => (
-      <div class="type-row">
-        <span class="fiche-note" data-type="data-sm">{r}</span>
-        <span data-type={r}>{sample(r)}</span>
-      </div>
-    ))
-  }
-</section>
-
-<section class="fiche-block">
-  <h2 data-type="text-sm">Línies i radis</h2>
+<section class="fiche-block" id="line">
+  <h2 data-type="display-sm">Línies i radis</h2>
+  <p class="fiche-note">Una corba de nivell, un filet de taula i un traçat són de la mateixa família. Els radis només poden ser 0 o 2 px.</p>
+  <div class="lines">
+    {
+      lines.map((t) => (
+        <div class="line-row">
+          <span data-type="data-sm">{short(t, 'sys')} · {t.value}</span>
+          <span class="line" style={`block-size: var(${t.css})`} />
+        </div>
+      ))
+    }
+  </div>
   <div class="fiche-row">
-    <span class="shape" style="border-width: var(--tram-sys-line-hairline)" data-type="text-xs">line-hairline</span>
-    <span class="shape" style="border-width: var(--tram-sys-line-strong)" data-type="text-xs">line-strong</span>
-    <span class="shape" style="border-radius: var(--tram-sys-radius-none)" data-type="text-xs">radius-none</span>
-    <span class="shape" style="border-radius: var(--tram-sys-radius-soft)" data-type="text-xs">radius-soft</span>
+    {radii.map((t) => <span class="radius" style={`border-radius: var(${t.css})`} data-type="data-sm">{short(t, 'sys')} · {t.value}</span>)}
+  </div>
+</section>
+
+<section class="fiche-block" id="motion">
+  <h2 data-type="display-sm">Moviment</h2>
+  <p class="fiche-note">Les microinteraccions duren de 160 a 320 ms. Amb moviment reduït totes les durades valen 0: ho genera la build.</p>
+  <div class="lines">
+    {
+      durations.map((t) => (
+        <div class="line-row">
+          <span data-type="data-sm">{short(t, 'sys')} · {t.value}</span>
+          <span class="duration" style={`inline-size: ${(Number.parseFloat(t.value) / longest) * 100}%`} />
+          {t.description && <span class="what" data-type="text-xs">{t.description}</span>}
+        </div>
+      ))
+    }
+  </div>
+  <div class="fiche-row">
+    {
+      easings.map((t) => (
+        <figure class="easing">
+          <svg viewBox="-4 -4 108 108" aria-hidden="true"><path class="easing-axis" d="M0 0V100H100" /><path class="easing-curve" d={curve(t.value)} /></svg>
+          <figcaption data-type="data-sm">{short(t, 'sys.motion')}</figcaption>
+        </figure>
+      ))
+    }
+  </div>
+</section>
+
+<section class="fiche-block" id="layer">
+  <h2 data-type="display-sm">Capes i icones</h2>
+  <div class="fiche-scroll">
+    <table class="fiche-table" data-type="text-sm">
+      <thead><tr><th>Rol</th><th>Valor</th><th>Per a què</th></tr></thead>
+      <tbody>
+        {[...layers, ...icons].map((t) => <tr><td data-type="data-sm">{t.id.slice(4)}</td><td data-type="data-sm">{t.value}</td><td>{t.description ?? ''}</td></tr>)}
+      </tbody>
+    </table>
+  </div>
+  <div class="fiche-row">
+    <Icon name="summit" size="sm" label="Cim, mida sm" />
+    <Icon name="summit" size="md" label="Cim, mida md" />
+    <Icon name="summit" size="lg" label="Cim, mida lg" />
   </div>
 </section>
 
 <style>
-  .swatch-row {
+  .group {
     display: grid;
-    grid-template-columns: var(--tram-sys-space-8) 1fr;
-    column-gap: var(--tram-sys-space-3);
-    align-items: center;
-    min-inline-size: 0;
+    gap: var(--tram-sys-space-3);
+  }
+
+  .group-title {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--tram-sys-space-12) * 2.25)), 1fr));
+    gap: var(--tram-sys-space-5) var(--tram-sys-space-4);
   }
 
   .swatch {
-    grid-row: span 2;
-    block-size: var(--tram-sys-space-8);
+    display: grid;
+    align-content: start;
+    gap: var(--tram-sys-space-1);
+    min-inline-size: 0;
+  }
+
+  /* Light and night side by side: a role is always a pair. */
+  .chips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    block-size: var(--tram-sys-space-10);
     border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
   }
 
-  .space-row {
-    display: grid;
-    grid-template-columns: var(--tram-sys-space-12) 1fr;
-    align-items: center;
+  .token,
+  .value,
+  .what,
+  .type-name,
+  .type-sample {
+    margin: 0;
   }
 
-  .bar {
-    block-size: var(--tram-sys-space-2);
-    background: var(--tram-sys-text);
+  .token {
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  .value,
+  .what,
+  .type-name,
+  .space-value {
+    color: var(--tram-sys-text-muted);
   }
 
   .type-row {
     display: grid;
     gap: var(--tram-sys-space-1);
     min-inline-size: 0;
+    padding-block-end: var(--tram-sys-space-3);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
     overflow-wrap: anywhere;
   }
 
-  .shape {
-    padding: var(--tram-sys-space-3);
-    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+  .spaces,
+  .lines {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+  }
+
+  .space-row {
+    display: grid;
+    grid-template-columns: var(--tram-sys-space-11) var(--tram-sys-space-10) minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .bar {
+    block-size: var(--tram-sys-space-3);
+    background: var(--tram-sys-text);
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+    gap: var(--tram-sys-grid-gutter);
+  }
+
+  .column {
+    padding-block: var(--tram-sys-space-5);
+    color: var(--tram-sys-text-muted);
+    text-align: center;
+    background: var(--tram-sys-surface-tint);
+  }
+
+  .line-row {
+    display: grid;
+    grid-template-columns: minmax(0, calc(var(--tram-sys-space-12) * 2)) minmax(0, 1fr);
+    gap: var(--tram-sys-space-1) var(--tram-sys-space-4);
+    align-items: center;
+  }
+
+  .line-row .what {
+    grid-column: 2;
+  }
+
+  .line {
+    background: var(--tram-sys-text);
+  }
+
+  .duration {
+    block-size: var(--tram-sys-space-3);
+    background: var(--tram-sys-data-grade-3);
+  }
+
+  .radius {
+    padding: var(--tram-sys-space-4) var(--tram-sys-space-5);
+    border: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+  }
+
+  .easing {
+    display: grid;
+    gap: var(--tram-sys-space-1);
+    inline-size: calc(var(--tram-sys-space-12) * 1.25);
+    margin: 0;
+  }
+
+  .easing-axis {
+    fill: none;
+    stroke: var(--tram-sys-rule);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .easing-curve {
+    fill: none;
+    stroke: var(--tram-sys-text);
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+  }
+
+  @media (width < 48rem) {
+    .columns {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .column:nth-child(n + 5) {
+      display: none;
+    }
+
+    .line-row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .line-row .what {
+      grid-column: 1;
+    }
   }
 </style>

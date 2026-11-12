@@ -1,0 +1,68 @@
+{
+  "$description": "Durades i corbes de moviment (CLAUDE.md 6.3 i 7.6). Les microinteraccions van de 160 a 320 ms.",
+  "ref": {
+    "duration": {
+      "$type": "duration",
+      "0": {
+        "$value": {
+          "value": 0,
+          "unit": "ms"
+        }
+      },
+      "1": {
+        "$value": {
+          "value": 160,
+          "unit": "ms"
+        }
+      },
+      "2": {
+        "$value": {
+          "value": 240,
+          "unit": "ms"
+        }
+      },
+      "3": {
+        "$value": {
+          "value": 320,
+          "unit": "ms"
+        }
+      },
+      "4": {
+        "$value": {
+          "value": 600,
+          "unit": "ms"
+        }
+      }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "standard": {
+        "$value": [
+          0.2,
+          0,
+          0,
+          1
+        ],
+        "$description": "Entra amb decisió i frena: per a canvis d'estat."
+      },
+      "out": {
+        "$value": [
+          0,
+          0,
+          0.2,
+          1
+        ],
+        "$description": "Només frena: per a coses que apareixen."
+      },
+      "linear": {
+        "$value": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "$description": "Sense corba: per a progrés lligat al scroll."
+      }
+    }
+  }
+}

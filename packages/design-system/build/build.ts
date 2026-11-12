@@ -1,6 +1,7 @@
 import { loadTokenSet, type TokenSource } from './load.ts';
 import { Diagnostics, type TokenSet } from './model.ts';
 import { validate, validateTargetRequirements, validateTypeRoles } from './resolve.ts';
+import { emitCatalog } from './targets/catalog.ts';
 import { emitCss } from './targets/css.ts';
 import { ECHARTS_REQUIREMENTS, emitEcharts } from './targets/echarts.ts';
 import { emitOg } from './targets/og.ts';
@@ -31,6 +32,7 @@ export function buildDesignSystem(src: TokenSource): BuildResult {
       'echarts-theme.ts': emitEcharts(set),
       'three.ts': emitThree(set),
       'og.ts': emitOg(set),
+      'catalog.ts': emitCatalog(set),
     },
   };
 }

@@ -1,0 +1,116 @@
+---
+import Band from '@tram/design-system/primitives/Band.astro';
+import Bleed from '@tram/design-system/primitives/Bleed.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Grid from '@tram/design-system/primitives/Grid.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Split from '@tram/design-system/primitives/Split.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import Fiche from '../Fiche.astro';
+
+const code = `<Band tone="tint" title="Full de resultats">
+  <Split ratio="2:1">
+    <Panel title="Pujades">…</Panel>
+    <Panel slot="aside" title="Parcials">…</Panel>
+  </Split>
+</Band>
+<Stack gap={6}>…</Stack>
+<Cluster gap={3}>…</Cluster>
+<Grid min="sm">…</Grid>`;
+const RATIOS = ['1:1', '1:2', '2:1', '2:3', '3:2'] as const;
+---
+
+<Fiche
+  title="Composició"
+  group="Primitiva"
+  use="Per col·locar coses sense escriure CSS: Stack apila, Cluster posa de costat i fa saltar de línia, Grid reparteix columnes iguals, Split fa dos costats, Bleed arriba a la vora, Band és una part de la pàgina i Panel un bloc a sobre."
+  avoid="Espais o columnes escrits a mà a una pàgina. Si una composició no surt amb aquestes peces, falta una peça al sistema."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Stack</h2>
+    <div class="fiche-grid">
+      {[2, 4, 7].map((gap) => (
+        <div class="fiche-specimen">
+          <Text size="xs" tone="muted">{`gap ${gap}`}</Text>
+          <Stack gap={gap as 2 | 4 | 7}><span class="box" /><span class="box" /><span class="box" /></Stack>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Cluster</h2>
+    <div class="fiche-specimen" data-testid="cluster">
+      <Cluster>{['Trail', '12 km', '340 m D+', 'Gavarres', 'Circular', 'Tardor', 'Pista i corriol', 'Sense avituallament'].map((t) => <span class="tag" data-type="text-sm">{t}</span>)}</Cluster>
+      <Cluster justify="between"><span class="tag" data-type="text-sm">Inici</span><span class="tag" data-type="text-sm">Final</span></Cluster>
+    </div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Grid</h2>
+    <Stack gap={5}>
+      {(['sm', 'md', 'lg'] as const).map((min) => (
+        <div class="fiche-specimen">
+          <Text size="xs" tone="muted">{`min ${min}`}</Text>
+          <Grid min={min} gap={3}>{Array.from({ length: 6 }, () => <span class="box" />)}</Grid>
+        </div>
+      ))}
+    </Stack>
+    <p class="fiche-note">Sense punts de tall: hi caben tantes columnes com permet l'amplada mínima.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Split</h2>
+    <Stack gap={3}>
+      {RATIOS.map((ratio) => (
+        <Split ratio={ratio} gap={3}>
+          <span class="box" data-type="data-sm">{ratio.split(':')[0]}</span>
+          <span slot="aside" class="box" data-type="data-sm">{ratio.split(':')[1]}</span>
+        </Split>
+      ))}
+    </Stack>
+    <p class="fiche-note">Per sota de 64rem els dos costats s'apilen.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Band i Panel</h2>
+    <Band tone="tint" title="Banda tenyida amb títol">
+      <Split>
+        <Panel title="Un bloc"><Text>Pla, amb un filet fort a dalt. La profunditat ve del to i de la línia, mai d'una ombra.</Text></Panel>
+        <Panel slot="aside" title="Un altre bloc"><Text>Els blocs són paper sobre la banda.</Text></Panel>
+      </Split>
+    </Band>
+    <Band tone="alt"><Text>Banda neutra, sense títol.</Text></Band>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Bleed</h2>
+    <Bleed pad><div class="edge"><Text size="sm">De vora a vora, amb el contingut alineat amb la resta de la pàgina.</Text></div></Bleed>
+  </section>
+</Fiche>
+
+<style>
+  .box {
+    display: grid;
+    place-items: center;
+    min-block-size: var(--tram-sys-space-8);
+    color: var(--tram-sys-surface);
+    background: var(--tram-sys-text);
+  }
+
+  .tag {
+    padding: var(--tram-sys-space-1) var(--tram-sys-space-3);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    background: var(--tram-sys-surface);
+  }
+
+  .edge {
+    padding-block: var(--tram-sys-space-5);
+  }
+
+  :global(.bleed):has(.edge) {
+    background: var(--tram-sys-surface-tint);
+  }
+</style>

@@ -1,0 +1,97 @@
+---
+export interface Props {
+  /** `primary` is the one main action of a view: the only place a button takes the accent. */
+  variant?: 'primary' | 'secondary' | 'quiet';
+  size?: 'md' | 'sm';
+  /** With `href` it is a link that looks like a button. */
+  href?: string;
+  type?: 'button' | 'submit';
+  disabled?: boolean;
+  /** Busy: it keeps its place and its width, and cannot be pressed twice. */
+  loading?: boolean;
+}
+
+const { variant = 'secondary', size = 'md', href, type = 'button', disabled = false, loading = false } = Astro.props;
+const off = disabled || loading;
+---
+
+{
+  href && !off ? (
+    <a class="button" data-variant={variant} data-size={size} data-type={size === 'sm' ? 'text-xs' : 'text-sm'} href={href}>
+      <slot />
+    </a>
+  ) : (
+    <button class="button" data-variant={variant} data-size={size} data-type={size === 'sm' ? 'text-xs' : 'text-sm'} type={type} disabled={off} aria-busy={loading ? 'true' : undefined}>
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--tram-sys-space-2);
+    min-block-size: var(--tram-sys-space-9);
+    padding-inline: var(--tram-sys-space-5);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-text);
+    border-radius: var(--tram-sys-radius-soft);
+    color: var(--tram-sys-text);
+    font-weight: 700;
+    text-decoration: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color var(--tram-sys-motion-quick) var(--tram-sys-motion-ease-standard);
+  }
+
+  .button[data-size='sm'] {
+    min-block-size: var(--tram-sys-space-7);
+    padding-inline: var(--tram-sys-space-3);
+  }
+
+  .button[data-variant='primary'] {
+    border-color: var(--tram-sys-accent);
+    color: var(--tram-sys-on-accent);
+    background: var(--tram-sys-accent);
+  }
+
+  .button[data-variant='quiet'] {
+    border-color: transparent;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .button[data-variant='secondary']:hover:not(:disabled),
+  .button[data-variant='quiet']:hover:not(:disabled) {
+    background: var(--tram-sys-surface-alt);
+  }
+
+  /* The accent has no darker step: pressing shows through an inked edge. */
+  .button[data-variant='primary']:hover:not(:disabled) {
+    border-color: var(--tram-sys-text);
+  }
+
+  .button:active:not(:disabled) {
+    color: var(--tram-sys-surface);
+    background: var(--tram-sys-text);
+  }
+
+  .button:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .button:disabled {
+    border-color: var(--tram-sys-rule);
+    color: var(--tram-sys-text-muted);
+    background: var(--tram-sys-surface-alt);
+    cursor: not-allowed;
+  }
+
+  /* Busy is said in a pattern, not in a spinner (7.8). */
+  .button[aria-busy] {
+    background-image: repeating-linear-gradient(135deg, transparent 0 var(--tram-sys-space-2), var(--tram-sys-rule) var(--tram-sys-space-2) var(--tram-sys-space-3));
+    cursor: progress;
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+import Icon from './Icon.astro';
+
+export interface Props {
+  href: string;
+  /** `inline` sits in a sentence; `standalone` is a line of its own and carries an arrow. */
+  variant?: 'inline' | 'standalone';
+  /** Marks the page the reader is on. */
+  current?: boolean;
+}
+
+const { href, variant = 'inline', current = false } = Astro.props;
+const external = /^https?:\/\//.test(href);
+---
+
+<a class="link" data-variant={variant} href={href} aria-current={current ? 'page' : undefined} rel={external ? 'noopener' : undefined}>
+  <slot />{variant === 'standalone' && <Icon name={external ? 'arrow-up-right' : 'arrow-right'} size="sm" />}
+</a>
+
+<style>
+  .link {
+    color: var(--tram-sys-text);
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--tram-sys-line-hairline);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color var(--tram-sys-motion-quick) var(--tram-sys-motion-ease-standard);
+  }
+
+  .link:hover {
+    text-decoration-thickness: var(--tram-sys-line-strong);
+  }
+
+  .link:active {
+    color: var(--tram-sys-accent-text);
+  }
+
+  .link:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .link[aria-current] {
+    font-weight: 700;
+    text-decoration-thickness: var(--tram-sys-line-strong);
+  }
+
+  .link[data-variant='standalone'] {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tram-sys-space-1);
+    font-weight: 700;
+  }
+</style>

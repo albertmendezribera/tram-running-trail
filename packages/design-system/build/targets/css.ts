@@ -34,6 +34,10 @@ function literalCss(lit: Literal): string {
     case 'fontWeight':
     case 'number':
       return trim(lit.value);
+    case 'duration':
+      return `${trim(lit.value)}ms`;
+    case 'cubicBezier':
+      return `cubic-bezier(${lit.value.map(trim).join(', ')})`;
   }
 }
 
@@ -99,6 +103,12 @@ export function emitCss(set: TokenSet): string {
         ),
       );
     }
+  }
+
+  // Motion: every duration has its reduced version, which is no motion at all (6.3).
+  const durations = ids.filter((id) => id.startsWith('sys.') && set.base.get(id)?.type === 'duration');
+  if (durations.length > 0) {
+    blocks.push(`  @media (prefers-reduced-motion: reduce) {\n${block(':root', durations.map((id) => `${cssName(id)}: 0ms;`)).replace(/^/gm, '  ')}\n  }`);
   }
 
   return `/* ${GENERATED_NOTICE} */\n\n@layer tram.tokens {\n${blocks.join('\n\n')}\n}\n${typeLayer(set)}`;

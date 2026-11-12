@@ -3,13 +3,45 @@
   "ref": {
     "line": {
       "$type": "dimension",
-      "1": { "$value": { "value": 1, "unit": "px" } },
-      "2": { "$value": { "value": 2, "unit": "px" } }
+      "1": {
+        "$value": {
+          "value": 1,
+          "unit": "px"
+        }
+      },
+      "2": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      },
+      "3": {
+        "$value": {
+          "value": 3,
+          "unit": "px"
+        }
+      },
+      "4": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        }
+      }
     },
     "radius": {
       "$type": "dimension",
-      "0": { "$value": { "value": 0, "unit": "px" } },
-      "2": { "$value": { "value": 2, "unit": "px" } }
+      "0": {
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "2": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      }
     }
   }
 }

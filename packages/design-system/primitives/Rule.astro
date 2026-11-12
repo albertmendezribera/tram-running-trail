@@ -1,0 +1,39 @@
+---
+export interface Props {
+  weight?: 'hairline' | 'strong' | 'mark';
+  tone?: 'rule' | 'strong' | 'accent';
+  /** A separator of content is announced; a rule that only draws is not. */
+  decorative?: boolean;
+}
+
+const { weight = 'hairline', tone = weight === 'hairline' ? 'rule' : 'strong', decorative = false } = Astro.props;
+---
+
+<hr class="rule" data-weight={weight} data-tone={tone} aria-hidden={decorative ? 'true' : undefined} />
+
+<style>
+  .rule {
+    inline-size: 100%;
+    block-size: var(--tram-sys-line-hairline);
+    margin: 0;
+    border: 0;
+    background: var(--tram-sys-rule);
+  }
+
+  .rule[data-weight='strong'] {
+    block-size: var(--tram-sys-line-strong);
+  }
+
+  .rule[data-weight='mark'] {
+    inline-size: var(--tram-sys-space-6);
+    block-size: var(--tram-sys-line-mark);
+  }
+
+  .rule[data-tone='strong'] {
+    background: var(--tram-sys-rule-strong);
+  }
+
+  .rule[data-tone='accent'] {
+    background: var(--tram-sys-accent);
+  }
+</style>

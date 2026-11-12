@@ -1,0 +1,119 @@
+{
+  "$description": "Punts de tall, capes i mides d'icona (CLAUDE.md 6.3).",
+  "ref": {
+    "breakpoint": {
+      "$type": "dimension",
+      "sm": {
+        "$value": {
+          "value": 480,
+          "unit": "px"
+        }
+      },
+      "md": {
+        "$value": {
+          "value": 768,
+          "unit": "px"
+        }
+      },
+      "lg": {
+        "$value": {
+          "value": 1024,
+          "unit": "px"
+        }
+      },
+      "xl": {
+        "$value": {
+          "value": 1440,
+          "unit": "px"
+        }
+      }
+    },
+    "layer": {
+      "$type": "number",
+      "0": {
+        "$value": 0
+      },
+      "1": {
+        "$value": 1
+      },
+      "2": {
+        "$value": 10
+      },
+      "3": {
+        "$value": 20
+      },
+      "4": {
+        "$value": 30
+      }
+    },
+    "icon": {
+      "$type": "dimension",
+      "sm": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "md": {
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        }
+      },
+      "lg": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      }
+    },
+    "grid": {
+      "columns": {
+        "$type": "number",
+        "12": {
+          "$value": 12
+        },
+        "4": {
+          "$value": 4
+        }
+      },
+      "gutter": {
+        "$type": "dimension",
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        },
+        "$extensions": {
+          "com.tramrun": {
+            "fluidMin": {
+              "value": 16,
+              "unit": "px"
+            }
+          }
+        }
+      },
+      "margin": {
+        "$type": "dimension",
+        "$value": {
+          "value": 40,
+          "unit": "px"
+        },
+        "$extensions": {
+          "com.tramrun": {
+            "fluidMin": {
+              "value": 16,
+              "unit": "px"
+            }
+          }
+        }
+      },
+      "measure": {
+        "$type": "dimension",
+        "$value": {
+          "value": 720,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

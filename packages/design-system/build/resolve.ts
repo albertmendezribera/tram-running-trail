@@ -77,6 +77,19 @@ export class Resolver {
     return lit.value;
   }
 
+  /** A duration token, in milliseconds. */
+  duration(id: string, sel: Selection): number {
+    const lit = this.resolve(id, sel);
+    if (lit?.type !== 'duration') throw new Error(`${id} is not a duration token`);
+    return lit.value;
+  }
+
+  cubicBezier(id: string, sel: Selection): [number, number, number, number] {
+    const lit = this.resolve(id, sel);
+    if (lit?.type !== 'cubicBezier') throw new Error(`${id} is not a cubicBezier token`);
+    return lit.value;
+  }
+
   /** The value of a fontWeight or number token. */
   scalar(id: string, sel: Selection): number {
     const lit = this.resolve(id, sel);

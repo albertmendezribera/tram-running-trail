@@ -63,7 +63,7 @@ describe('dist/tokens.css in Chromium', () => {
   });
 
   it('night', async () => {
-    assert.deepEqual(await probe('night'), { surface: rgb('#0e0f11'), primary: rgb('#e8e5dc'), cellY: '12px' });
+    assert.deepEqual(await probe('night'), { surface: rgb('#17191c'), primary: rgb('#e8e5dc'), cellY: '12px' });
   });
 
   it('trail inside night', async () => {
@@ -95,11 +95,12 @@ describe('dist/tokens.css in Chromium', () => {
     assert.equal((await probe('compact-comfortable')).cellY, '12px');
   });
 
-  it('follows the OS preference when no data-theme is set', async () => {
+  // Night is the reader's choice: a device in dark mode does not bring it by itself.
+  it('stays light on a dark system when no data-theme is set', async () => {
     const dark = await browser.newPage({ colorScheme: 'dark' });
     await dark.setContent(HTML);
     const surface = await dark.$eval('#root', (el) => getComputedStyle(el).backgroundColor);
     await dark.close();
-    assert.equal(surface, rgb('#0e0f11'));
+    assert.equal(surface, rgb('#efece4'));
   });
 });

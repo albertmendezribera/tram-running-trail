@@ -1,0 +1,23 @@
+---
+export interface Props {
+  as?: 'span' | 'div' | 'p';
+}
+
+const { as: Tag = 'span' } = Astro.props;
+---
+
+<!-- Read by screen readers, not drawn: the name of a figure, the text behind a pictogram. -->
+<Tag class="hidden"><slot /></Tag>
+
+<style>
+  .hidden {
+    position: absolute;
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-line-hairline);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,35 @@
+---
+import { ICONS, type IconName } from './icons.ts';
+
+export interface Props {
+  name: IconName;
+  size?: 'sm' | 'md' | 'lg';
+  /** Names the icon when it stands alone. Without it the icon is decoration and hidden from screen readers. */
+  label?: string;
+}
+
+const { name, size = 'md', label } = Astro.props;
+---
+
+<svg class="icon" data-size={size} viewBox="0 0 16 16" role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}>
+  <path fill-rule="evenodd" d={ICONS[name]}></path>
+</svg>
+
+<style>
+  .icon {
+    flex: none;
+    inline-size: var(--tram-sys-icon-md);
+    block-size: var(--tram-sys-icon-md);
+    fill: currentcolor;
+  }
+
+  .icon[data-size='sm'] {
+    inline-size: var(--tram-sys-icon-sm);
+    block-size: var(--tram-sys-icon-sm);
+  }
+
+  .icon[data-size='lg'] {
+    inline-size: var(--tram-sys-icon-lg);
+    block-size: var(--tram-sys-icon-lg);
+  }
+</style>

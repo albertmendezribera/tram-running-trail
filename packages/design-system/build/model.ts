@@ -6,7 +6,7 @@
  * parser in load.ts and an emitter in every target.
  */
 
-export const SUPPORTED_TYPES = ['color', 'dimension', 'fontFamily', 'fontWeight', 'number'] as const;
+export const SUPPORTED_TYPES = ['color', 'dimension', 'fontFamily', 'fontWeight', 'number', 'duration', 'cubicBezier'] as const;
 export type TokenType = (typeof SUPPORTED_TYPES)[number];
 
 export const LAYERS = ['ref', 'sys', 'comp'] as const;
@@ -32,7 +32,10 @@ export type Literal =
   | { type: 'dimension'; value: DimensionValue }
   | { type: 'fontFamily'; value: string[] }
   | { type: 'fontWeight'; value: number }
-  | { type: 'number'; value: number };
+  | { type: 'number'; value: number }
+  /** Always in milliseconds. */
+  | { type: 'duration'; value: number }
+  | { type: 'cubicBezier'; value: [number, number, number, number] };
 
 export interface TokenDef {
   /** Dotted id without `$root` segments, e.g. `sys.text.muted`. */

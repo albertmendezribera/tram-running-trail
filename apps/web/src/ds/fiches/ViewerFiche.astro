@@ -17,13 +17,15 @@ const POSTER = 'M0 70C20 30 35 35 50 55S80 85 100 40';
 ---
 
 <Fiche
+  group="Interactiu"
+  js="1,2 KB de JavaScript"
   title="Viewer3DShell"
   use="Tota escena 3D: el visor de rutes i la radiografia de sabatilles hi viuen a dins, i així totes es comporten igual."
   avoid="Contingut que no sigui 3D. El pòster i el text equivalent són obligatoris: el 3D només s'hi suma."
   code={code}
 >
   <section class="fiche-block" data-testid="auto">
-    <h2 data-type="text-sm">Quan és visible</h2>
+    <h2 data-type="display-sm">Quan és visible</h2>
     <Viewer3DShell id="demo-auto" label="Escena de demostració">
       <svg slot="poster" class="poster" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d={POSTER} /></svg>
       <p slot="text" data-type="text-sm" class="fiche-note">Text equivalent: descripció del recorregut, sempre present a l'HTML.</p>
@@ -31,14 +33,14 @@ const POSTER = 'M0 70C20 30 35 35 50 55S80 85 100 40';
   </section>
 
   <section class="fiche-block" data-testid="manual">
-    <h2 data-type="text-sm">Només en demanar-ho</h2>
+    <h2 data-type="display-sm">Només en demanar-ho</h2>
     <Viewer3DShell id="demo-manual" label="Escena manual" load="interaction">
       <svg slot="poster" class="poster" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d={POSTER} /></svg>
     </Viewer3DShell>
   </section>
 
   <section class="fiche-block" data-testid="error">
-    <h2 data-type="text-sm">Error i reintent</h2>
+    <h2 data-type="display-sm">Error i reintent</h2>
     <p class="fiche-note">Si l'escena falla, el pòster es queda i l'usuari ho pot tornar a provar.</p>
     <Viewer3DShell id="demo-error" label="Escena amb error" load="interaction">
       <svg slot="poster" class="poster" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d={POSTER} /></svg>
@@ -46,7 +48,7 @@ const POSTER = 'M0 70C20 30 35 35 50 55S80 85 100 40';
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Modes</h2>
+    <h2 data-type="display-sm">Modes</h2>
     <div class="fiche-grid">
       {
         MODES.map((m) => (

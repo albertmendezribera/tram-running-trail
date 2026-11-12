@@ -3,6 +3,10 @@ import { expect, type Page, test } from '@playwright/test';
 const PAGES = {
   index: '/ds/',
   foundations: '/ds/fonaments/',
+  text: '/ds/primitives/text/',
+  actions: '/ds/primitives/actions/',
+  media: '/ds/primitives/media/',
+  layout: '/ds/primitives/layout/',
   measure: '/ds/primitives/measure/',
   'data-table': '/ds/primitives/data-table/',
   bib: '/ds/patterns/bib/',
@@ -10,6 +14,7 @@ const PAGES = {
   'elevation-profile': '/ds/patterns/elevation-profile/',
   'climb-list': '/ds/patterns/climb-list/',
   'segmented-control': '/ds/interactive/segmented-control/',
+  'theme-toggle': '/ds/interactive/theme-toggle/',
   viewer: '/ds/interactive/viewer-3d-shell/',
 };
 
@@ -472,6 +477,89 @@ test.describe('M2 without JavaScript', () => {
     await expect(page.getByRole('button', { name: 'Veure en 3D' })).toBeHidden();
     const track = await page.locator('[data-track]').boundingBox();
     expect(track!.height).toBeLessThan(2 * (page.viewportSize()!.height));
+  });
+});
+
+test.describe('Catalogue', () => {
+  test('marks the page the reader is on in the index', async ({ page }) => {
+    await open(page, PAGES.actions);
+    const nav = page.getByRole('navigation', { name: 'Catàleg' });
+    await expect(nav.getByRole('link', { name: 'Enllaç i botó' })).toHaveAttribute('aria-current', 'page');
+    await expect(nav.locator('[aria-current]')).toHaveCount(1);
+  });
+
+  test('writes the foundations from the tokens themselves', async ({ page }) => {
+    await open(page, PAGES.foundations);
+    await expect(page.getByText('surface.tint', { exact: true })).toBeVisible();
+    await expect(page.getByText('motion.quick · 160 ms')).toBeVisible();
+    await expect(page.getByText('line.route · 3 px')).toBeVisible();
+  });
+});
+
+test.describe('Primitives', () => {
+  test('Button: one accent, real links, and states that say what they are', async ({ page }) => {
+    await open(page, PAGES.actions);
+    const variants = page.getByTestId('variants');
+    const primary = variants.getByRole('button', { name: 'Inscriu-t\'hi' });
+    expect(await primary.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(255, 90, 31)');
+    expect(await variants.getByRole('button', { name: 'Desa la cursa' }).evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
+    const states = page.getByTestId('states');
+    await expect(states.getByRole('button', { name: 'Inscripcions tancades' })).toBeDisabled();
+    await expect(states.getByRole('button', { name: 'Desant…' })).toHaveAttribute('aria-busy', 'true');
+    await expect(states.getByRole('button', { name: 'Desant…' })).toBeDisabled();
+    await expect(states.getByRole('link', { name: 'És un enllaç' })).toHaveAttribute('href', '/ds/');
+  });
+
+  test('Button and Link show a visible focus', async ({ page }) => {
+    await open(page, PAGES.actions);
+    const button = page.getByTestId('variants').getByRole('button', { name: 'Desa la cursa' });
+    await button.focus();
+    await page.keyboard.press('Shift+Tab');
+    await page.keyboard.press('Tab');
+    expect(await button.evaluate((el) => getComputedStyle(el).outlineStyle)).toBe('solid');
+  });
+
+  test('Link: an outside link says so and the current page is marked', async ({ page }) => {
+    await open(page, PAGES.actions);
+    await expect(page.getByRole('main').getByRole('link', { name: 'Institut Cartogràfic' })).toHaveAttribute('rel', 'noopener');
+    await expect(page.getByRole('main').getByRole('link', { name: 'Pàgina actual' })).toHaveAttribute('aria-current', 'page');
+  });
+
+  test('Icon: named when it stands alone, hidden when it decorates', async ({ page }) => {
+    await open(page, PAGES.media);
+    await expect(page.getByTestId('named').getByRole('img', { name: 'Cim' })).toBeVisible();
+    expect(await page.locator('main svg.icon[aria-hidden="true"]').count()).toBeGreaterThan(10);
+  });
+
+  test('VisuallyHidden is read but takes no room', async ({ page }) => {
+    await open(page, PAGES.media);
+    const hidden = page.getByTestId('hidden').getByText('Quilòmetre 4');
+    await expect(hidden).toBeAttached();
+    const box = (await hidden.boundingBox())!;
+    expect(box.width).toBeLessThanOrEqual(1);
+  });
+
+  test('Text keeps a running text to a readable measure', async ({ page }) => {
+    await open(page, PAGES.text);
+    const box = (await page.getByTestId('measure').locator('p').boundingBox())!;
+    expect(box.width).toBeLessThanOrEqual(720);
+  });
+
+  test('Split puts two sides next to each other only when there is room', async ({ page }, info) => {
+    await open(page, PAGES.layout);
+    const sides = page.locator('main .split').first().locator('.side');
+    const [a, b] = [(await sides.nth(0).boundingBox())!, (await sides.nth(1).boundingBox())!];
+    if (info.project.name.startsWith('desktop')) expect(Math.abs(a.y - b.y)).toBeLessThan(1);
+    else expect(b.y).toBeGreaterThan(a.y + a.height - 1);
+  });
+
+  test('Cluster wraps instead of overflowing', async ({ page }) => {
+    await open(page, PAGES.layout);
+    const specimen = (await page.getByTestId('cluster').boundingBox())!;
+    for (const tag of await page.getByTestId('cluster').locator('.tag').all()) {
+      const box = (await tag.boundingBox())!;
+      expect(box.x + box.width).toBeLessThanOrEqual(specimen.x + specimen.width + 0.5);
+    }
   });
 });
 

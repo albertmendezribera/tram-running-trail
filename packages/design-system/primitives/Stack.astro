@@ -1,0 +1,24 @@
+---
+export interface Props {
+  /** Step of the space scale between the items. */
+  gap?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  as?: 'div' | 'section' | 'article' | 'ul' | 'ol' | 'header' | 'footer';
+}
+
+const { gap = 4, as: Tag = 'div' } = Astro.props;
+---
+
+<!-- Things one under another, with one space between them. -->
+<Tag class="stack" style={`--gap: var(--tram-sys-space-${gap})`}><slot /></Tag>
+
+<style>
+  .stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

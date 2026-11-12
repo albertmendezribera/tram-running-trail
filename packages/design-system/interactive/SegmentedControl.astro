@@ -64,7 +64,7 @@ const { name, legend, options, value, compact = false } = Astro.props;
 
   /* The focus ring has to paint over the next option. */
   .option:has(.input:focus-visible) {
-    z-index: 1;
+    z-index: var(--tram-sys-layer-raised);
   }
 
   .option + .option {

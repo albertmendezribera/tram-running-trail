@@ -1,0 +1,87 @@
+{
+  "$description": "Rols de maquetació: graella, punts de tall, capes i icones. Les media queries no poden llegir variables: hi escrivim el mateix valor en rem.",
+  "sys": {
+    "breakpoint": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{ref.breakpoint.sm}",
+        "$description": "30rem. Mòbil gran."
+      },
+      "md": {
+        "$value": "{ref.breakpoint.md}",
+        "$description": "48rem. Tauleta: les files de xifres passen a tres columnes."
+      },
+      "lg": {
+        "$value": "{ref.breakpoint.lg}",
+        "$description": "64rem. Escriptori: dues columnes de contingut."
+      },
+      "xl": {
+        "$value": "{ref.breakpoint.xl}",
+        "$description": "90rem. Amplada de referència del disseny."
+      }
+    },
+    "layer": {
+      "$type": "number",
+      "base": {
+        "$value": "{ref.layer.0}"
+      },
+      "raised": {
+        "$value": "{ref.layer.1}",
+        "$description": "Un element que ha de pintar sobre el veí, com un anell de focus."
+      },
+      "sticky": {
+        "$value": "{ref.layer.2}",
+        "$description": "Capçaleres enganxoses."
+      },
+      "overlay": {
+        "$value": "{ref.layer.3}",
+        "$description": "Controls sobre una vista: commutadors de mapa."
+      },
+      "modal": {
+        "$value": "{ref.layer.4}",
+        "$description": "El que tapa la pàgina."
+      }
+    },
+    "icon": {
+      "$type": "dimension",
+      "sm": {
+        "$value": "{ref.icon.sm}",
+        "$description": "Dins d'una línia de text."
+      },
+      "md": {
+        "$value": "{ref.icon.md}",
+        "$description": "Mida per defecte."
+      },
+      "lg": {
+        "$value": "{ref.icon.lg}",
+        "$description": "Pictogrames de mapa i accions soles."
+      }
+    },
+    "grid": {
+      "columns": {
+        "$type": "number",
+        "$value": "{ref.grid.columns.12}",
+        "$description": "Columnes a partir de `lg`. Per sota, la graella és de 4."
+      },
+      "columns-narrow": {
+        "$type": "number",
+        "$value": "{ref.grid.columns.4}"
+      },
+      "gutter": {
+        "$type": "dimension",
+        "$value": "{ref.grid.gutter}",
+        "$description": "Separació entre columnes."
+      },
+      "margin": {
+        "$type": "dimension",
+        "$value": "{ref.grid.margin}",
+        "$description": "Marge de pàgina. Les bandes de banda a banda el desfan amb el mateix valor."
+      },
+      "measure": {
+        "$type": "dimension",
+        "$value": "{ref.grid.measure}",
+        "$description": "Amplada màxima d'un text seguit: unes 70 lletres."
+      }
+    }
+  }
+}

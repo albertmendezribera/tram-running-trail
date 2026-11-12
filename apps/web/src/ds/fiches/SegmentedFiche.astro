@@ -18,13 +18,14 @@ const code = `<SegmentedControl
 ---
 
 <Fiche
+  group="Interactiu"
   title="SegmentedControl"
   use="Triar una opció entre poques, totes visibles: terreny, unitats o mode de vista."
   avoid="Més de quatre opcions, o accions que no canvien una selecció."
   code={code}
 >
   <section class="fiche-block">
-    <h2 data-type="text-sm">Estats</h2>
+    <h2 data-type="display-sm">Estats</h2>
     <div class="fiche-row" data-testid="states">
       <SegmentedControl name="states" legend="Terreny" value="road" options={TERRAIN} />
     </div>
@@ -32,7 +33,7 @@ const code = `<SegmentedControl
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Desactivat</h2>
+    <h2 data-type="display-sm">Desactivat</h2>
     <div class="fiche-row" data-testid="disabled">
       <SegmentedControl
         name="disabled"
@@ -48,7 +49,7 @@ const code = `<SegmentedControl
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Modes</h2>
+    <h2 data-type="display-sm">Modes</h2>
     <div class="fiche-grid">
       {MODES.map((m, i) => <Mode {...m}><SegmentedControl name={`mode-${i}`} legend="Terreny" value="trail" options={TERRAIN} /></Mode>)}
     </div>

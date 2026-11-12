@@ -1,0 +1,46 @@
+---
+export interface Props {
+  gap?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  align?: 'start' | 'center' | 'end' | 'baseline';
+  justify?: 'start' | 'between' | 'end';
+  as?: 'div' | 'ul' | 'p' | 'nav';
+}
+
+const { gap = 3, align = 'center', justify = 'start', as: Tag = 'div' } = Astro.props;
+---
+
+<!-- Things side by side that wrap when they do not fit: tags, buttons, small figures. -->
+<Tag class="cluster" data-align={align} data-justify={justify} style={`--gap: var(--tram-sys-space-${gap})`}><slot /></Tag>
+
+<style>
+  .cluster {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cluster[data-align='start'] {
+    align-items: flex-start;
+  }
+
+  .cluster[data-align='end'] {
+    align-items: flex-end;
+  }
+
+  .cluster[data-align='baseline'] {
+    align-items: baseline;
+  }
+
+  .cluster[data-justify='between'] {
+    justify-content: space-between;
+  }
+
+  .cluster[data-justify='end'] {
+    justify-content: flex-end;
+  }
+</style>

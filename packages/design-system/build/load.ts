@@ -153,6 +153,22 @@ function parseNumber(v: Json, file: string, id: string, diags: Diagnostics): Lit
   return { type: 'number', value: v };
 }
 
+function parseDuration(v: Json, file: string, id: string, diags: Diagnostics): Literal | undefined {
+  if (!isObject(v) || typeof v['value'] !== 'number' || v['value'] < 0 || (v['unit'] !== 'ms' && v['unit'] !== 's')) {
+    diags.error(file, id, 'duration $value must be {"value": number ≥ 0, "unit": "ms" | "s"}');
+    return undefined;
+  }
+  return { type: 'duration', value: v['unit'] === 's' ? v['value'] * 1000 : v['value'] };
+}
+
+function parseCubicBezier(v: Json, file: string, id: string, diags: Diagnostics): Literal | undefined {
+  if (!Array.isArray(v) || v.length !== 4 || !v.every((n): n is number => typeof n === 'number') || v[0]! < 0 || v[0]! > 1 || v[2]! < 0 || v[2]! > 1) {
+    diags.error(file, id, 'cubicBezier $value must be [x1, y1, x2, y2] with x1 and x2 from 0 to 1');
+    return undefined;
+  }
+  return { type: 'cubicBezier', value: [v[0]!, v[1]!, v[2]!, v[3]!] };
+}
+
 function parseLiteral(type: TokenType, v: Json, node: JsonObject, file: string, id: string, diags: Diagnostics): Literal | undefined {
   switch (type) {
     case 'color':
@@ -163,6 +179,10 @@ function parseLiteral(type: TokenType, v: Json, node: JsonObject, file: string, 
       return parseFontWeight(v, file, id, diags);
     case 'number':
       return parseNumber(v, file, id, diags);
+    case 'duration':
+      return parseDuration(v, file, id, diags);
+    case 'cubicBezier':
+      return parseCubicBezier(v, file, id, diags);
     case 'dimension': {
       const lit = parseDimension(v, file, id, diags);
       return lit && withFluidMin(lit, node, file, id, diags);

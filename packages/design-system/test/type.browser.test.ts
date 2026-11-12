@@ -23,12 +23,12 @@ const ROLES: Record<string, [number, number]> = {
   'display-md': [44, 72],
   'display-sm': [28, 40],
   'text-lg': [18, 20],
-  'text-md': [16, 17],
-  'text-sm': [14, 15],
-  'text-xs': [12, 13],
+  'text-md': [17, 18],
+  'text-sm': [15, 16],
+  'text-xs': [13, 14],
   'data-lg': [18, 20],
-  'data-md': [15, 16],
-  'data-sm': [13, 14],
+  'data-md': [16, 17],
+  'data-sm': [14, 15],
 };
 
 const HTML = `<!doctype html><html lang="ca"><meta charset="utf-8">

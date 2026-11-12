@@ -23,13 +23,14 @@ const code = `<Measure value={42.195} unit="km" />
 ---
 
 <Fiche
+  group="Primitiva"
   title="Measure"
   use="Qualsevol xifra amb unitat: distància, D+, ritme, pes o mm. Formata segons l'idioma i no parteix mai la xifra de la unitat."
   avoid="Xifres sense unitat, com un dorsal o un any."
   code={code}
 >
   <section class="fiche-block">
-    <h2 data-type="text-sm">Unitats i idiomes</h2>
+    <h2 data-type="display-sm">Unitats i idiomes</h2>
     <div class="fiche-scroll">
       <table class="fiche-table" data-type="data-sm">
         <thead><tr><th>Unitat</th>{LOCALES.map((l) => <th>{l}</th>)}</tr></thead>
@@ -48,7 +49,7 @@ const code = `<Measure value={42.195} unit="km" />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Dada absent</h2>
+    <h2 data-type="display-sm">Dada absent</h2>
     <p class="fiche-row" data-testid="absent">
       <Measure value={null} unit="km" />
       <Measure value={undefined} unit="g" type="display-md" />
@@ -56,7 +57,7 @@ const code = `<Measure value={42.195} unit="km" />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Mides</h2>
+    <h2 data-type="display-sm">Mides</h2>
     <div class="fiche-row">
       <Measure value={42.195} unit="km" type="display-lg" />
       <Measure value={255} unit="pace" type="display-md" />
@@ -65,7 +66,7 @@ const code = `<Measure value={42.195} unit="km" />
   </section>
 
   <section class="fiche-block">
-    <h2 data-type="text-sm">Modes</h2>
+    <h2 data-type="display-sm">Modes</h2>
     <div class="fiche-grid">
       {MODES.map((m) => <Mode {...m}><Measure value={1250} unit="m-gain" type="display-md" /><Measure value={null} unit="km" /></Mode>)}
     </div>

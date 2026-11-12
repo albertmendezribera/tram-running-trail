@@ -1,0 +1,82 @@
+---
+import SegmentedControl from '@tram/design-system/interactive/SegmentedControl.astro';
+import Bib from '@tram/design-system/patterns/Bib.astro';
+import ElevationProfile from '@tram/design-system/patterns/ElevationProfile.astro';
+import StatBlock from '@tram/design-system/patterns/StatBlock.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+import { ROAD, TRAIL } from '../sample-profile';
+
+// Sample data, marked as such in sample-profile.ts: the page is about the modes, not about a race.
+const CONTENT = {
+  road: { title: 'Marató de mostra', points: ROAD, stats: [{ label: 'Distància', value: 42.195, unit: 'km' }, { label: 'Ritme', value: 255, unit: 'pace' }, { label: 'Desnivell positiu', value: 180, unit: 'm-gain', tone: 'grade' }] },
+  trail: { title: 'Trail de mostra', points: TRAIL, stats: [{ label: 'Distància', value: 28.4, unit: 'km' }, { label: 'Velocitat vertical', value: 820, unit: 'vertical-speed' }, { label: 'Desnivell positiu', value: 1250, unit: 'm-gain', tone: 'grade' }] },
+} as const;
+const NAME = { light: 'Clar', night: 'Nit', road: 'asfalt', trail: 'muntanya' } as const;
+---
+
+<Heading level={1} size="lg" kicker="Sistema · 2 temes × 2 terrenys">Modes</Heading>
+<Text size="lg" measure>
+  Els mateixos components en les quatre combinacions de tema i terreny. Cap d'ells sap en quin mode és: només canvien els tokens de sistema.
+</Text>
+
+{
+  MODES.map((m) => {
+    const content = CONTENT[m.terrain];
+    return (
+      <section class="fiche-block" data-testid={`${m.theme}-${m.terrain}`}>
+        <h2 data-type="display-sm">{`${NAME[m.theme]} · ${NAME[m.terrain]}`}</h2>
+        <Mode {...m}>
+          <div class="scene">
+            <div class="lead">
+              <Heading level={3} size="md" kicker={m.terrain === 'road' ? 'Cursa d’asfalt' : 'Cursa de muntanya'}>{content.title}</Heading>
+              <Bib number={1427} terrain={m.terrain} size="md" />
+              <SegmentedControl name={`units-${m.theme}-${m.terrain}`} legend="Unitats" value="km" options={[{ value: 'km', label: 'Quilòmetres' }, { value: 'mi', label: 'Milles' }]} />
+              <Cluster>
+                <Button variant="primary">Inscriu-t'hi</Button>
+                <Link href="/ds/" variant="standalone">Veure el recorregut</Link>
+              </Cluster>
+            </div>
+            <div class="data">
+              <StatBlock stats={content.stats} lead />
+              <ElevationProfile points={content.points} label={`Perfil de ${content.title}, ${NAME[m.theme].toLowerCase()} i ${NAME[m.terrain]}`} annotate={false} />
+            </div>
+          </div>
+        </Mode>
+      </section>
+    );
+  })
+}
+
+<style>
+  .scene {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--tram-sys-space-6);
+    inline-size: 100%;
+  }
+
+  .lead,
+  .data {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: var(--tram-sys-space-5);
+    min-inline-size: 0;
+  }
+
+  .data {
+    justify-items: stretch;
+  }
+
+  @media (width >= 64rem) {
+    .scene {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+  }
+</style>

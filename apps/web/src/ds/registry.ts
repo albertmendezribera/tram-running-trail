@@ -8,6 +8,7 @@ import Index from './fiches/Index.astro';
 import LayoutFiche from './fiches/LayoutFiche.astro';
 import MediaFiche from './fiches/MediaFiche.astro';
 import MeasureFiche from './fiches/MeasureFiche.astro';
+import ModesFiche from './fiches/ModesFiche.astro';
 import MomentM2 from './fiches/MomentM2.astro';
 import SegmentedFiche from './fiches/SegmentedFiche.astro';
 import StatBlockFiche from './fiches/StatBlockFiche.astro';
@@ -18,6 +19,7 @@ import ViewerFiche from './fiches/ViewerFiche.astro';
 export const FICHES = [
   { slug: undefined, title: 'Catàleg', Page: Index },
   { slug: 'fonaments', title: 'Fonaments', Page: Foundations },
+  { slug: 'modes', title: 'Modes', Page: ModesFiche },
   { slug: 'primitives/text', title: 'Text i títols', Page: TextFiche },
   { slug: 'primitives/actions', title: 'Enllaç i botó', Page: ActionsFiche },
   { slug: 'primitives/media', title: 'Icona, filet i figura', Page: MediaFiche },

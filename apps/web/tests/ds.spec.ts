@@ -3,6 +3,7 @@ import { expect, type Page, test } from '@playwright/test';
 const PAGES = {
   index: '/ds/',
   foundations: '/ds/fonaments/',
+  modes: '/ds/modes/',
   text: '/ds/primitives/text/',
   actions: '/ds/primitives/actions/',
   media: '/ds/primitives/media/',

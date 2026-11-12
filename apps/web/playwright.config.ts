@@ -38,7 +38,8 @@ export default defineConfig({
     ...(engines
       ? [
           { name: 'webkit', testIgnore: /perf\.spec/, ignoreSnapshots: true, use: { browserName: 'webkit' as const, viewport: VIEWPORTS.mobile, colorScheme: 'light' as const, launchOptions: { args: [] } } },
-          { name: 'firefox', testIgnore: /perf\.spec/, ignoreSnapshots: true, use: { browserName: 'firefox' as const, viewport: VIEWPORTS.desktop, colorScheme: 'light' as const, launchOptions: { args: [] } } },
+          // Firefox refuses WebGL without a GPU unless told otherwise: the 3D tests need it in a container.
+          { name: 'firefox', testIgnore: /perf\.spec/, ignoreSnapshots: true, use: { browserName: 'firefox' as const, viewport: VIEWPORTS.desktop, colorScheme: 'light' as const, launchOptions: { args: [], firefoxUserPrefs: { 'webgl.force-enabled': true, 'webgl.disable-fail-if-major-performance-caveat': true } } } },
         ]
       : []),
   ],

@@ -8,15 +8,18 @@ import { defineConfig, fontProviders } from 'astro/config';
  * @param {string} cssVariable
  * @param {string} file
  * @param {string} weight
+ * @param {string} standIn Fallback face of fonts/fallbacks.css, with the proportions of this font.
  */
-const fontFamily = (name, cssVariable, file, weight) => ({
+const fontFamily = (name, cssVariable, file, weight, standIn) => ({
   name,
   cssVariable,
   provider: fontProviders.local(),
-  fallbacks: ['sans-serif'],
+  fallbacks: [standIn, 'sans-serif'],
   options: {
-    variants: /** @type {[{ src: [string]; weight: string; style: 'normal' }]} */ ([
-      { src: [`@tram/design-system/fonts/${file}`], weight, style: 'normal' },
+    // `block`: the text waits for its font instead of swapping into it. The two files are small
+    // (52 KB) and preloaded; a swap from the system font moved the whole page (CLS 0.31 on Linux).
+    variants: /** @type {[{ src: [string]; weight: string; style: 'normal'; display: 'block' }]} */ ([
+      { src: [`@tram/design-system/fonts/${file}`], weight, style: 'normal', display: 'block' },
     ]),
   },
 });
@@ -28,8 +31,8 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   fonts: [
-    fontFamily('Sofia Sans Extra Condensed', '--tram-ref-font-display', 'sofia-sans-extra-condensed-latin-700-900.woff2', '700 900'),
-    fontFamily('Sofia Sans', '--tram-ref-font-text', 'sofia-sans-latin-400-700.woff2', '400 700'),
+    fontFamily('Sofia Sans Extra Condensed', '--tram-ref-font-display', 'sofia-sans-extra-condensed-latin-700-900.woff2', '700 900', 'TRAM display fallback'),
+    fontFamily('Sofia Sans', '--tram-ref-font-text', 'sofia-sans-latin-400-700.woff2', '400 700', 'TRAM text fallback'),
   ],
   i18n: {
     locales: ['ca', 'es', 'en'],

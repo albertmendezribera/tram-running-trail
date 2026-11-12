@@ -1,6 +1,6 @@
 /** The catalogue, grouped as in CLAUDE.md 6.7. */
 export const GROUPS = [
-  { title: 'Sistema', items: [{ href: '/ds/', title: 'Catàleg' }, { href: '/ds/fonaments/', title: 'Fonaments' }] },
+  { title: 'Sistema', items: [{ href: '/ds/', title: 'Catàleg' }, { href: '/ds/fonaments/', title: 'Fonaments' }, { href: '/ds/modes/', title: 'Modes' }] },
   {
     title: 'Primitives',
     items: [

@@ -4,7 +4,7 @@ Plataforma de running d'asfalt i trail running. Abans d'escriure codi, llegiu [`
 
 ## Estat
 
-**Fase 0: design system.** Encara no hi ha cap pàgina de producte (CLAUDE.md 6.1).
+**Fase 0 (design system) tancada el 12-11-2026:** [`docs/F0-tancament.md`](docs/F0-tancament.md) diu què hi ha, com s'ha comprovat i què queda sense comprovar. Encara no hi ha cap pàgina de producte; la Fase 1 és la següent.
 
 | Peça | Estat |
 |---|---|
@@ -18,6 +18,9 @@ Plataforma de running d'asfalt i trail running. Abans d'escriure codi, llegiu [`
 | E02 · Llenguatge visual del terreny | Decidit (cartogràfic amb color): [`docs/explorations/E02-terrain-look.md`](docs/explorations/E02-terrain-look.md) |
 | M2 · Recórrer el tram | Prototip al catàleg (`/ds/moments/recorrer-el-tram/`), amb scroll, dades reals i vol 3D pel relleu, en dos modes: realista (ortofoto de l'ICGC amb MapLibre) i cartogràfic (Three.js). Vist bé en un Galaxy S25 amb Chrome; falten les mesures en els dispositius de referència (E04) i Safari |
 | Segona passada visual | Aplicada després de les crítiques de llegibilitat; pendent que la torni a jutjar la mateixa gent: [`docs/explorations/visual-pass-2.md`](docs/explorations/visual-pass-2.md) |
+| Fonaments i primitives | Fets tots els de les seccions 6.3 i 6.4: `/ds/fonaments/` i les fitxes de primitives |
+| Esquema de Supabase | Al repositori i provat a la CI; cap projecte creat: [`supabase/README.md`](supabase/README.md) |
+| Pressupost de rendiment | Imposat a la CI: `pnpm --filter @tram/web budget` i `tests/perf.spec.ts` |
 | Lint (Stylelint, ESLint) | Fet: `pnpm lint`, regles de la secció 6.6 de `CLAUDE.md` |
 
 ## Requisits

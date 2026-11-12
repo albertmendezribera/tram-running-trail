@@ -84,6 +84,13 @@ Tancament de la Fase 0, primera part: fonaments i primitives.
 - `SegmentedControl` fa servir `sys.layer.raised` en lloc d'un `z-index` numèric.
 - Catàleg: navegació agrupada, plantilla de fitxa amb "quan sí / quan no" i fitxes noves per a les primitives i per a `ThemeToggle`.
 
+Tancament de la Fase 0, segona part.
+
+- Catàleg: pàgina de modes (`/ds/modes/`), amb els mateixos components en les quatre combinacions de tema i terreny.
+- El full d'estils de MapLibre ja no s'envia amb totes les pàgines: es carrega amb la seva escena.
+- `fonts/fallbacks.css`: lletres de reserva amb les proporcions de les dues tipografies, per a Arial, Helvetica, Liberation, Arimo i Roboto. Les tipografies passen a `font-display: block`.
+- Sense canvis de token.
+
 ## 0.1.0 · 2026-11-09
 
 Primera versió del pipeline (E16).

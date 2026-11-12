@@ -1,0 +1,32 @@
+/*
+ * Stand-ins with the proportions of TRAM's two fonts, so the text holds its
+ * place while they load and the page does not jump when they arrive.
+ *
+ * Astro's font optimiser only writes a stand-in for Arial, which Android and
+ * most Linux systems do not have. These name the system fonts that share
+ * Arial's proportions closely enough: Helvetica (Apple), Liberation Sans and
+ * Arimo (Linux, ChromeOS) and Roboto (Android).
+ *
+ * The four figures are the ones Astro computes for Arial from the font files.
+ * If the font files change, copy the new ones from the built CSS
+ * (`… fallback: Arial`).
+ */
+@font-face {
+  font-family: 'TRAM display fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('Liberation Sans'), local('Arimo'), local('Roboto');
+  font-weight: 700 900;
+  size-adjust: 66.6217%;
+  ascent-override: 135.0911%;
+  descent-override: 45.0304%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'TRAM text fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('Liberation Sans'), local('Arimo'), local('Roboto');
+  font-weight: 400 700;
+  size-adjust: 96.4556%;
+  ascent-override: 93.3071%;
+  descent-override: 31.1024%;
+  line-gap-override: 0%;
+}

@@ -245,3 +245,32 @@ test.describe('Shoe in 3D', () => {
     await expect(viewer).toContainText('no un escaneig');
   });
 });
+
+test.describe('Comparator in 3D', () => {
+  test.describe.configure({ timeout: 120_000 });
+
+  test('sets the two shoes side by side and turns them together, as mirror images', async ({ page }) => {
+    await open(page, COMPARE);
+    const [first, second] = [page.locator('#shoe-3d-a'), page.locator('#shoe-3d-b')];
+    await first.scrollIntoViewIfNeeded();
+    for (const viewer of [first, second]) await expect(viewer).toHaveAttribute('data-state', 'ready', { timeout: 90_000 });
+    // Side by side on every screen: the second starts to the right of the first, at the same height.
+    const [a, b] = [(await first.boundingBox())!, (await second.boundingBox())!];
+    expect(b.x).toBeGreaterThan(a.x + a.width - 1);
+    expect(Math.abs(b.y - a.y)).toBeLessThan(2);
+
+    const yaw = async (viewer: typeof first): Promise<number> => Number(await viewer.locator('canvas').getAttribute('data-yaw'));
+    await expect(first.locator('canvas')).toHaveAttribute('data-moving', 'false', { timeout: 60_000 });
+    const before = [await yaw(first), await yaw(second)];
+    // Facing each other: one is the other turned round.
+    expect(before[0]! + before[1]!).toBeCloseTo(Math.PI, 2);
+    const box = (await first.locator('canvas').boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width / 2 + 60, box.y + box.height / 2, { steps: 4 });
+    await page.mouse.up();
+    await expect.poll(() => yaw(second)).toBeLessThan(before[1]! - 0.3);
+    expect(await yaw(first)).toBeGreaterThan(before[0]! + 0.3);
+    expect((await yaw(first)) + (await yaw(second))).toBeCloseTo(Math.PI, 2);
+  });
+});

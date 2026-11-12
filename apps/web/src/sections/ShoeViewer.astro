@@ -5,9 +5,17 @@ import { type Shoe, shoeName } from '../content/shoes';
 
 export interface Props {
   shoe: Shoe;
+  /** Unique in the page. */
+  id?: string;
+  /** Viewers of the same group turn together, as in the comparator. */
+  group?: string;
+  /** Shown as its own mirror image: the second shoe of a pair, so the two face each other. */
+  mirror?: boolean;
+  /** Without the note under the view: for when the page explains several viewers at once. */
+  quiet?: boolean;
 }
 
-const { shoe } = Astro.props;
+const { shoe, id = 'shoe-3d', group, mirror, quiet = false } = Astro.props;
 const { specs } = shoe;
 // A photo model exists only where its files do: they are kept out of the repository (brand photos).
 const models = import.meta.glob<object>('../content/shoes-local/*/model.json', { eager: true, import: 'default' });
@@ -19,15 +27,15 @@ const data = { specs, turned: 'Sabatilla girada {degrees} graus.', photo };
 ---
 
 <!-- The shoe in 3D, to turn by hand. The profile is its poster; the scene loads when it comes into view. -->
-<div class="shoe-viewer" data-shoe-viewer data-terrain={shoe.terrain}>
+<div class="shoe-viewer" data-shoe-viewer data-shoe-group={group} data-shoe-mirror={mirror === undefined ? undefined : String(mirror)} data-terrain={shoe.terrain}>
   <script type="application/json" set:html={JSON.stringify(data)} />
-  <Viewer3DShell id="shoe-3d" label={`${shoeName(shoe)} en 3D`} ready="Vista 3D a punt. Arrossega o fes servir les fletxes per girar la sabatilla.">
+  <Viewer3DShell id={id} label={`${shoeName(shoe)} en 3D`} ready={quiet ? 'A punt: arrossega per girar.' : 'Vista 3D a punt. Arrossega o fes servir les fletxes per girar la sabatilla.'}>
     <ShoeSilhouette slot="poster" specs={specs} />
-    <p slot="text" class="note" data-type="text-xs">
+    {!quiet && <p slot="text" class="note" data-type="text-xs">
       {photo
         ? `Arrossega per girar-la; amb el teclat, les fletxes. No és un escaneig: són les fotos oficials de ${shoe.brand.name} posades sobre la seva silueta. De costat, de dalt i de darrere és fidel a les fotos; de front és aproximat.`
         : 'Arrossega per girar-la; amb el teclat, les fletxes. És un model generat a partir de les mesures, no un escaneig: l\'empenya i la forma en planta es dibuixen sense dada.'}
-    </p>
+    </p>}
   </Viewer3DShell>
 </div>
 

@@ -14,6 +14,7 @@ import { formatMeasure } from '@tram/formats';
 import { ACCESSED, pairSlug, type Shoe, SHOE_NOTICE, shoeName, shoePath, sourceOf, visiblePairs } from '../../../content/shoes';
 import Site from '../../../layouts/Site.astro';
 import ShoeSources from '../../../sections/ShoeSources.astro';
+import ShoeViewer from '../../../sections/ShoeViewer.astro';
 
 // The canonical address has the two models in alphabetical order; the other order leads to it (CLAUDE.md 5).
 export const getStaticPaths = (() =>
@@ -50,6 +51,11 @@ const sentences = [
   `${nameA}: ${PLATE[a.specs.plate]}${a.specs.lugDepthMm === null ? '' : `, tacs de ${formatMeasure(a.specs.lugDepthMm, 'mm', 'ca')}`}. ${nameB}: ${PLATE[b.specs.plate]}${b.specs.lugDepthMm === null ? '' : `, tacs de ${formatMeasure(b.specs.lugDepthMm, 'mm', 'ca')}`}.`,
 ];
 const lab = sourceOf(a, a.specs.measuredBy).name;
+// What the 3D views are made of is said once, under both.
+const hasPhotos = Object.keys(import.meta.glob('../../../content/shoes-local/*/model.json')).length > 0;
+const photoNote = hasPhotos
+  ? 'No són escanejos: són les fotos oficials de cada marca posades sobre la seva silueta.'
+  : 'No són escanejos: són models generats a partir de les mesures.';
 const scoresOf = (shoe: Shoe) => shoe.scores.map((s) => ({ ...s, source: sourceOf(shoe, s.source).name, url: sourceOf(shoe, s.source).url }));
 ---
 
@@ -58,6 +64,23 @@ const scoresOf = (shoe: Shoe) => shoe.scores.map((s) => ({ ...s, source: sourceO
     <Heading level={1} size="lg" kicker="Comparador · Radiografia">{`${nameA} vs ${nameB}`}</Heading>
     <Stack gap={2}>{sentences.map((s) => <Text size="lg" measure>{s}</Text>)}</Stack>
   </Stack>
+
+  <Band tone="alt" title="Cara a cara en 3D">
+    <Panel>
+      <!-- Side by side on a phone too: a comparison is read with both in sight. -->
+      <div class="face-to-face">
+        <Stack gap={2}>
+          <Heading level={3} size="sm">{nameA}</Heading>
+          <ShoeViewer shoe={a} id="shoe-3d-a" group="pair" mirror={false} quiet />
+        </Stack>
+        <Stack gap={2}>
+          <Heading level={3} size="sm">{nameB}</Heading>
+          <ShoeViewer shoe={b} id="shoe-3d-b" group="pair" mirror={true} quiet />
+        </Stack>
+      </div>
+      <Text size="sm" tone="muted" measure>{`Les dues sabatilles giren alhora, encarades: en gires una i l'altra fa el mateix moviment en mirall. Cadascuna omple el seu marc, de manera que la mida no es compara aquí sinó a la radiografia de sota. ${photoNote}`}</Text>
+    </Panel>
+  </Band>
 
   <Band title="Radiografia superposada">
     <Panel>
@@ -102,3 +125,27 @@ const scoresOf = (shoe: Shoe) => shoe.scores.map((s) => ({ ...s, source: sourceO
     </Split>
   </Band>
 </Site>
+
+<style>
+  .face-to-face {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--tram-sys-space-3);
+  }
+
+  /* Once a shoe is there, its "ready" line would sit on top of it in so narrow a frame: it stays for screen readers only. */
+  .face-to-face :global(tram-viewer-3d[data-state='ready'] [data-part='status']) {
+    position: absolute;
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-line-hairline);
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  /* Half a phone is a narrow frame: a square one gives the shoe its height back. */
+  @media (width < 48rem) {
+    .face-to-face :global(tram-viewer-3d .frame) {
+      aspect-ratio: 1;
+    }
+  }
+</style>

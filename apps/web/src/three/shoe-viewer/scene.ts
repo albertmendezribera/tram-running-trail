@@ -12,6 +12,14 @@ export interface ShoeViewerOptions {
   photo?: PhotoShoe | undefined;
   /** Says where the view is after a turn with the keyboard. */
   announce(degrees: number): string;
+  /**
+   * Shown as its own mirror image: the other way round, and turning the other way. In a
+   * comparison the second shoe is mirrored, so the two face each other and turn together.
+   * Left unset, a photo model shows its lateral side: mirrored when it is a left shoe.
+   */
+  mirror?: boolean | undefined;
+  /** Told each time the shoe is turned by hand or by key, in the terms of an unmirrored shoe. */
+  onTurn?(yaw: number, pitch: number): void;
 }
 
 /** Radians the shoe turns per pixel dragged, and per press of an arrow key. */
@@ -35,7 +43,7 @@ const geometryOf = (mesh: Mesh): THREE.BufferGeometry => {
  * outline seen from above are drawn, not measured, and the page says so.
  * It draws only while it turns.
  */
-export async function mountShoeViewer({ container, signal, reducedMotion }: SceneContext, o: ShoeViewerOptions): Promise<Scene> {
+export async function mountShoeViewer({ container, signal, reducedMotion }: SceneContext, o: ShoeViewerOptions): Promise<Scene & { setView(yaw: number, pitch: number): void }> {
   const solid = buildShoeSolid(o.specs);
   const scene = new THREE.Scene();
   const background = new THREE.Color();
@@ -88,13 +96,16 @@ export async function mountShoeViewer({ container, signal, reducedMotion }: Scen
   scene.add(pivot);
 
   const camera = new THREE.PerspectiveCamera(28, 1, 10, 5000);
+  const mirror = o.mirror ?? o.photo?.model.foot === 'left';
+  // The view is kept as that of an unmirrored shoe; a mirrored one is drawn turned the other way.
   const view = { yaw: REST.yaw, pitch: REST.pitch };
+  const shown = (yaw: number): number => (mirror ? Math.PI - yaw : yaw);
   let reveal = reducedMotion ? 1 : 0;
   let last = 0;
   const place = (): void => {
     // The entrance: the shoe comes round from its side to rest. Not with reduced motion.
     const eased = 1 - (1 - reveal) ** 3;
-    pivot.rotation.set(view.pitch, view.yaw - (1 - eased) * 1.1, 0, 'XYZ');
+    pivot.rotation.set(view.pitch, shown(view.yaw - (1 - eased) * 1.1), 0, 'XYZ');
   };
 
   const stage = await createStage(container, {
@@ -142,10 +153,12 @@ export async function mountShoeViewer({ container, signal, reducedMotion }: Scen
   let drag: { id: number; x: number; y: number } | undefined;
   const turn = (yaw: number, pitch: number): void => {
     reveal = 1;
-    view.yaw += yaw;
+    // The shoe follows the hand: on a mirrored shoe that is the opposite turn.
+    view.yaw += mirror ? -yaw : yaw;
     view.pitch = Math.min(PITCH.max, Math.max(PITCH.min, view.pitch + pitch));
-    canvas.dataset['yaw'] = view.yaw.toFixed(3);
+    canvas.dataset['yaw'] = shown(view.yaw).toFixed(3);
     stage.invalidate();
+    o.onTurn?.(view.yaw, view.pitch);
   };
   canvas.addEventListener('pointerdown', (event) => {
     drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
@@ -163,13 +176,20 @@ export async function mountShoeViewer({ container, signal, reducedMotion }: Scen
   };
   canvas.addEventListener('pointerup', release, { signal });
   canvas.addEventListener('pointercancel', release, { signal });
-  canvas.dataset['yaw'] = view.yaw.toFixed(3);
+  canvas.dataset['yaw'] = shown(view.yaw).toFixed(3);
   stage.invalidate();
 
   return {
+    setView(yaw, pitch) {
+      reveal = 1;
+      view.yaw = yaw;
+      view.pitch = pitch;
+      canvas.dataset['yaw'] = shown(view.yaw).toFixed(3);
+      stage.invalidate();
+    },
     step(direction) {
       turn(direction * KEY_TURN, 0);
-      const degrees = Math.round((((THREE.MathUtils.radToDeg(view.yaw - REST.yaw) % 360) + 360) % 360) / 22.5) * 22.5;
+      const degrees = Math.round((((THREE.MathUtils.radToDeg((mirror ? -1 : 1) * (view.yaw - REST.yaw)) % 360) + 360) % 360) / 22.5) * 22.5;
       return o.announce(degrees % 360);
     },
     setActive: (active) => stage.setActive(active),

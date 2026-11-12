@@ -41,6 +41,32 @@ jobs:
       - run: pnpm --filter @tram/web build
       # CLAUDE.md 6.7: the catalogue never reaches production.
       - run: test ! -e apps/web/dist/ds
+      # CLAUDE.md 10: the performance budget, measured on the build with the catalogue.
+      - run: pnpm --filter @tram/web build:ds
+      - run: pnpm --filter @tram/web budget
+
+  database:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        # Supabase runs Postgres with PostGIS: the schema is applied to the same thing.
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      # The roles Supabase gives every project.
+      - run: psql -v ON_ERROR_STOP=1 "$DATABASE_URL" -c "create role anon nologin; create role authenticated nologin;"
+      - run: for f in supabase/migrations/*.sql; do psql -v ON_ERROR_STOP=1 "$DATABASE_URL" -f "$f"; done
+      - run: psql -v ON_ERROR_STOP=1 "$DATABASE_URL" -f supabase/tests/schema.sql
 
   visual:
     # A commit tagged [update-visual] gets new baselines from visual-baselines.yml instead.
@@ -62,3 +88,17 @@ jobs:
           path: |
             apps/web/playwright-report
             apps/web/test-results
+
+  engines:
+    # The same behaviour tests on Safari's and Firefox's engines. Informative for now: it has
+    # only been run on a Mac, and the 3D may not start in these engines on a Linux container.
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    env:
+      HOME: /root
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tram/web test:engines

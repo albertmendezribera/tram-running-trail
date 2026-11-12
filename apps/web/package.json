@@ -11,7 +11,9 @@
     "preview": "astro preview",
     "typecheck": "astro check",
     "test:visual": "playwright test",
-    "test:visual:docker": "sh scripts/visual-docker.sh"
+    "test:visual:docker": "sh scripts/visual-docker.sh",
+    "budget": "node scripts/check-budget.mjs",
+    "test:engines": "TRAM_ENGINES=1 playwright test --project=webkit --project=firefox"
   },
   "dependencies": {
     "@tram/design-system": "workspace:*",

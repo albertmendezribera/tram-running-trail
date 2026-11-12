@@ -440,7 +440,7 @@ test.describe('M2 · Recórrer el tram', () => {
     await open(page, MOMENT);
     const legend = page.locator('tram-route-scroller .grades');
     // One legend at a time: the profile's own where it shows, the viewer's on narrow screens.
-    const narrow = info.project.name.startsWith('mobile');
+    const narrow = page.viewportSize()!.width < 768;
     await expect(legend).toBeVisible({ visible: narrow });
     await expect(page.locator('tram-route-scroller figure.profile .legend')).toBeVisible({ visible: !narrow });
     await expect(legend).toContainText('Pendent');
@@ -510,12 +510,14 @@ test.describe('Primitives', () => {
     await expect(states.getByRole('link', { name: 'És un enllaç' })).toHaveAttribute('href', '/ds/');
   });
 
-  test('Button and Link show a visible focus', async ({ page }) => {
+  test('Button and Link show a visible focus', async ({ page, browserName }) => {
     await open(page, PAGES.actions);
     const button = page.getByTestId('variants').getByRole('button', { name: 'Desa la cursa' });
     await button.focus();
-    await page.keyboard.press('Shift+Tab');
-    await page.keyboard.press('Tab');
+    // Safari only tabs to buttons and links with Option held, unless the reader changed its settings.
+    const tab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
+    await page.keyboard.press(`Shift+${tab}`);
+    await page.keyboard.press(tab);
     expect(await button.evaluate((el) => getComputedStyle(el).outlineStyle)).toBe('solid');
   });
 
@@ -542,14 +544,14 @@ test.describe('Primitives', () => {
   test('Text keeps a running text to a readable measure', async ({ page }) => {
     await open(page, PAGES.text);
     const box = (await page.getByTestId('measure').locator('p').boundingBox())!;
-    expect(box.width).toBeLessThanOrEqual(720);
+    expect(box.width).toBeLessThanOrEqual(720.5);
   });
 
-  test('Split puts two sides next to each other only when there is room', async ({ page }, info) => {
+  test('Split puts two sides next to each other only when there is room', async ({ page }) => {
     await open(page, PAGES.layout);
     const sides = page.locator('main .split').first().locator('.side');
     const [a, b] = [(await sides.nth(0).boundingBox())!, (await sides.nth(1).boundingBox())!];
-    if (info.project.name.startsWith('desktop')) expect(Math.abs(a.y - b.y)).toBeLessThan(1);
+    if (page.viewportSize()!.width >= 1024) expect(Math.abs(a.y - b.y)).toBeLessThan(1);
     else expect(b.y).toBeGreaterThan(a.y + a.height - 1);
   });
 

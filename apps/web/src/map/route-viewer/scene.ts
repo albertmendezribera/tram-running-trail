@@ -1,5 +1,6 @@
 import { type ExpressionSpecification, type GeoJSONSource, LngLat, Map as MapLibreMap, Marker, setWorkerUrl } from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+// As text, not as a stylesheet of the page: the bundler would otherwise ship it with every page of the site.
+import styles from 'maplibre-gl/dist/maplibre-gl.css?inline';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
 import type { SceneContext } from '@tram/design-system/interactive/viewer-3d-shell.ts';
 import { tramThreeColors, type TramColorName, type TramTerrain } from '@tram/design-system/three';
@@ -46,6 +47,12 @@ const ease = (edge0: number, edge1: number, x: number): number => {
  */
 export async function mountRealRouteViewer({ container, signal, reducedMotion }: SceneContext, o: RealRouteViewerOptions): Promise<RouteViewer> {
   setWorkerUrl(workerUrl);
+  if (!document.querySelector('style[data-maplibre]')) {
+    const sheet = document.createElement('style');
+    sheet.dataset['maplibre'] = '';
+    sheet.textContent = styles;
+    document.head.append(sheet);
+  }
   const exaggeration = Math.min(2.5, Math.max(1, o.exaggeration ?? 1.3));
 
   // A local frame in metres (east, north, up) keeps the camera maths the same as in the 3D scene.

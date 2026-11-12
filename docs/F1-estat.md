@@ -24,7 +24,14 @@ Tretze patrons nous amb fitxa al catàleg (`/ds/`): el marc del web, `RaceRow`, 
 
 ## Com s'ha comprovat
 
-Vegeu el final d'aquest document: els números són els de l'última execució abans de publicar.
+Última execució abans de publicar (2026-11-12):
+
+- `pnpm check` (tokens al dia, tipus, lint, proves unitàries, proves de les regles de lint i proves de tokens al navegador): passa. Proves unitàries: 70 del sistema de disseny, 14 de formats, 13 de geometria de sabatilla i 9 del pipeline de terreny.
+- Proves de navegador (Chromium, mòbil clar i escriptori clar, sense les comparacions de captura, que només valen a la imatge de CI): 192 passen de 192. Hi ha 54 proves noves per a les pàgines del web i la sabatilla en 3D.
+- Pressupost de pes: dins. JS inicial per sota de 30 KB a totes les pàgines; l'escena de la sabatilla afegeix 3,9 KB a l'illa de Three.js; el visor realista, 454,8 KB (excepció acceptada, límit 470).
+- CI a GitHub: `design-system`, `web` i `database` passen. `engines` (informatiu) falla a Firefox, que no té WebGL a CI, com a la Fase 0.
+- Una construcció de producció (`pnpm build`) fa 6 pàgines: portada, dues rutes i les tres llistes. Cap cursa de mostra, cap sabatilla i cap pàgina del catàleg.
+- L'adreça inversa del comparador respon amb una pàgina de redirecció (meta refresh), no amb un 301 de servidor: és el que dona una construcció estàtica.
 
 ## Què no s'ha verificat
 

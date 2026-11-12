@@ -23,6 +23,8 @@ const main = (page: Page) => page.locator('main');
 
 for (const [name, path] of Object.entries(PAGES)) {
   test(`${name} matches its baseline`, async ({ page }) => {
+    // A 3D view that starts on its own would move under the capture: with reduced motion it stays on its poster.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await open(page, path);
     await expect(page).toHaveScreenshot(`site-${name}.png`, { fullPage: true });
   });
@@ -219,6 +221,8 @@ test.describe('Shoe in 3D', () => {
     expect(await yaw()).toBeGreaterThan(start + 0.5);
     // Still again once the hand lets go: a shoe at rest costs no frames.
     await expect(canvas).toHaveAttribute('data-moving', 'false');
+    // The frame the last move asked for may still be on its way.
+    await page.waitForTimeout(300);
     const frames = await canvas.getAttribute('data-frames');
     await page.waitForTimeout(300);
     expect(await canvas.getAttribute('data-frames')).toBe(frames);

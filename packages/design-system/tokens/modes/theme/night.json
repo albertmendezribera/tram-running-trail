@@ -3,7 +3,8 @@
   "sys": {
     "surface": {
       "$root": { "$value": "{ref.night}" },
-      "alt": { "$value": "{ref.carbon}" }
+      "alt": { "$value": "{ref.carbon}" },
+      "tint": { "$value": "{ref.night-earth}" }
     },
     "text": {
       "$root": { "$value": "{ref.night-text}" },

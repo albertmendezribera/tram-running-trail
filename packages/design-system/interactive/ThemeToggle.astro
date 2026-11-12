@@ -1,0 +1,56 @@
+---
+import type { Locale } from '@tram/formats';
+
+export interface Props {
+  locale?: Locale;
+}
+
+const COPY = { ca: 'Mode nit', es: 'Modo noche', en: 'Night mode' };
+const { locale = 'ca' } = Astro.props;
+---
+
+<!-- Night is a choice of the reader, kept for the next visit. Hidden until the script is there to make it work. -->
+<button class="toggle" type="button" data-theme-toggle aria-pressed="false" data-type="text-sm" hidden>{COPY[locale]}</button>
+
+<script>
+  const KEY = 'tram-theme';
+  const root = document.documentElement;
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+    button.hidden = false;
+    button.setAttribute('aria-pressed', String(root.dataset['theme'] === 'night'));
+    button.addEventListener('click', () => {
+      const night = root.dataset['theme'] !== 'night';
+      if (night) root.dataset['theme'] = 'night';
+      else delete root.dataset['theme'];
+      for (const other of document.querySelectorAll('[data-theme-toggle]')) other.setAttribute('aria-pressed', String(night));
+      try {
+        if (night) localStorage.setItem(KEY, 'night');
+        else localStorage.removeItem(KEY);
+      } catch {
+        // Not remembered, that is all.
+      }
+    });
+  }
+</script>
+
+<style>
+  .toggle {
+    min-block-size: var(--tram-sys-space-7);
+    padding-inline: var(--tram-sys-space-3);
+    border: var(--tram-sys-line-hairline) solid currentcolor;
+    border-radius: var(--tram-sys-radius-soft);
+    color: inherit;
+    background: none;
+    cursor: pointer;
+  }
+
+  .toggle[aria-pressed='true'] {
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface);
+  }
+
+  .toggle:focus-visible {
+    outline: var(--tram-sys-line-strong) solid currentcolor;
+    outline-offset: var(--tram-sys-line-strong);
+  }
+</style>

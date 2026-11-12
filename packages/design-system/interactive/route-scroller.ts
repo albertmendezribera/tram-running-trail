@@ -176,6 +176,10 @@ export class TramRouteScroller extends HTMLElement {
     this.#out('gain').textContent = n(gainAt(points, this.#gains, km), 0);
     const grade = Math.round(gradeAt(points, km));
     this.#out('grade').textContent = n(grade === 0 ? 0 : grade, 0);
+    // The figure takes the colour of its level on the grade scale, uphill or down.
+    const steep = Math.abs(grade);
+    const level = this.querySelector<HTMLElement>('[data-out-level]');
+    if (level) level.dataset['level'] = String(steep < 5 ? 1 : steep < 10 ? 2 : steep < 15 ? 3 : 4);
 
     const climb = climbs.find((c) => km >= c.from && km <= c.to);
     const chapter = progress <= 0.002 ? start : progress >= 0.998 ? finish : (climb?.text ?? '');

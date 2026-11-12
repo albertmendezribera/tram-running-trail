@@ -7,6 +7,8 @@ export interface Stat {
   /** Null or undefined shows the figure as absent. */
   value: number | null | undefined;
   unit: Unit;
+  /** `grade` gives the figure the colour of the grade scale: for elevation gain. */
+  tone?: 'grade';
 }
 
 export interface Props {
@@ -24,7 +26,7 @@ const { stats, lead = false, locale = 'ca' } = Astro.props;
     stats.map((s, i) => (
       <div class="stat">
         <dt class="label" data-type="text-xs">{s.label}</dt>
-        <dd class="value">
+        <dd class="value" data-tone={s.tone}>
           <Measure value={s.value} unit={s.unit} locale={locale} type={lead && i === 0 ? 'display-lg' : 'display-md'} />
         </dd>
       </div>
@@ -55,6 +57,10 @@ const { stats, lead = false, locale = 'ca' } = Astro.props;
 
   .label {
     color: var(--tram-sys-text-muted);
+  }
+
+  .value[data-tone='grade'] {
+    color: var(--tram-sys-data-grade-3);
   }
 
   .value {

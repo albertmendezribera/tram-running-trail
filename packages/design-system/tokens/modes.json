@@ -34,6 +34,9 @@
   "contrast": [
     { "fg": "sys.text", "bg": "sys.surface", "min": 4.5 },
     { "fg": "sys.text", "bg": "sys.surface.alt", "min": 4.5 },
+    { "fg": "sys.text", "bg": "sys.surface.tint", "min": 4.5 },
+    { "fg": "sys.text.muted", "bg": "sys.surface.tint", "min": 4.5 },
+    { "fg": "sys.accent.text", "bg": "sys.surface.tint", "min": 4.5 },
     { "fg": "sys.text.muted", "bg": "sys.surface", "min": 4.5 },
     { "fg": "sys.text.muted", "bg": "sys.surface.alt", "min": 4.5 },
     { "fg": "sys.accent.text", "bg": "sys.surface", "min": 4.5 },

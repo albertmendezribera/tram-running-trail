@@ -108,10 +108,10 @@
     "night": {
       "$value": {
         "colorSpace": "srgb",
-        "components": [0.0549, 0.0588, 0.0667],
-        "hex": "#0e0f11"
+        "components": [0.0902, 0.098, 0.1098],
+        "hex": "#17191c"
       },
-      "$description": "Fons del mode nit de cursa. Gris carbó neutre, mai blau pissarra.",
+      "$description": "Fons del mode nit de cursa. Gris carbó neutre, mai blau pissarra. Aclarit l'11-11-2026: el d'abans (#0e0f11) es llegia com a negre.",
       "$extensions": {
         "com.tramrun": {
           "source": "CLAUDE.md 7.3 (mode nit)"
@@ -149,14 +149,14 @@
     "paper-shade": {
       "$value": {
         "colorSpace": "srgb",
-        "components": [0.8863, 0.8784, 0.8471],
-        "hex": "#e2e0d8"
+        "components": [0.8392, 0.8275, 0.8039],
+        "hex": "#d6d3cd"
       },
-      "$description": "Superfície alternativa (bandes de taula). Barreja OKLab paper→ink al 5 %.",
+      "$description": "Superfície alternativa (bandes i blocs). Barreja OKLab paper→ink al 10 %: amb el 5 % d'abans els blocs no es distingien del fons.",
       "$extensions": {
         "com.tramrun": {
           "status": "validated",
-          "derivedFrom": "mix(paper, ink, 0.05) in OKLab",
+          "derivedFrom": "mix(paper, ink, 0.10) in OKLab",
           "validatedIn": "E09"
         }
       }
@@ -164,14 +164,14 @@
     "paper-rule": {
       "$value": {
         "colorSpace": "srgb",
-        "components": [0.7451, 0.7373, 0.7137],
-        "hex": "#bebcb6"
+        "components": [0.6118, 0.6078, 0.5922],
+        "hex": "#9c9b97"
       },
-      "$description": "Filet fi sobre paper. Barreja OKLab ink→paper al 80 %.",
+      "$description": "Filet fi sobre paper. Barreja OKLab ink→paper al 66 %.",
       "$extensions": {
         "com.tramrun": {
           "status": "validated",
-          "derivedFrom": "mix(ink, paper, 0.80) in OKLab",
+          "derivedFrom": "mix(ink, paper, 0.66) in OKLab",
           "validatedIn": "E09"
         }
       }
@@ -179,10 +179,10 @@
     "signal-ink": {
       "$value": {
         "colorSpace": "srgb",
-        "components": [0.7373, 0.1373, 0],
-        "hex": "#bc2300"
+        "components": [0.698, 0.0784, 0.0],
+        "hex": "#b21400"
       },
-      "$description": "Senyal fosc per a text sobre paper: --signal només fa 2,64:1. Aquest fa 5,26:1 sobre paper i 4,70:1 sobre paper-shade.",
+      "$description": "Senyal fosc per a text sobre paper: --signal només fa 2,64:1. Aquest fa 5,94:1 sobre paper, 4,70:1 sobre paper-shade i 4,65:1 sobre paper-earth. Enfosquit l'11-11-2026 perquè arribi a 4,5:1 sobre les superfícies noves.",
       "$extensions": {
         "com.tramrun": {
           "status": "validated",
@@ -194,14 +194,14 @@
     "carbon": {
       "$value": {
         "colorSpace": "srgb",
-        "components": [0.0941, 0.098, 0.1059],
-        "hex": "#18191b"
+        "components": [0.1569, 0.1647, 0.1725],
+        "hex": "#282a2c"
       },
-      "$description": "Superfície alternativa del mode nit. Barreja OKLab night→night-text al 6 %.",
+      "$description": "Superfície alternativa del mode nit. Barreja OKLab night→night-text al 10 %.",
       "$extensions": {
         "com.tramrun": {
           "status": "validated",
-          "derivedFrom": "mix(night, night-text, 0.06) in OKLab",
+          "derivedFrom": "mix(night, night-text, 0.10) in OKLab",
           "validatedIn": "E09"
         }
       }
@@ -209,14 +209,14 @@
     "night-rule": {
       "$value": {
         "colorSpace": "srgb",
-        "components": [0.1804, 0.1843, 0.1843],
-        "hex": "#2e2f2f"
+        "components": [0.2902, 0.2941, 0.2941],
+        "hex": "#4a4b4b"
       },
-      "$description": "Filet fi del mode nit. Barreja OKLab night→night-text al 18 %.",
+      "$description": "Filet fi del mode nit. Barreja OKLab night→night-text al 28 %.",
       "$extensions": {
         "com.tramrun": {
           "status": "validated",
-          "derivedFrom": "mix(night, night-text, 0.18) in OKLab",
+          "derivedFrom": "mix(night, night-text, 0.28) in OKLab",
           "validatedIn": "E09"
         }
       }
@@ -224,14 +224,14 @@
     "night-text-muted": {
       "$value": {
         "colorSpace": "srgb",
-        "components": [0.5765, 0.5686, 0.5529],
-        "hex": "#93918d"
+        "components": [0.6196, 0.6157, 0.5961],
+        "hex": "#9e9d98"
       },
       "$description": "Text secundari del mode nit: 6,10:1 sobre night.",
       "$extensions": {
         "com.tramrun": {
           "status": "validated",
-          "derivedFrom": "mix(night-text, night, 0.35) in OKLab",
+          "derivedFrom": "mix(night-text, night, 0.32) in OKLab",
           "validatedIn": "E09"
         }
       }
@@ -385,6 +385,42 @@
           "status": "validated",
           "derivedFrom": "oklch(0.84 0.13 322)",
           "validatedIn": "E09"
+        }
+      }
+    },
+    "paper-earth": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8745,
+          0.8157,
+          0.7529
+        ],
+        "hex": "#dfd0c0"
+      },
+      "$description": "Paper tenyit de terra: bandes i blocs destacats, per donar color sense fer servir l'accent.",
+      "$extensions": {
+        "com.tramrun": {
+          "status": "hypothesis",
+          "derivedFrom": "mix(paper, contour, 0.20) in OKLab"
+        }
+      }
+    },
+    "night-earth": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1961,
+          0.1569,
+          0.1412
+        ],
+        "hex": "#322824"
+      },
+      "$description": "Fons tenyit de terra del mode nit.",
+      "$extensions": {
+        "com.tramrun": {
+          "status": "hypothesis",
+          "derivedFrom": "mix(night, contour, 0.22) in OKLab"
         }
       }
     }

@@ -17,6 +17,7 @@ Plataforma de running d'asfalt i trail running. Abans d'escriure codi, llegiu [`
 | E01 · Format del terreny | Decidit (heightmap de 10 m en WebP) per a muntanya a Catalunya: [`docs/explorations/E01-terrain-format.md`](docs/explorations/E01-terrain-format.md) |
 | E02 · Llenguatge visual del terreny | Decidit (cartogràfic amb color): [`docs/explorations/E02-terrain-look.md`](docs/explorations/E02-terrain-look.md) |
 | M2 · Recórrer el tram | Prototip al catàleg (`/ds/moments/recorrer-el-tram/`), amb scroll, dades reals i vol 3D pel relleu, en dos modes: realista (ortofoto de l'ICGC amb MapLibre) i cartogràfic (Three.js). Vist bé en un Galaxy S25 amb Chrome; falten les mesures en els dispositius de referència (E04) i Safari |
+| Segona passada visual | Aplicada després de les crítiques de llegibilitat; pendent que la torni a jutjar la mateixa gent: [`docs/explorations/visual-pass-2.md`](docs/explorations/visual-pass-2.md) |
 | Lint (Stylelint, ESLint) | Fet: `pnpm lint`, regles de la secció 6.6 de `CLAUDE.md` |
 
 ## Requisits

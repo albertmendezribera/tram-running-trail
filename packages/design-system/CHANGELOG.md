@@ -63,6 +63,16 @@ Vol 3D a M2 (E01 i E02).
 - `Viewer3DShell` dona estil a les fites que una escena afegeix sobre el llenç: elements `data-scene-label` (`km` o `place`) dins de `data-scene-labels`.
 - Captures: `docs/explorations/E02/m2-*.png`.
 
+Segona passada visual: llegibilitat, blocs i color (`docs/explorations/visual-pass-2.md`, amb captures abans/després).
+
+- **Clar per defecte:** `:root` declara `color-scheme: light`; el tema nit només s'aplica amb `data-theme="night"`. Nou `ThemeToggle` (interactiu), que recorda la tria.
+- **Tokens que canvien:** `ref.paper-shade` `#e2e0d8` → `#d6d3cd`, `ref.paper-rule` `#bebcb6` → `#9c9b97`, `ref.night` `#0e0f11` → `#17191c`, `ref.carbon` `#18191b` → `#282a2c`, `ref.night-rule` `#2e2f2f` → `#4a4b4b`, `ref.night-text-muted` `#93918d` → `#9e9d98`, `ref.signal-ink` `#bc2300` → `#b21400`.
+- **Tokens nous:** `ref.paper-earth`, `ref.night-earth` i el rol `sys.surface.tint`, amb regles de contrast per al text.
+- **Escala de text:** `ref.size.2xs` a `ref.size.base` pugen un píxel.
+- **Primitives noves:** `Band` (part de pàgina de banda a banda, amb títol sobre barra de tinta) i `Panel` (bloc pla amb filet fort).
+- `StatBlock`: `tone: 'grade'` dona a una xifra el color de l'escala de pendent.
+- `RouteScroller`: el desnivell i el pendent prenen el lila del seu nivell, la pujada activa porta l'accent i les etiquetes deixen les majúscules.
+
 ## 0.1.0 · 2026-11-09
 
 Primera versió del pipeline (E16).

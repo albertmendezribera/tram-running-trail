@@ -2,7 +2,7 @@
 
 @layer tram.tokens {
   :root {
-    color-scheme: light dark;
+    color-scheme: light;
     --tram-ref-paper: #efece4;
     --tram-ref-ink: #141518;
     --tram-ref-graphite: #2b2d31;
@@ -11,15 +11,15 @@
     --tram-ref-contour: #9c6237;
     --tram-ref-moss: #5f6b3b;
     --tram-ref-water: #3e6d8a;
-    --tram-ref-night: #0e0f11;
+    --tram-ref-night: #17191c;
     --tram-ref-night-text: #e8e5dc;
     --tram-ref-ink-muted: #575757;
-    --tram-ref-paper-shade: #e2e0d8;
-    --tram-ref-paper-rule: #bebcb6;
-    --tram-ref-signal-ink: #bc2300;
-    --tram-ref-carbon: #18191b;
-    --tram-ref-night-rule: #2e2f2f;
-    --tram-ref-night-text-muted: #93918d;
+    --tram-ref-paper-shade: #d6d3cd;
+    --tram-ref-paper-rule: #9c9b97;
+    --tram-ref-signal-ink: #b21400;
+    --tram-ref-carbon: #282a2c;
+    --tram-ref-night-rule: #4a4b4b;
+    --tram-ref-night-text-muted: #9e9d98;
     --tram-ref-grade-1: #6a657e;
     --tram-ref-grade-2: #60437e;
     --tram-ref-grade-3: #591277;
@@ -28,6 +28,8 @@
     --tram-ref-night-grade-2: #a385c7;
     --tram-ref-night-grade-3: #d095f0;
     --tram-ref-night-grade-4: #f2aefd;
+    --tram-ref-paper-earth: #dfd0c0;
+    --tram-ref-night-earth: #322824;
     --tram-ref-space-0: 0rem;
     --tram-ref-space-1: 0.25rem;
     --tram-ref-space-2: 0.5rem;
@@ -55,11 +57,11 @@
     --tram-ref-tracking-none: 0;
     --tram-ref-tracking-open: 0.01;
     --tram-ref-tracking-label: 0.02;
-    --tram-ref-size-2xs: clamp(0.75rem, 0.7268rem + 0.0952vw, 0.8125rem);
-    --tram-ref-size-xs: clamp(0.8125rem, 0.7893rem + 0.0952vw, 0.875rem);
-    --tram-ref-size-sm: clamp(0.875rem, 0.8518rem + 0.0952vw, 0.9375rem);
-    --tram-ref-size-md: clamp(0.9375rem, 0.9143rem + 0.0952vw, 1rem);
-    --tram-ref-size-base: clamp(1rem, 0.9768rem + 0.0952vw, 1.0625rem);
+    --tram-ref-size-2xs: clamp(0.8125rem, 0.7893rem + 0.0952vw, 0.875rem);
+    --tram-ref-size-xs: clamp(0.875rem, 0.8518rem + 0.0952vw, 0.9375rem);
+    --tram-ref-size-sm: clamp(0.9375rem, 0.9143rem + 0.0952vw, 1rem);
+    --tram-ref-size-md: clamp(1rem, 0.9768rem + 0.0952vw, 1.0625rem);
+    --tram-ref-size-base: clamp(1.0625rem, 1.0393rem + 0.0952vw, 1.125rem);
     --tram-ref-size-lg: clamp(1.125rem, 1.0786rem + 0.1905vw, 1.25rem);
     --tram-ref-size-xl: clamp(1.75rem, 1.4714rem + 1.1429vw, 2.5rem);
     --tram-ref-size-2xl: clamp(2.75rem, 2.1rem + 2.6667vw, 4.5rem);
@@ -71,6 +73,7 @@
     --tram-ref-radius-2: 0.125rem;
     --tram-sys-surface: light-dark(var(--tram-ref-paper), var(--tram-ref-night));
     --tram-sys-surface-alt: light-dark(var(--tram-ref-paper-shade), var(--tram-ref-carbon));
+    --tram-sys-surface-tint: light-dark(var(--tram-ref-paper-earth), var(--tram-ref-night-earth));
     --tram-sys-text: light-dark(var(--tram-ref-ink), var(--tram-ref-night-text));
     --tram-sys-text-muted: light-dark(var(--tram-ref-ink-muted), var(--tram-ref-night-text-muted));
     --tram-sys-rule: light-dark(var(--tram-ref-paper-rule), var(--tram-ref-night-rule));

@@ -2,7 +2,7 @@
 
 export type TramOgTheme = "light" | "night";
 export type TramOgTerrain = "mixed" | "road" | "trail";
-export type TramOgColorName = "surface" | "surface-alt" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "data-active-outline" | "data-grade-1" | "data-grade-2" | "data-grade-3" | "data-grade-4" | "map-contour" | "map-vegetation" | "map-water";
+export type TramOgColorName = "surface" | "surface-alt" | "surface-tint" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "data-active-outline" | "data-grade-1" | "data-grade-2" | "data-grade-3" | "data-grade-4" | "map-contour" | "map-vegetation" | "map-water";
 export type TramOgSpaceName = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11" | "12" | "cell-y" | "cell-x";
 export type TramOgTypeRole = "display-xl" | "display-lg" | "display-md" | "display-sm" | "text-lg" | "text-md" | "text-sm" | "text-xs" | "data-lg" | "data-md" | "data-sm";
 
@@ -28,13 +28,14 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
     "mixed": {
       "color": {
         "surface": "#efece4",
-        "surface-alt": "#e2e0d8",
+        "surface-alt": "#d6d3cd",
+        "surface-tint": "#dfd0c0",
         "text": "#141518",
         "text-muted": "#575757",
-        "rule": "#bebcb6",
+        "rule": "#9c9b97",
         "rule-strong": "#141518",
         "accent": "#ff5a1f",
-        "accent-text": "#bc2300",
+        "accent-text": "#b21400",
         "on-accent": "#141518",
         "focus": "#141518",
         "data-road": "#2b2d31",
@@ -71,13 +72,14 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
     "road": {
       "color": {
         "surface": "#efece4",
-        "surface-alt": "#e2e0d8",
+        "surface-alt": "#d6d3cd",
+        "surface-tint": "#dfd0c0",
         "text": "#141518",
         "text-muted": "#575757",
-        "rule": "#bebcb6",
+        "rule": "#9c9b97",
         "rule-strong": "#141518",
         "accent": "#ff5a1f",
-        "accent-text": "#bc2300",
+        "accent-text": "#b21400",
         "on-accent": "#141518",
         "focus": "#141518",
         "data-road": "#2b2d31",
@@ -114,13 +116,14 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
     "trail": {
       "color": {
         "surface": "#efece4",
-        "surface-alt": "#e2e0d8",
+        "surface-alt": "#d6d3cd",
+        "surface-tint": "#dfd0c0",
         "text": "#141518",
         "text-muted": "#575757",
-        "rule": "#bebcb6",
+        "rule": "#9c9b97",
         "rule-strong": "#141518",
         "accent": "#ff5a1f",
-        "accent-text": "#bc2300",
+        "accent-text": "#b21400",
         "on-accent": "#141518",
         "focus": "#141518",
         "data-road": "#2b2d31",
@@ -158,11 +161,12 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
   "night": {
     "mixed": {
       "color": {
-        "surface": "#0e0f11",
-        "surface-alt": "#18191b",
+        "surface": "#17191c",
+        "surface-alt": "#282a2c",
+        "surface-tint": "#322824",
         "text": "#e8e5dc",
-        "text-muted": "#93918d",
-        "rule": "#2e2f2f",
+        "text-muted": "#9e9d98",
+        "rule": "#4a4b4b",
         "rule-strong": "#e8e5dc",
         "accent": "#ff5a1f",
         "accent-text": "#ff5a1f",
@@ -201,11 +205,12 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
     },
     "road": {
       "color": {
-        "surface": "#0e0f11",
-        "surface-alt": "#18191b",
+        "surface": "#17191c",
+        "surface-alt": "#282a2c",
+        "surface-tint": "#322824",
         "text": "#e8e5dc",
-        "text-muted": "#93918d",
-        "rule": "#2e2f2f",
+        "text-muted": "#9e9d98",
+        "rule": "#4a4b4b",
         "rule-strong": "#e8e5dc",
         "accent": "#ff5a1f",
         "accent-text": "#ff5a1f",
@@ -244,11 +249,12 @@ export const tramOg: Record<TramOgTheme, Record<TramOgTerrain, TramOgStyle>> = {
     },
     "trail": {
       "color": {
-        "surface": "#0e0f11",
-        "surface-alt": "#18191b",
+        "surface": "#17191c",
+        "surface-alt": "#282a2c",
+        "surface-tint": "#322824",
         "text": "#e8e5dc",
-        "text-muted": "#93918d",
-        "rule": "#2e2f2f",
+        "text-muted": "#9e9d98",
+        "rule": "#4a4b4b",
         "rule-strong": "#e8e5dc",
         "accent": "#ff5a1f",
         "accent-text": "#ff5a1f",
@@ -326,21 +332,21 @@ export const tramOgType: Record<TramOgTypeRole, TramOgTypeStyle> = {
   },
   "text-md": {
     "family": "Sofia Sans",
-    "size": 17,
+    "size": 18,
     "weight": 400,
     "lineHeight": 1.5,
     "letterSpacing": 0
   },
   "text-sm": {
     "family": "Sofia Sans",
-    "size": 15,
+    "size": 16,
     "weight": 400,
     "lineHeight": 1.5,
     "letterSpacing": 0
   },
   "text-xs": {
     "family": "Sofia Sans",
-    "size": 13,
+    "size": 14,
     "weight": 500,
     "lineHeight": 1.3,
     "letterSpacing": 0.02
@@ -354,14 +360,14 @@ export const tramOgType: Record<TramOgTypeRole, TramOgTypeStyle> = {
   },
   "data-md": {
     "family": "Sofia Sans",
-    "size": 16,
+    "size": 17,
     "weight": 500,
     "lineHeight": 1.3,
     "letterSpacing": 0
   },
   "data-sm": {
     "family": "Sofia Sans",
-    "size": 14,
+    "size": 15,
     "weight": 500,
     "lineHeight": 1.3,
     "letterSpacing": 0

@@ -102,11 +102,11 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
           </div>
           <div>
             <dt data-type="text-xs">{copy.gain}</dt>
-            <dd data-type="display-md" data-numeric="tabular"><span data-out="gain">{n(0, 0)}</span><span class="unit">{' m D+'}</span></dd>
+            <dd class="gain" data-type="display-md" data-numeric="tabular"><span data-out="gain">{n(0, 0)}</span><span class="unit">{' m D+'}</span></dd>
           </div>
           <div>
             <dt data-type="text-xs">{copy.grade}</dt>
-            <dd data-type="display-md" data-numeric="tabular"><span data-out="grade">{n(Math.round(gradeAt(points, first)), 0)}</span><span class="unit">{' %'}</span></dd>
+            <dd class="slope" data-out-level data-level="1" data-type="display-md" data-numeric="tabular"><span data-out="grade">{n(Math.round(gradeAt(points, first)), 0)}</span><span class="unit">{' %'}</span></dd>
           </div>
         </dl>
         <p class="chapter" data-type="display-sm" data-out="chapter" role="status">{copy.start}</p>
@@ -244,7 +244,34 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
   .hint {
     margin: 0;
     color: var(--tram-sys-text-muted);
+  }
+
+  /* Capitals only for the name of the route: a page of them is hard to read. */
+  .name {
     text-transform: uppercase;
+  }
+
+  /* Elevation takes the colour of the grade scale: gained so far, and how steep it is right now. */
+  .gain,
+  .slope[data-level='3'] {
+    color: var(--tram-sys-data-grade-3);
+  }
+
+  .slope[data-level='1'] {
+    color: var(--tram-sys-data-grade-1);
+  }
+
+  .slope[data-level='2'] {
+    color: var(--tram-sys-data-grade-2);
+  }
+
+  .slope[data-level='4'] {
+    color: var(--tram-sys-data-grade-4);
+  }
+
+  .gain .unit,
+  .slope .unit {
+    color: inherit;
   }
 
   .km {
@@ -282,7 +309,8 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
     min-block-size: 1.2em;
     margin: 0;
     padding-inline-start: var(--tram-sys-space-3);
-    border-inline-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+    /* The climb being run is the active thing on the page: it carries the accent. */
+    border-inline-start: var(--tram-sys-space-1) solid var(--tram-sys-accent);
     color: var(--tram-sys-text);
   }
 
@@ -312,7 +340,7 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
     margin-block: calc(var(--tram-sys-space-3) * -1);
     padding-block: var(--tram-sys-space-3);
     color: var(--tram-sys-text);
-    text-transform: uppercase;
+    font-weight: 700;
     text-underline-offset: 0.25em;
   }
 

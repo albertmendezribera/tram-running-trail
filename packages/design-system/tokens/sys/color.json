@@ -4,7 +4,8 @@
     "$type": "color",
     "surface": {
       "$root": { "$value": "{ref.paper}", "$description": "Fons de pàgina." },
-      "alt": { "$value": "{ref.paper-shade}", "$description": "Bandes de taula, capçaleres de full de resultats. Mai com a 'targeta' amb ombra." }
+      "alt": { "$value": "{ref.paper-shade}", "$description": "Bandes de taula, capçaleres de full de resultats. Mai com a 'targeta' amb ombra." },
+      "tint": { "$value": "{ref.paper-earth}", "$description": "Fons tenyit de terra per a bandes i blocs destacats: color sense gastar l'accent." }
     },
     "text": {
       "$root": { "$value": "{ref.ink}" },

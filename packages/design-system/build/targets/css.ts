@@ -66,11 +66,11 @@ export function emitCss(set: TokenSet): string {
   const blocks: string[] = [];
 
   // Base: every token with the default context of each attribute modifier.
-  // `color-scheme: light dark` lets the OS preference pick the theme when no
-  // data-theme is set.
+  // The default theme applies until the page sets data-theme: a phone in dark
+  // mode does not switch TRAM to night by itself (people read night as 'all black').
   blocks.push(
     block(':root', [
-      ...(theme ? ['color-scheme: light dark;'] : []),
+      ...(theme ? [`color-scheme: ${theme.contexts[theme.default]!.colorScheme};`] : []),
       ...ids.map((id) => `${cssName(id)}: ${themedExpr(set, id, defaults, theme)};`),
     ]),
   );

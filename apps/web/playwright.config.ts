@@ -3,6 +3,8 @@ import { defineConfig } from '@playwright/test';
 const PORT = 4329;
 const VIEWPORTS = { mobile: { width: 390, height: 844 }, desktop: { width: 1440, height: 900 } };
 const SCHEMES = { light: 'light', night: 'dark' } as const;
+// Night is the reader's choice on the page, not the system's: the night projects arrive having chosen it.
+const CHOSE_NIGHT = { cookies: [], origins: [{ origin: `http://localhost:${PORT}`, localStorage: [{ name: 'tram-theme', value: 'night' }] }] };
 
 // scripts/visual-docker.sh runs the CI image under x86 emulation on a Mac, several
 // times slower than CI: fewer workers and more time there. CI keeps the defaults.
@@ -23,7 +25,7 @@ export default defineConfig({
   projects: Object.entries(VIEWPORTS).flatMap(([size, viewport]) =>
     Object.entries(SCHEMES).map(([theme, colorScheme]) => ({
       name: `${size}-${theme}`,
-      use: { viewport, colorScheme },
+      use: { viewport, colorScheme, ...(theme === 'night' ? { storageState: CHOSE_NIGHT } : {}) },
     })),
   ),
   webServer: {

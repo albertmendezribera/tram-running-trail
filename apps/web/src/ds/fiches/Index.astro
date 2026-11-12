@@ -113,9 +113,10 @@ const fiches = NAV.slice(1).map((n, i) => ({
     gap: var(--tram-sys-space-4);
     padding-block: var(--tram-sys-space-8) var(--tram-sys-space-9);
     overflow: hidden;
+    /* A map grid one tone off the paper: it sits behind the text, never across it. */
     background-image:
-      linear-gradient(var(--tram-sys-rule) var(--tram-sys-line-hairline), transparent 0),
-      linear-gradient(90deg, var(--tram-sys-rule) var(--tram-sys-line-hairline), transparent 0);
+      linear-gradient(var(--tram-sys-surface-alt) var(--tram-sys-line-hairline), transparent 0),
+      linear-gradient(90deg, var(--tram-sys-surface-alt) var(--tram-sys-line-hairline), transparent 0);
     background-size: var(--tram-sys-space-12) var(--tram-sys-space-12);
     border-block-end: var(--tram-sys-line-strong) solid var(--tram-sys-text);
   }
@@ -149,8 +150,9 @@ const fiches = NAV.slice(1).map((n, i) => ({
     }
   }
 
+  /* The route as a shape, in the earth tint: the first thing seen has colour. */
   .silhouette-area {
-    fill: var(--tram-sys-surface-alt);
+    fill: var(--tram-sys-surface-tint);
   }
 
   .silhouette-line {
@@ -206,9 +208,19 @@ const fiches = NAV.slice(1).map((n, i) => ({
   }
 
   .kicker {
+    display: flex;
+    align-items: center;
+    gap: var(--tram-sys-space-2);
     margin: 0;
     color: var(--tram-sys-text-muted);
     text-transform: uppercase;
+  }
+
+  .kicker::before {
+    inline-size: var(--tram-sys-space-6);
+    block-size: var(--tram-sys-space-1);
+    background: var(--tram-sys-accent);
+    content: '';
   }
 
   .title {

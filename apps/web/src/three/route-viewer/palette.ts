@@ -17,4 +17,8 @@ export function watchPalette(element: HTMLElement, signal: AbortSignal, apply: (
   };
   read();
   dark.addEventListener('change', read, { signal });
+  // The reader can switch the night theme on the page at any time.
+  const observer = new MutationObserver(read);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  signal.addEventListener('abort', () => observer.disconnect(), { once: true });
 }

@@ -251,7 +251,7 @@ Els tokens es defineixen en **format DTCG (JSON)** a `packages/design-system/tok
 | **Component (comp)** | `--tram-comp-*` | Decisions d'un component concret: `--tram-comp-bib-number-size`, `--tram-comp-profile-band-steep` | Només el seu component |
 
 **Modes** (canvien els tokens de sistema, no els components):
-- `data-theme="light" | "night"`: tema clar i "nit de cursa".
+- `data-theme="light" | "night"`: tema clar i "nit de cursa". El clar és el tema per defecte encara que el dispositiu estigui en mode fosc; la nit la tria qui llegeix (segona passada visual, 11-11-2026).
 - `data-terrain="road" | "trail" | "mixed"`: canvia patrons, trames i accents de dades. Un mateix component es veu i es llegeix bé en tots dos mons, que és com es garanteix el principi d'equilibri.
 - `data-density="comfortable" | "compact"`: per a taules i vistes denses (fulls de resultats, comparador).
 
@@ -377,7 +377,7 @@ Paleta de terreny i senyalització, no de tecnologia. Aquests són els tokens de
 | `--moss` | `#5F6B3B` | Vegetació (només en mapes i dades) |
 | `--water` | `#3E6D8A` | Aigua (només en mapes i dades) |
 
-- **Mode nit ("nit de cursa"):** fons `#0E0F11`, gris carbó neutre i mai blau pissarra. Text `#E8E5DC`. L'accent de senyal es manté i fa de llum de frontal.
+- **Mode nit ("nit de cursa"):** fons `#17191C` (abans `#0E0F11`, que es llegia com a negre), gris carbó neutre i mai blau pissarra. Text `#E8E5DC`. L'accent de senyal es manté i fa de llum de frontal.
 - **Asfalt i trail no es diferencien només per color:** cal combinar-hi patró (traç continu o discontinu, trama), etiqueta o forma. Res de blau per a asfalt i verd per a muntanya.
 
 ### 7.4 Graella i composició

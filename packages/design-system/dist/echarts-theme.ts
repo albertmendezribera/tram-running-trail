@@ -50,7 +50,7 @@ export const tramEchartsThemes = {
       },
       "splitLine": {
         "lineStyle": {
-          "color": "#bebcb6"
+          "color": "#9c9b97"
         }
       },
       "splitArea": {
@@ -73,7 +73,7 @@ export const tramEchartsThemes = {
       },
       "splitLine": {
         "lineStyle": {
-          "color": "#bebcb6"
+          "color": "#9c9b97"
         }
       },
       "splitArea": {
@@ -96,7 +96,7 @@ export const tramEchartsThemes = {
       },
       "splitLine": {
         "lineStyle": {
-          "color": "#bebcb6"
+          "color": "#9c9b97"
         }
       },
       "splitArea": {
@@ -119,7 +119,7 @@ export const tramEchartsThemes = {
       },
       "splitLine": {
         "lineStyle": {
-          "color": "#bebcb6"
+          "color": "#9c9b97"
         }
       },
       "splitArea": {
@@ -160,12 +160,12 @@ export const tramEchartsThemes = {
         "color": "#e8e5dc"
       },
       "subtextStyle": {
-        "color": "#93918d"
+        "color": "#9e9d98"
       }
     },
     "legend": {
       "textStyle": {
-        "color": "#93918d"
+        "color": "#9e9d98"
       }
     },
     "grid": {
@@ -186,11 +186,11 @@ export const tramEchartsThemes = {
         }
       },
       "axisLabel": {
-        "color": "#93918d"
+        "color": "#9e9d98"
       },
       "splitLine": {
         "lineStyle": {
-          "color": "#2e2f2f"
+          "color": "#4a4b4b"
         }
       },
       "splitArea": {
@@ -209,11 +209,11 @@ export const tramEchartsThemes = {
         }
       },
       "axisLabel": {
-        "color": "#93918d"
+        "color": "#9e9d98"
       },
       "splitLine": {
         "lineStyle": {
-          "color": "#2e2f2f"
+          "color": "#4a4b4b"
         }
       },
       "splitArea": {
@@ -232,11 +232,11 @@ export const tramEchartsThemes = {
         }
       },
       "axisLabel": {
-        "color": "#93918d"
+        "color": "#9e9d98"
       },
       "splitLine": {
         "lineStyle": {
-          "color": "#2e2f2f"
+          "color": "#4a4b4b"
         }
       },
       "splitArea": {
@@ -255,11 +255,11 @@ export const tramEchartsThemes = {
         }
       },
       "axisLabel": {
-        "color": "#93918d"
+        "color": "#9e9d98"
       },
       "splitLine": {
         "lineStyle": {
-          "color": "#2e2f2f"
+          "color": "#4a4b4b"
         }
       },
       "splitArea": {
@@ -267,7 +267,7 @@ export const tramEchartsThemes = {
       }
     },
     "tooltip": {
-      "backgroundColor": "#0e0f11",
+      "backgroundColor": "#17191c",
       "borderColor": "#e8e5dc",
       "padding": [8, 12],
       "textStyle": {

@@ -1,0 +1,52 @@
+---
+export interface Props {
+  /** `alt` is a neutral band, `tint` an earth-tinted one: colour without spending the accent. */
+  tone?: 'plain' | 'alt' | 'tint';
+  /** Heading of the band, on an inked bar: where a part of the page starts is never in doubt. */
+  title?: string;
+}
+
+const { tone = 'plain', title } = Astro.props;
+---
+
+<!-- A part of the page, edge to edge. It assumes the page gutter is `space-4`. -->
+<section class="band" data-tone={tone}>
+  {title && <h2 class="title" data-type="display-sm">{title}</h2>}
+  <div class="body"><slot /></div>
+</section>
+
+<style>
+  .band {
+    margin-inline: calc(var(--tram-sys-space-4) * -1);
+  }
+
+  .band[data-tone='alt'] {
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .band[data-tone='tint'] {
+    background: var(--tram-sys-surface-tint);
+  }
+
+  /* Inverted with the theme's own pair, so it also works at night. */
+  .title {
+    margin: 0;
+    padding: var(--tram-sys-space-3) var(--tram-sys-space-4);
+    color: var(--tram-sys-surface);
+    background: var(--tram-sys-text);
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--tram-sys-space-6);
+    padding: var(--tram-sys-space-6) var(--tram-sys-space-4);
+  }
+
+  /* On a phone the blocks run edge to edge: a gutter inside a gutter would cost a table its last column. */
+  @media (width < 48rem) {
+    .body {
+      padding-inline: 0;
+    }
+  }
+</style>

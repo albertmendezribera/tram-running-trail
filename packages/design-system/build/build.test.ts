@@ -147,7 +147,8 @@ describe('fixture build', () => {
     const css = r.files['tokens.css']!;
     assert.match(css, /--tram-sys-surface: light-dark\(var\(--tram-ref-paper\), var\(--tram-ref-night\)\);/);
     assert.match(css, /\[data-theme="night"\] \{\n\s+color-scheme: dark;\n\s+\}/);
-    assert.match(css, /:root \{\n\s+color-scheme: light dark;/);
+    // The default theme holds until the page chooses: the system's dark mode alone does not bring the night theme.
+    assert.match(css, /:root \{\n\s+color-scheme: light;/);
   });
 
   it('keeps sys→sys aliases as var() so theme changes flow through', () => {

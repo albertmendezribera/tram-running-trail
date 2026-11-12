@@ -475,6 +475,26 @@ test.describe('M2 without JavaScript', () => {
   });
 });
 
+test.describe('Theme', () => {
+  test.use({ colorScheme: 'dark', storageState: { cookies: [], origins: [] } });
+
+  test('stays light on a phone in dark mode, until the reader chooses night', async ({ page }) => {
+    await open(page, PAGES.index);
+    const background = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    expect(await background()).toBe('rgb(239, 236, 228)');
+    const toggle = page.getByRole('button', { name: 'Mode nit' });
+    await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    expect(await background()).toBe('rgb(23, 25, 28)');
+    // The choice holds on the next page.
+    await open(page, PAGES.measure);
+    expect(await background()).toBe('rgb(23, 25, 28)');
+    await page.getByRole('button', { name: 'Mode nit' }).click();
+    expect(await background()).toBe('rgb(239, 236, 228)');
+  });
+});
+
 test('StatBlock pairs each label with its figure', async ({ page }) => {
   await open(page, PAGES['stat-block']);
   const block = page.getByTestId('road');

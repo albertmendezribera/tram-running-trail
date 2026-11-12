@@ -1,6 +1,7 @@
 ---
 import { Font } from 'astro:assets';
 import '@tram/design-system/tokens.css';
+import ThemeToggle from '@tram/design-system/interactive/ThemeToggle.astro';
 import { NAV } from './nav';
 
 export interface Props {
@@ -20,10 +21,19 @@ const current = Astro.url.pathname;
     <title>{title} · TRAM DS</title>
     <Font cssVariable="--tram-ref-font-display" preload />
     <Font cssVariable="--tram-ref-font-text" preload />
+    <!-- Before the first paint: the theme the reader chose, not the one of the phone. -->
+    <script is:inline>
+      try {
+        if (localStorage.getItem('tram-theme') === 'night') document.documentElement.dataset.theme = 'night';
+      } catch {}
+    </script>
   </head>
   <body data-type="text-md">
     <header class="top">
-      <strong data-type="display-sm">TRAM · design system</strong>
+      <div class="top-row">
+        <strong data-type="display-sm">TRAM · design system</strong>
+        <ThemeToggle />
+      </div>
       <nav aria-label="Catàleg">
         {NAV.map((n) => <a data-type="text-sm" href={n.href} aria-current={n.href === current ? 'page' : undefined}>{n.title}</a>)}
       </nav>
@@ -41,7 +51,7 @@ const current = Astro.url.pathname;
   @layer ds {
     body {
       margin: 0;
-      padding: var(--tram-sys-space-5) var(--tram-sys-space-4);
+      padding: 0 var(--tram-sys-space-4) var(--tram-sys-space-5);
       color: var(--tram-sys-text);
       background: var(--tram-sys-surface);
     }
@@ -51,11 +61,22 @@ const current = Astro.url.pathname;
       font: inherit;
     }
 
+    /* An inked bar, edge to edge: the page has a clear top. */
     .top {
       display: grid;
       gap: var(--tram-sys-space-3);
-      padding-block-end: var(--tram-sys-space-4);
-      border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+      margin-inline: calc(var(--tram-sys-space-4) * -1);
+      padding: var(--tram-sys-space-4);
+      color: var(--tram-sys-surface);
+      background: var(--tram-sys-text);
+    }
+
+    .top-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--tram-sys-space-3);
     }
 
     .top nav {
@@ -65,11 +86,17 @@ const current = Astro.url.pathname;
     }
 
     .top a {
-      color: var(--tram-sys-text);
+      color: inherit;
+      text-underline-offset: 0.25em;
+    }
+
+    .top a:not([aria-current]) {
+      text-decoration-color: transparent;
     }
 
     .top a[aria-current] {
-      color: var(--tram-sys-accent-text);
+      font-weight: 700;
+      text-decoration-thickness: var(--tram-sys-line-strong);
     }
 
     .main {

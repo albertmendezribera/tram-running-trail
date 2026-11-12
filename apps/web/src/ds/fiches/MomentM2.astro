@@ -1,5 +1,7 @@
 ---
+import Band from '@tram/design-system/primitives/Band.astro';
 import DataTable from '@tram/design-system/primitives/DataTable.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
 import RouteScroller from '@tram/design-system/interactive/RouteScroller.astro';
 import ClimbList from '@tram/design-system/patterns/ClimbList.astro';
 import StatBlock from '@tram/design-system/patterns/StatBlock.astro';
@@ -14,7 +16,7 @@ const distance = Number(summary.distanceKm.toFixed(2));
 const gain = Math.round(summary.gainM);
 const stats = [
   { label: 'Distància', value: distance, unit: 'km' },
-  { label: 'Desnivell positiu', value: gain, unit: 'm-gain' },
+  { label: 'Desnivell positiu', value: gain, unit: 'm-gain', tone: 'grade' },
   { label: 'Altitud màxima', value: summary.highest[1], unit: 'm' },
   { label: 'Km-esforç', value: Number((distance + gain / 100).toFixed(1)), unit: 'km-effort' },
 ] as const;
@@ -41,15 +43,15 @@ const rows = kmStretches(CALONGE).map((r) => ({ km: r.km, gain: Math.round(r.gai
   }}
 />
 
-<section class="sheet">
-  <h2 class="sheet-title" data-type="display-sm">Full de resultats</h2>
-  <StatBlock stats={stats} lead />
+<Band tone="tint" title="Full de resultats">
+  <Panel>
+    <StatBlock stats={stats} lead />
+  </Panel>
   <div class="pair">
-    <div class="block">
-      <h3 class="block-title" data-type="text-xs">Pujades</h3>
+    <Panel title="Pujades">
       <ClimbList label="Pujades de la sortida a Calonge" points={CALONGE} />
-    </div>
-    <div class="block">
+    </Panel>
+    <Panel>
       <DataTable
         caption="Trams per quilòmetre"
         density="compact"
@@ -61,9 +63,9 @@ const rows = kmStretches(CALONGE).map((r) => ({ km: r.km, gain: Math.round(r.gai
         ]}
         rows={rows}
       />
-    </div>
+    </Panel>
   </div>
-</section>
+</Band>
 
 <script>
   import type { TramRouteScroller } from '@tram/design-system/interactive/route-scroller.ts';
@@ -95,15 +97,24 @@ const rows = kmStretches(CALONGE).map((r) => ({ km: r.km, gain: Math.round(r.gai
     border-block-end: var(--tram-sys-line-strong) solid var(--tram-sys-text);
   }
 
-  .kicker,
-  .block-title {
+  /* A short bar in the accent opens the page: colour that marks, not decorates. */
+  .kicker {
+    display: flex;
+    align-items: center;
+    gap: var(--tram-sys-space-2);
     margin: 0;
     color: var(--tram-sys-text-muted);
     text-transform: uppercase;
   }
 
-  .title,
-  .sheet-title {
+  .kicker::before {
+    inline-size: var(--tram-sys-space-6);
+    block-size: var(--tram-sys-space-1);
+    background: var(--tram-sys-accent);
+    content: '';
+  }
+
+  .title {
     margin: 0;
   }
 
@@ -112,23 +123,10 @@ const rows = kmStretches(CALONGE).map((r) => ({ km: r.km, gain: Math.round(r.gai
     margin: 0;
   }
 
-  .sheet {
-    display: grid;
-    gap: var(--tram-sys-space-7);
-    padding-block-start: var(--tram-sys-space-7);
-    border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
-  }
-
   .pair {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--tram-sys-space-7);
-  }
-
-  .block {
-    display: grid;
-    gap: var(--tram-sys-space-3);
-    align-content: start;
+    gap: var(--tram-sys-space-6);
   }
 
   @media (width >= 64rem) {

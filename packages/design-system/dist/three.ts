@@ -2,7 +2,7 @@
 
 export type TramTheme = "light" | "night";
 export type TramTerrain = "mixed" | "road" | "trail";
-export type TramColorName = "surface" | "surface-alt" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "data-active-outline" | "data-grade-1" | "data-grade-2" | "data-grade-3" | "data-grade-4" | "map-contour" | "map-vegetation" | "map-water";
+export type TramColorName = "surface" | "surface-alt" | "surface-tint" | "text" | "text-muted" | "rule" | "rule-strong" | "accent" | "accent-text" | "on-accent" | "focus" | "data-road" | "data-trail" | "data-primary" | "data-active" | "data-active-outline" | "data-grade-1" | "data-grade-2" | "data-grade-3" | "data-grade-4" | "map-contour" | "map-vegetation" | "map-water";
 
 export interface TramThreeColor {
   readonly hex: number;
@@ -19,9 +19,14 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [0.86316, 0.8388, 0.77582]
       },
       "surface-alt": {
-        "hex": 0xe2e0d8,
-        "srgb": [0.8863, 0.8784, 0.8471],
-        "linear": [0.76052, 0.7454, 0.68669]
+        "hex": 0xd6d3cd,
+        "srgb": [0.8392, 0.8275, 0.8039],
+        "linear": [0.67244, 0.65141, 0.6105]
+      },
+      "surface-tint": {
+        "hex": 0xdfd0c0,
+        "srgb": [0.8745, 0.8157, 0.7529],
+        "linear": [0.73791, 0.63076, 0.52712]
       },
       "text": {
         "hex": 0x141518,
@@ -34,9 +39,9 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [0.09531, 0.09531, 0.09531]
       },
       "rule": {
-        "hex": 0xbebcb6,
-        "srgb": [0.7451, 0.7373, 0.7137],
-        "linear": [0.51492, 0.50289, 0.46778]
+        "hex": 0x9c9b97,
+        "srgb": [0.6118, 0.6078, 0.5922],
+        "linear": [0.33245, 0.32778, 0.30947]
       },
       "rule-strong": {
         "hex": 0x141518,
@@ -49,9 +54,9 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [1, 0.10224, 0.0137]
       },
       "accent-text": {
-        "hex": 0xbc2300,
-        "srgb": [0.7373, 0.1373, 0],
-        "linear": [0.50289, 0.01681, 0]
+        "hex": 0xb21400,
+        "srgb": [0.698, 0.0784, 0],
+        "linear": [0.4452, 0.007, 0]
       },
       "on-accent": {
         "hex": 0x141518,
@@ -131,9 +136,14 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [0.86316, 0.8388, 0.77582]
       },
       "surface-alt": {
-        "hex": 0xe2e0d8,
-        "srgb": [0.8863, 0.8784, 0.8471],
-        "linear": [0.76052, 0.7454, 0.68669]
+        "hex": 0xd6d3cd,
+        "srgb": [0.8392, 0.8275, 0.8039],
+        "linear": [0.67244, 0.65141, 0.6105]
+      },
+      "surface-tint": {
+        "hex": 0xdfd0c0,
+        "srgb": [0.8745, 0.8157, 0.7529],
+        "linear": [0.73791, 0.63076, 0.52712]
       },
       "text": {
         "hex": 0x141518,
@@ -146,9 +156,9 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [0.09531, 0.09531, 0.09531]
       },
       "rule": {
-        "hex": 0xbebcb6,
-        "srgb": [0.7451, 0.7373, 0.7137],
-        "linear": [0.51492, 0.50289, 0.46778]
+        "hex": 0x9c9b97,
+        "srgb": [0.6118, 0.6078, 0.5922],
+        "linear": [0.33245, 0.32778, 0.30947]
       },
       "rule-strong": {
         "hex": 0x141518,
@@ -161,9 +171,9 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [1, 0.10224, 0.0137]
       },
       "accent-text": {
-        "hex": 0xbc2300,
-        "srgb": [0.7373, 0.1373, 0],
-        "linear": [0.50289, 0.01681, 0]
+        "hex": 0xb21400,
+        "srgb": [0.698, 0.0784, 0],
+        "linear": [0.4452, 0.007, 0]
       },
       "on-accent": {
         "hex": 0x141518,
@@ -243,9 +253,14 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [0.86316, 0.8388, 0.77582]
       },
       "surface-alt": {
-        "hex": 0xe2e0d8,
-        "srgb": [0.8863, 0.8784, 0.8471],
-        "linear": [0.76052, 0.7454, 0.68669]
+        "hex": 0xd6d3cd,
+        "srgb": [0.8392, 0.8275, 0.8039],
+        "linear": [0.67244, 0.65141, 0.6105]
+      },
+      "surface-tint": {
+        "hex": 0xdfd0c0,
+        "srgb": [0.8745, 0.8157, 0.7529],
+        "linear": [0.73791, 0.63076, 0.52712]
       },
       "text": {
         "hex": 0x141518,
@@ -258,9 +273,9 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [0.09531, 0.09531, 0.09531]
       },
       "rule": {
-        "hex": 0xbebcb6,
-        "srgb": [0.7451, 0.7373, 0.7137],
-        "linear": [0.51492, 0.50289, 0.46778]
+        "hex": 0x9c9b97,
+        "srgb": [0.6118, 0.6078, 0.5922],
+        "linear": [0.33245, 0.32778, 0.30947]
       },
       "rule-strong": {
         "hex": 0x141518,
@@ -273,9 +288,9 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [1, 0.10224, 0.0137]
       },
       "accent-text": {
-        "hex": 0xbc2300,
-        "srgb": [0.7373, 0.1373, 0],
-        "linear": [0.50289, 0.01681, 0]
+        "hex": 0xb21400,
+        "srgb": [0.698, 0.0784, 0],
+        "linear": [0.4452, 0.007, 0]
       },
       "on-accent": {
         "hex": 0x141518,
@@ -352,14 +367,19 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
   "night": {
     "mixed": {
       "surface": {
-        "hex": 0x0e0f11,
-        "srgb": [0.0549, 0.0588, 0.0667],
-        "linear": [0.00439, 0.00478, 0.00561]
+        "hex": 0x17191c,
+        "srgb": [0.0902, 0.098, 0.1098],
+        "linear": [0.00857, 0.00972, 0.01161]
       },
       "surface-alt": {
-        "hex": 0x18191b,
-        "srgb": [0.0941, 0.098, 0.1059],
-        "linear": [0.00913, 0.00972, 0.01096]
+        "hex": 0x282a2c,
+        "srgb": [0.1569, 0.1647, 0.1725],
+        "linear": [0.02122, 0.02315, 0.02519]
+      },
+      "surface-tint": {
+        "hex": 0x322824,
+        "srgb": [0.1961, 0.1569, 0.1412],
+        "linear": [0.0319, 0.02122, 0.01764]
       },
       "text": {
         "hex": 0xe8e5dc,
@@ -367,14 +387,14 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [0.80695, 0.78354, 0.71569]
       },
       "text-muted": {
-        "hex": 0x93918d,
-        "srgb": [0.5765, 0.5686, 0.5529],
-        "linear": [0.29177, 0.28315, 0.26636]
+        "hex": 0x9e9d98,
+        "srgb": [0.6196, 0.6157, 0.5961],
+        "linear": [0.34191, 0.33716, 0.31399]
       },
       "rule": {
-        "hex": 0x2e2f2f,
-        "srgb": [0.1804, 0.1843, 0.1843],
-        "linear": [0.02732, 0.02843, 0.02843]
+        "hex": 0x4a4b4b,
+        "srgb": [0.2902, 0.2941, 0.2941],
+        "linear": [0.06848, 0.07036, 0.07036]
       },
       "rule-strong": {
         "hex": 0xe8e5dc,
@@ -464,14 +484,19 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
     },
     "road": {
       "surface": {
-        "hex": 0x0e0f11,
-        "srgb": [0.0549, 0.0588, 0.0667],
-        "linear": [0.00439, 0.00478, 0.00561]
+        "hex": 0x17191c,
+        "srgb": [0.0902, 0.098, 0.1098],
+        "linear": [0.00857, 0.00972, 0.01161]
       },
       "surface-alt": {
-        "hex": 0x18191b,
-        "srgb": [0.0941, 0.098, 0.1059],
-        "linear": [0.00913, 0.00972, 0.01096]
+        "hex": 0x282a2c,
+        "srgb": [0.1569, 0.1647, 0.1725],
+        "linear": [0.02122, 0.02315, 0.02519]
+      },
+      "surface-tint": {
+        "hex": 0x322824,
+        "srgb": [0.1961, 0.1569, 0.1412],
+        "linear": [0.0319, 0.02122, 0.01764]
       },
       "text": {
         "hex": 0xe8e5dc,
@@ -479,14 +504,14 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [0.80695, 0.78354, 0.71569]
       },
       "text-muted": {
-        "hex": 0x93918d,
-        "srgb": [0.5765, 0.5686, 0.5529],
-        "linear": [0.29177, 0.28315, 0.26636]
+        "hex": 0x9e9d98,
+        "srgb": [0.6196, 0.6157, 0.5961],
+        "linear": [0.34191, 0.33716, 0.31399]
       },
       "rule": {
-        "hex": 0x2e2f2f,
-        "srgb": [0.1804, 0.1843, 0.1843],
-        "linear": [0.02732, 0.02843, 0.02843]
+        "hex": 0x4a4b4b,
+        "srgb": [0.2902, 0.2941, 0.2941],
+        "linear": [0.06848, 0.07036, 0.07036]
       },
       "rule-strong": {
         "hex": 0xe8e5dc,
@@ -576,14 +601,19 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
     },
     "trail": {
       "surface": {
-        "hex": 0x0e0f11,
-        "srgb": [0.0549, 0.0588, 0.0667],
-        "linear": [0.00439, 0.00478, 0.00561]
+        "hex": 0x17191c,
+        "srgb": [0.0902, 0.098, 0.1098],
+        "linear": [0.00857, 0.00972, 0.01161]
       },
       "surface-alt": {
-        "hex": 0x18191b,
-        "srgb": [0.0941, 0.098, 0.1059],
-        "linear": [0.00913, 0.00972, 0.01096]
+        "hex": 0x282a2c,
+        "srgb": [0.1569, 0.1647, 0.1725],
+        "linear": [0.02122, 0.02315, 0.02519]
+      },
+      "surface-tint": {
+        "hex": 0x322824,
+        "srgb": [0.1961, 0.1569, 0.1412],
+        "linear": [0.0319, 0.02122, 0.01764]
       },
       "text": {
         "hex": 0xe8e5dc,
@@ -591,14 +621,14 @@ export const tramThreeColors: Record<TramTheme, Record<TramTerrain, Record<TramC
         "linear": [0.80695, 0.78354, 0.71569]
       },
       "text-muted": {
-        "hex": 0x93918d,
-        "srgb": [0.5765, 0.5686, 0.5529],
-        "linear": [0.29177, 0.28315, 0.26636]
+        "hex": 0x9e9d98,
+        "srgb": [0.6196, 0.6157, 0.5961],
+        "linear": [0.34191, 0.33716, 0.31399]
       },
       "rule": {
-        "hex": 0x2e2f2f,
-        "srgb": [0.1804, 0.1843, 0.1843],
-        "linear": [0.02732, 0.02843, 0.02843]
+        "hex": 0x4a4b4b,
+        "srgb": [0.2902, 0.2941, 0.2941],
+        "linear": [0.06848, 0.07036, 0.07036]
       },
       "rule-strong": {
         "hex": 0xe8e5dc,

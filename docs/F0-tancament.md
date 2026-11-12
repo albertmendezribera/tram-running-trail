@@ -38,7 +38,7 @@ Aquest document diu què demanava la Fase 0, què hi ha i com s'ha comprovat. El
 | Proves de les regles de lint | 23 |
 | Proves dels tokens al navegador | 20 |
 | Proves de navegador de l'app, Chromium | 340 (clar i nit, mòbil i escriptori; 4 són de velocitat) |
-| Les mateixes al motor de Safari i al de Firefox | 168, 3D inclòs, en un Mac. A Linux, Firefox no té WebGL dins del contenidor i el visor es queda al pòster |
+| Les mateixes al motor de Safari i al de Firefox | 168, 3D inclòs, en un Mac. A la CI (Linux), el motor de Safari les passa totes; Firefox no hi té WebGL i les 7 que necessiten el 3D fallen: el visor es queda al pòster, com està previst |
 | Esquema de la base de dades | a la CI s'aplica a un Postgres amb PostGIS i passa les seves proves |
 
 ### Pressupost de rendiment (secció 10)
@@ -47,7 +47,7 @@ Aquest document diu què demanava la Fase 0, què hi ha i com s'ha comprovat. El
 |---|---|---|
 | JS carregat d'entrada per pàgina | < 30 KB gzip | de 0,4 a 4,1 KB |
 | LCP, amb 4G lent i CPU 4 vegades més lenta | < 1,8 s | de 0,6 a 0,7 s |
-| CLS | < 0,05 | 0,005 com a màxim en un Mac. A Linux va sortir 0,31 pel canvi de lletra; corregit amb lletres de reserva ajustades, pendent de confirmar a la CI |
+| CLS | < 0,05 | 0,005 com a màxim en un Mac. A Linux va sortir 0,31 pel canvi de lletra; corregit amb lletres de reserva ajustades, i la CI ho confirma: passa per sota de 0,05 |
 | Illa 3D cartogràfica | < 250 KB gzip | 225,9 KB |
 | Illa 3D realista (excepció acceptada) | límit fixat a 470 KB | 454,8 KB |
 | Terreny de la primera vista | < 1,5 MB | 64,5 KB (cartogràfic) |

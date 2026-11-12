@@ -50,11 +50,11 @@ Nike Vaporfly 4 (asfalt, placa de carboni) i Hoka Speedgoat 6 (muntanya, tacs). 
 
 Demanat el mateix dia: una sabatilla que es giri i es vegi com la real, feta a partir de les fotos oficials.
 
-- `apps/web/scripts/photo-model.py` retalla la sabatilla de la foto lateral, de la interior, de la de dalt i de la del taló, i en treu la silueta de costat i en planta.
+- `apps/web/scripts/photo-model.py` retalla la sabatilla de la foto lateral, de la interior, de la de dalt, de la del taló i, si n'hi ha, de la de la sola, i en treu la silueta de costat i en planta. Una configuració diu com està feta cada foto (cap on mira la punta, quin peu és).
 - `three/shoe-viewer/photo.ts` dona volum a aquesta silueta (amb l'amplada mesurada de l'avantpeu) i hi posa cada foto des d'on es va fer.
-- Fet per al Nike Vaporfly 4. De costat, de dalt i de darrere és fidel a les fotos; de front i per sota és aproximat, perquè cap foto hi mira de cara. No és un escaneig.
+- Fet per al Nike Vaporfly 4 (peu esquerre, sense foto de la sola de cara: per sota és un color pla) i per al Hoka Speedgoat 6 (peu dret, amb la sola). De costat, de dalt i de darrere és fidel a les fotos; de front és aproximat, perquè cap foto hi mira de cara. No és un escaneig.
 - **Les fotos són de la marca i no són al repositori.** Viuen a `apps/web/src/content/shoes-local/`, que git no segueix; sense elles el visor mostra el model de mesures. S'han desplegat només a l'entorn de proves, per decisió expressa. `CLAUDE.md` 7.6 diu que no es fan servir fotos de màrqueting de les marques: portar-ho a producció demana el permís de la marca i canviar aquesta regla.
-- El Hoka Speedgoat 6 no té model amb fotos. El retall de l'ombra de sota la sola suposa una sola de color: una sola negra demana un altre criteri.
+- El retall de l'ombra de sota la sola suposa una sola de color: una sola negra o grisa demana un altre criteri. Les fotos del Hoka surten del servidor d'imatges de la marca (`dms.deckers.com`), perquè la pàgina de hoka.com no es deixa llegir amb les eines d'aquí.
 
 ## Què no s'ha verificat, i què queda obert
 

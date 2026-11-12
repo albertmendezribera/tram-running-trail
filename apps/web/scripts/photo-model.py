@@ -1,17 +1,21 @@
 """Official product photos -> a profile and textures for the photo model of a shoe (prototype).
 Needs numpy, scipy and Pillow. The photos belong to the brands: they and what this script
 makes of them stay out of the repository (apps/web/src/content/shoes-local/ is not tracked).
-Usage: python3 photo-model.py <photoDir> <outDir> <lateral> <medial> <top> <topSide:left|right> <forefootWidthMm> [<heel> <heelSide>]
-The lateral photo has the toe at the left, the medial one at the right; the top photo
-shows the pair with the toes down, and <topSide> says which of the two shoes to take."""
+
+Usage: python3 photo-model.py <config.json>, where the config says where the photos are and how
+each one is taken:
+  { "src": dir, "out": dir, "foot": "left"|"right", "forefootMm": measured width,
+    "lateral": { "file", "toe": "left"|"right" }, "medial": { "file" },
+    "top":  { "file", "pick": "left"|"right", "toes": "up"|"down" },
+    "heel": { "file", "pick" } (optional), "sole": { "file", "pick", "toes" } (optional) }
+`pick` is which shoe of a pair to take: it has to be the same foot as the side photos."""
 import json, sys
 import numpy as np
 from PIL import Image
 from scipy import ndimage
 
-src, out, lateral_name, medial_name, top_name, top_side, forefoot_mm = sys.argv[1:8]
-# Optional: the photo of the pair from behind, and which of the two shoes to take.
-heel_name, heel_side = (sys.argv[8], sys.argv[9]) if len(sys.argv) > 9 else (None, None)
+config = json.load(open(sys.argv[1]))
+src, out = config['src'], config['out']
 STATIONS = 120
 
 def load(name):
@@ -58,7 +62,15 @@ def body(mask, rgb):
         floor = b
         while b > a + 1 and floor - b < limit and spread[b - 1, c] < 14:
             b -= 1
+        # A column of nothing but grey is the shadow reaching past the toe or the heel: not shoe.
+        if (spread[a:b, c] < 14).mean() > 0.8:
+            continue
         tops[c], lows[c] = a, b
+    # The shoe is one stretch of columns: the longest.
+    cols = np.concatenate([[False], lows >= 0, [False]])
+    edges = np.flatnonzero(cols[1:] != cols[:-1]).reshape(-1, 2)
+    first, last = edges[np.argmax(edges[:, 1] - edges[:, 0])]
+    lows[:first] = lows[last:] = -1
     known = lows >= 0
     lows[known] = ndimage.median_filter(lows[known], 31)
     for c in np.flatnonzero(known):
@@ -91,50 +103,60 @@ def spans(mask, axis_len):
         hi.append(float(rows.max() + 1) / axis_len if len(rows) else None)
     return lo, hi
 
+def one_of_pair(view):
+    """One shoe of a photo of the pair, cut out, with the heel at the top."""
+    rgb = load(view['file'])
+    pair = sorted(biggest(*mask_of(rgb), count=2), key=lambda m: np.where(m)[1].mean())
+    rgb, mask = crop(rgb, pair[0] if view['pick'] == 'left' else pair[1])
+    if view.get('toes') == 'up':
+        rgb, mask = rgb[::-1, ::-1], mask[::-1, ::-1]
+    return rgb, mask
+
 # Side views.
 side = {}
-for key, name in (('lateral', lateral_name), ('medial', medial_name)):
-    rgb = load(name)
+for key in ('lateral', 'medial'):
+    rgb = load(config[key]['file'])
     mask = body(biggest(*mask_of(rgb))[0], rgb)
     rgb, mask = crop(rgb, mask)
     side[key] = (rgb, mask)
     save(rgb, mask, key, 1280)
 lat_rgb, lat_mask = side['lateral']
-# Heel to toe: the lateral photo has the toe at the left, so it is read right to left.
-top_edge, bottom_edge = spans(lat_mask[:, ::-1], lat_mask.shape[0])
+# Read from heel to toe, whichever way the lateral photo faces.
+heel_first = lat_mask if config['lateral']['toe'] == 'right' else lat_mask[:, ::-1]
+top_edge, bottom_edge = spans(heel_first, lat_mask.shape[0])
 height_px, length_px = lat_mask.shape
 
-# Top view: one shoe of the pair, heel up.
-rgb = load(top_name)
-pair = sorted(biggest(*mask_of(rgb), count=2), key=lambda m: np.where(m)[1].mean())
-shoe = pair[0] if top_side == 'left' else pair[1]
-top_rgb, top_mask = crop(rgb, shoe)
+# From above: rows run heel to toe; across, the left of the photo is one side of the shoe.
+top_rgb, top_mask = one_of_pair(config['top'])
 save(top_rgb, top_mask, 'top', 640)
-# Rows run heel to toe; across, the left of the photo is one side of the shoe.
 left_edge, right_edge = spans(top_mask.T, top_mask.shape[1])
 width_px, top_length_px = top_mask.shape[1], top_mask.shape[0]
 
 # Millimetres: the widest point of the photo from above is the measured forefoot width.
-length_mm = float(forefoot_mm) * top_length_px / width_px
+forefoot_mm = float(config['forefootMm'])
+length_mm = forefoot_mm * top_length_px / width_px
 model = {
+    'foot': config['foot'],
     'lengthMm': round(length_mm, 1),
     'heightMm': round(length_mm * height_px / length_px, 1),
-    'widthMm': float(forefoot_mm),
+    'widthMm': forefoot_mm,
     # Shares of the height, from the top of the photo, at each station from heel to toe.
     'top': [None if v is None else round(v, 4) for v in top_edge],
     'bottom': [None if v is None else round(v, 4) for v in bottom_edge],
     # Shares of the width, from the left of the photo from above.
     'left': [None if v is None else round(v, 4) for v in left_edge],
     'right': [None if v is None else round(v, 4) for v in right_edge],
-    # The colour under the shoe: the photos used do not show the sole square on.
-    'sole': [int(v) for v in np.median(lat_rgb[int(height_px * 0.93):][lat_mask[int(height_px * 0.93):]], axis=0)],
+    # The colour under the shoe, for when no photo shows the sole square on.
+    'soleColour': [int(v) for v in np.median(lat_rgb[int(height_px * 0.93):][lat_mask[int(height_px * 0.93):]], axis=0)],
 }
-if heel_name:
-    rgb = load(heel_name)
+if config.get('heel'):
+    rgb = load(config['heel']['file'])
     pair = sorted(biggest(*mask_of(rgb), count=2), key=lambda m: np.where(m)[1].mean())
-    shoe = body(pair[0] if heel_side == 'left' else pair[1], rgb)
-    heel_rgb, heel_mask = crop(rgb, shoe)
-    save(heel_rgb, heel_mask, 'heel', 512)
+    shoe = body(pair[0] if config['heel']['pick'] == 'left' else pair[1], rgb)
+    save(*crop(rgb, shoe), 'heel', 512)
     model['heel'] = True
+if config.get('sole'):
+    save(*one_of_pair(config['sole']), 'sole', 640)
+    model['sole'] = True
 json.dump(model, open(f'{out}/model.json', 'w'))
-print(model['lengthMm'], model['heightMm'], 'px', lat_mask.shape, top_mask.shape)
+print(model['foot'], model['lengthMm'], model['heightMm'], 'px', lat_mask.shape, top_mask.shape)

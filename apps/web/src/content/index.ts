@@ -99,5 +99,7 @@ export const routeOf = (slug: string): Route => {
 };
 
 export const ICGC_CREDIT = 'Ortofoto i model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
+/** What the view from the ground adds, and how much of it is data. */
+export const WORLD_NOTE = 'A peu: els edificis tenen la planta i l’alçada del mapa de l’ICGC; els arbres són tants i tan alts com va mesurar el LiDAR (2016-2017) a cada cel·la de 20 m i del tipus que diu el mapa de cobertes del sòl (2024), però cap és un arbre concret.';
 export const DEM_CREDIT = 'Model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
 export const SAMPLE_NOTICE = 'Cursa de mostra: el recorregut és real, però el nom, la data i el dorsal són inventats per provar la pàgina.';

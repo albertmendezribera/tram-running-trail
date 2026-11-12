@@ -242,7 +242,8 @@ test.describe('Shoe in 3D', () => {
     await expect(viewer).toHaveAttribute('data-state', 'poster');
     await expect(viewer.locator('svg path').first()).toBeVisible();
     await expect(viewer.getByRole('button', { name: 'Veure en 3D' })).toBeVisible();
-    await expect(viewer).toContainText('no un escaneig');
+    // What the view is made of is said next to it: measurements, or the brand's photos where they are.
+    await expect(viewer).toContainText(/no (és )?un escaneig/i);
   });
 });
 
@@ -272,5 +273,27 @@ test.describe('Comparator in 3D', () => {
     await expect.poll(() => yaw(second)).toBeLessThan(before[1]! - 0.3);
     expect(await yaw(first)).toBeGreaterThan(before[0]! + 0.3);
     expect((await yaw(first)) + (await yaw(second))).toBeCloseTo(Math.PI, 2);
+  });
+});
+
+test.describe('Route on foot', () => {
+  test.describe.configure({ timeout: 180_000 });
+
+  test('offers three ways of seeing a route, and on foot stands trees and buildings along it', async ({ page }) => {
+    await open(page, ROUTE_PAGES['route-flat']);
+    const scroller = page.locator('tram-route-scroller');
+    await expect(scroller.getByRole('radio')).toHaveCount(3);
+    // What is data and what is not is said next to the view.
+    await expect(scroller).toContainText('cap és un arbre concret');
+    await scroller.getByRole('radio', { name: 'A peu' }).check({ force: true });
+    const viewer = scroller.locator('tram-viewer-3d');
+    await viewer.scrollIntoViewIfNeeded();
+    // The view that was there steps aside for the new one: the canvas with trees is the one to wait for.
+    const canvas = viewer.locator('canvas[data-engine="maplibre"][data-trees]');
+    await expect(canvas).toBeVisible({ timeout: 120_000 });
+    await expect(viewer).toHaveAttribute('data-state', 'ready');
+    expect(Number(await canvas.getAttribute('data-trees'))).toBeGreaterThan(1000);
+    // The choice is kept for the next visit, as the other two.
+    expect(await page.evaluate(() => localStorage.getItem('tram-viewer-mode'))).toBe('walk');
   });
 });

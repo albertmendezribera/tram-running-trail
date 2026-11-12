@@ -14,6 +14,8 @@
 | Comparador (M3) | `/ca/comparar/hoka-speedgoat-6-vs-nike-vaporfly-4/` | Fet; l'ordre invers hi redirigeix |
 | E03 · ruta plana | `docs/explorations/E03-flat-route.md` | Decidida |
 | E05 · radiografia paramètrica | `docs/explorations/E05-shoe-xray.md` | Decidida |
+| Comparador en 3D | mateixa pàgina del comparador | Fet: les dues sabatilles de costat, girant alhora en mirall |
+| Vista «A peu» del visor de rutes (E18) | les fitxes de cursa i de ruta | Feta: edificis del mapa, arbres segons el LiDAR i les cobertes del sòl, càmera baixa. No és la vista per defecte |
 | E04 · dispositius de referència | — | **No feta**: cal tenir els dispositius a la mà |
 
 Les dades viuen en fitxers (`apps/web/src/content/`) amb la forma de l'esquema de la base de dades. Una construcció de producció no inclou cap cursa de mostra ni cap sabatilla pendent de revisió legal; l'entorn de proves, sí.

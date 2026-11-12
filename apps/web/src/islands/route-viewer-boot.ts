@@ -2,7 +2,7 @@
 // terrain load only when a viewer asks for it: nothing here weighs on the page.
 import type { TramRouteScroller } from '@tram/design-system/interactive/route-scroller.ts';
 import type { SceneLoader } from '@tram/design-system/interactive/viewer-3d-shell.ts';
-import { MODE_FIELD, preferredMode, rememberMode } from './viewer-mode.ts';
+import { isMode, MODE_FIELD, preferredMode, rememberMode } from './viewer-mode.ts';
 
 void customElements.whenDefined('tram-viewer-3d').then(() => {
   for (const host of document.querySelectorAll<HTMLElement>('[data-route-viewer]')) {
@@ -15,7 +15,7 @@ void customElements.whenDefined('tram-viewer-3d').then(() => {
     if (chosen) chosen.checked = true;
     scroller.addEventListener('change', (event) => {
       const input = event.target as HTMLInputElement;
-      if (input.name === MODE_FIELD && (input.value === 'real' || input.value === 'map')) rememberMode(input.value);
+      if (input.name === MODE_FIELD && isMode(input.value)) rememberMode(input.value);
     });
     viewer.loader = (context) => import('./route-viewer.ts').then((m) => m.mount(context, scroller, slug));
   }

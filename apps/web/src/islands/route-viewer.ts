@@ -5,6 +5,7 @@ import type { TramRouteScroller } from '@tram/design-system/interactive/route-sc
 import type { Scene, SceneContext } from '@tram/design-system/interactive/viewer-3d-shell.ts';
 import { elevationAt, gradeBands, summarize } from '@tram/design-system/patterns/elevation.ts';
 import { toLngLat } from '@tram/terrain-pipeline/utm';
+import type { TreeKind } from '../map/route-viewer/trees.ts';
 import type { TerrainMeta } from '../three/route-viewer/heights.ts';
 import type { RouteMark, RouteViewer } from '../three/route-viewer/scene.ts';
 import { MODE_FIELD, preferredMode, rememberMode, type ViewerMode } from './viewer-mode.ts';
@@ -13,8 +14,11 @@ import { MODE_FIELD, preferredMode, rememberMode, type ViewerMode } from './view
 const TERRAINS = import.meta.glob<TerrainMeta & { x0: number; y0: number }>('../content/routes/*/terrain.json', { import: 'default' });
 const TRACKS = import.meta.glob<Array<[number, number]>>('../content/routes/*/route.json', { import: 'default' });
 const IMAGES = import.meta.glob<string>('../content/routes/*/terrain.webp', { query: '?url', import: 'default' });
+/** What stands along the route (`world-cli`): asked for only by the view from the ground. */
+const WORLDS = import.meta.glob<{ kinds: TreeKind[]; trees: number[]; buildings: Array<{ h: number; rings: number[][] }> }>('../content/routes/*/world.json', { import: 'default' });
 
 interface RouteFiles {
+  slug: string;
   terrain: TerrainMeta & { x0: number; y0: number };
   track: Array<[number, number]>;
   terrainUrl: string;
@@ -24,7 +28,7 @@ async function filesOf(slug: string): Promise<RouteFiles> {
   const at = (ext: string): string => `../content/routes/${slug}/${ext}`;
   const [terrain, track, terrainUrl] = await Promise.all([TERRAINS[at('terrain.json')]?.(), TRACKS[at('route.json')]?.(), IMAGES[at('terrain.webp')]?.()]);
   if (!terrain || !track || !terrainUrl) throw new Error(`no terrain for the route "${slug}"`);
-  return { terrain, track, terrainUrl };
+  return { slug, terrain, track, terrainUrl };
 }
 
 /** Course markers, computed from the profile: each kilometre, start, finish and the highest point. */
@@ -67,7 +71,13 @@ async function start(mode: ViewerMode, context: SceneContext, scroller: TramRout
     const { mountRouteViewer } = await import('../three/route-viewer/scene.ts');
     return mountRouteViewer(context, { ...shared, terrainUrl, terrain, route: track });
   }
-  const { mountRealRouteViewer } = await import('../map/route-viewer/scene.ts');
+  const [{ mountRealRouteViewer }, stored] = await Promise.all([import('../map/route-viewer/scene.ts'), mode === 'walk' ? WORLDS[`../content/routes/${files.slug}/world.json`]?.() : undefined]);
+  // Tenths of a metre from the corner of the terrain → longitude and latitude.
+  const place = (x: number, y: number): [number, number] => toLngLat(terrain.x0 + x / 10, terrain.y0 + y / 10);
+  const world = stored && {
+    trees: Array.from({ length: stored.trees.length / 5 }, (_, i): [number, number, number, number, TreeKind] => [...place(stored.trees[i * 5]!, stored.trees[i * 5 + 1]!), stored.trees[i * 5 + 2]! / 10, stored.trees[i * 5 + 3]! / 10, stored.kinds[stored.trees[i * 5 + 4]!] ?? 'oak']),
+    buildings: stored.buildings.map((b) => ({ heightM: b.h, rings: b.rings.map((ring) => Array.from({ length: ring.length / 2 }, (_, i) => place(ring[i * 2]!, ring[i * 2 + 1]!))) })),
+  };
   const { points } = scroller.route;
   const first = points[0]![0];
   const length = points.at(-1)![0] - first;
@@ -75,6 +85,8 @@ async function start(mode: ViewerMode, context: SceneContext, scroller: TramRout
     ...shared,
     path: track.map(([x, y]) => toLngLat(terrain.x0 + x, terrain.y0 + y)),
     elevationAt: (share) => elevationAt(points, first + share * length),
+    walk: mode === 'walk',
+    world,
   });
 }
 

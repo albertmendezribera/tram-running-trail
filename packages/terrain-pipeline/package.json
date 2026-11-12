@@ -3,23 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "GPX \u2192 ICGC elevation model \u2192 terrain-RGB WebP and route, for the 3D route viewer (CLAUDE.md 8.1, E01).",
+  "description": "GPX → ICGC elevation model → terrain-RGB WebP and route, for the 3D route viewer (CLAUDE.md 8.1, E01).",
   "exports": {
     ".": "./src/index.ts",
     "./terrain-rgb": "./src/terrain-rgb.ts",
-    "./utm": "./src/utm.ts"
+    "./utm": "./src/utm.ts",
+    "./world": "./src/world.ts"
   },
   "scripts": {
     "build-route": "node src/cli.ts",
     "build-plate": "node src/plate-cli.ts",
     "test": "node --test \"src/**/*.test.ts\"",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "build-world": "node src/world-cli.ts"
   },
   "dependencies": {
     "sharp": "0.34.5"
   },
   "devDependencies": {
+    "@mapbox/vector-tile": "3.0.0",
     "@types/node": "^22.20.5",
+    "pbf": "5.1.2",
     "typescript": "5.9.3"
   }
 }

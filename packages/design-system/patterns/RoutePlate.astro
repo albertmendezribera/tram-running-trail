@@ -1,0 +1,219 @@
+---
+import { formatNumber, type Locale } from '@tram/formats';
+import type { Plate } from './route-plate.ts';
+
+export interface Props {
+  plate: Plate;
+  /** What the plate shows, for those who do not see it: the name of the route. */
+  label: string;
+  /** Source of the terrain, shown under the plate. */
+  credit?: string | undefined;
+  /** Kilometre numbers, scale and north: left out when the plate is a small picture next to its figures. */
+  bare?: boolean;
+  locale?: Locale;
+}
+
+const COPY = {
+  ca: { plan: 'Plànol de', contours: (m: number) => `Corbes de nivell cada ${m} m`, start: 'Sortida', finish: 'Arribada', both: 'Sortida i arribada', north: 'Nord' },
+  es: { plan: 'Plano de', contours: (m: number) => `Curvas de nivel cada ${m} m`, start: 'Salida', finish: 'Llegada', both: 'Salida y llegada', north: 'Norte' },
+  en: { plan: 'Map of', contours: (m: number) => `Contour lines every ${m} m`, start: 'Start', finish: 'Finish', both: 'Start and finish', north: 'North' },
+};
+
+const { plate, label, credit, bare = false, locale = 'ca' } = Astro.props;
+const copy = COPY[locale];
+const pct = (v: number, of: number): string => `${Number(((v / of) * 100).toFixed(2))}%`;
+const at = ([x, y]: readonly [number, number]): string => `left:${pct(x, plate.width)};top:${pct(y, plate.height)}`;
+// A loop ends where it starts: one mark says both.
+const loop = Math.hypot(plate.start[0] - plate.finish[0], plate.start[1] - plate.finish[1]) * plate.unitM < 150;
+// The scale bar is a round distance that fits a quarter of the plate.
+const widthM = plate.width * plate.unitM;
+const barM = [5000, 2000, 1000, 500, 200, 100].find((m) => m <= widthM / 4) ?? 100;
+const barLabel = barM >= 1000 ? `${formatNumber(barM / 1000, locale, 0)} km` : `${formatNumber(barM, locale, 0)} m`;
+// Marks that would sit on top of another (a there-and-back route) share one label.
+const marks = plate.marks.map((m, i) => ({ ...m, quiet: plate.marks.slice(0, i).some((o) => Math.hypot(o.x - m.x, o.y - m.y) * plate.unitM < 250) }));
+---
+
+<!-- The route seen from above on its contour lines. A drawing, not a tile map: no script, no image. -->
+<figure class="plate" data-bare={bare ? '' : undefined}>
+  <div class="sheet" style={`aspect-ratio:${plate.width}/${plate.height}`}>
+    <svg class="map" viewBox={`0 0 ${plate.width} ${plate.height}`} role="img" aria-label={`${copy.plan} ${label}`}>
+      <g class="contours">
+        {plate.contours.map((c) => <path class:list={['contour', c.major && 'major']} d={c.d} />)}
+      </g>
+      <path class="casing" d={plate.route}></path>
+      <path class="route" d={plate.route}></path>
+    </svg>
+    {
+      !bare &&
+        marks.map((m) => (
+          <span class="km" style={at([m.x, m.y])} data-quiet={m.quiet ? '' : undefined} aria-hidden="true">
+            <i class="dot" />
+            {!m.quiet && <span class="number" data-type="text-xs" data-numeric="tabular">{m.km}</span>}
+          </span>
+        ))
+    }
+    {!loop && <span class="end finish" style={at(plate.finish)}><i class="flag" />{!bare && <span class="name" data-type="text-xs">{copy.finish}</span>}</span>}
+    <span class="end start" style={at(plate.start)}><i class="flag" />{!bare && <span class="name" data-type="text-xs">{loop ? copy.both : copy.start}</span>}</span>
+  </div>
+  {
+    !bare && (
+      <figcaption class="caption" data-type="text-xs">
+        <!-- Scale and north sit under the sheet, at its own width: nothing is drawn over the track. -->
+        <span class="legend">
+          <span class="scale" style={`inline-size:${pct(barM / plate.unitM, plate.width)}`}>{barLabel}</span>
+          <span class="north"><i class="arrow" aria-hidden="true" />{copy.north}</span>
+          <span>{copy.contours(plate.intervalM)}</span>
+        </span>
+        {credit && <span>{credit}</span>}
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .plate {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  .sheet {
+    position: relative;
+    overflow: hidden;
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    background: var(--tram-sys-surface);
+  }
+
+  .map {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .contour,
+  .casing,
+  .route {
+    fill: none;
+    vector-effect: non-scaling-stroke;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .contour {
+    stroke: var(--tram-sys-map-contour);
+    stroke-width: var(--tram-sys-line-hairline);
+    opacity: 0.55;
+  }
+
+  .contour.major {
+    stroke-width: var(--tram-sys-line-contour);
+    opacity: 1;
+  }
+
+  /* The track is ink with a paper edge, so it reads over any density of contours. */
+  .casing {
+    stroke: var(--tram-sys-surface);
+    stroke-width: calc(var(--tram-sys-line-route) * 2.2);
+  }
+
+  .route {
+    stroke: var(--tram-sys-text);
+    stroke-width: var(--tram-sys-line-route);
+  }
+
+  .km,
+  .end {
+    position: absolute;
+    display: grid;
+    inline-size: 0;
+    block-size: 0;
+    place-items: center;
+  }
+
+  .dot {
+    position: absolute;
+    inline-size: var(--tram-sys-space-2);
+    block-size: var(--tram-sys-space-2);
+    border: var(--tram-sys-line-mark) solid var(--tram-sys-text);
+    border-radius: 50%;
+    background: var(--tram-sys-surface);
+  }
+
+  .number,
+  .name {
+    position: absolute;
+    inset-block-end: var(--tram-sys-space-2);
+    padding-inline: var(--tram-sys-space-1);
+    color: var(--tram-sys-text);
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: nowrap;
+    background: var(--tram-sys-surface);
+  }
+
+  /* The start is where the reader begins: the one mark in the accent. */
+  .flag {
+    position: absolute;
+    inline-size: var(--tram-sys-space-3);
+    block-size: var(--tram-sys-space-3);
+    border: var(--tram-sys-line-mark) solid var(--tram-sys-surface);
+    border-radius: 50%;
+    background: var(--tram-sys-text);
+  }
+
+  .start .flag {
+    background: var(--tram-sys-accent);
+  }
+
+  .name {
+    inset-block: var(--tram-sys-space-3) auto;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .caption {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+    color: var(--tram-sys-text-muted);
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--tram-sys-space-1) var(--tram-sys-space-4);
+  }
+
+  /* A bar of a round distance, as wide as that distance on the sheet above: the plate has a scale, like any map. */
+  .scale {
+    flex: none;
+    box-sizing: border-box;
+    padding-block-end: var(--tram-sys-space-1);
+    border: var(--tram-sys-line-mark) solid var(--tram-sys-text);
+    border-block-start: 0;
+    color: var(--tram-sys-text);
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .north {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tram-sys-space-1);
+  }
+
+  .arrow {
+    inline-size: var(--tram-sys-space-2);
+    block-size: var(--tram-sys-space-3);
+    background: var(--tram-sys-text);
+    clip-path: polygon(50% 0, 100% 100%, 50% 72%, 0 100%);
+  }
+
+  [data-bare] .sheet {
+    border: 0;
+    background: none;
+  }
+</style>

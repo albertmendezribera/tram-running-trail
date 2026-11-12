@@ -1,0 +1,40 @@
+---
+import RaceRow from '@tram/design-system/patterns/RaceRow.astro';
+import { summarize } from '@tram/design-system/patterns/elevation.ts';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import { type Race, routeOf } from '../content';
+
+export interface Props {
+  races: readonly Race[];
+}
+
+const { races } = Astro.props;
+const rows = races.map((race) => {
+  const course = race.courses[0]!;
+  const route = routeOf(course.route);
+  const summary = summarize(route.profile);
+  return { race, course, route, span: summary.highest[1] - summary.lowest[1] };
+});
+// One vertical scale for the whole list: a flat race looks flat next to a mountain one.
+const scale = Math.max(...rows.map((r) => r.span), 1);
+---
+
+<Stack gap={0} as="ul">
+  {
+    rows.map(({ race, course, route }) => (
+      <li>
+        <RaceRow
+          href={`/ca/curses/${race.slug}/`}
+          name={race.name}
+          place={race.place}
+          terrain={race.terrain}
+          date={race.edition.startDate}
+          distanceKm={Number((course.distanceM / 1000).toFixed(2))}
+          gainM={course.elevationGainM}
+          profile={route.profile}
+          scaleM={scale}
+        />
+      </li>
+    ))
+  }
+</Stack>

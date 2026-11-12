@@ -450,6 +450,13 @@ const poiRows = placedPois.map((p) => ({ point: p.name, km: p.km, elevation: nea
     margin-block-start: var(--tram-sys-space-4);
   }
 
+  /* Next to a 3D view the chart yields to the height of the screen, so the figures above it are never cut. */
+  @media (width >= 48rem) {
+    [data-compact] .chart {
+      grid-template-rows: auto clamp(8rem, 26dvh, 20rem) var(--tram-sys-space-6);
+    }
+  }
+
   @media (width < 48rem) {
     .x [data-minor] {
       display: none;

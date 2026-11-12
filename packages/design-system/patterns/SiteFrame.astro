@@ -1,0 +1,28 @@
+---
+---
+
+<!-- The frame of a page: the page margin, the header on top, the content, the footer at the bottom. -->
+<div class="frame">
+  <slot name="header" />
+  <main class="main"><slot /></main>
+  <slot name="footer" />
+</div>
+
+<style>
+  .frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    min-block-size: 100dvh;
+    padding-inline: var(--tram-sys-grid-margin);
+  }
+
+  .main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--tram-sys-space-9);
+    min-inline-size: 0;
+    padding-block: var(--tram-sys-space-7) var(--tram-sys-space-10);
+  }
+</style>

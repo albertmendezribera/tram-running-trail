@@ -1,0 +1,18 @@
+---
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { ROUTES, visible } from '../../../content';
+import Site from '../../../layouts/Site.astro';
+import RouteList from '../../../sections/RouteList.astro';
+
+const routes = visible(ROUTES);
+---
+
+<Site title="Rutes" description="Rutes reals per recórrer en 3D, amb el perfil, les pujades i les xifres de cada una.">
+  <Stack gap={4}>
+    <Heading level={1} size="lg" kicker="Tracks reals">Rutes</Heading>
+    <Text size="lg" measure>Cada ruta surt d'un GPX: se'n pot fer el vol sobre el terreny, veure'n el perfil i llegir-ne les xifres.</Text>
+  </Stack>
+  <RouteList routes={routes} />
+</Site>

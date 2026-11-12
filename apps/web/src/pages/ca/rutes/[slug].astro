@@ -1,0 +1,29 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { describeRoute } from '@tram/design-system/patterns/route-description.ts';
+import { summarize } from '@tram/design-system/patterns/elevation.ts';
+import { ICGC_CREDIT, ROUTES, visible } from '../../../content';
+import Site from '../../../layouts/Site.astro';
+import RouteExperience from '../../../sections/RouteExperience.astro';
+import RouteSheet from '../../../sections/RouteSheet.astro';
+
+export const getStaticPaths = (() => visible(ROUTES).map((route) => ({ params: { slug: route.slug }, props: { route } }))) satisfies GetStaticPaths;
+
+const { route } = Astro.props;
+const summary = summarize(route.profile);
+// A track says how much it climbs, not what is underfoot: a hilly route takes the mountain mode, and nothing is claimed about asphalt.
+const terrain = summary.gainM / Math.max(1, summary.distanceKm) >= 15 ? 'trail' : 'mixed';
+const sentences = describeRoute(route.profile);
+---
+
+<Site title={`Ruta de ${route.name}`} description={sentences.join(' ')} terrain={terrain} credits={[route.credit, ICGC_CREDIT]}>
+  <Stack gap={4}>
+    <Heading level={1} size="lg" kicker={`Ruta · ${route.place}`}>{route.name}</Heading>
+    <Text size="lg" measure>{sentences[0]} Fes scroll per recórrer-la, o salta directament al full de resultats.</Text>
+  </Stack>
+  <RouteExperience route={route} />
+  <RouteSheet route={route} />
+</Site>

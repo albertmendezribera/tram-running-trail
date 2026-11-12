@@ -1,0 +1,92 @@
+---
+import ThemeToggle from '../interactive/ThemeToggle.astro';
+import type { Locale } from '@tram/formats';
+
+export interface Props {
+  /** Home of the site in this language. */
+  home: string;
+  links: ReadonlyArray<{ href: string; label: string }>;
+  /** Path of the page being shown: the link that leads to it, or to its section, is marked. */
+  current: string;
+  locale?: Locale;
+}
+
+const NAV: Record<Locale, string> = { ca: 'Principal', es: 'Principal', en: 'Main' };
+const { home, links, current, locale = 'ca' } = Astro.props;
+const active = (href: string): boolean => current === href || (href !== home && current.startsWith(href));
+---
+
+<!-- The top of every page: an inked bar, edge to edge. It wears the night theme in both themes. -->
+<header class="header" data-theme="night">
+  <a class="brand" href={home} data-type="display-sm" aria-label="TRAM, inici">TRAM</a>
+  <nav class="nav" aria-label={NAV[locale]}>
+    {links.map((l) => <a class="link" data-type="text-sm" href={l.href} aria-current={active(l.href) ? 'page' : undefined}>{l.label}</a>)}
+  </nav>
+  <ThemeToggle locale={locale} />
+</header>
+
+<style>
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--tram-sys-space-2) var(--tram-sys-space-6);
+    margin-inline: calc(var(--tram-sys-grid-margin) * -1);
+    padding: var(--tram-sys-space-3) var(--tram-sys-grid-margin);
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .brand {
+    color: inherit;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+
+  .nav {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    gap: var(--tram-sys-space-2) var(--tram-sys-space-5);
+  }
+
+  .link {
+    padding-block: var(--tram-sys-space-2);
+    color: inherit;
+    text-decoration-color: transparent;
+    text-decoration-thickness: var(--tram-sys-line-mark);
+    text-underline-offset: 0.4em;
+    transition: text-decoration-color var(--tram-sys-motion-quick) var(--tram-sys-motion-ease-standard);
+  }
+
+  .link:hover {
+    text-decoration-color: currentcolor;
+  }
+
+  /* The section the reader is in carries the accent: it is the active thing in the bar. */
+  .link[aria-current] {
+    font-weight: 700;
+    text-decoration-color: var(--tram-sys-accent);
+  }
+
+  /* On a phone the sections take their own line under the name, so the bar never wraps by chance. */
+  @media (width < 40rem) {
+    .header {
+      justify-content: space-between;
+    }
+
+    .nav {
+      flex: none;
+      order: 1;
+      inline-size: 100%;
+      padding-block-start: var(--tram-sys-space-1);
+      border-block-start: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+    }
+  }
+
+  .brand:focus-visible,
+  .link:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+</style>

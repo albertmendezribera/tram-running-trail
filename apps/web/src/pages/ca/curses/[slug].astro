@@ -1,0 +1,66 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { formatDate } from '@tram/formats';
+import Bib from '@tram/design-system/patterns/Bib.astro';
+import Facts from '@tram/design-system/patterns/Facts.astro';
+import { describeRoute } from '@tram/design-system/patterns/route-description.ts';
+import TerrainTag from '@tram/design-system/patterns/TerrainTag.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Split from '@tram/design-system/primitives/Split.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { ICGC_CREDIT, RACES, routeOf, SAMPLE_NOTICE, visible } from '../../../content';
+import Site from '../../../layouts/Site.astro';
+import RouteExperience from '../../../sections/RouteExperience.astro';
+import RouteSheet from '../../../sections/RouteSheet.astro';
+
+export const getStaticPaths = (() => visible(RACES).map((race) => ({ params: { slug: race.slug }, props: { race } }))) satisfies GetStaticPaths;
+
+const { race } = Astro.props;
+const course = race.courses[0]!;
+const route = routeOf(course.route);
+const sentences = describeRoute(route.profile);
+const STATUS = { scheduled: 'Programada', cancelled: 'Cancel·lada', postponed: 'Ajornada', finished: 'Disputada' } as const;
+const facts = [
+  { label: 'Data', value: formatDate(race.edition.startDate, 'ca') },
+  { label: 'Lloc', value: race.place },
+  { label: 'Estat', value: STATUS[race.edition.status] },
+  { label: 'Organitza', value: race.organizer },
+  { label: 'Inscripció', value: race.edition.registrationUrl ? 'Oberta' : null, ...(race.edition.registrationUrl ? { href: race.edition.registrationUrl } : {}) },
+];
+// schema.org only for races that exist: a sample race is described to nobody (CLAUDE.md 11).
+const jsonLd = race.isPlaceholder
+  ? undefined
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'SportsEvent',
+      name: race.name,
+      startDate: race.edition.startDate,
+      eventStatus: `https://schema.org/Event${{ scheduled: 'Scheduled', cancelled: 'Cancelled', postponed: 'Postponed', finished: 'Scheduled' }[race.edition.status]}`,
+      location: { '@type': 'Place', name: race.place, address: { '@type': 'PostalAddress', addressRegion: race.region, addressCountry: race.countryCode } },
+      ...(race.organizer ? { organizer: { '@type': 'Organization', name: race.organizer } } : {}),
+    };
+---
+
+<Site
+  title={race.name}
+  description={`${race.name}, ${race.place}. ${sentences.join(' ')}`}
+  terrain={race.terrain}
+  placeholder={race.isPlaceholder}
+  credits={[route.credit, ICGC_CREDIT]}
+  notice={race.isPlaceholder ? SAMPLE_NOTICE : undefined}
+  jsonLd={jsonLd}
+>
+  <Split ratio="3:2">
+    <Stack gap={5}>
+      <Heading level={1} size="lg" kicker={`Cursa · ${course.name}`}>{race.name}</Heading>
+      <Cluster><TerrainTag terrain={race.terrain} /></Cluster>
+      <Text size="lg" measure>{sentences[0]} Fes scroll per recórrer-la quilòmetre a quilòmetre.</Text>
+      <Facts facts={facts} />
+    </Stack>
+    <Bib slot="aside" number={race.edition.bib} terrain={race.terrain} label={race.name} />
+  </Split>
+  <RouteExperience route={route} />
+  <RouteSheet route={route} />
+</Site>

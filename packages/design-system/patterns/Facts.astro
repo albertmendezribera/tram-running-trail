@@ -1,0 +1,83 @@
+---
+import { ABSENT, absentLabel, type Locale } from '@tram/formats';
+
+export interface Fact {
+  label: string;
+  /** Null or undefined shows the fact as absent: it is never guessed. */
+  value: string | null | undefined;
+  /** Makes the value a link. */
+  href?: string;
+}
+
+export interface Props {
+  facts: readonly Fact[];
+  locale?: Locale;
+}
+
+const { facts, locale = 'ca' } = Astro.props;
+---
+
+<!-- Short facts in words, label and value: date, place, status. Figures with units go in StatBlock. -->
+<dl class="facts">
+  {
+    facts.map((f) => (
+      <div class="fact">
+        <dt class="label" data-type="text-xs">{f.label}</dt>
+        <dd class="value" data-type="text-md">
+          {f.value === null || f.value === undefined ? (
+            <><span aria-hidden="true">{ABSENT}</span><span class="hidden">{absentLabel(locale)}</span></>
+          ) : f.href ? (
+            <a class="link" href={f.href}>{f.value}</a>
+          ) : (
+            f.value
+          )}
+        </dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--tram-sys-space-12) * 1.5)), 1fr));
+    gap: 0 var(--tram-sys-grid-gutter);
+    margin: 0;
+    border-block-start: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+  }
+
+  .fact {
+    display: grid;
+    align-content: start;
+    gap: var(--tram-sys-space-1);
+    padding-block: var(--tram-sys-space-3);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+  }
+
+  .label {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .value {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .link {
+    color: inherit;
+    text-underline-offset: 0.2em;
+  }
+
+  .link:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .hidden {
+    position: absolute;
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-line-hairline);
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+</style>

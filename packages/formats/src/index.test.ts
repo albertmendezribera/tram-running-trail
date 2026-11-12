@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { ABSENT, absentLabel, formatMeasure, formatMeasureParts, formatNumber } from './index.ts';
+import { ABSENT, absentLabel, formatDate, formatMeasure, formatMeasureParts, formatNumber } from './index.ts';
 
 const clean = (s: string): string => s.replaceAll(' ', ' ');
 
@@ -55,5 +55,18 @@ describe('formatMeasure', () => {
 
   it('labels the absent value for screen readers', () => {
     assert.equal(absentLabel('ca'), 'Sense dada');
+  });
+});
+
+describe('formatDate', () => {
+  it('writes a calendar date in words, the same day everywhere', () => {
+    assert.equal(formatDate('2027-03-14', 'ca'), '14 de març del 2027');
+    assert.equal(formatDate('2027-03-14', 'es'), '14 de marzo de 2027');
+    assert.equal(formatDate('2027-03-14', 'en'), 'March 14, 2027');
+  });
+
+  it('shows a missing or malformed date as absent', () => {
+    assert.equal(formatDate(null, 'ca'), '—');
+    assert.equal(formatDate('14/03/2027', 'ca'), '—');
   });
 });

@@ -1,6 +1,7 @@
 /** Ways of seeing the terrain. Each loads its own engine, and only when chosen. */
 export type ViewerMode = 'real' | 'map';
-export const MODE_FIELD = 'm2-viewer-mode';
+/** Name of the switch's radio group. One route viewer per page. */
+export const MODE_FIELD = 'route-view';
 const MODE_KEY = 'tram-viewer-mode';
 
 /** The photograph costs megabytes: with data saving on, the drawn map comes first. */

@@ -71,3 +71,12 @@ export function formatMeasure(value: number | null | undefined, unit: Unit, loca
   if (!parts) return ABSENT;
   return parts.unit ? `${parts.value}${NBSP}${parts.unit}` : parts.value;
 }
+
+/**
+ * A calendar date in words, e.g. "14 de març del 2027". Takes an ISO date
+ * (`2027-03-14`) and reads it as that day everywhere: no time zone can move it.
+ */
+export function formatDate(iso: string | null | undefined, locale: Locale): string {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return ABSENT;
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${iso}T00:00:00Z`));
+}

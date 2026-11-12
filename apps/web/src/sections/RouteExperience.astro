@@ -1,0 +1,32 @@
+---
+import RouteScroller from '@tram/design-system/interactive/RouteScroller.astro';
+import { ICGC_CREDIT, type Route } from '../content';
+import { MODE_FIELD } from '../islands/viewer-mode';
+
+export interface Props {
+  route: Route;
+  /** Id of the 3D viewer. One per page. */
+  id?: string;
+}
+
+const { route, id = 'route-viewer' } = Astro.props;
+---
+
+<!-- M2, "Recórrer el tram": the route run with the scroll, with its 3D view in two modes. -->
+<div data-route-viewer={route.slug}>
+  <RouteScroller
+    points={route.profile}
+    name={route.name}
+    viewer={{
+      id,
+      label: `Vol en 3D pel recorregut de ${route.name}`,
+      credit: ICGC_CREDIT,
+      grades: true,
+      modes: { name: MODE_FIELD, legend: 'Com es veu el terreny', value: 'real', options: [{ value: 'real', label: 'Realista' }, { value: 'map', label: 'Cartogràfic' }] },
+    }}
+  />
+</div>
+
+<script>
+  import '../islands/route-viewer-boot.ts';
+</script>

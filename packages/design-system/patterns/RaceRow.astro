@@ -1,0 +1,171 @@
+---
+import { formatNumber, type Locale } from '@tram/formats';
+import Icon from '../primitives/Icon.astro';
+import Measure from '../primitives/Measure.astro';
+import { areaPath, createPlot, linePath, type ProfilePoint } from './elevation.ts';
+import TerrainTag from './TerrainTag.astro';
+
+export interface Props {
+  href: string;
+  name: string;
+  /** Where it is run. */
+  place: string;
+  /** Left out when the surface is not known: a track alone does not say what is underfoot. */
+  terrain?: 'road' | 'trail' | 'mixed' | undefined;
+  /** ISO date of the start, e.g. `2027-03-14`. */
+  date?: string;
+  distanceKm: number | null;
+  gainM: number | null;
+  /** Draws the route's silhouette at the end of the row, all rows at the same vertical scale. */
+  profile?: readonly ProfilePoint[];
+  /** Metres of elevation the silhouette box stands for. The same for every row of a list. */
+  scaleM?: number;
+  locale?: Locale;
+}
+
+const MONTHS: Record<Locale, string[]> = {
+  ca: ['gen.', 'febr.', 'març', 'abr.', 'maig', 'juny', 'jul.', 'ag.', 'set.', 'oct.', 'nov.', 'des.'],
+  es: ['ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sept.', 'oct.', 'nov.', 'dic.'],
+  en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+};
+
+const { href, name, place, terrain, date, distanceKm, gainM, profile, scaleM, locale = 'ca' } = Astro.props;
+const [year, month, day] = date ? date.split('-').map(Number) : [];
+let silhouette: { area: string; line: string } | undefined;
+if (profile && profile.length > 1) {
+  const low = Math.min(...profile.map((p) => p[1]));
+  const span = Math.max(scaleM ?? 0, Math.max(...profile.map((p) => p[1])) - low, 1);
+  const plot = createPlot(profile, [low, low + span], 240, 60);
+  silhouette = { area: areaPath(profile, plot), line: linePath(profile, plot) };
+}
+---
+
+<!-- A line of a calendar, as in a results sheet: not a card in a grid (6.4). -->
+<a class="row" href={href} data-terrain={terrain} data-dated={date ? '' : undefined}>
+  {
+    date && (
+      <time class="date" datetime={date}>
+        <span class="day" data-type="display-md" data-numeric="tabular">{formatNumber(day!, locale, 0)}</span>
+        <span class="month" data-type="text-xs">{`${MONTHS[locale][month! - 1]} ${year}`}</span>
+      </time>
+    )
+  }
+  <span class="what">
+    <span class="name" data-type="display-sm">{name}</span>
+    <span class="place" data-type="text-sm">{place}</span>
+  </span>
+  {terrain && <span class="tag"><TerrainTag terrain={terrain} locale={locale} /></span>}
+  <span class="figures">
+    <Measure value={distanceKm} unit="km" locale={locale} type="data-lg" />
+    <Measure value={gainM} unit="m-gain" locale={locale} type="data-lg" />
+  </span>
+  {
+    silhouette && (
+      <svg class="silhouette" viewBox="0 0 240 60" preserveAspectRatio="none" aria-hidden="true">
+        <path class="area" d={silhouette.area} />
+        <path class="line" d={silhouette.line} />
+      </svg>
+    )
+  }
+  <span class="go"><Icon name="arrow-right" /></span>
+</a>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'what go' 'tag tag' 'figures figures' 'silhouette silhouette';
+    gap: var(--tram-sys-space-3) var(--tram-sys-space-4);
+    align-items: center;
+    padding-block: var(--tram-sys-space-5);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    color: var(--tram-sys-text);
+    text-decoration: none;
+    transition: background-color var(--tram-sys-motion-quick) var(--tram-sys-motion-ease-standard);
+  }
+
+  .row:hover {
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .row:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .row[data-dated] {
+    grid-template-areas: 'date go' 'what what' 'tag tag' 'figures figures' 'silhouette silhouette';
+  }
+
+  .date {
+    grid-area: date;
+    display: flex;
+    align-items: baseline;
+    gap: var(--tram-sys-space-2);
+  }
+
+  .what {
+    grid-area: what;
+    display: grid;
+    gap: var(--tram-sys-space-1);
+    min-inline-size: 0;
+  }
+
+  .place,
+  .month {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .tag {
+    grid-area: tag;
+    justify-self: start;
+  }
+
+  .figures {
+    grid-area: figures;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tram-sys-space-2) var(--tram-sys-space-6);
+  }
+
+  .silhouette {
+    grid-area: silhouette;
+    inline-size: 100%;
+    block-size: var(--tram-sys-space-9);
+  }
+
+  .area {
+    fill: var(--tram-sys-surface-tint);
+  }
+
+  .line {
+    fill: none;
+    stroke: var(--tram-sys-data-primary);
+    stroke-width: var(--tram-sys-line-strong);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .go {
+    grid-area: go;
+    display: grid;
+  }
+
+  @media (width >= 64rem) {
+    .row,
+    .row[data-dated] {
+      grid-template-columns: minmax(0, 2fr) calc(var(--tram-sys-space-12) * 1.5) minmax(0, 1.5fr) minmax(0, 1.5fr) auto;
+      grid-template-areas: 'what tag figures silhouette go';
+      column-gap: var(--tram-sys-space-6);
+    }
+
+    .row[data-dated] {
+      grid-template-columns: calc(var(--tram-sys-space-12) * 1.25) minmax(0, 2fr) calc(var(--tram-sys-space-12) * 1.5) minmax(0, 1.5fr) minmax(0, 1.5fr) auto;
+      grid-template-areas: 'date what tag figures silhouette go';
+    }
+
+    .date {
+      display: grid;
+      gap: 0;
+    }
+  }
+</style>

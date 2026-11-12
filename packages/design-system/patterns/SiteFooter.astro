@@ -1,0 +1,45 @@
+---
+export interface Props {
+  /** Sources of what the page shows: every figure says where it comes from. */
+  credits?: readonly string[] | undefined;
+  /** Shown when the page mixes real data with sample data. */
+  notice?: string | undefined;
+}
+
+const { credits = [], notice } = Astro.props;
+---
+
+<footer class="footer" data-type="text-xs">
+  {notice && <p class="notice">{notice}</p>}
+  {credits.length > 0 && <ul class="credits">{credits.map((c) => <li>{c}</li>)}</ul>}
+  <p class="brand">TRAM · Running &amp; Trail</p>
+</footer>
+
+<style>
+  .footer {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+    padding-block: var(--tram-sys-space-5) var(--tram-sys-space-7);
+    border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+    color: var(--tram-sys-text-muted);
+  }
+
+  .notice,
+  .brand,
+  .credits {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Sample data is said out loud, in the colour of text: it is information, not small print. */
+  .notice {
+    color: var(--tram-sys-text);
+    font-weight: 700;
+  }
+
+  .credits {
+    display: grid;
+    gap: var(--tram-sys-space-1);
+  }
+</style>

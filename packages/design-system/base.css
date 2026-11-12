@@ -1,0 +1,16 @@
+/*
+ * The few rules a TRAM page needs on its root elements. Everything else is
+ * in components. Import it after tokens.css.
+ */
+@layer tram.base {
+  body {
+    margin: 0;
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface);
+  }
+
+  /* No default monospace (CLAUDE.md 2.4): its line boxes made the baselines unstable (E17). */
+  code {
+    font: inherit;
+  }
+}

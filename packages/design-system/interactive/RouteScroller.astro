@@ -43,9 +43,10 @@ const chapters = climbs.map((c, i) => ({
 }));
 
 // Silhouette fitted to its own range: the route as a shape, as on the catalogue cover.
-const span = summary.highest[1] - summary.lowest[1];
+// …but never stretched: under 100 m of relief the box stands for 100 m, so a flat route is drawn flat (E03).
+const span = Math.max(100, summary.highest[1] - summary.lowest[1]);
 const low = summary.lowest[1] - span * 0.15;
-const high = summary.highest[1] + span * 0.05;
+const high = summary.lowest[1] + span * 1.05;
 const plot = createPlot(points, [low, high], 1000, 300);
 const area = areaPath(points, plot);
 const line = linePath(points, plot);

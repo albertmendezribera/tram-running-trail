@@ -1,0 +1,32 @@
+---
+import RaceRow from '@tram/design-system/patterns/RaceRow.astro';
+import { summarize } from '@tram/design-system/patterns/elevation.ts';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import type { Route } from '../content';
+
+export interface Props {
+  routes: readonly Route[];
+}
+
+const { routes } = Astro.props;
+const rows = routes.map((route) => ({ route, summary: summarize(route.profile) }));
+const scale = Math.max(...rows.map((r) => r.summary.highest[1] - r.summary.lowest[1]), 1);
+---
+
+<Stack gap={0} as="ul">
+  {
+    rows.map(({ route, summary }) => (
+      <li>
+        <RaceRow
+          href={`/ca/rutes/${route.slug}/`}
+          name={route.name}
+          place={route.place}
+          distanceKm={Number(summary.distanceKm.toFixed(2))}
+          gainM={Math.round(summary.gainM)}
+          profile={route.profile}
+          scaleM={scale}
+        />
+      </li>
+    ))
+  }
+</Stack>

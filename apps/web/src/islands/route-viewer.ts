@@ -1,28 +1,46 @@
-// The real Calonge run for the M2 prototype: terrain and route built by
-// `@tram/terrain-pipeline` from the GPX and the ICGC 5 m elevation model.
+// Mounts the 3D view of a route of the content folder: its terrain and track
+// were built by `@tram/terrain-pipeline` from the GPX and the ICGC elevation model.
 import { formatMeasure, formatNumber } from '@tram/formats';
 import type { TramRouteScroller } from '@tram/design-system/interactive/route-scroller.ts';
 import type { Scene, SceneContext } from '@tram/design-system/interactive/viewer-3d-shell.ts';
 import { elevationAt, gradeBands, summarize } from '@tram/design-system/patterns/elevation.ts';
 import { toLngLat } from '@tram/terrain-pipeline/utm';
+import type { TerrainMeta } from '../three/route-viewer/heights.ts';
 import type { RouteMark, RouteViewer } from '../three/route-viewer/scene.ts';
-import route from './terrain/calonge/route.json';
-import terrain from './terrain/calonge/terrain.json';
-import terrainUrl from './terrain/calonge/terrain.webp?url';
 import { MODE_FIELD, preferredMode, rememberMode, type ViewerMode } from './viewer-mode.ts';
 
+// Each route's files load only when its page asks for them.
+const TERRAINS = import.meta.glob<TerrainMeta & { x0: number; y0: number }>('../content/routes/*/terrain.json', { import: 'default' });
+const TRACKS = import.meta.glob<Array<[number, number]>>('../content/routes/*/route.json', { import: 'default' });
+const IMAGES = import.meta.glob<string>('../content/routes/*/terrain.webp', { query: '?url', import: 'default' });
+
+interface RouteFiles {
+  terrain: TerrainMeta & { x0: number; y0: number };
+  track: Array<[number, number]>;
+  terrainUrl: string;
+}
+
+async function filesOf(slug: string): Promise<RouteFiles> {
+  const at = (ext: string): string => `../content/routes/${slug}/${ext}`;
+  const [terrain, track, terrainUrl] = await Promise.all([TERRAINS[at('terrain.json')]?.(), TRACKS[at('route.json')]?.(), IMAGES[at('terrain.webp')]?.()]);
+  if (!terrain || !track || !terrainUrl) throw new Error(`no terrain for the route "${slug}"`);
+  return { terrain, track, terrainUrl };
+}
+
 /** Course markers, computed from the profile: each kilometre, start, finish and the highest point. */
-function marks(scroller: TramRouteScroller): RouteMark[] {
+function marks(scroller: TramRouteScroller, track: Array<[number, number]>): RouteMark[] {
   const { points, start, finish, locale } = scroller.route;
   const first = points[0]![0];
   const length = points.at(-1)![0] - first;
   const out: RouteMark[] = [];
   for (let km = Math.ceil(first + 0.5); km < first + length - 0.3; km++) out.push({ share: (km - first) / length, text: formatNumber(km, locale, 0), kind: 'km' });
-  const [topKm, topM] = summarize(points).highest;
-  out.push({ share: (topKm - first) / length, text: `Cim · ${formatMeasure(topM, 'm', locale)}`, kind: 'place' });
+  // A summit is named only where there is one: on a flat route the highest point is not a place.
+  const summary = summarize(points);
+  const [topKm, topM] = summary.highest;
+  if (topM - summary.lowest[1] >= 100) out.push({ share: (topKm - first) / length, text: `Cim · ${formatMeasure(topM, 'm', locale)}`, kind: 'place' });
   // A loop starts and ends at the same place: one label, not two on top of each other.
-  const [a, b] = [route[0]!, route.at(-1)!];
-  if (Math.hypot(a[0]! - b[0]!, a[1]! - b[1]!) < 80) out.push({ share: 0, text: `${start} · ${finish}`, kind: 'place' });
+  const [a, b] = [track[0]!, track.at(-1)!];
+  if (Math.hypot(a[0] - b[0], a[1] - b[1]) < 80) out.push({ share: 0, text: `${start} · ${finish}`, kind: 'place' });
   else out.push({ share: 0, text: start, kind: 'place' }, { share: 1, text: finish, kind: 'place' });
   return out;
 }
@@ -35,10 +53,11 @@ function grades(scroller: TramRouteScroller): Array<{ from: number; to: number; 
   return gradeBands(points).map((band) => ({ from: (band.from - first) / length, to: (band.to - first) / length, level: band.level }));
 }
 
-async function start(mode: ViewerMode, context: SceneContext, scroller: TramRouteScroller): Promise<RouteViewer> {
+async function start(mode: ViewerMode, context: SceneContext, scroller: TramRouteScroller, files: RouteFiles): Promise<RouteViewer> {
+  const { terrain, track, terrainUrl } = files;
   const shared = {
     share: scroller.share,
-    marks: marks(scroller),
+    marks: marks(scroller, track),
     grades: grades(scroller),
     onStep: (direction: -1 | 1) => scroller.stepKm(direction),
     onPoint: (share: number | null) => scroller.preview(share),
@@ -46,7 +65,7 @@ async function start(mode: ViewerMode, context: SceneContext, scroller: TramRout
   };
   if (mode === 'map') {
     const { mountRouteViewer } = await import('../three/route-viewer/scene.ts');
-    return mountRouteViewer(context, { ...shared, terrainUrl, terrain, route: route as Array<[number, number]> });
+    return mountRouteViewer(context, { ...shared, terrainUrl, terrain, route: track });
   }
   const { mountRealRouteViewer } = await import('../map/route-viewer/scene.ts');
   const { points } = scroller.route;
@@ -54,7 +73,7 @@ async function start(mode: ViewerMode, context: SceneContext, scroller: TramRout
   const length = points.at(-1)![0] - first;
   return mountRealRouteViewer(context, {
     ...shared,
-    path: (route as Array<[number, number]>).map(([x, y]) => toLngLat(terrain.x0 + x, terrain.y0 + y)),
+    path: track.map(([x, y]) => toLngLat(terrain.x0 + x, terrain.y0 + y)),
     elevationAt: (share) => elevationAt(points, first + share * length),
   });
 }
@@ -63,11 +82,12 @@ async function start(mode: ViewerMode, context: SceneContext, scroller: TramRout
  * The scroll runs the route: the camera follows the scroller, and both mark what
  * the other points at. The mode switch swaps the engine without losing the place.
  */
-export async function mount(context: SceneContext, scroller: TramRouteScroller): Promise<Scene> {
+export async function mount(context: SceneContext, scroller: TramRouteScroller, slug: string): Promise<Scene> {
+  const files = await filesOf(slug);
   // The switch is the truth: it may have been used before the 3D was asked for.
   const chosen = (): ViewerMode => (scroller.querySelector<HTMLInputElement>(`input[name="${MODE_FIELD}"]:checked`)?.value as ViewerMode | undefined) ?? preferredMode();
   let mode = chosen();
-  let viewer = await start(mode, context, scroller);
+  let viewer = await start(mode, context, scroller, files);
   let active = true;
   const on = <T,>(target: EventTarget, type: string, handle: (detail: T, event: Event) => void): void =>
     target.addEventListener(type, (event) => handle((event as CustomEvent<T>).detail, event), { signal: context.signal });
@@ -85,7 +105,7 @@ export async function mount(context: SceneContext, scroller: TramRouteScroller):
         const next = chosen();
         try {
           // The new view is ready before the old one goes: no empty frame in between.
-          const fresh = await start(next, context, scroller);
+          const fresh = await start(next, context, scroller, files);
           viewer.dispose();
           viewer = fresh;
           mode = next;

@@ -56,3 +56,27 @@ describe('planTiles', () => {
     assert.ok(tiles.every((t) => t.cols * t.rows <= 35800));
   });
 });
+
+it('plate: a cone gives closed contours around its summit and the track with its kilometre marks', async () => {
+  const { buildPlate, contourLines, simplify } = await import('./plate.ts');
+  const cols = 60;
+  const rows = 40;
+  const heights = new Float32Array(cols * rows);
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) heights[r * cols + c] = Math.max(0, 100 - Math.hypot(c - 30, r - 20) * 5);
+  const ring = contourLines(heights, cols, rows, 50);
+  assert.equal(ring.length, 1);
+  assert.deepEqual(ring[0]![0], ring[0]!.at(-1));
+  for (const [x, y] of ring[0]!) assert.ok(Math.abs(Math.hypot(x - 30, y - 20) - 10) < 0.5);
+  const lean = simplify(ring[0]!, 0.4);
+  assert.ok(lean.length < ring[0]!.length && lean.length >= 8);
+  for (const [x, y] of lean) assert.ok(Math.abs(Math.hypot(x - 30, y - 20) - 10) < 0.5);
+
+  // A straight track of 3 km, west to east, 100 m above the south edge.
+  const plate = buildPlate({ heights, cols, rows, cell: 100, route: [[500, 100], [3500, 100]], distanceKm: 3 });
+  assert.equal(plate.intervalM, 10);
+  assert.ok(plate.contours.length >= 8);
+  assert.ok(plate.contours.some((c) => c.major && c.elevation === 50));
+  assert.deepEqual(plate.start, [5, 39]);
+  assert.deepEqual(plate.finish, [35, 39]);
+  assert.deepEqual(plate.marks, [{ km: 1, x: 15, y: 39 }, { km: 2, x: 25, y: 39 }]);
+});

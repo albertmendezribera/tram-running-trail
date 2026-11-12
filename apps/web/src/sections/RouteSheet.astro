@@ -1,0 +1,66 @@
+---
+import ClimbList from '@tram/design-system/patterns/ClimbList.astro';
+import { kmStretches, summarize } from '@tram/design-system/patterns/elevation.ts';
+import { describeRoute } from '@tram/design-system/patterns/route-description.ts';
+import RoutePlate from '@tram/design-system/patterns/RoutePlate.astro';
+import StatBlock from '@tram/design-system/patterns/StatBlock.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import DataTable from '@tram/design-system/primitives/DataTable.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Split from '@tram/design-system/primitives/Split.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { DEM_CREDIT, type Route } from '../content';
+
+export interface Props {
+  route: Route;
+}
+
+const { route } = Astro.props;
+// Every figure comes from the GPX: distance and elevation only.
+const summary = summarize(route.profile);
+const distance = Number(summary.distanceKm.toFixed(2));
+const gain = Math.round(summary.gainM);
+const stats = [
+  { label: 'Distància', value: distance, unit: 'km' },
+  { label: 'Desnivell positiu', value: gain, unit: 'm-gain', tone: 'grade' },
+  { label: 'Altitud màxima', value: Math.round(summary.highest[1]), unit: 'm' },
+  { label: 'Km-esforç', value: Number((distance + gain / 100).toFixed(1)), unit: 'km-effort' },
+] as const;
+const rows = kmStretches(route.profile).map((r) => ({ km: r.km, gain: Math.round(r.gainM), loss: Math.round(r.lossM), grade: Math.round(r.grade) }));
+---
+
+<!-- The results sheet of a route: its figures, its climbs, its kilometres, and the same thing in words. -->
+<Band tone="tint" title="Full de resultats">
+  <Panel>
+    <StatBlock stats={stats} lead />
+  </Panel>
+  <Split>
+    <Stack gap={6}>
+      <Panel title="El recorregut, en planta">
+        <RoutePlate plate={route.plate} label={route.name} credit={DEM_CREDIT} />
+      </Panel>
+      <Panel title="El recorregut, en paraules">
+        <Stack gap={3}>{describeRoute(route.profile).map((sentence) => <Text measure>{sentence}</Text>)}</Stack>
+      </Panel>
+    </Stack>
+    <Stack gap={6} slot="aside">
+      <Panel title="Pujades">
+        <ClimbList label={`Pujades del recorregut de ${route.name}`} points={route.profile} />
+      </Panel>
+      <Panel>
+      <DataTable
+        caption="Trams per quilòmetre"
+        density="compact"
+        columns={[
+          { key: 'km', label: 'Km', unit: 'km' },
+          { key: 'gain', label: 'D+', unit: 'm-gain' },
+          { key: 'loss', label: 'D−', unit: 'm' },
+          { key: 'grade', label: 'Pendent', diverging: { max: 20, suffix: '%' } },
+        ]}
+        rows={rows}
+      />
+      </Panel>
+    </Stack>
+  </Split>
+</Band>

@@ -6,6 +6,7 @@
   "description": "TRAM design system: DTCG tokens → CSS, ECharts, Three.js and OG targets. Single source of visual truth (CLAUDE.md 6).",
   "exports": {
     "./tokens.css": "./dist/tokens.css",
+    "./base.css": "./base.css",
     "./echarts-theme": "./dist/echarts-theme.ts",
     "./three": "./dist/three.ts",
     "./og": "./dist/og.ts",

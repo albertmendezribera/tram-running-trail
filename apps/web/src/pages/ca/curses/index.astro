@@ -1,0 +1,24 @@
+---
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { RACES, visible } from '../../../content';
+import Site from '../../../layouts/Site.astro';
+import RaceList from '../../../sections/RaceList.astro';
+
+const races = visible(RACES);
+const sample = races.some((r) => r.isPlaceholder);
+---
+
+<Site
+  title="Curses"
+  description="Curses d'asfalt i de muntanya, amb el recorregut en 3D, el perfil i les xifres de cada una."
+  placeholder={sample}
+  notice={sample ? 'Les curses d’aquesta llista són de mostra: els recorreguts són reals, però no s’hi disputa cap cursa.' : undefined}
+>
+  <Stack gap={4}>
+    <Heading level={1} size="lg" kicker="Calendari">Curses</Heading>
+    <Text size="lg" measure>Asfalt i muntanya a la mateixa llista, i tots els perfils a la mateixa escala: una cursa plana es veu plana al costat d'una de muntanya.</Text>
+  </Stack>
+  {races.length > 0 ? <RaceList races={races} /> : <Text tone="muted">Encara no hi ha cap cursa publicada.</Text>}
+</Site>

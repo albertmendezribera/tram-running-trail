@@ -9,7 +9,7 @@ import Text from '@tram/design-system/primitives/Text.astro';
 import VisuallyHidden from '@tram/design-system/primitives/VisuallyHidden.astro';
 import { areaPath, createPlot, linePath } from '@tram/design-system/patterns/elevation.ts';
 import Fiche from '../Fiche.astro';
-import { CALONGE } from '../real-profile';
+import { CALONGE } from '../../content/profiles';
 
 const names = Object.keys(ICONS) as IconName[];
 const plot = createPlot(CALONGE, [0, 340], 1000, 240);

@@ -1,0 +1,48 @@
+---
+import type { Locale } from '@tram/formats';
+import Icon from '../primitives/Icon.astro';
+
+type Terrain = 'road' | 'trail' | 'mixed';
+
+export interface Props {
+  terrain: Terrain;
+  locale?: Locale;
+}
+
+const LABEL: Record<Locale, Record<Terrain, string>> = {
+  ca: { road: 'Asfalt', trail: 'Muntanya', mixed: 'Mixt' },
+  es: { road: 'Asfalto', trail: 'Montaña', mixed: 'Mixto' },
+  en: { road: 'Road', trail: 'Trail', mixed: 'Mixed' },
+};
+
+const { terrain, locale = 'ca' } = Astro.props;
+---
+
+<!-- The terrain is read in the word, the pictogram and the rule under it: never in colour alone (7.3). -->
+<span class="tag" data-terrain={terrain} data-type="text-xs">
+  {terrain !== 'mixed' && <Icon name={terrain} size="sm" />}
+  {LABEL[locale][terrain]}
+</span>
+
+<style>
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tram-sys-space-1);
+    padding-block-end: var(--tram-sys-space-1);
+    border-block-end: var(--tram-sys-line-strong) solid var(--tram-sys-data-primary);
+    color: var(--tram-sys-text);
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* Asphalt is a solid line, like road paint; the mountain a dashed one, like a path on a map. */
+  .tag[data-terrain='trail'] {
+    border-block-end-style: dashed;
+  }
+
+  .tag[data-terrain='mixed'] {
+    border-block-end-style: dotted;
+  }
+</style>

@@ -4,9 +4,12 @@ import { buildShoeSolid, type Mesh, type SolidSpecs } from '@tram/shoe-geometry/
 import * as THREE from 'three/webgpu';
 import { createStage } from '../core/stage.ts';
 import { watchPalette } from '../route-viewer/palette.ts';
+import { buildPhotoShoe, type PhotoShoe } from './photo.ts';
 
 export interface ShoeViewerOptions {
   specs: SolidSpecs;
+  /** The brand's photos and the outline read off them: shown instead of the drawn solid when there. */
+  photo?: PhotoShoe | undefined;
   /** Says where the view is after a turn with the keyboard. */
   announce(degrees: number): string;
 }
@@ -63,18 +66,23 @@ export async function mountShoeViewer({ container, signal, reducedMotion }: Scen
     shoe.add(body);
     if (edges) shoe.add(new THREE.LineSegments(new THREE.EdgesGeometry(geometry, 28), edges));
   };
-  add(solid.plate, materials.plate, 0, null);
-  add(solid.outsole, materials.outsole, 1);
-  add(solid.lugs, materials.outsole, 1, null);
-  add(solid.midsole, materials.midsole, 2);
-  add(solid.insole, materials.insole, 3);
-  add(solid.upper, materials.upper, 4, null);
-  // The upper as a cage of a few lines: a ghost, as in the drawing.
-  const cage = new THREE.BufferGeometry();
-  cage.setAttribute('position', new THREE.BufferAttribute(new Float32Array(solid.upperCage), 3));
-  shoe.add(new THREE.LineSegments(cage, ghostMaterial));
+  const photo = o.photo ? await buildPhotoShoe(o.photo) : undefined;
+  const size = photo ? { lengthMm: o.photo!.model.lengthMm, heightMm: o.photo!.model.heightMm } : solid;
+  if (photo) shoe.add(photo.mesh);
+  else {
+    add(solid.plate, materials.plate, 0, null);
+    add(solid.outsole, materials.outsole, 1);
+    add(solid.lugs, materials.outsole, 1, null);
+    add(solid.midsole, materials.midsole, 2);
+    add(solid.insole, materials.insole, 3);
+    add(solid.upper, materials.upper, 4, null);
+    // The upper as a cage of a few lines: a ghost, as in the drawing.
+    const cage = new THREE.BufferGeometry();
+    cage.setAttribute('position', new THREE.BufferAttribute(new Float32Array(solid.upperCage), 3));
+    shoe.add(new THREE.LineSegments(cage, ghostMaterial));
+  }
   // Centred on its own middle, so it turns in place.
-  shoe.position.set(-solid.lengthMm / 2, -solid.heightMm * 0.42, 0);
+  shoe.position.set(-size.lengthMm / 2, -size.heightMm * 0.42, 0);
   const pivot = new THREE.Group();
   pivot.add(shoe);
   scene.add(pivot);
@@ -94,7 +102,7 @@ export async function mountShoeViewer({ container, signal, reducedMotion }: Scen
       camera.aspect = width / height;
       // Far enough for the whole length at any turn, in a wide or a tall frame.
       const reach = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-      const distance = Math.max((solid.lengthMm * 1.25) / (reach * camera.aspect), (solid.lengthMm * 0.72) / reach);
+      const distance = Math.max((size.lengthMm * 1.25) / (reach * camera.aspect), (size.lengthMm * 0.72) / reach);
       camera.position.set(0, 0, distance);
       camera.lookAt(0, 0, 0);
       camera.updateProjectionMatrix();
@@ -167,6 +175,7 @@ export async function mountShoeViewer({ container, signal, reducedMotion }: Scen
     setActive: (active) => stage.setActive(active),
     dispose() {
       stage.dispose();
+      photo?.dispose();
       scene.traverse((object) => {
         const mesh = object as THREE.Mesh;
         mesh.geometry?.dispose();

@@ -9,7 +9,13 @@ export interface Props {
 
 const { shoe } = Astro.props;
 const { specs } = shoe;
-const data = { specs, turned: 'Sabatilla girada {degrees} graus.' };
+// A photo model exists only where its files do: they are kept out of the repository (brand photos).
+const models = import.meta.glob<object>('../content/shoes-local/*/model.json', { eager: true, import: 'default' });
+const images = import.meta.glob<string>('../content/shoes-local/*/*.webp', { eager: true, import: 'default', query: '?url' });
+const folder = `../content/shoes-local/${shoe.slug}`;
+const model = models[`${folder}/model.json`];
+const photo = model ? { model, lateral: images[`${folder}/lateral.webp`], medial: images[`${folder}/medial.webp`], top: images[`${folder}/top.webp`], heel: images[`${folder}/heel.webp`] } : undefined;
+const data = { specs, turned: 'Sabatilla girada {degrees} graus.', photo };
 ---
 
 <!-- The shoe in 3D, to turn by hand. The profile is its poster; the scene loads when it comes into view. -->
@@ -18,7 +24,9 @@ const data = { specs, turned: 'Sabatilla girada {degrees} graus.' };
   <Viewer3DShell id="shoe-3d" label={`${shoeName(shoe)} en 3D`} ready="Vista 3D a punt. Arrossega o fes servir les fletxes per girar la sabatilla.">
     <ShoeSilhouette slot="poster" specs={specs} />
     <p slot="text" class="note" data-type="text-xs">
-      Arrossega per girar-la; amb el teclat, les fletxes. És un model generat a partir de les mesures, no un escaneig: l'empenya i la forma en planta es dibuixen sense dada.
+      {photo
+        ? `Arrossega per girar-la; amb el teclat, les fletxes. No és un escaneig: són les fotos oficials de ${shoe.brand.name} posades sobre la seva silueta. De costat, de dalt i de darrere és fidel a les fotos; de front i per sota és aproximat.`
+        : 'Arrossega per girar-la; amb el teclat, les fletxes. És un model generat a partir de les mesures, no un escaneig: l\'empenya i la forma en planta es dibuixen sense dada.'}
     </p>
   </Viewer3DShell>
 </div>

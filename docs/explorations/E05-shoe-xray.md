@@ -46,6 +46,16 @@ Els tres camps nous són a la migració `20261112100000_shoe_profile_fields.sql`
 
 Nike Vaporfly 4 (asfalt, placa de carboni) i Hoka Speedgoat 6 (muntanya, tacs). Mesures de laboratori de RunRepeat; xifres declarades de les pàgines de Nike i Hoka; puntuacions de RunRepeat, OutdoorGearLab i Running Shoes Guru, cadascuna a la seva escala. Tot consultat el 12 de novembre de 2026, amb l'enllaç a `apps/web/src/content/shoes.ts`.
 
+## Prototip: el model amb les fotos de la marca
+
+Demanat el mateix dia: una sabatilla que es giri i es vegi com la real, feta a partir de les fotos oficials.
+
+- `apps/web/scripts/photo-model.py` retalla la sabatilla de la foto lateral, de la interior, de la de dalt i de la del taló, i en treu la silueta de costat i en planta.
+- `three/shoe-viewer/photo.ts` dona volum a aquesta silueta (amb l'amplada mesurada de l'avantpeu) i hi posa cada foto des d'on es va fer.
+- Fet per al Nike Vaporfly 4. De costat, de dalt i de darrere és fidel a les fotos; de front i per sota és aproximat, perquè cap foto hi mira de cara. No és un escaneig.
+- **Les fotos són de la marca i no són al repositori.** Viuen a `apps/web/src/content/shoes-local/`, que git no segueix; sense elles el visor mostra el model de mesures. S'han desplegat només a l'entorn de proves, per decisió expressa. `CLAUDE.md` 7.6 diu que no es fan servir fotos de màrqueting de les marques: portar-ho a producció demana el permís de la marca i canviar aquesta regla.
+- El Hoka Speedgoat 6 no té model amb fotos. El retall de l'ombra de sota la sola suposa una sola de color: una sola negra demana un altre criteri.
+
 ## Què no s'ha verificat, i què queda obert
 
 - **No és un escaneig.** La vista 3D és un model generat a partir de les mesures: no té textura, ni el dibuix de la sola, ni l'empenya real. Una vista fotorealista com la d'un escàner 3D és la capa B (E06): cal tenir la sabatilla i escanejar-la. El visor ja té el lloc per a aquest model.

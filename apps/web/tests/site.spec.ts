@@ -289,7 +289,7 @@ test.describe('Route on foot', () => {
     const viewer = scroller.locator('tram-viewer-3d');
     await viewer.scrollIntoViewIfNeeded();
     // The view that was there steps aside for the new one: the canvas with trees is the one to wait for.
-    const canvas = viewer.locator('canvas[data-engine="maplibre"][data-trees]');
+    const canvas = viewer.locator('canvas[data-engine^="three-walk"][data-trees]');
     await expect(canvas).toBeVisible({ timeout: 120_000 });
     await expect(viewer).toHaveAttribute('data-state', 'ready');
     expect(Number(await canvas.getAttribute('data-trees'))).toBeGreaterThan(1000);

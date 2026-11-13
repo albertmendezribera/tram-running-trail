@@ -5,7 +5,7 @@ import type { TramRouteScroller } from '@tram/design-system/interactive/route-sc
 import type { Scene, SceneContext } from '@tram/design-system/interactive/viewer-3d-shell.ts';
 import { elevationAt, gradeBands, summarize } from '@tram/design-system/patterns/elevation.ts';
 import { toLngLat } from '@tram/terrain-pipeline/utm';
-import type { TreeKind } from '../map/route-viewer/trees.ts';
+type TreeKind = 'pine' | 'oak' | 'deciduous' | 'olive';
 import type { TerrainMeta } from '../three/route-viewer/heights.ts';
 import type { RouteMark, RouteViewer } from '../three/route-viewer/scene.ts';
 import { MODE_FIELD, preferredMode, rememberMode, type ViewerMode } from './viewer-mode.ts';
@@ -15,7 +15,9 @@ const TERRAINS = import.meta.glob<TerrainMeta & { x0: number; y0: number }>('../
 const TRACKS = import.meta.glob<Array<[number, number]>>('../content/routes/*/route.json', { import: 'default' });
 const IMAGES = import.meta.glob<string>('../content/routes/*/terrain.webp', { query: '?url', import: 'default' });
 /** What stands along the route (`world-cli`): asked for only by the view from the ground. */
-const WORLDS = import.meta.glob<{ kinds: TreeKind[]; trees: number[]; buildings: Array<{ h: number; rings: number[][] }> }>('../content/routes/*/world.json', { import: 'default' });
+const WORLDS = import.meta.glob<{ kinds: TreeKind[]; trees: number[]; buildings: Array<{ h: number; rings: number[][] }>; land?: { x0: number; y0: number; cols: number; rows: number; cellM: number } }>('../content/routes/*/world.json', { import: 'default' });
+const ORTHOS = import.meta.glob<string>('../content/routes/*/ortho.webp', { query: '?url', import: 'default' });
+const LANDS = import.meta.glob<string>('../content/routes/*/land.png', { query: '?url', import: 'default' });
 
 interface RouteFiles {
   slug: string;
@@ -71,13 +73,20 @@ async function start(mode: ViewerMode, context: SceneContext, scroller: TramRout
     const { mountRouteViewer } = await import('../three/route-viewer/scene.ts');
     return mountRouteViewer(context, { ...shared, terrainUrl, terrain, route: track });
   }
-  const [{ mountRealRouteViewer }, stored] = await Promise.all([import('../map/route-viewer/scene.ts'), mode === 'walk' ? WORLDS[`../content/routes/${files.slug}/world.json`]?.() : undefined]);
-  // Tenths of a metre from the corner of the terrain → longitude and latitude.
-  const place = (x: number, y: number): [number, number] => toLngLat(terrain.x0 + x / 10, terrain.y0 + y / 10);
-  const world = stored && {
-    trees: Array.from({ length: stored.trees.length / 5 }, (_, i): [number, number, number, number, TreeKind] => [...place(stored.trees[i * 5]!, stored.trees[i * 5 + 1]!), stored.trees[i * 5 + 2]! / 10, stored.trees[i * 5 + 3]! / 10, stored.kinds[stored.trees[i * 5 + 4]!] ?? 'oak']),
-    buildings: stored.buildings.map((b) => ({ heightM: b.h, rings: b.rings.map((ring) => Array.from({ length: ring.length / 2 }, (_, i) => place(ring[i * 2]!, ring[i * 2 + 1]!))) })),
-  };
+  if (mode === 'walk') {
+    // The view from the ground: its own scene, with the photograph of the ground and what stands along the route.
+    const at = (file: string): string => `../content/routes/${files.slug}/${file}`;
+    const [{ mountWalkViewer }, stored, orthoUrl, landUrl] = await Promise.all([import('../three/walk-viewer/scene.ts'), WORLDS[at('world.json')]?.(), ORTHOS[at('ortho.webp')]?.(), LANDS[at('land.png')]?.()]);
+    if (!stored || !orthoUrl) throw new Error(`no world for the route "${files.slug}"`);
+    // Stored in tenths of a metre from the corner of the terrain.
+    const world = {
+      trees: Array.from({ length: stored.trees.length / 5 }, (_, i): [number, number, number, TreeKind] => [stored.trees[i * 5]! / 10, stored.trees[i * 5 + 1]! / 10, stored.trees[i * 5 + 2]! / 10, stored.kinds[stored.trees[i * 5 + 4]!] ?? 'oak']),
+      buildings: stored.buildings.map((b) => ({ heightM: b.h, rings: b.rings.map((ring) => Array.from({ length: ring.length / 2 }, (_, i): [number, number] => [ring[i * 2]! / 10, ring[i * 2 + 1]! / 10])) })),
+      land: stored.land,
+    };
+    return mountWalkViewer(context, { ...shared, terrainUrl, terrain, route: track, orthoUrl, landUrl, world });
+  }
+  const { mountRealRouteViewer } = await import('../map/route-viewer/scene.ts');
   const { points } = scroller.route;
   const first = points[0]![0];
   const length = points.at(-1)![0] - first;
@@ -85,8 +94,6 @@ async function start(mode: ViewerMode, context: SceneContext, scroller: TramRout
     ...shared,
     path: track.map(([x, y]) => toLngLat(terrain.x0 + x, terrain.y0 + y)),
     elevationAt: (share) => elevationAt(points, first + share * length),
-    walk: mode === 'walk',
-    world,
   });
 }
 

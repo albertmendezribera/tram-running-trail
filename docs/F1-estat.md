@@ -15,7 +15,7 @@
 | E03 · ruta plana | `docs/explorations/E03-flat-route.md` | Decidida |
 | E05 · radiografia paramètrica | `docs/explorations/E05-shoe-xray.md` | Decidida |
 | Comparador en 3D | mateixa pàgina del comparador | Fet: les dues sabatilles de costat, girant alhora en mirall |
-| Vista «A peu» del visor de rutes (E18) | les fitxes de cursa i de ruta | Feta: edificis del mapa, arbres segons el LiDAR i les cobertes del sòl, càmera baixa. No és la vista per defecte |
+| Vista «A peu» del visor de rutes (E18) | les fitxes de cursa i de ruta | Feta en three.js: terreny amb foto i gra propi, camí, arbres segons el LiDAR i les cobertes del sòl, edificis del mapa, ombres i càmera de tercera persona. No és la vista per defecte |
 | E04 · dispositius de referència | — | **No feta**: cal tenir els dispositius a la mà |
 
 Les dades viuen en fitxers (`apps/web/src/content/`) amb la forma de l'esquema de la base de dades. Una construcció de producció no inclou cap cursa de mostra ni cap sabatilla pendent de revisió legal; l'entorn de proves, sí.

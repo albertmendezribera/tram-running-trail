@@ -30,11 +30,15 @@ const route = JSON.parse(readFileSync(join(dir, 'route.json'), 'utf8')) as Point
 /** The ICGC base map as vector tiles (CC BY 4.0): one zoom has every building and wood. */
 const TILES = 'https://geoserveis.icgc.cat/servei/catalunya/mapa-base2/vt';
 const ZOOM = 14;
-const TREES = { spacingM: 8.5, corridorM: 110, clearanceM: 4 };
+// Six metres clear of the path: the camera of the view from the ground runs along it, under the crowns.
+const TREES = { spacingM: 8.5, corridorM: 110, clearanceM: 6 };
 /** ICGC map services: the tree variables measured by LiDAR (2016-2017, cells of 20 m) and the land-cover map of 2024. */
 const WMS = 'https://geoserveis.icgc.cat/servei/catalunya';
 const CANOPY_CELL_M = 20;
 const COVER_CELL_M = 2;
+/** The photograph of the ground, over the whole terrain of the route, and the kinds of ground near it, as textures. */
+const ORTHO = { url: 'https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wms/service', layer: 'orto', cellM: 2, tile: 1800 };
+const LAND_CELL_M = 4;
 const BUILDING_CORRIDOR_M = 260;
 const KINDS = new Set(['residential', 'industrial', 'greenhouse']);
 
@@ -194,6 +198,39 @@ for (let i = 0; i < route.length; i += 4) for (const d of [-40, 0, 40]) {
 }
 console.log([...near].sort((a, b) => b[1] - a[1]).slice(0, 9).map(([name, n]) => `${n} ${name}`).join(' · '));
 
+// The kinds of ground the view tells apart, from the land-cover map: each gets its own grain up close, and scrub its bushes.
+const GROUND: Array<[RegExp, number]> = [
+  [/boscos densos|ribera/i, 1],
+  [/boscos clars|matollar/i, 2],
+  [/prats|zones verdes/i, 3],
+  [/conreus|horta|vinyes|oliverars|fruiters/i, 4],
+  [/urb|casc|eixample|industrial|vi[àa]ria|ferrovi|residencial/i, 5],
+  [/s[òo]l nu|roquissar|platg/i, 6],
+  [/llacs|rius|mar |humides|embassament/i, 7],
+];
+const groundOf = (name: string | undefined): number => GROUND.find(([pattern]) => name && pattern.test(name))?.[1] ?? 0;
+const step = LAND_CELL_M / COVER_CELL_M;
+const [landCols, landRows] = [Math.floor(land.cols / step), Math.floor(land.rows / step)];
+const kinds = Buffer.alloc(landCols * landRows);
+for (let row = 0; row < landRows; row++) for (let col = 0; col < landCols; col++) kinds[row * landCols + col] = groundOf(legend.get(colourAt(col * step, row * step))) * 30;
+await sharp(kinds, { raw: { width: landCols, height: landRows, channels: 1 } }).png({ compressionLevel: 9 }).toFile(join(dir, 'land.png'));
+
+// The orthophoto over the whole terrain, in the terrain's own coordinates: asked for in pieces the service accepts.
+const [orthoCols, orthoRows] = [(meta.cols * meta.cell) / ORTHO.cellM, (meta.rows * meta.cell) / ORTHO.cellM];
+const pieces: Array<{ input: Buffer; left: number; top: number }> = [];
+for (let top = 0; top < orthoRows; top += ORTHO.tile) {
+  for (let left = 0; left < orthoCols; left += ORTHO.tile) {
+    const [w, h] = [Math.min(ORTHO.tile, orthoCols - left), Math.min(ORTHO.tile, orthoRows - top)];
+    const north = meta.y0 + meta.rows * meta.cell - top * ORTHO.cellM;
+    const west = meta.x0 + left * ORTHO.cellM;
+    const response = await fetch(`${ORTHO.url}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=${ORTHO.layer}&SRS=EPSG:25831&BBOX=${west},${north - h * ORTHO.cellM},${west + w * ORTHO.cellM},${north}&WIDTH=${w}&HEIGHT=${h}&FORMAT=image/jpeg&STYLES=`);
+    if (!response.ok) throw new Error(`ICGC orthophoto: ${response.status}`);
+    pieces.push({ input: Buffer.from(await response.arrayBuffer()), left, top });
+  }
+}
+const ortho = await sharp({ create: { width: orthoCols, height: orthoRows, channels: 3, background: '#000' } }).composite(pieces).webp({ quality: 72, effort: 5 }).toBuffer();
+writeFileSync(join(dir, 'ortho.webp'), ortho);
+
 const tenths = (v: number): number => Math.round(v * 10);
 const buildings = [...cache.values()]
   .flatMap((tile) => tile.buildings)
@@ -204,6 +241,8 @@ const buildings = [...cache.values()]
 const world = {
   attribution: 'Edificis, variables de l’arbrat (LiDAR 2016-2017) i cobertes del sòl (2024): © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0',
   kinds: TREE_KINDS,
+  // Where land.png lies: its south-west corner in metres from the corner of the terrain, and the size of its cells.
+  land: { x0: box.west - meta.x0, y0: box.south - meta.y0, cols: landCols, rows: landRows, cellM: LAND_CELL_M },
   // Tenths of a metre from the south-west corner of the terrain. Trees: x, y, height, elevation of the ground under it, kind (index of `kinds`).
   treeSpacingM: TREES.spacingM,
   treeCorridorM: TREES.corridorM,
@@ -214,4 +253,5 @@ const world = {
 const json = JSON.stringify(world);
 writeFileSync(join(dir, 'world.json'), json + '\n');
 const count = (kind: TreeKind): number => trees.filter((tree) => tree[3] === kind).length;
+console.log(`ortho.webp ${orthoCols}×${orthoRows}, ${(ortho.length / 1024).toFixed(0)} KB · land.png ${landCols}×${landRows}`);
 console.log(`${trees.length} trees (${TREE_KINDS.map((kind) => `${count(kind)} ${kind}`).join(', ')}), ${buildings.length} buildings, world.json ${(json.length / 1024).toFixed(1)} KB`);

@@ -1,11 +1,10 @@
-import { type ExpressionSpecification, type GeoJSONSource, type GeoJSONSourceSpecification, type LayerSpecification, LngLat, Map as MapLibreMap, Marker, setWorkerUrl } from 'maplibre-gl';
+import { type ExpressionSpecification, type GeoJSONSource, LngLat, Map as MapLibreMap, Marker, setWorkerUrl } from 'maplibre-gl';
 // As text, not as a stylesheet of the page: the bundler would otherwise ship it with every page of the site.
 import styles from 'maplibre-gl/dist/maplibre-gl.css?inline';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
 import type { SceneContext } from '@tram/design-system/interactive/viewer-3d-shell.ts';
 import { tramThreeColors, type TramColorName, type TramTerrain } from '@tram/design-system/three';
 import type { RouteMark, RouteViewer } from '../../three/route-viewer/scene.ts';
-import { createTreeLayer, type TreeKind } from './trees.ts';
 
 export interface RealRouteViewerOptions {
   /** Route as longitude and latitude, in order. */
@@ -20,10 +19,6 @@ export interface RealRouteViewerOptions {
   onStep?(direction: -1 | 1): string | void;
   onPoint?(share: number | null): void;
   onPick?(share: number): void;
-  /** The camera runs close behind the runner, near the ground, instead of flying high over the route. */
-  walk?: boolean | undefined;
-  /** What stands along the route: buildings with their height and trees, as longitude and latitude. */
-  world?: { /** Longitude, latitude, height of the tree and elevation of the ground under it, in metres, and its kind. */ trees: ReadonlyArray<readonly [number, number, number, number, TreeKind]>; buildings: ReadonlyArray<{ heightM: number; rings: ReadonlyArray<ReadonlyArray<readonly [number, number]>> }> } | undefined;
 }
 
 /** ICGC services for MapLibre: orthophoto and 5 m terrain, CC BY 4.0, no key. */
@@ -32,11 +27,6 @@ const TERRAIN = 'https://geoserveis.icgc.cat/servei/catalunya/contextmaps-terren
 
 /** Follow camera, in metres: the same flight as the cartographic viewer. */
 const FOLLOW = { back: 420, up: 260, ahead: 0.04 };
-/** From the ground: a few strides behind the runner and just over the trees. */
-const WALK = { back: 88, up: 34, ahead: 0.012 };
-/** The plaster of a wall and the tile of a roof. A photograph sets the palette here, not the tokens. */
-const WALL = '#d8d0c4';
-const ROOF = '#b0694b';
 const EASE_MS = 110;
 const KM_MARK_RANGE = 1800;
 const POINT_RADIUS = 28;
@@ -63,9 +53,7 @@ export async function mountRealRouteViewer({ container, signal, reducedMotion }:
     sheet.textContent = styles;
     document.head.append(sheet);
   }
-  // On foot nothing is stretched: a tree or a house next to a hill made taller would look like a toy.
-  const exaggeration = o.walk ? 1 : Math.min(2.5, Math.max(1, o.exaggeration ?? 1.3));
-  const follow0 = o.walk ? WALK : FOLLOW;
+  const exaggeration = Math.min(2.5, Math.max(1, o.exaggeration ?? 1.3));
 
   // A local frame in metres (east, north, up) keeps the camera maths the same as in the 3D scene.
   const [lng0, lat0] = o.path[0]!;
@@ -97,22 +85,6 @@ export async function mountRealRouteViewer({ container, signal, reducedMotion }:
   const color = (name: TramColorName): string => `#${tramThreeColors.night[terrainMode][name].hex.toString(16).padStart(6, '0')}`;
   const point = (p: Vec) => ({ type: 'Feature' as const, properties: {}, geometry: { type: 'Point' as const, coordinates: toLngLat(p).toArray() } });
 
-  // What stands along the route: the buildings as prisms of their mapped height on the terrain.
-  // The trees are meshes of their own (trees.ts), added once the map is there.
-  const worldSources: Record<string, GeoJSONSourceSpecification> = {};
-  const worldLayers: LayerSpecification[] = [];
-  if (o.world) {
-    worldSources['buildings'] = {
-      type: 'geojson',
-      data: { type: 'FeatureCollection', features: o.world.buildings.map((b) => ({ type: 'Feature' as const, properties: { top: b.heightM }, geometry: { type: 'Polygon' as const, coordinates: b.rings.map((ring) => ring.map(([lng, lat]) => [lng, lat])) } })) },
-    };
-    worldLayers.push(
-      { id: 'buildings', type: 'fill-extrusion', source: 'buildings', paint: { 'fill-extrusion-color': WALL, 'fill-extrusion-height': ['get', 'top'], 'fill-extrusion-vertical-gradient': true } },
-      // A slab of tile on each: from above a town is its roofs.
-      { id: 'roofs', type: 'fill-extrusion', source: 'buildings', paint: { 'fill-extrusion-color': ROOF, 'fill-extrusion-base': ['get', 'top'], 'fill-extrusion-height': ['+', ['get', 'top'], 0.5], 'fill-extrusion-vertical-gradient': false } },
-    );
-  }
-
   const host = document.createElement('div');
   host.style.cssText = 'position:absolute;inset:0';
   container.append(host);
@@ -133,21 +105,17 @@ export async function mountRealRouteViewer({ container, signal, reducedMotion }:
         route: { type: 'geojson', lineMetrics: true, data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: o.path.map(([lng, lat]) => [lng, lat]) } } },
         runner: { type: 'geojson', data: point(at(o.share ?? 0)) },
         pointer: { type: 'geojson', data: point(at(0)) },
-        ...worldSources,
       },
       layers: [
         { id: 'orthophoto', type: 'raster', source: 'orthophoto' },
         { id: 'route-casing', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': color('surface'), 'line-opacity': 0.6, 'line-width': 8 } },
         { id: 'route', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-width': 4.5, 'line-color': color('data-primary') } },
-        ...worldLayers,
         { id: 'pointer', type: 'circle', source: 'pointer', layout: { visibility: 'none' }, paint: { 'circle-radius': 5, 'circle-color': color('surface'), 'circle-stroke-color': color('data-active-outline'), 'circle-stroke-width': 2.5 } },
         // The runner: signal colour with its mandatory outline (E09).
         { id: 'runner', type: 'circle', source: 'runner', paint: { 'circle-radius': 8, 'circle-color': color('data-active'), 'circle-stroke-color': color('data-active-outline'), 'circle-stroke-width': 3 } },
       ],
       terrain: { source: 'terrain', exaggeration },
-      sky: { 'sky-color': '#7fb2e5', 'horizon-color': '#e6eef5', 'fog-color': '#e6eef5', 'fog-ground-blend': o.walk ? 0.35 : 0.55, 'horizon-fog-blend': 0.7, 'sky-horizon-blend': 0.8, 'atmosphere-blend': 0.6 },
-      // A low sun from the south-west gives each wall and each crown a lit side and a dark one.
-      light: { anchor: 'map', position: [1.4, 225, 38], intensity: 0.5, color: '#fff3dd' },
+      sky: { 'sky-color': '#7fb2e5', 'horizon-color': '#e6eef5', 'fog-color': '#e6eef5', 'fog-ground-blend': 0.55, 'horizon-fog-blend': 0.7, 'sky-horizon-blend': 0.8, 'atmosphere-blend': 0.6 },
     },
   });
   const abort = new AbortController();
@@ -164,12 +132,6 @@ export async function mountRealRouteViewer({ container, signal, reducedMotion }:
   } catch (error) {
     remove();
     throw error;
-  }
-  if (o.world?.trees.length) {
-    const trees = o.world.trees.map(([lng, lat, height, ground, kind]): [number, number, number, number, TreeKind] => [(lng - lng0) * perLng, (lat - lat0) * METRES_PER_DEGREE, ground * exaggeration, height, kind]);
-    // Under the runner and the pointer, which are drawn over everything.
-    map.addLayer(createTreeLayer({ origin: [lng0, lat0], trees, camera: () => camera }), 'pointer');
-    map.getCanvas().dataset['trees'] = String(trees.length);
   }
   const canvas = map.getCanvas();
   canvas.dataset['engine'] = 'maplibre';
@@ -227,8 +189,8 @@ export async function mountRealRouteViewer({ container, signal, reducedMotion }:
   /** Places runner and camera at a share of the route. Returns true once the camera has settled. */
   const place = (share: number, k: number): boolean => {
     const here = at(share);
-    const ahead = at(share + follow0.ahead);
-    const behind = at(share - follow0.ahead / 2);
+    const ahead = at(share + FOLLOW.ahead);
+    const behind = at(share - FOLLOW.ahead / 2);
     let hx = ahead[0] - behind[0];
     let hy = ahead[1] - behind[1];
     const n = Math.hypot(hx, hy);
@@ -244,7 +206,7 @@ export async function mountRealRouteViewer({ container, signal, reducedMotion }:
     const settled = heading[0] * hx + heading[1] * hy > 0.99995;
     if (settled) [heading[0], heading[1]] = [hx, hy];
 
-    const follow: Vec = [here[0] - heading[0] * follow0.back, here[1] - heading[1] * follow0.back, here[2] + follow0.up];
+    const follow: Vec = [here[0] - heading[0] * FOLLOW.back, here[1] - heading[1] * FOLLOW.back, here[2] + FOLLOW.up];
     // Start and finish show the whole route; in between the camera runs with the runner.
     const near = ease(0, 0.03, share) * (1 - ease(0.97, 1, share));
     camera = lerp(overview, follow, near);

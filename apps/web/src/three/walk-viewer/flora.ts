@@ -132,7 +132,7 @@ export function plantGeometry(kind: PlantKind, fine = false): THREE.BufferGeomet
   }
   for (const blob of shape.blobs) {
     // From close by a clump is cut finer, so its outline is round; from afar the coarse one is the same shape.
-    const sphere = new THREE.IcosahedronGeometry(1, blob.detail + (fine ? 1 : 0)).toNonIndexed();
+    const sphere = new THREE.IcosahedronGeometry(1, blob.detail + (fine ? 1 : 0));
     const points = sphere.getAttribute('position');
     for (let i = 0; i < points.count; i++) {
       const [x, y, z] = [points.getX(i), points.getY(i), points.getZ(i)];

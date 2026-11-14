@@ -122,6 +122,8 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
       </div>
     </div>
   </div>
+  <!-- On a phone the credit leaves the screen of the route to the view: it is read here, once the route is run. -->
+  {viewer?.credit && <p class="credit-after" data-type="text-xs">{viewer.credit}</p>}
   <span id={endId} tabindex="-1"></span>
 </tram-route-scroller>
 
@@ -359,10 +361,96 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
       grid-template-columns: repeat(2, minmax(0, max-content));
     }
 
-    /* With the 3D view the figures keep to one row: the relief gets the room. */
+    /*
+     * With the 3D view the phone is the view: it takes every line the figures and the profile can spare.
+     * The kilometre and its three figures shrink to two short rows, the profile to a strip, and the
+     * credit waits under the route.
+     */
+    .scroller[data-viewer] .stage {
+      gap: var(--tram-sys-space-2);
+      padding-block: var(--tram-sys-space-3);
+    }
+
+    .scroller[data-viewer] .readout {
+      gap: var(--tram-sys-space-1);
+    }
+
+    .scroller[data-viewer] .km .label {
+      position: absolute;
+      inline-size: var(--tram-sys-line-hairline);
+      block-size: var(--tram-sys-line-hairline);
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .scroller[data-viewer] .figure {
+      font-size: var(--tram-sys-type-display-lg-size);
+      line-height: 1;
+    }
+
     .scroller[data-viewer] .stats {
       grid-template-columns: repeat(3, minmax(0, max-content));
-      column-gap: var(--tram-sys-space-4);
+      column-gap: var(--tram-sys-space-5);
+    }
+
+    .scroller[data-viewer] .stats dd {
+      font-size: var(--tram-sys-type-display-sm-size);
+      line-height: 1.1;
+    }
+
+    .scroller[data-viewer] .chapter {
+      min-block-size: 0;
+      font-size: var(--tram-sys-type-text-md-size);
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .scroller[data-viewer] .chapter:empty {
+      display: none;
+    }
+
+    .scroller[data-viewer] .sky {
+      min-block-size: 42dvh;
+    }
+
+    .scroller[data-viewer] .credit {
+      display: none;
+    }
+
+    /* The scale of grades in one line. */
+    .scroller[data-viewer] .grades {
+      column-gap: var(--tram-sys-space-2);
+    }
+
+    .scroller[data-viewer] .foot {
+      gap: 0;
+      padding-block-start: var(--tram-sys-space-2);
+    }
+
+    /* The profile under a 3D view on a phone: a strip to see where on the route the runner is. */
+    .scroller[data-viewer] .foot :global([data-compact] .chart) {
+      grid-template-rows: auto 3.5rem var(--tram-sys-space-5);
+    }
+
+    /* Once the view is there its "ready" line would sit on it: it stays for screen readers only. */
+    .scroller[data-viewer] :global(tram-viewer-3d[data-state='ready'] [data-part='status']) {
+      position: absolute;
+      inline-size: var(--tram-sys-line-hairline);
+      block-size: var(--tram-sys-line-hairline);
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+  }
+
+  .credit-after {
+    margin: 0;
+    padding-block: var(--tram-sys-space-3);
+    color: var(--tram-sys-text-muted);
+  }
+
+  @media (width >= 48rem) {
+    .credit-after {
+      display: none;
     }
   }
 

@@ -4,6 +4,10 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+El visor de rutes al mòbil.
+
+- `RouteScroller` amb visor 3D, per sota de 48rem: la vista ocupa la pantalla (com a mínim el 42 % de l'alçada). El quilòmetre i les tres xifres es redueixen a dues files curtes, el perfil a una franja, i el crèdit passa a sota del recorregut. Abans la vista quedava en una franja d'uns 90 px.
+
 Fase 1: el web i les sabatilles.
 
 - `base.css`: els estils de pàgina que comparteixen el catàleg i el web.

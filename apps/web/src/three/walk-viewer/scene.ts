@@ -552,6 +552,8 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
       size.width = w;
       size.height = h;
       camera.aspect = w / h;
+      // An upright frame sees little to the sides: it is given a wider angle.
+      camera.fov = w < h ? CAMERA.fov + 10 : CAMERA.fov;
       camera.updateProjectionMatrix();
       // Overview: the closest point that holds the whole terrain, with its long side across a wide frame.
       const fromEast = sizeZ > sizeX === camera.aspect > 1;

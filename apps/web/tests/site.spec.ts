@@ -295,5 +295,8 @@ test.describe('Route on foot', () => {
     expect(Number(await canvas.getAttribute('data-trees'))).toBeGreaterThan(1000);
     // The choice is kept for the next visit, as the other two.
     expect(await page.evaluate(() => localStorage.getItem('tram-viewer-mode'))).toBe('walk');
+    // Once the route is under way the ground by the runner is covered: grass, scrub, stones.
+    await page.evaluate(() => (document.querySelector('tram-route-scroller') as HTMLElement & { goTo(share: number): void }).goTo(0.3));
+    await expect.poll(async () => Number(await canvas.getAttribute('data-plants')), { timeout: 90_000 }).toBeGreaterThan(500);
   });
 });

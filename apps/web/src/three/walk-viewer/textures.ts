@@ -151,87 +151,236 @@ const tiles: Paint = (context, size, random) => {
   }
 };
 
-/**
- * One bay of a wall: plaster with its stains and a window with frame, sill and shutters. A wall
- * repeats it across and up; the building's own colour is laid over it, so the plaster is near white.
- */
-const bay: Paint = (context, size, random) => {
+/** Plaster with its stains, near white: the colour of the building is laid over it. A line of shade under the floor above. */
+const plaster = (context: CanvasRenderingContext2D, size: number, random: () => number): void => {
   context.fillStyle = hsl(40, 12, 90);
   context.fillRect(0, 0, size, size);
   for (let i = 0; i < size * 14; i++) {
     context.fillStyle = hsl(36, 14, 70 + random() * 26, 0.22);
     context.fillRect(random() * size, random() * size, 2 + random() * 5, 2 + random() * 9);
   }
-  const [left, top, wide, tall] = [size * 0.3, size * 0.2, size * 0.4, size * 0.52];
-  // The window sits in the wall: a shadow at its top and one side.
-  context.fillStyle = hsl(30, 12, 52);
-  context.fillRect(left - 5, top - 6, wide + 10, tall + 11);
+  context.fillStyle = hsl(34, 10, 60, 0.35);
+  context.fillRect(0, 0, size, 3);
+};
+/** An opening in the wall: its shadow at the top and one side, and what fills it. */
+const opening = (context: CanvasRenderingContext2D, left: number, top: number, wide: number, tall: number, fill: string | CanvasGradient): void => {
+  context.fillStyle = hsl(30, 12, 50);
+  context.fillRect(left - 5, top - 6, wide + 10, tall + 8);
+  context.fillStyle = fill;
+  context.fillRect(left, top, wide, tall);
+};
+const glassOf = (context: CanvasRenderingContext2D, left: number, top: number, wide: number, tall: number): CanvasGradient => {
   const glass = context.createLinearGradient(left, top, left + wide, top + tall);
   glass.addColorStop(0, hsl(208, 30, 30));
   glass.addColorStop(0.55, hsl(210, 34, 16));
   glass.addColorStop(1, hsl(206, 26, 36));
-  context.fillStyle = glass;
+  return glass;
+};
+/** A shutter, slat by slat. */
+const shutter = (context: CanvasRenderingContext2D, left: number, top: number, wide: number, tall: number): void => {
+  context.fillStyle = hsl(150, 22, 30);
   context.fillRect(left, top, wide, tall);
+  context.fillStyle = hsl(150, 24, 20, 0.7);
+  for (let y = top + 4; y < top + tall - 3; y += 7) context.fillRect(left + 3, y, wide - 6, 2.5);
+};
+const frame = (context: CanvasRenderingContext2D, left: number, top: number, wide: number, tall: number, bars: number): void => {
   context.strokeStyle = hsl(36, 14, 94);
   context.lineWidth = 3;
   context.strokeRect(left + 1.5, top + 1.5, wide - 3, tall - 3);
   context.beginPath();
   context.moveTo(left + wide / 2, top);
   context.lineTo(left + wide / 2, top + tall);
-  context.moveTo(left, top + tall * 0.42);
-  context.lineTo(left + wide, top + tall * 0.42);
-  context.stroke();
-  // Shutters folded back on the wall, slat by slat.
-  for (const x of [left - wide * 0.42 - 6, left + wide + 6]) {
-    context.fillStyle = hsl(150, 22, 30);
-    context.fillRect(x, top - 2, wide * 0.42, tall + 4);
-    context.fillStyle = hsl(150, 24, 20, 0.7);
-    for (let y = top + 2; y < top + tall; y += 7) context.fillRect(x + 3, y, wide * 0.42 - 6, 2.5);
+  for (let k = 1; k <= bars; k++) {
+    context.moveTo(left, top + (tall * k) / (bars + 1));
+    context.lineTo(left + wide, top + (tall * k) / (bars + 1));
   }
+  context.stroke();
+};
+const sill = (context: CanvasRenderingContext2D, left: number, y: number, wide: number, random: () => number): void => {
   context.fillStyle = hsl(34, 12, 78);
-  context.fillRect(left - 10, top + tall + 5, wide + 20, 7);
+  context.fillRect(left - 10, y, wide + 20, 7);
   context.fillStyle = hsl(30, 10, 40, 0.4);
-  context.fillRect(left - 10, top + tall + 12, wide + 20, 5);
+  context.fillRect(left - 10, y + 7, wide + 20, 5);
   // Rain marks under the sill.
   for (let i = 0; i < 9; i++) {
     context.fillStyle = hsl(34, 10, 52, 0.12 + random() * 0.1);
-    context.fillRect(left - 8 + random() * (wide + 12), top + tall + 14, 2 + random() * 4, 20 + random() * 46);
+    context.fillRect(left - 8 + random() * (wide + 12), y + 9, 2 + random() * 4, 14 + random() * 36);
   }
 };
 
-/** A spray of foliage on a clear ground: the leaves of a crown, a card at a time. */
-const spray = (leaf: (context: CanvasRenderingContext2D, x: number, y: number, angle: number, random: () => number) => void, count: number): Paint => (context, size, random) => {
-  const centre = size / 2;
-  for (let i = 0; i < count; i++) {
-    // Thick at the heart, thin at the rim: a round clump, not a square of leaves.
-    const reach = Math.sqrt(random()) * size * 0.46;
-    const turn = random() * Math.PI * 2;
-    leaf(context, centre + Math.cos(turn) * reach, centre + Math.sin(turn) * reach, random() * Math.PI * 2, random);
+/**
+ * The bays of a wall, one picture each: a window with its shutters folded back, a balcony, a window shut,
+ * bare wall, a front door and the gate of a shed. A wall takes one for each bay of each floor.
+ */
+const BAY_PAINTS: Paint[] = [
+  (context, size, random) => {
+    plaster(context, size, random);
+    const [left, top, wide, tall] = [size * 0.3, size * 0.2, size * 0.4, size * 0.52];
+    opening(context, left, top, wide, tall, glassOf(context, left, top, wide, tall));
+    frame(context, left, top, wide, tall, 1);
+    shutter(context, left - wide * 0.42 - 6, top - 2, wide * 0.42, tall + 4);
+    shutter(context, left + wide + 6, top - 2, wide * 0.42, tall + 4);
+    sill(context, left, top + tall + 5, wide, random);
+  },
+  (context, size, random) => {
+    plaster(context, size, random);
+    const [left, top, wide, tall] = [size * 0.3, size * 0.14, size * 0.4, size * 0.76];
+    opening(context, left, top, wide, tall, glassOf(context, left, top, wide, tall));
+    frame(context, left, top, wide, tall, 2);
+    shutter(context, left - wide * 0.4 - 6, top - 2, wide * 0.4, tall + 2);
+    shutter(context, left + wide + 6, top - 2, wide * 0.4, tall + 2);
+    // The balcony: a slab, its shadow, and a rail of iron bars in front of the door.
+    const [from, to, rail, slab] = [size * 0.1, size * 0.9, size * 0.6, size * 0.9];
+    context.fillStyle = hsl(34, 10, 70);
+    context.fillRect(from - 4, slab, to - from + 8, 9);
+    context.fillStyle = hsl(30, 10, 34, 0.45);
+    context.fillRect(from - 4, slab + 9, to - from + 8, 8);
+    context.fillStyle = hsl(220, 8, 16);
+    context.fillRect(from, rail, to - from, 4);
+    context.fillRect(from, slab - 6, to - from, 3);
+    for (let x = from; x <= to; x += (to - from) / 16) context.fillRect(x - 1, rail, 2.4, slab - rail);
+  },
+  (context, size, random) => {
+    plaster(context, size, random);
+    const [left, top, wide, tall] = [size * 0.3, size * 0.2, size * 0.4, size * 0.52];
+    opening(context, left, top, wide, tall, hsl(150, 20, 22));
+    shutter(context, left, top, wide / 2 - 1, tall);
+    shutter(context, left + wide / 2 + 1, top, wide / 2 - 1, tall);
+    sill(context, left, top + tall + 5, wide, random);
+  },
+  (context, size, random) => {
+    plaster(context, size, random);
+    // Bare wall: where the plaster has come away, and the damp that climbs from the street.
+    for (let i = 0; i < 5; i++) {
+      context.fillStyle = hsl(30, 16, 62 + random() * 14, 0.28);
+      context.beginPath();
+      context.ellipse(random() * size, random() * size, 10 + random() * 26, 6 + random() * 16, random() * 3, 0, Math.PI * 2);
+      context.fill();
+    }
+  },
+  (context, size, random) => {
+    plaster(context, size, random);
+    const [left, top, wide, tall] = [size * 0.31, size * 0.2, size * 0.38, size * 0.8];
+    opening(context, left, top, wide, tall, hsl(24, 34, 24));
+    // A door of planks, with its lintel, its knob and a step.
+    context.fillStyle = hsl(24, 30, 15, 0.8);
+    for (let x = left + wide / 5; x < left + wide - 2; x += wide / 5) context.fillRect(x, top, 2, tall);
+    context.fillStyle = hsl(32, 12, 72);
+    context.fillRect(left - 12, top - 14, wide + 24, 10);
+    context.fillStyle = hsl(44, 50, 62);
+    context.beginPath();
+    context.arc(left + wide * 0.82, top + tall * 0.55, 4, 0, Math.PI * 2);
+    context.fill();
+    context.fillStyle = hsl(30, 8, 58);
+    context.fillRect(left - 14, size - 8, wide + 28, 8);
+    // A lamp by the door.
+    context.fillStyle = hsl(220, 8, 18);
+    context.fillRect(left + wide + 22, top + 6, 10, 16);
+    context.fillStyle = hsl(48, 60, 78);
+    context.fillRect(left + wide + 24, top + 10, 6, 9);
+  },
+  (context, size, random) => {
+    plaster(context, size, random);
+    const [left, top, wide, tall] = [size * 0.08, size * 0.12, size * 0.84, size * 0.88];
+    opening(context, left, top, wide, tall, hsl(210, 8, 46));
+    // A gate of sheet, rolled up and down: its ribs.
+    context.fillStyle = hsl(210, 8, 30, 0.7);
+    for (let y = top + 6; y < top + tall; y += 12) context.fillRect(left, y, wide, 3);
+    context.fillStyle = hsl(210, 6, 62, 0.5);
+    for (let y = top + 10; y < top + tall; y += 12) context.fillRect(left, y, wide, 2);
+  },
+];
+
+/** The pictures of a bay side by side in one texture: a wall reads the one it wants (`scene.ts`). */
+function strip(size: number, seed: number, paints: readonly Paint[]): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = size * paints.length;
+  canvas.height = size;
+  const context = canvas.getContext('2d')!;
+  paints.forEach((paint, i) => {
+    context.save();
+    context.translate(i * size, 0);
+    context.beginPath();
+    context.rect(0, 0, size, size);
+    context.clip();
+    paint(context, size, seeded(seed + i));
+    context.restore();
+  });
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 8;
+  return texture;
+}
+
+/** One leaf: a blade with a lit half and a midrib, pointing along `angle` from its stalk. */
+const leafOf = (context: CanvasRenderingContext2D, x: number, y: number, angle: number, long: number, wide: number, hue: number, light: number): void => {
+  const [cx, cy] = [x + (Math.cos(angle) * long) / 2, y + (Math.sin(angle) * long) / 2];
+  context.fillStyle = hsl(hue, 42, light);
+  context.beginPath();
+  context.ellipse(cx, cy, long / 2, wide / 2, angle, 0, Math.PI * 2);
+  context.fill();
+  // The half that catches the light, and the rib between the two.
+  context.fillStyle = hsl(hue + 6, 46, light + 11, 0.75);
+  context.beginPath();
+  context.ellipse(cx - Math.sin(angle) * wide * 0.16, cy + Math.cos(angle) * wide * 0.16, long * 0.42, wide * 0.26, angle, 0, Math.PI * 2);
+  context.fill();
+  stroke(context, x, y, angle, long * 0.92, Math.max(0.8, wide * 0.09), hsl(hue - 6, 36, light - 12, 0.7));
+};
+
+/** A mass of leaves seen from outside the crown: leaves over leaves, dark between them. It repeats. */
+const thicket: Paint = (context, size, random) => {
+  context.fillStyle = hsl(90, 30, 9);
+  context.fillRect(0, 0, size, size);
+  for (let i = 0; i < 2600; i++) {
+    const depth = i / 2600;
+    const [x, y, angle, long] = [random() * size, random() * size, random() * Math.PI * 2, size * (0.02 + random() * 0.022)];
+    const tone = 14 + depth * 26 + random() * 14;
+    wrapped(size, x, y, long * 2, (px, py) => leafOf(context, px, py, angle, long, long * 0.48, 90, tone));
   }
 };
-const needles = spray((context, x, y, angle, random) => {
-  for (let k = 0; k < 7; k++) stroke(context, x, y, angle + (k - 3) * 0.3, 15 + random() * 12, 1.5, hsl(98 + random() * 26, 32 + random() * 22, 16 + random() * 28));
-}, 300);
-const leaves = (hue: number, light: number, long: number): Paint =>
-  spray((context, x, y, angle, random) => {
-    context.fillStyle = hsl(hue + random() * 22, 30 + random() * 24, light + random() * 26);
-    context.beginPath();
-    context.ellipse(x, y, long * (0.8 + random() * 0.5), long * 0.42, angle, 0, Math.PI * 2);
-    context.fill();
-  }, 520);
-/** Blades of grass standing up from the bottom edge: a tuft seen from the side. */
+
+/**
+ * A spray of foliage on a clear ground, for the cards of a crown: leaves every way, thick at its heart and
+ * loose at its rim, so the edge of a card is leaves and not a line. The first leaves painted are the ones
+ * deep in the crown, in shade; the last ones are in the light.
+ */
+const sprigs = (count: number, long: number, wide: number, hue: number, light: number): Paint => (context, size, random) => {
+  const centre = size / 2;
+  for (let i = 0; i < count; i++) {
+    const depth = i / count;
+    const turn = random() * Math.PI * 2;
+    const from = random() ** 0.62 * size * 0.44;
+    const length = long * (0.7 + random() * 0.6);
+    leafOf(context, centre + Math.cos(turn) * from - length / 2, centre + Math.sin(turn) * from, random() * Math.PI * 2, length, wide * (0.8 + random() * 0.4), hue + (random() - 0.5) * 24, light - 10 + depth * 22 + random() * 8);
+  }
+};
+/** The same for a pine: tufts of needles at the end of each twig. */
+const needles: Paint = (context, size, random) => {
+  const centre = size / 2;
+  for (let i = 0; i < 230; i++) {
+    const depth = i / 230;
+    const turn = random() * Math.PI * 2;
+    const from = Math.sqrt(random()) * size * 0.34;
+    const [x, y] = [centre + Math.cos(turn) * from, centre + Math.sin(turn) * from];
+    const heading = random() * Math.PI * 2;
+    const tone = 15 + depth * 24;
+    for (let k = 0; k < 15; k++) stroke(context, x, y, heading + (k - 7) * 0.2 + (random() - 0.5) * 0.1, size * (0.045 + random() * 0.045), size / 380, hsl(96 + random() * 28, 34 + random() * 18, tone + random() * 12));
+  }
+};
+/** Blades of grass standing up from the bottom edge: a tuft seen from the side, each blade wide at its foot and ending in a point. */
 const blades: Paint = (context, size, random) => {
-  for (let i = 0; i < 90; i++) {
-    const x = size * (0.08 + random() * 0.84);
-    const tall = size * (0.35 + random() * 0.6);
-    const lean = (random() - 0.5) * size * 0.3;
-    context.strokeStyle = random() < 0.55 ? hsl(48 + random() * 14, 40 + random() * 18, 44 + random() * 26) : hsl(74 + random() * 26, 34 + random() * 22, 26 + random() * 26);
-    context.lineWidth = 2 + random() * 2.5;
-    context.lineCap = 'round';
+  for (let i = 0; i < 130; i++) {
+    const depth = i / 130;
+    const x = size * (0.07 + random() * 0.86);
+    const tall = size * (0.3 + random() * 0.66);
+    const lean = (random() - 0.5) * size * 0.34;
+    const wide = size * (0.012 + random() * 0.016);
+    context.fillStyle = random() < 0.45 ? hsl(48 + random() * 14, 36 + random() * 18, 26 + depth * 24 + random() * 10) : hsl(72 + random() * 28, 36 + random() * 22, 16 + depth * 22 + random() * 10);
     context.beginPath();
-    context.moveTo(x, size);
-    context.quadraticCurveTo(x + lean * 0.3, size - tall * 0.6, x + lean, size - tall);
-    context.stroke();
+    context.moveTo(x - wide, size);
+    context.quadraticCurveTo(x - wide * 0.5 + lean * 0.25, size - tall * 0.6, x + lean, size - tall);
+    context.quadraticCurveTo(x + wide * 0.5 + lean * 0.25, size - tall * 0.6, x + wide, size);
+    context.fill();
   }
 };
 
@@ -242,8 +391,10 @@ export interface WalkTextures {
   earth: THREE.Texture;
   tarmac: THREE.Texture;
   bark: THREE.Texture;
+  thicket: THREE.Texture;
   tiles: THREE.Texture;
-  bay: THREE.Texture;
+  /** The bays of a wall, side by side. */
+  bays: THREE.Texture;
   foliage: Record<'pine' | 'oak' | 'deciduous' | 'olive' | 'bush', THREE.Texture>;
   blades: THREE.Texture;
   dispose(): void;
@@ -257,17 +408,19 @@ export function paintTextures(): WalkTextures {
     earth: tile(512, 14, earth),
     tarmac: tile(512, 15, tarmac),
     bark: tile(256, 16, bark),
+    thicket: tile(512, 19, thicket),
     tiles: tile(256, 17, tiles),
-    bay: tile(256, 18, bay),
+    bays: strip(256, 18, BAY_PAINTS),
     foliage: {
-      pine: tile(256, 21, needles, true),
-      oak: tile(256, 22, leaves(78, 16, 9), true),
-      deciduous: tile(256, 23, leaves(84, 24, 13), true),
-      olive: tile(256, 24, leaves(96, 34, 10), true),
-      bush: tile(256, 25, leaves(72, 24, 8), true),
+      pine: tile(512, 21, needles, true),
+      // Holm and cork oak: small, dark, leathery. A plantation tree: large and light. Olive: narrow and grey. Heath and lentisk: tiny.
+      oak: tile(512, 22, sprigs(1100, 30, 14, 96, 20), true),
+      deciduous: tile(512, 23, sprigs(700, 44, 27, 94, 31), true),
+      olive: tile(512, 24, sprigs(1200, 30, 9, 100, 38), true),
+      bush: tile(512, 25, sprigs(1700, 21, 9, 88, 25), true),
     },
-    blades: tile(256, 26, blades, true),
+    blades: tile(512, 26, blades, true),
   };
-  const every = [all.grass, all.dryGrass, all.litter, all.earth, all.tarmac, all.bark, all.tiles, all.bay, all.blades, ...Object.values(all.foliage)];
+  const every = [all.grass, all.dryGrass, all.litter, all.earth, all.tarmac, all.bark, all.thicket, all.tiles, all.bays, all.blades, ...Object.values(all.foliage)];
   return { ...all, dispose: () => every.forEach((texture) => texture.dispose()) };
 }

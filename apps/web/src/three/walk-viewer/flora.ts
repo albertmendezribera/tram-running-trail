@@ -91,14 +91,14 @@ const geometryOf = (attributes: Record<string, [number[], number]>): THREE.Buffe
   return geometry;
 };
 
-/** A tuft of grass: three cards of blades crossed at one foot, in metres. */
+/** A tuft of grass: two cards of blades crossed at one foot, in metres. */
 function tuft(): Plant {
   const positions: number[] = [];
   const normals: number[] = [];
   const uvs: number[] = [];
   const shades: number[] = [];
-  for (let i = 0; i < 3; i++) {
-    const turn = (i / 3) * Math.PI + 0.3;
+  for (let i = 0; i < 2; i++) {
+    const turn = (i / 2) * Math.PI + 0.3;
     const [dx, dz] = [Math.cos(turn) * 0.42, Math.sin(turn) * 0.42];
     const corners: Array<[number[], number[]]> = [[[-dx, 0, -dz], [0, 0]], [[dx, 0, dz], [1, 0]], [[dx, 0.62, dz], [1, 1]], [[-dx, 0.62, -dz], [0, 1]]];
     for (const k of [0, 1, 2, 0, 2, 3]) {
@@ -106,7 +106,8 @@ function tuft(): Plant {
       // Lit as the ground it grows on: a field of blades shades evenly.
       normals.push(0, 1, 0);
       uvs.push(...corners[k]![1]);
-      shades.push(0.7 + corners[k]![1][1]! * 0.45);
+      // Dark at the foot, where the blades shade each other.
+      shades.push(0.5 + corners[k]![1][1]! * 0.6);
     }
   }
   return { core: null, cards: geometryOf({ position: [positions, 3], normal: [normals, 3], uv: [uvs, 2], shade: [shades, 1] }) };
@@ -118,7 +119,7 @@ function tuft(): Plant {
  * crown shades as a volume and ends in leaves. `fine` cuts the body finer and gives it more cards,
  * for the plants next to the camera.
  */
-export function plantGeometry(kind: PlantKind, fine = false): Plant {
+export function plantGeometry(kind: PlantKind, fine = false, leafy = 1): Plant {
   if (kind === 'grass') return tuft();
   const shape = SHAPES[kind];
   const core = { positions: [] as number[], normals: [] as number[], uvs: [] as number[], shades: [] as number[], parts: [] as number[] };
@@ -154,13 +155,14 @@ export function plantGeometry(kind: PlantKind, fine = false): Plant {
       const n = new THREE.Vector3(x / blob.radii[0], y / blob.radii[1], z / blob.radii[2]).normalize();
       core.normals.push(n.x, n.y, n.z);
       core.uvs.push(0, 0);
-      core.shades.push(0.5 + 0.25 * ((y + 1) / 2));
+      core.shades.push(0.42 + 0.4 * ((y + 1) / 2));
       core.parts.push(1);
     }
     sphere.dispose();
     // Its leaves: cards set all round it (a spiral over the sphere spreads them evenly), each tilted its own way.
-    const count = Math.round((fine ? 46 : 16) * (blob.detail ? 1 : 0.5));
-    const span = Math.min(blob.radii[0], blob.radii[2]) * (blob.detail ? 1.25 : 1.5);
+    // More cards are smaller cards: the same crown, in finer leaves.
+    const count = Math.round((fine ? 46 : 16) * (blob.detail ? 1 : 0.5) * leafy);
+    const span = (Math.min(blob.radii[0], blob.radii[2]) * (blob.detail ? 1.25 : 1.5)) / Math.sqrt(leafy);
     const out = new THREE.Vector3();
     const facing = new THREE.Vector3();
     const side = new THREE.Vector3();
@@ -172,7 +174,7 @@ export function plantGeometry(kind: PlantKind, fine = false): Plant {
       out.set(Math.cos(around) * r, y, Math.sin(around) * r);
       const reach = 0.82 + cell(i, b, 1) * 0.3;
       const at = [blob.at[0] + out.x * blob.radii[0] * reach, blob.at[1] + out.y * blob.radii[1] * reach, blob.at[2] + out.z * blob.radii[2] * reach];
-      facing.set(out.x + (cell(i, b, 2) - 0.5) * 1.3, out.y + (cell(i, b, 3) - 0.5) * 1.3, out.z + (cell(i, b, 4) - 0.5) * 1.3).normalize();
+      facing.set(out.x + (cell(i, b, 2) - 0.5) * 0.95, out.y + (cell(i, b, 3) - 0.5) * 0.95, out.z + (cell(i, b, 4) - 0.5) * 0.95).normalize();
       side.crossVectors(facing, Math.abs(facing.y) > 0.9 ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3(0, 1, 0)).normalize();
       upward.crossVectors(side, facing);
       const half = (span * (0.8 + cell(i, b, 5) * 0.5)) / 2;
@@ -191,4 +193,83 @@ export function plantGeometry(kind: PlantKind, fine = false): Plant {
     core: geometryOf({ position: [core.positions, 3], normal: [core.normals, 3], uv: [core.uvs, 2], shade: [core.shades, 1], part: [core.parts, 1] }),
     cards: geometryOf({ position: [cards.positions, 3], normal: [cards.normals, 3], uv: [cards.uvs, 2], shade: [cards.shades, 1] }),
   };
+}
+
+/**
+ * A bush one unit tall, for the carpet by the path: no body, only leaves. Upright cards cross at its
+ * heart, so it is full from any side, and others lie over it like a shell, so it is full from above.
+ */
+export function shrubGeometry(): THREE.BufferGeometry {
+  const positions: number[] = [];
+  const normals: number[] = [];
+  const uvs: number[] = [];
+  const shades: number[] = [];
+  const card = (corners: ReadonlyArray<readonly [number, number, number]>, normal: readonly [number, number, number], shade: (y: number) => number): void => {
+    const st = [[0, 0], [1, 0], [1, 1], [0, 1]] as const;
+    for (const k of [0, 1, 2, 0, 2, 3]) {
+      positions.push(...corners[k]!);
+      normals.push(...normal);
+      uvs.push(...st[k]!);
+      shades.push(shade(corners[k]![1]));
+    }
+  };
+  // Dark at the foot and inside, light on top: the shade a thicket casts on itself.
+  const shadeAt = (y: number): number => 0.5 + 0.62 * Math.min(1, Math.max(0, y));
+  for (let i = 0; i < 7; i++) {
+    const turn = (i / 7) * Math.PI + cell(i, 1, 1) * 0.35;
+    const [dx, dz] = [Math.cos(turn), Math.sin(turn)];
+    // Each a little off the middle, a little taller or shorter, leaning a little.
+    const off = (cell(i, 2, 1) - 0.5) * 0.42;
+    const [ox, oz] = [-dz * off, dx * off];
+    const half = 0.52 + cell(i, 3, 1) * 0.2;
+    const tall = 0.78 + cell(i, 4, 1) * 0.24;
+    const lean = (cell(i, 5, 1) - 0.5) * 0.3;
+    card(
+      [
+        [ox - dx * half, -0.05, oz - dz * half],
+        [ox + dx * half, -0.05, oz + dz * half],
+        [ox + dx * half - dz * lean, tall, oz + dz * half + dx * lean],
+        [ox - dx * half - dz * lean, tall, oz - dz * half + dx * lean],
+      ],
+      [0, 1, 0],
+      shadeAt,
+    );
+  }
+  const out = new THREE.Vector3();
+  const facing = new THREE.Vector3();
+  const side = new THREE.Vector3();
+  const upward = new THREE.Vector3();
+  const shell = 13;
+  for (let i = 0; i < shell; i++) {
+    // Over the top and down the sides, not underneath.
+    const y = 1 - (1.35 * (i + 0.5)) / shell;
+    const around = i * 2.399963;
+    const r = Math.sqrt(1 - y * y);
+    out.set(Math.cos(around) * r, y, Math.sin(around) * r);
+    const at: [number, number, number] = [out.x * 0.5, 0.46 + out.y * 0.4, out.z * 0.5];
+    facing.set(out.x + (cell(i, 7, 2) - 0.5) * 0.8, out.y + (cell(i, 7, 3) - 0.5) * 0.8, out.z + (cell(i, 7, 4) - 0.5) * 0.8).normalize();
+    side.crossVectors(facing, Math.abs(facing.y) > 0.9 ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3(0, 1, 0)).normalize();
+    upward.crossVectors(side, facing);
+    const half = 0.34 + cell(i, 7, 5) * 0.16;
+    const corner = (u: number, v: number): [number, number, number] => [at[0] + (side.x * u + upward.x * v) * half, at[1] + (side.y * u + upward.y * v) * half, at[2] + (side.z * u + upward.z * v) * half];
+    card([corner(-1, -1), corner(1, -1), corner(1, 1), corner(-1, 1)], [out.x, out.y * 0.8 + 0.2, out.z], (height) => shadeAt(height) * 1.05);
+  }
+  return geometryOf({ position: [positions, 3], normal: [normals, 3], uv: [uvs, 2], shade: [shades, 1] });
+}
+
+/** A stone half sunk in the ground: a lump one unit across, no two faces alike. */
+export function stoneGeometry(): THREE.BufferGeometry {
+  const lump = new THREE.IcosahedronGeometry(0.5, 1);
+  const points = lump.getAttribute('position');
+  const shades: number[] = [];
+  for (let i = 0; i < points.count; i++) {
+    const [x, y, z] = [points.getX(i), points.getY(i), points.getZ(i)];
+    const push = 0.72 + wobble(x * 2.6, y * 2.6, z * 2.6) * 0.6;
+    points.setXYZ(i, x * push * 1.25, y * push * 0.72 + 0.08, z * push);
+    shades.push(0.6 + 0.5 * Math.min(1, Math.max(0, y + 0.5)));
+  }
+  // Faces, not a smooth skin: a stone has edges.
+  lump.computeVertexNormals();
+  lump.setAttribute('shade', new THREE.Float32BufferAttribute(shades, 1));
+  return lump;
 }

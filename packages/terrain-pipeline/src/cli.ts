@@ -36,14 +36,21 @@ const cols = Math.floor(srcCols / stride);
 const rows = Math.floor(srcRows / stride);
 const heights = new Float32Array(cols * rows);
 for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) heights[r * cols + c] = source[r * stride * srcCols + c * stride]!;
+// Where the model holds nothing (-8888 in the ICGC's) it is the sea, as long as the land next to it is at
+// sea level: a route that leaves Catalonia inland is refused instead of being drawn with a sea it has not.
+// The sea is given a bed just under the water, so the shore dips into it. It is not a sounding.
+const SEA_BED_M = -2;
 let min = Infinity;
 let max = -Infinity;
-for (const h of heights) if (h > -9000) ((min = Math.min(min, h)), (max = Math.max(max, h)));
+let sea = 0;
+for (const h of heights) h < -1000 ? sea++ : ((min = Math.min(min, h)), (max = Math.max(max, h)));
+if (sea && min > 5) throw new Error(`${sea} cells without elevation and no land at sea level: the route leaves the area the model covers`);
+if (sea) for (let i = 0; i < heights.length; i++) if (heights[i]! < -1000) heights[i] = SEA_BED_M;
 
 mkdirSync(out, { recursive: true });
 const webp = await sharp(Buffer.from(encodeTerrainRgb(heights)), { raw: { width: cols, height: rows, channels: 3 } }).webp({ lossless: true, effort: 6 }).toBuffer();
 writeFileSync(join(out, 'terrain.webp'), webp);
-writeFileSync(join(out, 'terrain.json'), JSON.stringify({ crs: 'EPSG:25831', x0, y0, cell, cols, rows, min: Number(min.toFixed(1)), max: Number(max.toFixed(1)), attribution: ICGC_ATTRIBUTION }, null, 2) + '\n');
+writeFileSync(join(out, 'terrain.json'), JSON.stringify({ crs: 'EPSG:25831', x0, y0, cell, cols, rows, min: Number(min.toFixed(1)), max: Number(max.toFixed(1)), ...(sea ? { seaBedM: SEA_BED_M } : {}), attribution: ICGC_ATTRIBUTION }, null, 2) + '\n');
 // Route in metres from the south-west corner of the terrain, one point every ~10 m of track.
 const route: Array<[number, number]> = [];
 let last: [number, number] | undefined;

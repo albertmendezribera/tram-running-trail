@@ -135,3 +135,65 @@ describe('world', () => {
     assert.equal(polygons[1]!.length, 1);
   });
 });
+
+describe('houses of a block', () => {
+  const block = { heightM: 14, polygon: [[[0, 0], [20, 0], [20, 10], [0, 10]] as Array<[number, number]>] };
+  const route: Array<[number, number]> = [[-50, -10], [80, -10]];
+
+  it('replaces a block near the route by the houses the cadastre has inside it, three metres a floor', async () => {
+    const { housesOf } = await import('./world.ts');
+    const parts = [
+      { floors: 2, rings: [[[0, 0], [8, 0], [8, 10], [0, 10], [0, 0]] as Array<[number, number]>], use: 'residential', year: 1930 },
+      { floors: 5, rings: [[[8, 0], [20, 0], [20, 10], [8, 10], [8, 0]] as Array<[number, number]>], use: 'retail', year: null },
+      // A quay the cadastre calls a building and the map does not.
+      { floors: 1, rings: [[[40, 0], [60, 0], [60, 10], [40, 10]] as Array<[number, number]>], use: null, year: null },
+    ];
+    const houses = housesOf({ blocks: [block], parts, route, detailM: 100 });
+    assert.deepEqual(houses.map((h) => [h.heightM, h.floors, h.use, h.year, h.rings[0]!.length]), [[6, 2, 'residential', 1930, 4], [15, 5, 'retail', undefined, 4]]);
+  });
+
+  it('keeps the block as the map drew it where the cadastre has nothing, or far from the route', async () => {
+    const { housesOf } = await import('./world.ts');
+    const part = { floors: 3, rings: [[[0, 0], [20, 0], [20, 10], [0, 10]] as Array<[number, number]>], use: null, year: null };
+    assert.deepEqual(housesOf({ blocks: [block], parts: [], route, detailM: 100 }).map((h) => [h.heightM, h.floors]), [[14, undefined]]);
+    assert.deepEqual(housesOf({ blocks: [block], parts: [part], route, detailM: 5 }).map((h) => [h.heightM, h.floors]), [[14, undefined]]);
+    // Something of no floors above ground, or too small to be a house, is not one.
+    assert.equal(housesOf({ blocks: [block], parts: [{ ...part, floors: 0 }], route, detailM: 100 })[0]!.floors, undefined);
+  });
+
+  it('tidies an outline: no closing point, no point on the line between its neighbours', async () => {
+    const { tidyRing } = await import('./world.ts');
+    assert.deepEqual(tidyRing([[0, 0], [5, 0.02], [10, 0], [10, 10], [0, 10], [0, 0]]), [[0, 0], [10, 0], [10, 10], [0, 10]]);
+  });
+});
+
+describe('cadastre', () => {
+  it('asks for the squares a route comes near, each once', async () => {
+    const { tilesNear } = await import('./cadastre.ts');
+    assert.deepEqual(tilesNear([[500950, 4630500], [501100, 4630500]], 100), [[500000, 4630000], [501000, 4630000]]);
+  });
+
+  it('reads the floors of a part and the use and year of its building', async () => {
+    const { parseBuildings, parseParts } = await import('./cadastre.ts');
+    const part = `<bu-ext2d:BuildingPart gml:id="ES.SDGC.BU.0531601EG1303S_part1"><base:localId>0531601EG1303S_part1</base:localId>
+      <gml:PolygonPatch><gml:exterior><gml:LinearRing><gml:posList srsDimension="2" count="5">0 0 10 0 10 8 0 8 0 0</gml:posList></gml:LinearRing></gml:exterior></gml:PolygonPatch>
+      <bu-ext2d:numberOfFloorsAboveGround>4</bu-ext2d:numberOfFloorsAboveGround></bu-ext2d:BuildingPart>`;
+    assert.deepEqual(parseParts(part), [{ building: '0531601EG1303S', floors: 4, rings: [[[0, 0], [10, 0], [10, 8], [0, 8], [0, 0]]] }]);
+    const building = (use: string, year: string): string =>
+      `<bu-ext2d:Building gml:id="x"><bu-core2d:beginning>${year}-01-01T00:00:00</bu-core2d:beginning><base:localId>0531601EG1303S</base:localId><bu-ext2d:currentUse>${use}</bu-ext2d:currentUse></bu-ext2d:Building>`;
+    assert.deepEqual(parseBuildings(building('4_2_retail', '1963')).get('0531601EG1303S'), { use: 'retail', year: 1963 });
+    // The cadastre writes the year 1 where it does not know it.
+    assert.deepEqual(parseBuildings(building('1_residential', '0001')).get('0531601EG1303S'), { use: 'residential', year: null });
+  });
+});
+
+describe('OpenStreetMap', () => {
+  it('keeps what a runner would know a place by, and nothing else', async () => {
+    const { osmKind } = await import('./osm.ts');
+    assert.equal(osmKind({ amenity: 'restaurant', name: 'x' }), 'restaurant');
+    assert.equal(osmKind({ shop: 'clothes' }), 'shop');
+    assert.equal(osmKind({ shop: 'bakery' }), 'bakery');
+    assert.equal(osmKind({ tourism: 'information' }), null);
+    assert.equal(osmKind({ office: 'estate_agent' }), null);
+  });
+});

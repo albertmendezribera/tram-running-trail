@@ -7,6 +7,8 @@ export interface TerrainMeta {
   cell: number;
   min: number;
   max: number;
+  /** Set where the model holds nothing because it is the sea: the depth its bed is drawn at. */
+  seaBedM?: number;
 }
 
 export interface Heights {

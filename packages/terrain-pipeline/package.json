@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "GPX → ICGC elevation model → terrain-RGB WebP and route, for the 3D route viewer (CLAUDE.md 8.1, E01).",
+  "description": "GPX → ICGC elevation model → terrain-RGB WebP and route, and what stands along it (ICGC, cadastre, OpenStreetMap), for the 3D route viewer (CLAUDE.md 8.1, E01, E18).",
   "exports": {
     ".": "./src/index.ts",
     "./terrain-rgb": "./src/terrain-rgb.ts",
@@ -15,7 +15,8 @@
     "build-plate": "node src/plate-cli.ts",
     "test": "node --test \"src/**/*.test.ts\"",
     "typecheck": "tsc -p tsconfig.json",
-    "build-world": "node src/world-cli.ts"
+    "build-world": "node src/world-cli.ts",
+    "fetch-cadastre": "node src/cadastre-cli.ts"
   },
   "dependencies": {
     "sharp": "0.34.5"

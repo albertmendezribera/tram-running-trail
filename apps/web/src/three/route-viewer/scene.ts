@@ -80,6 +80,7 @@ export async function mountRouteViewer({ container, signal, reducedMotion }: Sce
     low: uniform(new THREE.Color()),
     high: uniform(new THREE.Color()),
     contour: uniform(new THREE.Color()),
+    water: uniform(new THREE.Color()),
   };
   const terrainMaterial = new THREE.MeshStandardNodeMaterial({ roughness: 1, metalness: 0 });
   const elevation = positionLocal.y.div(exaggeration).add(o.terrain.min);
@@ -96,7 +97,9 @@ export async function mountRouteViewer({ container, signal, reducedMotion }: Sce
   const flat = smoothstep(0.985, 0.998, normalLocal.y);
   const minor = contourLine(10, 1).mul(float(1).sub(flat));
   const major = contourLine(50, 1.8).mul(float(1).sub(flat.mul(0.7)));
-  terrainMaterial.colorNode = mix(mix(tint, tone.contour, minor.mul(0.55)), tone.contour, major);
+  const land = mix(mix(tint, tone.contour, minor.mul(0.55)), tone.contour, major);
+  // Where the model holds nothing because it is the sea, the terrain lies at the bed it was given: there it is water, not relief.
+  terrainMaterial.colorNode = o.terrain.seaBedM === undefined ? land : mix(land, tone.water, smoothstep(o.terrain.seaBedM * 0.15, o.terrain.seaBedM * 0.7, elevation));
   const terrain = new THREE.Mesh(ground, terrainMaterial);
   terrain.position.set(sizeX / 2, 0, -sizeZ / 2);
 
@@ -333,6 +336,7 @@ export async function mountRouteViewer({ container, signal, reducedMotion }: Sce
     const [low, contour] = [c['surface-alt'].srgb, c['map-contour'].srgb];
     tone.high.value.setRGB(low[0] + (contour[0] - low[0]) * 0.3, low[1] + (contour[1] - low[1]) * 0.3, low[2] + (contour[2] - low[2]) * 0.3, THREE.SRGBColorSpace);
     set(tone.contour.value, 'map-contour');
+    set(tone.water.value, 'map-water');
     set(aheadMaterial.color, 'text-muted');
     ramp.forEach((color, k) => set(color.value, GRADES[k]!));
     set(doneMaterial.color, 'data-primary');

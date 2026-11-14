@@ -210,7 +210,7 @@ const sill = (context: CanvasRenderingContext2D, left: number, y: number, wide: 
 
 /**
  * The bays of a wall, one picture each: a window with its shutters folded back, a balcony, a window shut,
- * bare wall, a front door and the gate of a shed. A wall takes one for each bay of each floor.
+ * bare wall, a front door, the gate of a shed and a shop front. A wall takes one for each bay of each floor.
  */
 const BAY_PAINTS: Paint[] = [
   (context, size, random) => {
@@ -288,6 +288,42 @@ const BAY_PAINTS: Paint[] = [
     for (let y = top + 6; y < top + tall; y += 12) context.fillRect(left, y, wide, 3);
     context.fillStyle = hsl(210, 6, 62, 0.5);
     for (let y = top + 10; y < top + tall; y += 12) context.fillRect(left, y, wide, 2);
+  },
+  (context, size, random) => {
+    plaster(context, size, random);
+    // A shop front: glass from side to side with a door in it, a board over it and an awning out over the pavement.
+    const [left, top, wide, tall] = [size * 0.07, size * 0.3, size * 0.86, size * 0.7];
+    opening(context, left, top, wide, tall, glassOf(context, left, top, wide, tall));
+    // What the glass lets see: shelves, a counter, a lamp lit.
+    for (let i = 0; i < 7; i++) {
+      context.fillStyle = hsl(30 + random() * 30, 30, 34 + random() * 24, 0.5);
+      context.fillRect(left + 8 + random() * (wide * 0.55), top + tall * (0.35 + random() * 0.4), 14 + random() * 30, 10 + random() * 26);
+    }
+    context.fillStyle = hsl(46, 70, 80, 0.5);
+    context.fillRect(left + wide * 0.2, top + 8, wide * 0.3, 5);
+    context.strokeStyle = hsl(220, 8, 14);
+    context.lineWidth = 4;
+    context.strokeRect(left + 2, top + 2, wide - 4, tall - 2);
+    context.beginPath();
+    context.moveTo(left + wide * 0.68, top);
+    context.lineTo(left + wide * 0.68, top + tall);
+    context.stroke();
+    context.fillStyle = hsl(44, 40, 70);
+    context.fillRect(left + wide * 0.7, top + tall * 0.5, 3, 16);
+    // The board with the name, which a texture cannot write: the name is the label over the house.
+    context.fillStyle = hsl(210, 14, 20);
+    context.fillRect(left - 4, size * 0.12, wide + 8, size * 0.1);
+    context.fillStyle = hsl(40, 30, 88, 0.85);
+    context.fillRect(left + wide * 0.22, size * 0.155, wide * 0.56, size * 0.03);
+    // The awning, in stripes, and the shade it throws on the glass.
+    for (let x = 0; x < 12; x++) {
+      context.fillStyle = x % 2 ? hsl(40, 30, 92) : hsl(8, 52, 46);
+      context.fillRect(left - 8 + (x * (wide + 16)) / 12, size * 0.22, (wide + 16) / 12 + 0.5, size * 0.11);
+    }
+    context.fillStyle = hsl(220, 20, 10, 0.4);
+    context.fillRect(left, size * 0.33, wide, size * 0.07);
+    context.fillStyle = hsl(30, 8, 58);
+    context.fillRect(0, size - 6, size, 6);
   },
 ];
 

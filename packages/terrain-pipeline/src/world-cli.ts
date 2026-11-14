@@ -2,17 +2,20 @@
 // where its LiDAR found them, of the kind its land-cover map says (E18).
 // Usage: node src/world-cli.ts <routeDir>
 import { readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { VectorTile } from '@mapbox/vector-tile';
 import { PbfReader } from 'pbf';
 import sharp from 'sharp';
+import { CADASTRE_ATTRIBUTION, fetchCadastre, tilesNear } from './cadastre.ts';
+import { fetchOsmPlaces, OSM_ATTRIBUTION } from './osm.ts';
 import { decodeTerrainRgb } from './terrain-rgb.ts';
 import { toLngLat, toUtm } from './utm.ts';
-import { type Canopy, distanceToLine, forestTrees, groveTrees, type Point, polygonsOf, TREE_KINDS, type TreeKind } from './world.ts';
+import { type Canopy, distanceToLine, forestTrees, groveTrees, housesOf, insideRings, type Point, polygonsOf, TREE_KINDS, type TreeKind } from './world.ts';
 
 const [dir] = process.argv.slice(2);
 if (!dir) throw new Error('usage: node src/world-cli.ts <routeDir>');
-const meta = JSON.parse(readFileSync(join(dir, 'terrain.json'), 'utf8')) as { x0: number; y0: number; cols: number; rows: number; cell: number };
+const meta = JSON.parse(readFileSync(join(dir, 'terrain.json'), 'utf8')) as { x0: number; y0: number; cols: number; rows: number; cell: number; seaBedM?: number };
 const { data } = await sharp(join(dir, 'terrain.webp')).removeAlpha().raw().toBuffer({ resolveWithObject: true });
 const heights = decodeTerrainRgb(data, 3);
 /** Elevation of the ground at a point, between the four cells around it. Row 0 is the north edge. */
@@ -40,6 +43,12 @@ const COVER_CELL_M = 2;
 const ORTHO = { url: 'https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wms/service', layer: 'orto', cellM: 2, tile: 1800 };
 const LAND_CELL_M = 4;
 const BUILDING_CORRIDOR_M = 260;
+/** Within this distance of the route a block of the map is told apart into the houses the cadastre has in it. */
+const HOUSE_CORRIDOR_M = 130;
+/** Within this distance of the route the names the map writes are kept: churches, farmhouses, beaches, squares. */
+const PLACE_CORRIDOR_M = 200;
+/** A bar or a shop is named when the route passes its door. */
+const SHOP_CORRIDOR_M = 35;
 const KINDS = new Set(['residential', 'industrial', 'greenhouse']);
 
 const scale = 2 ** ZOOM;
@@ -60,9 +69,13 @@ const localOf = (tx: number, ty: number, u: number, v: number): Point => {
 };
 
 interface Loaded {
-  /** Roads and paths with a known surface, as lines in tile units. */
-  roads: Array<{ paved: boolean; lines: Point[][] }>;
+  /** Roads and paths with a known surface, as lines in tile units. `walk` is one for people on foot: a promenade, a square, a path. */
+  roads: Array<{ paved: boolean; walk: boolean; lines: Point[][] }>;
+  /** Beaches, as the rings of each in the metres of the route. */
+  beaches: Point[][][];
   buildings: Array<{ heightM: number; polygons: Point[][][] }>;
+  /** What the map names: the name, the class the ICGC gives it, where it is, and the size it writes it in. */
+  places: Array<{ name: string; kind: string; at: Point; size: number }>;
 }
 const cache = new Map<string, Loaded>();
 async function load(tx: number, ty: number): Promise<Loaded> {
@@ -72,22 +85,45 @@ async function load(tx: number, ty: number): Promise<Loaded> {
   const response = await fetch(`${TILES}/${ZOOM}/${tx}/${ty}.pbf`);
   if (!response.ok) throw new Error(`ICGC tile ${key}: ${response.status}`);
   const tile = new VectorTile(new PbfReader(new Uint8Array(await response.arrayBuffer())));
-  const loaded: Loaded = { roads: [], buildings: [] };
+  const loaded: Loaded = { roads: [], buildings: [], places: [], beaches: [] };
   const rings = (layer: string, i: number): Point[][] => {
     const feature = tile.layers[layer]!.feature(i);
     return feature.loadGeometry().map((ring) => ring.map((p): Point => [p.x / feature.extent, p.y / feature.extent]));
   };
   const transportation = tile.layers['transportation'];
   for (let i = 0; transportation && i < transportation.length; i++) {
-    const { surface } = transportation.feature(i).properties;
+    const { surface, class: kind } = transportation.feature(i).properties;
     if (transportation.feature(i).type !== 2 || (surface !== 'paved' && surface !== 'unpaved')) continue;
-    loaded.roads.push({ paved: surface === 'paved', lines: rings('transportation', i) });
+    loaded.roads.push({ paved: surface === 'paved', walk: kind === 'pedestrian' || kind === 'path' || kind === 'square', lines: rings('transportation', i) });
+  }
+  const landcover = tile.layers['landcover'];
+  for (let i = 0; landcover && i < landcover.length; i++) {
+    if (landcover.feature(i).type !== 3 || landcover.feature(i).properties['class'] !== 'beach') continue;
+    loaded.beaches.push(rings('landcover', i).map((ring) => ring.map(([u, v]) => localOf(tx, ty, u, v))));
   }
   const building = tile.layers['building'];
   for (let i = 0; building && i < building.length; i++) {
     const { building: kind, render_height: height } = building.feature(i).properties;
     if (building.feature(i).type !== 3 || !KINDS.has(String(kind)) || !(Number(height) >= 2)) continue;
     loaded.buildings.push({ heightM: Number(height), polygons: polygonsOf(rings('building', i)).map((polygon) => polygon.map((ring) => ring.map(([u, v]) => localOf(tx, ty, u, v)))) });
+  }
+  // Names: of a point as it is; of a line (a beach, a stream), at its middle; of an area (a port, a school), at the middle of its box.
+  for (const name of ['place', 'landuse', 'mountain_peak', 'water_name', 'poi']) {
+    const layer = tile.layers[name];
+    for (let i = 0; layer && i < layer.length; i++) {
+      const feature = layer.feature(i);
+      const properties = feature.properties;
+      const label = String(properties['name'] ?? '').trim();
+      const kind = String(properties['classicgc'] ?? properties['descripcio'] ?? properties['class'] ?? '').trim();
+      if (!label || kind === 'parada_autobus' || kind === 'recinte') continue;
+      const points = rings(name, i).flat();
+      if (!points.length) continue;
+      const us = points.map((p) => p[0]);
+      const vs = points.map((p) => p[1]);
+      const [u, v] = feature.type === 1 ? points[0]! : feature.type === 2 ? points[Math.floor(points.length / 2)]! : [(Math.min(...us) + Math.max(...us)) / 2, (Math.min(...vs) + Math.max(...vs)) / 2];
+      if (u < 0 || u > 1 || v < 0 || v > 1) continue;
+      loaded.places.push({ name: label, kind, at: localOf(tx, ty, u, v), size: Number(properties['fontsize']) || 6 });
+    }
   }
   cache.set(key, loaded);
   return loaded;
@@ -211,18 +247,19 @@ console.log([...near].sort((a, b) => b[1] - a[1]).slice(0, 9).map(([name, n]) =>
 const tileM = (40075016.686 * Math.cos(((toLngLat(meta.x0, meta.y0)[1]) * Math.PI) / 180)) / scale;
 const lengths = [0];
 for (let i = 1; i < route.length; i++) lengths.push(lengths[i - 1]! + Math.hypot(route[i]![0] - route[i - 1]![0], route[i]![1] - route[i - 1]![1]));
-const surfaces = route.map((point): boolean | null => {
+const nearestRoad = route.map((point) => {
   const { tx, ty, u, v } = tileOf(point);
   let best = 10 / tileM;
-  let paved: boolean | null = null;
+  let found: { paved: boolean; walk: boolean } | null = null;
   for (const road of cache.get(`${tx}/${ty}`)?.roads ?? []) {
     for (const line of road.lines) {
       const d = distanceToLine([u, v], line);
-      if (d < best) [best, paved] = [d, road.paved];
+      if (d < best) [best, found] = [d, road];
     }
   }
-  return paved;
+  return found;
 });
+const surfaces = nearestRoad.map((road) => road?.paved ?? null);
 // A stretch is paved when most of what the map knows within 25 m either way is: one stray point changes nothing.
 const pavedAt = route.map((_, i) => {
   let [yes, no] = [0, 0];
@@ -233,11 +270,27 @@ const pavedAt = route.map((_, i) => {
   }
   return yes > no;
 });
-const paved: number[] = [];
-for (let i = 0; i < route.length; i++) {
-  if (pavedAt[i] && !pavedAt[i - 1]) paved.push(Number((lengths[i]! / lengths.at(-1)!).toFixed(4)));
-  if (pavedAt[i] && !pavedAt[i + 1]) paved.push(Number((lengths[i]! / lengths.at(-1)!).toFixed(4)));
-}
+/** The stretches where something holds, as shares of the route: from, to, from, to… */
+const stretchesOf = (holds: readonly boolean[]): number[] => {
+  const shares: number[] = [];
+  for (let i = 0; i < route.length; i++) {
+    if (holds[i] && !holds[i - 1]) shares.push(Number((lengths[i]! / lengths.at(-1)!).toFixed(4)));
+    if (holds[i] && !holds[i + 1]) shares.push(Number((lengths[i]! / lengths.at(-1)!).toFixed(4)));
+  }
+  return shares;
+};
+const paved = stretchesOf(pavedAt);
+// Of the paved stretches, the ones for people on foot: a promenade, a square. No cars, no lines on the ground.
+const walkedAt = route.map((_, i) => {
+  let [yes, no] = [0, 0];
+  for (let k = 0; k < route.length; k++) {
+    if (Math.abs(lengths[k]! - lengths[i]!) > 25 || !nearestRoad[k]) continue;
+    if (nearestRoad[k]!.walk) yes++;
+    else no++;
+  }
+  return pavedAt[i]! && yes > no;
+});
+const walked = stretchesOf(walkedAt);
 
 // The kinds of ground the view tells apart, from the land-cover map: each gets its own grain up close, and scrub its bushes.
 const GROUND: Array<[RegExp, number]> = [
@@ -245,15 +298,35 @@ const GROUND: Array<[RegExp, number]> = [
   [/boscos clars|matollar/i, 2],
   [/prats|zones verdes/i, 3],
   [/conreus|horta|vinyes|oliverars|fruiters/i, 4],
-  [/urb|casc|eixample|industrial|vi[àa]ria|ferrovi|residencial/i, 5],
-  [/s[òo]l nu|roquissar|platg/i, 6],
+  [/urb|casc|eixample|industrial|vi[àa]ria|ferrovi|residencial|portu/i, 5],
+  [/platg/i, 8],
+  [/s[òo]l nu|roquissar/i, 6],
   [/llacs|rius|mar |humides|embassament/i, 7],
 ];
 const groundOf = (name: string | undefined): number => GROUND.find(([pattern]) => name && pattern.test(name))?.[1] ?? 0;
 const step = LAND_CELL_M / COVER_CELL_M;
 const [landCols, landRows] = [Math.floor(land.cols / step), Math.floor(land.rows / step)];
 const kinds = Buffer.alloc(landCols * landRows);
-for (let row = 0; row < landRows; row++) for (let col = 0; col < landCols; col++) kinds[row * landCols + col] = groundOf(legend.get(colourAt(col * step, row * step))) * 30;
+// The land-cover map stops at the shore: the sea is where the model holds no elevation, and the beaches are the map's own.
+const beaches = [...cache.values()].flatMap((tile) => tile.beaches).map((rings) => {
+  const all = rings.flat();
+  return { rings, west: Math.min(...all.map((p) => p[0])), east: Math.max(...all.map((p) => p[0])), south: Math.min(...all.map((p) => p[1])), north: Math.max(...all.map((p) => p[1])) };
+});
+for (let row = 0; row < landRows; row++) {
+  for (let col = 0; col < landCols; col++) {
+    const at: Point = [box.west - meta.x0 + (col + 0.5) * LAND_CELL_M, box.north - meta.y0 - (row + 0.5) * LAND_CELL_M];
+    const inTerrain = at[0] >= 0 && at[1] >= 0 && at[0] <= (meta.cols - 1) * meta.cell && at[1] <= (meta.rows - 1) * meta.cell;
+    const kind =
+      meta.seaBedM !== undefined && inTerrain && groundAt(at) <= meta.seaBedM / 2
+        ? 7
+        : beaches.some((beach) => at[0] >= beach.west && at[0] <= beach.east && at[1] >= beach.south && at[1] <= beach.north && insideRings(at, beach.rings))
+          ? 8
+          : groundOf(legend.get(colourAt(col * step, row * step)));
+    // Between the last thing the land-cover map names and the water there is a strip it leaves blank: the shore, taken for beach.
+    const shore = kind === 0 && meta.seaBedM !== undefined && inTerrain && groundAt(at) < 3;
+    kinds[row * landCols + col] = (shore ? 8 : kind) * 30;
+  }
+}
 await sharp(kinds, { raw: { width: landCols, height: landRows, channels: 1 } }).png({ compressionLevel: 9 }).toFile(join(dir, 'land.png'));
 
 // The orthophoto over the whole terrain, in the terrain's own coordinates: asked for in pieces the service accepts.
@@ -273,17 +346,64 @@ const ortho = await sharp({ create: { width: orthoCols, height: orthoRows, chann
 writeFileSync(join(dir, 'ortho.webp'), ortho);
 
 const tenths = (v: number): number => Math.round(v * 10);
-const buildings = [...cache.values()]
+const blocks = [...cache.values()]
   .flatMap((tile) => tile.buildings)
   .flatMap((b) => b.polygons.map((polygon) => ({ heightM: b.heightM, polygon })))
-  .filter((b) => b.polygon[0]!.some((p) => distanceToLine(p, route) <= BUILDING_CORRIDOR_M))
-  .map((b) => ({ h: b.heightM, rings: b.polygon.map((ring) => ring.flatMap(([x, y]) => [tenths(x), tenths(y)])) }));
+  .filter((b) => b.polygon[0]!.some((p) => distanceToLine(p, route) <= BUILDING_CORRIDOR_M));
+// The cadastre, near the route: each house on its own, with its floors, instead of the block it stands in.
+const kept = process.env['TRAM_WORLD_CACHE'] ?? join(tmpdir(), 'tram-world');
+const cadastre = await fetchCadastre(tilesNear(route.map(([x, y]): [number, number] => [meta.x0 + x, meta.y0 + y]), HOUSE_CORRIDOR_M), kept);
+const parts = cadastre.parts.map((part) => ({
+  floors: part.floors,
+  rings: part.rings.map((ring) => ring.map(([x, y]): Point => [x - meta.x0, y - meta.y0])),
+  use: cadastre.buildings.get(part.building)?.use ?? null,
+  year: cadastre.buildings.get(part.building)?.year ?? null,
+}));
+const USES = ['residential', 'agriculture', 'industrial', 'office', 'retail', 'public'];
+const houses = housesOf({ blocks, parts, route, detailM: HOUSE_CORRIDOR_M });
+const buildings = houses.map((b) => ({
+  h: b.heightM,
+  ...(b.floors ? { f: b.floors } : {}),
+  ...(b.use ? { u: USES.indexOf(b.use) } : {}),
+  ...(b.year ? { y: b.year } : {}),
+  rings: b.rings.map((ring) => ring.flatMap(([x, y]) => [tenths(x), tenths(y)])),
+}));
+
+// The names the map writes near the route, each once: the nearest of those that share a name, and of
+// those the class that says most (a church before "a building").
+const VAGUE = new Set(['isolated_dwelling', 'other', 'service', '-', '']);
+const named = new Map<string, { name: string; kind: string; at: Point; size: number; away: number }>();
+for (const place of [...cache.values()].flatMap((tile) => tile.places)) {
+  const away = distanceToLine(place.at, route);
+  if (away > PLACE_CORRIDOR_M) continue;
+  const key = place.name.toLocaleLowerCase('ca');
+  const known = named.get(key);
+  if (!known) named.set(key, { ...place, away });
+  else if (VAGUE.has(known.kind) && !VAGUE.has(place.kind)) named.set(key, { ...known, kind: place.kind, size: Math.max(known.size, place.size) });
+  else if (VAGUE.has(place.kind) === VAGUE.has(known.kind) && away < known.away) named.set(key, { ...place, kind: known.kind, away });
+}
+const places: Array<{ n: string; k: string; x: number; y: number; s: number; o?: 1 }> = [...named.values()].sort((a, b) => a.away - b.away).map((p) => ({ n: p.name, k: p.kind, x: tenths(p.at[0]), y: tenths(p.at[1]), s: p.size }));
+// What OpenStreetMap names at the side of the route and the ICGC does not: bars, shops, a sculpture.
+const [west, south] = toLngLat(meta.x0 + Math.min(...route.map((p) => p[0])) - 60, meta.y0 + Math.min(...route.map((p) => p[1])) - 60);
+const [east, north] = toLngLat(meta.x0 + Math.max(...route.map((p) => p[0])) + 60, meta.y0 + Math.max(...route.map((p) => p[1])) + 60);
+const doors = new Map<string, { name: string; kind: string; at: Point; away: number }>();
+for (const place of await fetchOsmPlaces({ south, west, north, east }, kept)) {
+  const [x, y] = toUtm(place.lat, place.lon);
+  const at: Point = [x - meta.x0, y - meta.y0];
+  const away = distanceToLine(at, route);
+  const key = place.name.toLocaleLowerCase('ca');
+  if (away > SHOP_CORRIDOR_M || named.has(key) || (doors.get(key)?.away ?? Infinity) <= away) continue;
+  doors.set(key, { name: place.name, kind: place.kind, at, away });
+}
+for (const door of [...doors.values()].sort((a, b) => a.away - b.away)) places.push({ n: door.name, k: door.kind, x: tenths(door.at[0]), y: tenths(door.at[1]), s: 4, o: 1 });
 
 const world = {
-  attribution: 'Edificis, variables de l’arbrat (LiDAR 2016-2017) i cobertes del sòl (2024): © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0',
+  attribution: `Edificis, topònims, variables de l’arbrat (LiDAR 2016-2017) i cobertes del sòl (2024): © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0. ${CADASTRE_ATTRIBUTION}. ${OSM_ATTRIBUTION}`,
   kinds: TREE_KINDS,
   // Stretches of the route on a paved road, as shares of its length: from, to, from, to…
   paved,
+  // Of those, the stretches for people on foot (a promenade, a square): from, to, from, to…
+  walked,
   // Where land.png lies: its south-west corner in metres from the corner of the terrain, and the size of its cells.
   land: { x0: box.west - meta.x0, y0: box.south - meta.y0, cols: landCols, rows: landRows, cellM: LAND_CELL_M },
   // Tenths of a metre from the south-west corner of the terrain. Trees: x, y, height, elevation of the ground under it, kind (index of `kinds`).
@@ -291,7 +411,12 @@ const world = {
   treeCorridorM: TREES.corridorM,
   buildingCorridorM: BUILDING_CORRIDOR_M,
   trees: trees.flatMap(([x, y, h, kind]) => [tenths(x), tenths(y), tenths(h), tenths(groundAt([x, y])), TREE_KINDS.indexOf(kind)]),
+  // Height in metres; where the cadastre tells the house apart: `f` floors above ground (the height is then three metres a floor), `u` its use (index of `uses`) and `y` the year it was built.
+  uses: USES,
   buildings,
+  // What is named within reach of the route: name, class, place in tenths of a metre, and the size the ICGC's map writes it in.
+  // `o` marks the ones that come from OpenStreetMap (ODbL), with its own tags for a class.
+  places,
 };
 const json = JSON.stringify(world);
 writeFileSync(join(dir, 'world.json'), json + '\n');
@@ -299,4 +424,4 @@ const count = (kind: TreeKind): number => trees.filter((tree) => tree[3] === kin
 const pavedShare = paved.reduce((sum, share, i) => sum + (i % 2 ? share - paved[i - 1]! : 0), 0);
 console.log(`paved ${(pavedShare * 100).toFixed(0)} % of the route, in ${paved.length / 2} stretches`);
 console.log(`ortho.webp ${orthoCols}×${orthoRows}, ${(ortho.length / 1024).toFixed(0)} KB · land.png ${landCols}×${landRows}`);
-console.log(`${trees.length} trees (${TREE_KINDS.map((kind) => `${count(kind)} ${kind}`).join(', ')}), ${buildings.length} buildings, world.json ${(json.length / 1024).toFixed(1)} KB`);
+console.log(`${trees.length} trees (${TREE_KINDS.map((kind) => `${count(kind)} ${kind}`).join(', ')}), ${buildings.length} buildings (${buildings.filter((b) => 'f' in b).length} houses of the cadastre in ${blocks.length} blocks of the map), ${places.length} names (${doors.size} from OpenStreetMap), world.json ${(json.length / 1024).toFixed(1)} KB`);

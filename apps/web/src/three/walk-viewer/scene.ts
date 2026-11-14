@@ -12,12 +12,27 @@ import { paintTextures } from './textures.ts';
 export interface WalkWorld {
   /** Metres east and north of the south-west corner of the terrain, height of the tree in metres, and its kind. */
   trees: ReadonlyArray<readonly [number, number, number, Exclude<PlantKind, 'bush'>]>;
-  /** Outline of each building (the first ring; the rest are courtyards) and its height. */
-  buildings: ReadonlyArray<{ heightM: number; rings: ReadonlyArray<ReadonlyArray<readonly [number, number]>> }>;
+  /**
+   * Outline of each building (the first ring; the rest are courtyards) and its height. Where the cadastre
+   * tells a house apart from its block it comes with its floors above ground, its use and the year it was built.
+   */
+  buildings: ReadonlyArray<WalkBuilding>;
+  /** What is named along the route: the name, its class, and where it is. `door` marks what OpenStreetMap names at the side of the route. */
+  places?: ReadonlyArray<{ name: string; kind: string; x: number; y: number; size: number; door?: boolean }> | undefined;
   /** Where the image of the kinds of ground lies, and the size of its cells. */
   land?: { x0: number; y0: number; cols: number; rows: number; cellM: number } | undefined;
   /** Stretches of the route on a paved road, as shares of its length: from, to, from, to… */
   paved?: readonly number[] | undefined;
+  /** Of those, the stretches for people on foot: a promenade has no lines painted on it. */
+  walked?: readonly number[] | undefined;
+}
+
+export interface WalkBuilding {
+  heightM: number;
+  rings: ReadonlyArray<ReadonlyArray<readonly [number, number]>>;
+  floors?: number | undefined;
+  use?: string | undefined;
+  year?: number | undefined;
 }
 
 export interface WalkViewerOptions {
@@ -64,11 +79,98 @@ const HAZE = 0xdfe8ef;
 const ZENITH = 0x5d93cf;
 /** Greens of each kind of plant, and the wood of a trunk. */
 const LEAF: Record<PlantKind, number> = { pine: 0x4a7a42, oak: 0x5c8040, deciduous: 0x7fae4c, olive: 0x98a780, bush: 0x6f9448, grass: 0xb3ad68 };
-/** Plaster, from white to ochre, and roofs: tile on a house, sheet on a shed. */
-const WALLS = [0xf1ead9, 0xe6d3ae, 0xd9b98c] as const;
-const SHEET = 0x9a9c9a;
+/** Plaster: white and cream most of all, then ochre, salmon, a grey that leans to blue and a faded red. Each house takes one. */
+const WALLS = [0xf3efe6, 0xead9b5, 0xdcb98a, 0xe2b49c, 0xd5dbdc, 0xcf9f86] as const;
+const WALL_SHARES = [0.3, 0.52, 0.68, 0.81, 0.91] as const;
+/** The sea is drawn a hand under the level the model calls zero, so a beach at zero stays dry. */
+const SEA_LEVEL_M = -0.25;
+/** A name of the map is shown while the runner is within this distance of it, and so many at a time. */
+const NAME_RANGE_M = 260;
+/** What the ICGC calls a place, in the words of the page. Said only when the name does not say it itself. */
+const PLACE_WORDS: Record<string, string> = {
+  esglesia: 'Església',
+  monestir: 'Monestir',
+  ermita: 'Ermita',
+  capella: 'Capella',
+  santuari: 'Santuari',
+  castell: 'Castell',
+  torre_defensa: 'Torre de defensa',
+  masia: 'Masia',
+  allotjament_rural: 'Allotjament rural',
+  platja: 'Platja',
+  cala: 'Cala',
+  cap: 'Cap',
+  port: 'Port',
+  moll: 'Moll',
+  vela: 'Club nàutic',
+  escullera: 'Espigó',
+  educacio: 'Escola',
+  esports: 'Esports',
+  hipica: 'Hípica',
+  camping: 'Càmping',
+  cementiri: 'Cementiri',
+  deixalleria: 'Deixalleria',
+  estacio_baixador: 'Estació',
+  estacio_ferroviaria: 'Estació',
+  poligons_industrials: 'Polígon',
+  arbre_singular: 'Arbre singular',
+  riera: 'Riera',
+  veinat: 'Veïnat',
+  neighbourhood: 'Barri',
+  urbanitzacio: 'Urbanització',
+  // The tags of OpenStreetMap, for what it names at the side of the route.
+  restaurant: 'Restaurant',
+  bar: 'Bar',
+  pub: 'Bar',
+  cafe: 'Cafè',
+  ice_cream: 'Gelateria',
+  fast_food: 'Menjar ràpid',
+  pharmacy: 'Farmàcia',
+  bank: 'Banc',
+  library: 'Biblioteca',
+  theatre: 'Teatre',
+  cinema: 'Cinema',
+  police: 'Policia',
+  post_office: 'Correus',
+  fuel: 'Benzinera',
+  marketplace: 'Mercat',
+  hospital: 'Hospital',
+  clinic: 'Clínica',
+  school: 'Escola',
+  place_of_worship: 'Església',
+  shop: 'Botiga',
+  supermarket: 'Supermercat',
+  bakery: 'Forn de pa',
+  bicycle: 'Bicicletes',
+  sports: 'Esports',
+  hotel: 'Hotel',
+  hostel: 'Alberg',
+  guest_house: 'Hostal',
+  museum: 'Museu',
+  artwork: 'Escultura',
+  viewpoint: 'Mirador',
+  camp_site: 'Càmping',
+  gallery: 'Galeria',
+  monument: 'Monument',
+  memorial: 'Memorial',
+  castle: 'Castell',
+  ruins: 'Ruïnes',
+  archaeological_site: 'Jaciment',
+  tower: 'Torre',
+  park: 'Parc',
+  sports_centre: 'Esports',
+  marina: 'Port esportiu',
+  lighthouse: 'Far',
+  windmill: 'Molí',
+};
+/** The kinds of place that have a shop front on the street. */
+const SHOP_KINDS = new Set(['restaurant', 'bar', 'pub', 'cafe', 'ice_cream', 'fast_food', 'pharmacy', 'bank', 'shop', 'supermarket', 'bakery', 'bicycle', 'sports']);
+/** A bar or a shop is named from closer by than a church. */
+const DOOR_RANGE_M = 90;
+/** Names that say nothing on the ground: a trail code, a survey point, the town the whole route is in. */
+const PLACE_SKIPPED = new Set(['gr', 'vertex_geodesic', 'municipality', 'town', 'city', 'parada', 'cami', 'sequia', 'torrent', 'stream']);
 /** How many pictures of a bay the strip of facades holds (`textures.ts`). */
-const BAYS = 6;
+const BAYS = 7;
 /** A floor is this tall and a bay this wide, more or less: a wall is cut in whole ones. */
 const FLOOR_M = 2.9;
 const BAY_M = 3.1;
@@ -123,7 +225,7 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
     if (u + v <= 1) return lift(at(c0, r0) + (northEast - at(c0, r0)) * u + (southWest - at(c0, r0)) * v);
     return lift(at(c0 + 1, r0 + 1) + (southWest - at(c0 + 1, r0 + 1)) * (1 - u) + (northEast - at(c0 + 1, r0 + 1)) * (1 - v));
   };
-  /** Kind of ground at a point: 0 unknown, 1 wood, 2 scrub, 3 meadow, 4 crops, 5 built, 6 bare, 7 water. */
+  /** Kind of ground at a point: 0 unknown, 1 wood, 2 scrub, 3 meadow, 4 crops, 5 built, 6 bare, 7 water, 8 beach. */
   const kindAt = (x: number, y: number): number => {
     const land = o.world.land;
     if (!land || !landKinds) return 0;
@@ -165,7 +267,7 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
     const kind = texture(landMap, at).r.mul(255 / 30);
     // How much of each kind a point is: all of one, away from the edge between two.
     const is = (k: number) => float(1).sub(kind.sub(k).abs().clamp(0, 1));
-    return mix(mix(mix(mix(mix(straw, wood, is(1)), scrub, is(2)), meadow, is(3)), bare, is(5).add(is(6)).clamp(0, 1)), straw, is(4));
+    return mix(mix(mix(mix(mix(straw, wood, is(1)), scrub, is(2)), meadow, is(3)), bare, is(5).add(is(6)).add(is(8)).clamp(0, 1)), straw, is(4));
   };
   const cover = coverOf(read);
   const plain = luminance(coverOf(flatOf)).max(0.03);
@@ -218,6 +320,26 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
     const key = Math.floor(drawn[i * 2]! / cellM) * 100003 + Math.floor(drawn[i * 2 + 1]! / cellM);
     (cells.get(key) ?? cells.set(key, []).get(key)!).push(i);
   }
+  /**
+   * Where the route runs beside itself: out along a promenade and back along it, a few metres apart. Two
+   * roads drawn one over the other cross their lines; there the road is drawn without them.
+   */
+  const doubled = new Uint8Array(samples + 1);
+  const apart = Math.ceil(80 / 2.5);
+  for (let i = 0; i <= samples; i++) {
+    const [x, y] = [drawn[i * 2]!, drawn[i * 2 + 1]!];
+    const [cx, cy] = [Math.floor(x / cellM), Math.floor(y / cellM)];
+    for (let dx = -1; dx <= 1 && !doubled[i]; dx++) {
+      for (let dy = -1; dy <= 1 && !doubled[i]; dy++) {
+        for (const j of cells.get((cx + dx) * 100003 + cy + dy) ?? []) {
+          if (Math.abs(j - i) > apart && Math.hypot(drawn[j * 2]! - x, drawn[j * 2 + 1]! - y) < ROAD_HALF * 2.4) {
+            doubled[i] = 1;
+            break;
+          }
+        }
+      }
+    }
+  }
   const nearest = (x: number, y: number): { distance: number; share: number } => {
     let best = Infinity;
     let share = 0;
@@ -242,7 +364,9 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   // The path: beaten earth that fades into the ground at its edges, and along its middle the line of the
   // route: what is left to run in the colour of its grade, what has been run inked in.
   /** A band along the route, with its points across at the given offsets (metres from the middle). */
-  const pavedAt = (share: number): boolean => (o.world.paved ?? []).some((from, i, all) => i % 2 === 0 && share >= from && share <= all[i + 1]!);
+  const inStretch = (stretches: readonly number[] | undefined, share: number): boolean => (stretches ?? []).some((from, i, all) => i % 2 === 0 && share >= from && share <= all[i + 1]!);
+  const pavedAt = (share: number): boolean => inStretch(o.world.paved, share);
+  const walkedAt = (share: number): boolean => inStretch(o.world.walked, share);
   const bandOf = (offsets: readonly number[], rise: number, widen = false): THREE.BufferGeometry => {
     const across = offsets.length;
     const positions = new Float32Array((samples + 1) * across * 3);
@@ -264,7 +388,8 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
       offsets.forEach((across0, k) => {
         // A road is wider than a path.
         const offset = across0 * (widen && paved ? ROAD_HALF / PATH_HALF : 1);
-        roads[i * across + k] = paved ? 1 : 0;
+        // 0 is a path of earth, 1 a road, 2 a paved way for people on foot, 3 a road the route runs twice.
+        roads[i * across + k] = paved ? (walkedAt(share) ? 2 : doubled[i] ? 3 : 1) : 0;
         // Across the band from 0 to 1, and along it in metres.
         uvs.set([(across0 / Math.max(...offsets.map(Math.abs)) + 1) / 2, share * total], (i * across + k) * 2);
         const [x, z] = [point.x + (-tz / length) * offset, point.z + (tx / length) * offset];
@@ -289,15 +414,22 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   };
   const offset = { polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 };
   const dirtMaterial = new THREE.MeshStandardNodeMaterial({ roughness: 1, metalness: 0, transparent: true, depthWrite: false, side: THREE.DoubleSide, ...offset });
-  const road = attribute('road', 'float');
+  const way = attribute('road', 'float');
+  const road = way.clamp(0, 1);
   const lane = uv();
   // Beaten earth where the map has a track or nothing; tarmac, with its lines, where it has a paved road.
   const beaten = texture(paints.earth, vec2(positionWorld.x, positionWorld.z).div(2.6)).rgb.mul(mx_noise_float(vec3(positionWorld.x, positionWorld.z, 4).mul(0.5)).mul(0.12).add(1.02));
-  const paved = texture(paints.tarmac, vec2(lane.x, lane.y.div(ROAD_HALF * 2))).rgb;
+  // The lines of a road are painted at the edges of its texture: a road with no lines reads the texture between them.
+  const unlined = step(2.5, way);
+  const paved = texture(paints.tarmac, vec2(mix(lane.x, lane.x.mul(0.8).add(0.1), unlined), lane.y.div(ROAD_HALF * 2))).rgb;
   // A track is two ruts packed hard and pale by wheels, with looser, darker earth between them and at the sides.
   const rut = (middle: number) => smoothstep(0.17, 0.03, lane.x.sub(middle).abs());
   const tracked = beaten.mul(rut(0.27).add(rut(0.73)).mul(0.2).add(0.86));
-  dirtMaterial.colorNode = mix(tracked, paved, road);
+  // A promenade is paved in pale slabs, with no lines: the joints run across and along it.
+  const slab = vec2(lane.x.mul(5), lane.y.div(1.1));
+  const joints = smoothstep(0.035, 0.0, slab.x.fract().sub(0.5).abs().sub(0.465).negate().min(slab.y.fract().sub(0.5).abs().sub(0.465).negate()));
+  const stone = vec3(0.62, 0.59, 0.54).mul(mx_noise_float(vec3(slab.x.floor(), slab.y.floor(), 2).mul(3.7)).mul(0.07).add(0.97)).mul(mix(1, 0.72, joints)).mul(luminance(paved).div(0.28).clamp(0.8, 1.15));
+  dirtMaterial.colorNode = mix(tracked, mix(paved, stone, way.sub(1).clamp(0, 1).mul(float(1).sub(unlined))), road);
   // A path is worn in the middle and grown over at the sides; a road ends where its tarmac ends.
   const grownOver = smoothstep(1, 0.5, attribute('edge', 'float').add(mx_noise_float(vec3(positionWorld.x, positionWorld.z, 9).mul(0.9)).mul(0.22))).mul(0.94);
   dirtMaterial.opacityNode = mix(grownOver, float(1), road);
@@ -481,12 +613,14 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   const layCarpets = (lite: boolean): void => {
     if (!landKinds) return;
     // How much of each grows on each kind of ground: unknown, wood, scrub, meadow, crops, built, bare, water.
-    const grassy = [0.5, 0.4, 0.5, 0.95, 0.6, 0.12, 0.2, 0];
-    const bushy = [0.1, 0.42, 0.92, 0.04, 0, 0, 0.06, 0];
-    const stony = [0.03, 0.07, 0.14, 0.02, 0, 0, 0.3, 0];
+    const grassy = [0.5, 0.4, 0.5, 0.95, 0.6, 0.12, 0.2, 0, 0];
+    const bushy = [0.1, 0.42, 0.92, 0.04, 0, 0, 0.06, 0, 0];
+    const stony = [0.03, 0.07, 0.14, 0.02, 0, 0, 0.3, 0, 0.01];
     carpets.push(
       createCarpet(plantGeometry('grass').cards, cardMaterial('grass'), { cellM: 6, radiusM: lite ? 30 : 44, perCell: 169 }, sown(6, 13, (gi, gj, x, y, clear, put) => {
-        if (scatter(gi, gj, 6) >= grassy[kindAt(x, y)]! * (0.4 + 0.6 * lushAt(x, y)) || !clear(-0.15) || indoors(x, y)) return;
+        // Among houses grass grows only where the photograph is green: a garden, a verge. Not on a pavement.
+        const kind = kindAt(x, y);
+        if (scatter(gi, gj, 6) >= grassy[kind]! * (kind === 5 ? lushAt(x, y) : 0.4 + 0.6 * lushAt(x, y)) || !clear(-0.15) || indoors(x, y)) return;
         put(x, y, groundAt(x, y), 0.4 + scatter(gi, gj, 7) ** 2 * 0.75, scatter(gi, gj, 8) * Math.PI, 1.25);
       })),
       createCarpet(shrubGeometry(), shrubMaterial(), { cellM: 12, radiusM: lite ? 75 : 120, perCell: 36 }, sown(12, 6, (gi, gj, x, y, clear, put) => {
@@ -519,10 +653,23 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   };
 
   // ── The buildings of the map: walls with their windows, a roof of tile on a house and of sheet on a shed.
-  const built = buildingsOf(o.world.buildings, groundAt);
+  const roofTones = readTones(ortho.image as CanvasImageSource, 1);
+  /** The colour of the photograph at a place, 0–255: a roof is the colour it has from the air. */
+  const photoAt = (x: number, y: number): readonly [number, number, number] => {
+    const col = Math.min(roofTones.width - 1, Math.max(0, Math.floor((x / sizeX) * roofTones.width)));
+    const row = Math.min(roofTones.height - 1, Math.max(0, Math.floor((1 - y / sizeZ) * roofTones.height)));
+    const i = (row * roofTones.width + col) * 4;
+    return [roofTones.data[i]!, roofTones.data[i + 1]!, roofTones.data[i + 2]!];
+  };
+  // Where OpenStreetMap has a bar or a shop, the wall nearest to it gets a shop front at street level.
+  const shops = (o.world.places ?? []).filter((place) => place.door && SHOP_KINDS.has(place.kind)).map((place) => [place.x, place.y] as const);
+  const built = buildingsOf(o.world.buildings, groundAt, photoAt, shops);
   const wallMaterial = new THREE.MeshStandardNodeMaterial({ roughness: 0.9, metalness: 0 });
-  const tone = attribute('tone', 'float');
-  const isRoof = attribute('roof', 'float');
+  // A renderer takes eight buffers to a mesh at most: what a wall is goes four to a buffer.
+  const look = attribute('look', 'vec4');
+  const more = attribute('more', 'vec2');
+  const tone = look.x;
+  const isRoof = look.y;
   const wall = uv();
   // A wall is bays across and floors up, whole ones: `uv` counts them. Each bay of each floor is one of the
   // pictures of the strip: a window, a balcony, closed shutters, bare wall; at street level, a door now and then.
@@ -530,25 +677,55 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   const pick = hash(bayOf.mul(13).add(floorOf.mul(71)).add(tone.mul(977).floor()).add(4000));
   const atStreet = step(wall.y, 1);
   // 1 is a house, a half a block of flats, 0 a shed.
-  const isHouse = step(0.25, attribute('tiled', 'float'));
+  const isHouse = step(0.25, look.z);
   const upstairs = step(0.45, pick).add(step(0.72, pick)).add(step(0.9, pick));
   const house = mix(upstairs, step(pick, 0.3).mul(4), atStreet);
   // A shed is bare wall, with a gate here and there.
   const shed = mix(float(3), float(5), atStreet.mul(step(0.8, pick)));
-  const which = mix(mix(shed, house, isHouse), float(3), attribute('plain', 'float'));
+  const which = mix(mix(mix(shed, house, isHouse), float(6), more.y.mul(atStreet)), float(3), look.w);
   const within = vec2(wall.x.fract().add(which).div(BAYS), wall.y.fract());
   const facade = texture(paints.bays, within).grad(vec2(dFdx(wall.x).div(BAYS), dFdx(wall.y)), vec2(dFdy(wall.x).div(BAYS), dFdy(wall.y))).rgb;
-  const plaster = mix(mix(color(WALLS[0]), color(WALLS[1]), smoothstep(0.2, 0.55, tone)), color(WALLS[2]), smoothstep(0.6, 0.95, tone));
+  const wallOf = (i: number) => color(WALLS[i]!);
+  const takes = (i: number) => step(WALL_SHARES[i]!, tone);
+  const plaster = mix(mix(mix(mix(mix(wallOf(0), wallOf(1), takes(0)), wallOf(2), takes(1)), wallOf(3), takes(2)), wallOf(4), takes(3)), wallOf(5), takes(4));
   // Below the floor a wall is its footing: stone, darker.
   const footing = texture(paints.earth, vec2(wall.x.mul(1.3), wall.y.mul(1.3))).rgb.mul(vec3(0.62, 0.6, 0.58));
   const walls = mix(facade.mul(plaster).mul(mix(0.8, 1, smoothstep(0.05, 0.6, wall.y))), footing, step(wall.y, 0));
-  // Tile laid along the slope of a roof on a house; sheet, with its seams, on a shed.
-  const tiled = texture(paints.tiles, vec2(wall.x.div(2.4), wall.y.div(2.4))).rgb;
-  const sheet = color(SHEET).mul(fract(wall.x.div(1.1)).sub(0.5).abs().mul(0.3).add(0.88));
-  wallMaterial.colorNode = mix(walls, mix(sheet, tiled, step(0.75, attribute('tiled', 'float'))), isRoof);
+  // A roof is the colour it has in the photograph, where it stands: red tile, a grey terrace, the white of a
+  // new sheet. The photograph gives the colour and a texture the grain: tile laid along the slope of a
+  // pitched roof, the seams of the sheet on a shed, and little on a terrace.
+  const fromAir = texture(ortho, vec2(positionWorld.x.div(sizeX), positionWorld.z.negate().div(sizeZ))).level(float(1)).rgb.mul(1.5);
+  // Seen from the air at midday a roof is paler than it is from the street in the afternoon.
+  const roofPhoto = saturation(fromAir.div(fromAir.mul(0.55).add(1)).mul(1.12), 1.45);
+  const roofUV = vec2(wall.x.div(2.4), wall.y.div(2.4));
+  const tileGrain = luminance(texture(paints.tiles, roofUV).rgb).div(luminance(texture(paints.tiles, roofUV).level(float(9)).rgb).max(0.03)).clamp(0.55, 1.5);
+  const seams = fract(wall.x.div(1.1)).sub(0.5).abs().mul(0.3).add(0.88);
+  const terrace = mx_noise_float(vec3(positionWorld.x, positionWorld.z, 0).mul(1.7)).mul(0.07).add(0.97);
+  const pitched = more.x;
+  const roofGrain = mix(mix(seams, terrace, isHouse), tileGrain, pitched);
+  wallMaterial.colorNode = mix(walls, roofPhoto.mul(roofGrain), isRoof);
   const buildings = new THREE.Mesh(built, wallMaterial);
   buildings.castShadow = true;
   buildings.receiveShadow = true;
+
+  // ── The sea, where the route has one: the model holds nothing there, and the photograph says what colour
+  // the water is at each place, the pale shallows and the dark of the deep. On top of it, the ripple and the shine.
+  const sea: THREE.Mesh[] = [];
+  if (o.terrain.seaBedM !== undefined) {
+    const water = new THREE.MeshStandardNodeMaterial({ roughness: 0.16, metalness: 0, transparent: true, depthWrite: false });
+    const swell = vec3(positionWorld.x, positionWorld.z, 0);
+    const tilt = (offset: number) => mx_noise_float(swell.mul(0.09).add(offset)).mul(0.05).add(mx_noise_float(swell.mul(0.45).add(offset * 2)).mul(0.05)).add(mx_noise_float(swell.mul(1.6).add(offset * 3)).mul(0.025));
+    water.normalNode = transformNormalToView(vec3(tilt(3.1), 1, tilt(17.3)).normalize());
+    const seen = texture(ortho, vec2(positionWorld.x.div(sizeX), positionWorld.z.negate().div(sizeZ))).level(float(2)).rgb.mul(1.5);
+    const tinted = seen.div(seen.mul(0.55).add(1)).mul(1.1);
+    water.colorNode = mix(tinted, vec3(0.03, 0.2, 0.3), 0.3);
+    water.opacityNode = float(0.9);
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(sizeX, sizeZ, 1, 1), water);
+    plane.rotation.x = -Math.PI / 2;
+    plane.position.set(sizeX / 2, lift(SEA_LEVEL_M), -sizeZ / 2);
+    plane.receiveShadow = true;
+    sea.push(plane);
+  }
 
   // ── The runner: a figure in running kit, the shirt in the signal colour, on a ring that marks it from afar.
   const runnerMaterial = new THREE.MeshStandardNodeMaterial({ roughness: 0.75, metalness: 0 });
@@ -635,7 +812,7 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   Object.assign(sun.shadow.camera, { left: -SHADOW_REACH_M, right: SHADOW_REACH_M, top: SHADOW_REACH_M, bottom: -SHADOW_REACH_M, near: 20, far: 1400 });
   sun.shadow.bias = -0.0006;
   sun.shadow.normalBias = 0.7;
-  scene.add(sky, ground, dirt, aheadBand, doneBand, growth, buildings, runner, pointer, sun, sun.target, new THREE.HemisphereLight(0xd9e8ff, 0xbfae92, 2.25));
+  scene.add(sky, ground, ...sea, dirt, aheadBand, doneBand, growth, buildings, runner, pointer, sun, sun.target, new THREE.HemisphereLight(0xd9e8ff, 0xbfae92, 2.25));
 
   const camera = new THREE.PerspectiveCamera(CAMERA.fov, 1, 0.6, 90000);
   const centre = new THREE.Vector3(sizeX / 2, lift(o.terrain.max) * 0.3, -sizeZ / 2);
@@ -668,6 +845,40 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
     at.y += 3.2;
     return { ...mark, element, at };
   });
+  // The names the map writes along the route, each over its place: over the roof, where it is a building.
+  const names = (o.world.places ?? [])
+    .filter((place) => !PLACE_SKIPPED.has(place.kind))
+    .map((place) => {
+      let roof = 0;
+      for (const building of o.world.buildings) {
+        const outer = building.rings[0];
+        if (!outer || Math.abs(outer[0]![0] - place.x) > 120 || Math.abs(outer[0]![1] - place.y) > 120) continue;
+        let inside = false;
+        for (let i = 0, j = outer.length - 1; i < outer.length; j = i++) {
+          const [xi, yi] = outer[i]!;
+          const [xj, yj] = outer[j]!;
+          if (yi > place.y !== yj > place.y && place.x < ((xj - xi) * (place.y - yi)) / (yj - yi) + xi) inside = !inside;
+        }
+        if (inside) roof = Math.max(roof, building.heightM);
+      }
+      const element = document.createElement('div');
+      element.dataset['sceneLabel'] = 'name';
+      const text = document.createElement('span');
+      text.dataset['type'] = 'text-xs';
+      const word = PLACE_WORDS[place.kind];
+      // "Masia" over "Mas Ribot" says it twice.
+      const said = word && (place.name.toLocaleLowerCase('ca').includes(word.toLocaleLowerCase('ca').slice(0, 4)) || (place.kind === 'masia' && /^(mas|can|cal|ca)\b/i.test(place.name)));
+      if (word && !said) {
+        const kicker = document.createElement('small');
+        kicker.textContent = `${word} · `;
+        text.append(kicker);
+      }
+      text.append(place.name);
+      element.append(text);
+      element.hidden = true;
+      labels.append(element);
+      return { element, at: new THREE.Vector3(place.x, groundAt(place.x, place.y) + roof + (roof ? 3.5 : 6), -place.y), weight: place.size, range: place.size < 5 ? DOOR_RANGE_M : NAME_RANGE_M, width: (place.name.length + (word && !said ? word.length + 3 : 0)) * 7 + 24 };
+    });
   const size = { width: 1, height: 1 };
   const screen = new THREE.Vector3();
   const ray = new THREE.Vector3();
@@ -680,13 +891,31 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   };
   let flying = 0;
   const placeLabels = (): void => {
+    const taken: Array<readonly [number, number, number]> = [];
     for (const mark of marks) {
       screen.copy(mark.at).project(camera);
       const far = mark.kind === 'km' && flying > 0.5 && camera.position.distanceTo(mark.at) > KM_MARK_RANGE;
       const show = !far && screen.z < 1 && Math.abs(screen.x) < 1 && Math.abs(screen.y) < 1 && !hidden(mark.at);
       mark.element.hidden = !show;
       if (show) mark.element.style.transform = `translate(${((screen.x + 1) / 2) * size.width}px, ${((1 - screen.y) / 2) * size.height}px) translate(-50%, -100%)`;
+      if (show) taken.push([((screen.x + 1) / 2) * size.width, ((1 - screen.y) / 2) * size.height, mark.text.length * 8 + 24]);
     }
+    // Names: the nearest and the ones the map writes largest first, a few at a time, none over another
+    // nor over a mark of the course. The top of the frame is left to the switch of views.
+    const most = size.width < size.height ? 3 : 6;
+    const ranked = flying > 0.5 ? names.map((name) => ({ name, away: name.at.distanceTo(here) })).filter(({ name, away }) => away < name.range).sort((a, b) => b.name.weight * 30 - b.away - (a.name.weight * 30 - a.away)) : [];
+    const showing = new Set<(typeof names)[number]>();
+    for (const { name } of ranked) {
+      if (showing.size >= most) break;
+      screen.copy(name.at).project(camera);
+      const [left, topPx] = [((screen.x + 1) / 2) * size.width, ((1 - screen.y) / 2) * size.height];
+      if (screen.z >= 1 || left < name.width / 2 || left > size.width - name.width / 2 || topPx < 76 || topPx > size.height * 0.72 || hidden(name.at)) continue;
+      if (taken.some(([x, y, w]) => Math.abs(x - left) < (w + name.width) / 2 + 8 && Math.abs(y - topPx) < 34)) continue;
+      taken.push([left, topPx, name.width]);
+      showing.add(name);
+      name.element.style.transform = `translate(${left}px, ${topPx}px) translate(-50%, -100%)`;
+    }
+    for (const name of names) name.element.hidden = !showing.has(name);
   };
 
   /** Places runner and camera at a share of the route. */
@@ -817,6 +1046,9 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   layCarpets(matchMedia('(max-width: 48rem)').matches || stage.backend !== 'webgpu');
   stage.canvas.dataset['engine'] = `three-walk-${stage.backend}`;
   stage.canvas.dataset['trees'] = String(o.world.trees.length);
+  // How much of what stands along the route is told house by house, and how many of its places have a name.
+  stage.canvas.dataset['houses'] = String(o.world.buildings.filter((building) => building.floors !== undefined).length);
+  stage.canvas.dataset['names'] = String(names.length);
 
   const local = new AbortController();
   // Over a photograph the ground is dark: the night colours of the tokens read on it in both themes, as in the realistic view.
@@ -917,72 +1149,154 @@ function readTones(image: CanvasImageSource, shrink: number): { width: number; h
 }
 
 /** Walls and roofs of every building as one mesh. On a wall `uv` counts bays across and floors up from the floor; on a roof, metres. */
-function buildingsOf(buildings: WalkWorld['buildings'], groundAt: (x: number, y: number) => number): THREE.BufferGeometry {
+function buildingsOf(buildings: ReadonlyArray<WalkBuilding>, groundAt: (x: number, y: number) => number, photoAt: (x: number, y: number) => readonly [number, number, number], shops: ReadonlyArray<readonly [number, number]>): THREE.BufferGeometry {
   const positions: number[] = [];
   const normals: number[] = [];
   const uvs: number[] = [];
-  const tones: number[] = [];
-  const roofs: number[] = [];
-  const tiled: number[] = [];
-  const plains: number[] = [];
-  buildings.forEach((building) => {
-    const outer = building.rings[0];
-    if (!outer || outer.length < 3) return;
+  /** Tone of the plaster, whether it is roof, what kind of building it is and whether the wall is bare; then whether the roof is pitched and the wall a shop front. */
+  const looks: number[] = [];
+  const mores: number[] = [];
+  const areaOf = (ring: ReadonlyArray<readonly [number, number]>): number => {
+    let area = 0;
+    for (let i = 0; i < ring.length; i++) area += ring[i]![0] * ring[(i + 1) % ring.length]![1] - ring[(i + 1) % ring.length]![0] * ring[i]![1];
+    return area / 2;
+  };
+  const within = (x: number, y: number, ring: ReadonlyArray<readonly [number, number]>): boolean => {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i]!;
+      const [xj, yj] = ring[j]!;
+      if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  };
+  // Where each building stands and how high it reaches, so a wall knows what it has against it.
+  const stood = buildings.map((building) => {
+    const outer = building.rings[0] ?? [];
     const levels = outer.map(([x, y]) => groundAt(x, y));
-    const foot = Math.min(...levels) - 1.5;
-    const top = Math.max(...levels) + building.heightM;
-    const floor = top - building.heightM;
-    const floors = Math.max(1, Math.round(building.heightM / FLOOR_M));
+    const floor = levels.length ? Math.max(...levels) : 0;
+    return { outer, foot: (levels.length ? Math.min(...levels) : 0) - 1.5, floor, top: floor + building.heightM };
+  });
+  const CELL = 24;
+  const cells = new Map<number, number[]>();
+  stood.forEach(({ outer }, index) => {
+    if (outer.length < 3) return;
+    const xs = outer.map((p) => p[0]);
+    const ys = outer.map((p) => p[1]);
+    for (let i = Math.floor(Math.min(...xs) / CELL); i <= Math.floor(Math.max(...xs) / CELL); i++) {
+      for (let j = Math.floor(Math.min(...ys) / CELL); j <= Math.floor(Math.max(...ys) / CELL); j++) (cells.get(i * 100003 + j) ?? cells.set(i * 100003 + j, []).get(i * 100003 + j)!).push(index);
+    }
+  });
+  /** The top of the building a point is in, other than the one asking; null in the open. */
+  const against = (x: number, y: number, self: number): number | null => {
+    for (const index of cells.get(Math.floor(x / CELL) * 100003 + Math.floor(y / CELL)) ?? []) {
+      if (index !== self && within(x, y, stood[index]!.outer)) return stood[index]!.top;
+    }
+    return null;
+  };
+  // The wall each shop is on: the nearest one that gives on the open, within a few metres of where the map has the shop.
+  const shopWalls = new Set<number>();
+  for (const [sx, sy] of shops) {
+    let [best, wall] = [9, -1];
+    const seen = new Set<number>();
+    for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (const index of cells.get((Math.floor(sx / CELL) + i) * 100003 + Math.floor(sy / CELL) + j) ?? []) {
+      if (seen.has(index)) continue;
+      seen.add(index);
+      const { outer } = stood[index]!;
+      const facing = Math.sign(areaOf(outer)) || 1;
+      for (let k = 0; k < outer.length; k++) {
+        const [ax, ay] = outer[k]!;
+        const [bx, by] = outer[(k + 1) % outer.length]!;
+        const length = Math.hypot(bx - ax, by - ay);
+        if (length < 2) continue;
+        const t = Math.min(1, Math.max(0, ((sx - ax) * (bx - ax) + (sy - ay) * (by - ay)) / (length * length)));
+        const away = Math.hypot(sx - ax - (bx - ax) * t, sy - ay - (by - ay) * t);
+        if (away >= best || against((ax + bx) / 2 + ((by - ay) / length) * facing * 0.6, (ay + by) / 2 - ((bx - ax) / length) * facing * 0.6, index) !== null) continue;
+        [best, wall] = [away, index * 4096 + k];
+      }
+    }
+    if (wall >= 0) shopWalls.add(wall);
+  }
+  buildings.forEach((building, self) => {
+    const { outer, foot, floor, top } = stood[self]!;
+    if (outer.length < 3) return;
+    const floors = building.floors ?? Math.max(1, Math.round(building.heightM / FLOOR_M));
     /** Height as floors: 0 at the floor, and whole floors up to the eaves. */
     const storey = (y: number): number => ((y - floor) / building.heightM) * floors;
     const tone = scatter(outer[0]![0], outer[0]![1], 6);
-    let area = 0;
-    for (let i = 0; i < outer.length; i++) area += outer[i]![0] * outer[(i + 1) % outer.length]![1] - outer[(i + 1) % outer.length]![0] * outer[i]![1];
-    // A small footprint is a house: tile on top. A big one is a shed if it is low, with a roof of sheet and
-    // bare walls, and a block of flats if it is tall: windows, and a flat roof.
-    const tile = Math.abs(area) / 2 < 450 ? 1 : building.heightM > 7.5 ? 0.5 : 0;
+    const area = areaOf(outer);
+    const holes = building.rings.slice(1).map((ring) => ring.map(([x, y]) => new THREE.Vector2(x, y)));
+    const xs = outer.map((point) => point[0]);
+    const ys = outer.map((point) => point[1]);
+    const centre = [xs.reduce((sum, x) => sum + x, 0) / xs.length, ys.reduce((sum, y) => sum + y, 0) / ys.length] as const;
+    // What it is: the cadastre says when it is a workshop or a farm building; where it says nothing, a big
+    // low footprint is taken for a shed. Anything else has windows.
+    const shed = building.use ? building.use === 'industrial' || building.use === 'agriculture' : Math.abs(area) >= 450 && building.heightM <= 7.5;
+    // What is on top: where the photograph shows the warm colour of tile on a roof of the size of a house or a barn, a pitched roof of tile; otherwise a flat one.
+    const [red, green, blue] = [0, 1, 2].map((channel) => [0.25, 0.5, 0.75].reduce((sum, t) => sum + photoAt(centre[0] + (outer[0]![0] - centre[0]) * (t - 0.5), centre[1] + (outer[0]![1] - centre[1]) * (t - 0.5))[channel]!, 0) / 3) as [number, number, number];
+    const warm = red > blue * 1.18 && red > green * 1.02 && red > 70;
+    const pitched = !holes.length && Math.abs(area) < 600 && (building.floors === undefined ? !shed && Math.abs(area) < 450 : warm);
+    const tile = shed ? 0 : pitched ? 1 : 0.5;
+    let front = 0;
     const add = (p: readonly [number, number, number], n: readonly [number, number, number], st: readonly [number, number], roof: number, plain = 0): void => {
       positions.push(...p);
       normals.push(...n);
       uvs.push(...st);
-      tones.push(tone);
-      roofs.push(roof);
-      tiled.push(tile);
-      plains.push(plain);
+      looks.push(tone, roof, tile, plain);
+      mores.push(pitched ? 1 : 0, front);
     };
-    /** An upright wall between two points of the map, from one height to another. */
-    const wallOf = (ax: number, ay: number, bx: number, by: number, low: number, high: number, bays: readonly [number, number], outwards: number, plain: number): void => {
+    // Walls look outwards whichever way the ring was drawn.
+    const outwards = Math.sign(area) || 1;
+    /** An upright wall between two points of the map, from one height to another at each end. */
+    const wallOf = (ax: number, ay: number, bx: number, by: number, low: number, highA: number, highB: number, bays: readonly [number, number], facing: number, plain: number): void => {
       const length = Math.hypot(bx - ax, by - ay);
-      const normal = [((by - ay) / length) * outwards, 0, ((bx - ax) / length) * outwards] as const;
+      const normal = [((by - ay) / length) * facing, 0, ((bx - ax) / length) * facing] as const;
       const quad = [
         [[ax, low, -ay], [bays[0], storey(low)]],
         [[bx, low, -by], [bays[1], storey(low)]],
-        [[bx, high, -by], [bays[1], storey(high)]],
-        [[ax, high, -ay], [bays[0], storey(high)]],
+        [[bx, highB, -by], [bays[1], storey(highB)]],
+        [[ax, highA, -ay], [bays[0], storey(highA)]],
       ] as const;
-      for (const k of outwards > 0 ? [0, 1, 2, 0, 2, 3] : [0, 2, 1, 0, 3, 2]) add(quad[k]![0], normal, quad[k]![1], 0, plain);
+      for (const k of facing > 0 ? [0, 1, 2, 0, 2, 3] : [0, 2, 1, 0, 3, 2]) add(quad[k]![0], normal, quad[k]![1], 0, plain);
     };
-    for (const ring of building.rings) {
+    let attached = false;
+    building.rings.forEach((ring, which) => {
       let run = 0;
-      // Walls look outwards whichever way the ring was drawn.
-      const outwards = Math.sign(area) || 1;
       for (let i = 0; i < ring.length; i++) {
         const [ax, ay] = ring[i]!;
         const [bx, by] = ring[(i + 1) % ring.length]!;
         const length = Math.hypot(bx - ax, by - ay);
         if (length < 0.05) continue;
+        // A wall with another house against it is a party wall: nothing of it shows below the neighbour's
+        // roof, and what stands above it has no windows.
+        let low = foot;
+        let party = false;
+        if (which === 0) {
+          const [nx, ny] = [((by - ay) / length) * outwards * 0.6, (-(bx - ax) / length) * outwards * 0.6];
+          const tops = [0.25, 0.5, 0.75].map((t) => against(ax + (bx - ax) * t + nx, ay + (by - ay) * t + ny, self)).filter((value): value is number => value !== null);
+          if (tops.length >= 2) {
+            party = attached = true;
+            low = Math.min(...tops) - 0.3;
+          }
+        }
         // Whole bays to a wall, so no window is cut by a corner; a wall too short for one is bare.
         const bays = Math.max(1, Math.round(length / BAY_M));
-        wallOf(ax, ay, bx, by, foot, top, [run, run + bays], outwards, length < BAY_M * 0.7 ? 1 : 0);
+        front = which === 0 && shopWalls.has(self * 4096 + i) ? 1 : 0;
+        if (low < top - 0.4) wallOf(ax, ay, bx, by, low, top, top, [run, run + bays], outwards, party || length < BAY_M * 0.7 ? 1 : 0);
+        front = 0;
         run += bays;
       }
-    }
-    const holes = building.rings.slice(1).map((ring) => ring.map(([x, y]) => new THREE.Vector2(x, y)));
-    const xs = outer.map((point) => point[0]);
-    const ys = outer.map((point) => point[1]);
-    if (tile === 1 && !holes.length) {
-      // A house: four slopes of tile, from eaves that stand out from the wall up to a flat ridge.
-      const centre = [xs.reduce((sum, x) => sum + x, 0) / xs.length, ys.reduce((sum, y) => sum + y, 0) / ys.length] as const;
+    });
+    const slope = (a: THREE.Vector3, b: THREE.Vector3, c: THREE.Vector3, st: (point: THREE.Vector3) => [number, number]): void => {
+      const normal = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(b, a), new THREE.Vector3().subVectors(c, a));
+      if (normal.lengthSq() < 1e-8) return;
+      normal.normalize();
+      const upwards = normal.y >= 0;
+      if (!upwards) normal.negate();
+      for (const point of upwards ? [a, b, c] : [a, c, b]) add([point.x, point.y, point.z], [normal.x, normal.y, normal.z], st(point), 1);
+    };
+    if (pitched && !attached && Math.abs(area) < 450) {
+      // A house on its own: four slopes of tile, from eaves that stand out from the wall up to a flat ridge.
       const rise = Math.min(2.6, Math.max(0.9, Math.min(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 0.2));
       const eaves = outer.map(([x, y]) => {
         const reach = Math.hypot(x - centre[0], y - centre[1]) || 1;
@@ -999,17 +1313,14 @@ function buildingsOf(buildings: WalkWorld['buildings'], groundAt: (x: number, y:
         const length = along.length();
         if (length < 0.05) continue;
         along.divideScalar(length);
-        const normal = new THREE.Vector3().crossVectors(along, new THREE.Vector3().subVectors(d, a)).normalize();
-        const upwards = normal.y >= 0;
-        if (!upwards) normal.negate();
         // Tiles run in rows along the eaves and climb the slope.
         const st = (point: THREE.Vector3): [number, number] => {
           const from = new THREE.Vector3().subVectors(point, a);
           const across = from.dot(along);
           return [across, Math.sqrt(Math.max(0, from.lengthSq() - across * across))];
         };
-        const quad = [a, b, c, d];
-        for (const k of upwards ? [0, 1, 2, 0, 2, 3] : [0, 2, 1, 0, 3, 2]) add([quad[k]!.x, quad[k]!.y, quad[k]!.z], [normal.x, normal.y, normal.z], st(quad[k]!), 1);
+        slope(a, b, c, st);
+        slope(a, c, d, st);
       }
       const cap = ridge.map(([x, y]) => new THREE.Vector2(x, y));
       for (const triangle of THREE.ShapeUtils.triangulateShape(cap, [])) {
@@ -1019,10 +1330,47 @@ function buildingsOf(buildings: WalkWorld['buildings'], groundAt: (x: number, y:
       const [hx, hy] = [centre[0] + (outer[0]![0] - centre[0]) * 0.22, centre[1] + (outer[0]![1] - centre[1]) * 0.22];
       const stack = [[hx - 0.32, hy - 0.32], [hx + 0.32, hy - 0.32], [hx + 0.32, hy + 0.32], [hx - 0.32, hy + 0.32]] as const;
       const [low, high] = [top + rise * 0.5, top + rise + 0.95];
-      stack.forEach(([ax, ay], i) => wallOf(ax, ay, stack[(i + 1) % 4]![0], stack[(i + 1) % 4]![1], low, high, [0, 0.2], 1, 1));
+      stack.forEach(([ax, ay], i) => wallOf(ax, ay, stack[(i + 1) % 4]![0], stack[(i + 1) % 4]![1], low, high, high, [0, 0.2], 1, 1));
       for (const k of [0, 1, 2, 0, 2, 3]) add([stack[k]![0], high, -stack[k]![1]], [0, 1, 0], [0, storey(high)], 0, 1);
+    } else if (pitched) {
+      // A house in a row: two slopes of tile, the ridge along its longest wall, and the walls at both ends carried up to it.
+      let [ux, uy, longest] = [1, 0, 0];
+      for (let i = 0; i < outer.length; i++) {
+        const [dx, dy] = [outer[(i + 1) % outer.length]![0] - outer[i]![0], outer[(i + 1) % outer.length]![1] - outer[i]![1]];
+        if (Math.hypot(dx, dy) > longest) [ux, uy, longest] = [dx / Math.hypot(dx, dy), dy / Math.hypot(dx, dy), Math.hypot(dx, dy)];
+      }
+      const across = (x: number, y: number): number => (x - centre[0]) * -uy + (y - centre[1]) * ux;
+      const reaches = outer.map(([x, y]) => across(x, y));
+      const middle = (Math.min(...reaches) + Math.max(...reaches)) / 2;
+      const half = Math.max(0.5, (Math.max(...reaches) - Math.min(...reaches)) / 2);
+      const rise = Math.min(2.4, half * 0.42);
+      const lean = Math.hypot(half, rise) / half;
+      const heightAt = (x: number, y: number): number => top + rise * Math.max(0, 1 - Math.abs(across(x, y) - middle) / half);
+      const st = (point: THREE.Vector3): [number, number] => [(point.x - centre[0]) * ux + (-point.z - centre[1]) * uy, Math.abs(across(point.x, -point.z) - middle) * lean];
+      for (const side of [1, -1]) {
+        // The part of the outline on one side of the ridge.
+        const part: Array<readonly [number, number]> = [];
+        for (let i = 0; i < outer.length; i++) {
+          const [a, b] = [outer[i]!, outer[(i + 1) % outer.length]!];
+          const [da, db] = [(across(a[0], a[1]) - middle) * side, (across(b[0], b[1]) - middle) * side];
+          if (da >= 0) part.push(a);
+          if (da >= 0 !== db >= 0) part.push([a[0] + ((b[0] - a[0]) * da) / (da - db), a[1] + ((b[1] - a[1]) * da) / (da - db)]);
+        }
+        if (part.length < 3) continue;
+        const contour = part.map(([x, y]) => new THREE.Vector2(x, y));
+        const lifted = part.map(([x, y]) => new THREE.Vector3(x, heightAt(x, y), -y));
+        for (const [i, j, k] of THREE.ShapeUtils.triangulateShape(contour, [])) slope(lifted[i!]!, lifted[j!]!, lifted[k!]!, st);
+        // The gable: the wall under the slope, wherever the outline climbs towards the ridge.
+        for (let i = 0; i < part.length; i++) {
+          const [a, b] = [part[i]!, part[(i + 1) % part.length]!];
+          const [ha, hb] = [heightAt(a[0], a[1]), heightAt(b[0], b[1])];
+          const onRidge = Math.abs(across(a[0], a[1]) - middle) < 0.01 && Math.abs(across(b[0], b[1]) - middle) < 0.01;
+          if (onRidge || Math.max(ha, hb) - top < 0.05 || Math.hypot(b[0] - a[0], b[1] - a[1]) < 0.05) continue;
+          wallOf(a[0], a[1], b[0], b[1], top, ha, hb, [0, 0.2], outwards, 1);
+        }
+      }
     } else {
-      // A shed, or a block round a courtyard: a flat roof.
+      // A shed, a block of flats, a terrace, or a block round a courtyard: a flat roof.
       const contour = outer.map(([x, y]) => new THREE.Vector2(x, y));
       const flat = [...contour, ...holes.flat()];
       for (const triangle of THREE.ShapeUtils.triangulateShape(contour, holes)) {
@@ -1034,9 +1382,7 @@ function buildingsOf(buildings: WalkWorld['buildings'], groundAt: (x: number, y:
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
   geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
   geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-  geometry.setAttribute('tone', new THREE.Float32BufferAttribute(tones, 1));
-  geometry.setAttribute('roof', new THREE.Float32BufferAttribute(roofs, 1));
-  geometry.setAttribute('tiled', new THREE.Float32BufferAttribute(tiled, 1));
-  geometry.setAttribute('plain', new THREE.Float32BufferAttribute(plains, 1));
+  geometry.setAttribute('look', new THREE.Float32BufferAttribute(looks, 4));
+  geometry.setAttribute('more', new THREE.Float32BufferAttribute(mores, 2));
   return geometry;
 }

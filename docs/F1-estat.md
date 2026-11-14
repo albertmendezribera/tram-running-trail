@@ -8,14 +8,14 @@
 |---|---|---|
 | Portada | `/ca/` | Feta: plànol de Calonge, curses i rutes |
 | Dues curses (muntanya i asfalt) amb visor 3D, perfil i full de resultats | `/ca/curses/cursa-de-mostra-calonge/`, `/ca/curses/cursa-de-mostra-sils/` | Fetes sobre les dues sortides reals. **Les curses són de mostra**: nom, data i dorsal inventats, marcades `isPlaceholder` |
-| Dues rutes reals | `/ca/rutes/calonge/`, `/ca/rutes/sils/` | Fetes |
+| Tres rutes reals | `/ca/rutes/calonge/`, `/ca/rutes/sils/`, `/ca/rutes/palamos/` | Fetes. Palamós és la primera de poble i de costa: s'ha afegit només amb el generador (E18, «Afegir una ruta») |
 | Llistes | `/ca/curses/`, `/ca/rutes/`, `/ca/sabatilles/` | Fetes |
 | Dues sabatilles reals amb radiografia, vista 3D, fitxa tècnica i puntuacions | `/ca/sabatilles/nike/vaporfly-4/`, `/ca/sabatilles/hoka/speedgoat-6/` | Fetes |
 | Comparador (M3) | `/ca/comparar/hoka-speedgoat-6-vs-nike-vaporfly-4/` | Fet; l'ordre invers hi redirigeix |
 | E03 · ruta plana | `docs/explorations/E03-flat-route.md` | Decidida |
 | E05 · radiografia paramètrica | `docs/explorations/E05-shoe-xray.md` | Decidida |
 | Comparador en 3D | mateixa pàgina del comparador | Fet: les dues sabatilles de costat, girant alhora en mirall |
-| Vista «A peu» del visor de rutes (E18) | les fitxes de cursa i de ruta | Feta en three.js: terreny amb el color de l'ortofoto i gra propi, camí, arbres segons el LiDAR i les cobertes del sòl, catifa d'herba, matolls i pedres que acompanya el corredor, edificis del mapa amb façanes, ombres i càmera de tercera persona. No és la vista per defecte |
+| Vista «A peu» del visor de rutes (E18) | les fitxes de cursa i de ruta | Feta en three.js: terreny amb el color de l'ortofoto i gra propi, camí, arbres segons el LiDAR i les cobertes del sòl, catifa d'herba, matolls i pedres que acompanya el corredor, cases una a una amb les plantes del Cadastre i la teulada del color de la foto, mar, noms de lloc de l'ICGC i comerços d'OpenStreetMap, ombres i càmera de tercera persona. No és la vista per defecte |
 | E04 · dispositius de referència | — | **No feta**: cal tenir els dispositius a la mà |
 
 Les dades viuen en fitxers (`apps/web/src/content/`) amb la forma de l'esquema de la base de dades. Una construcció de producció no inclou cap cursa de mostra ni cap sabatilla pendent de revisió legal; l'entorn de proves, sí.
@@ -32,7 +32,7 @@ Tretze patrons nous amb fitxa al catàleg (`/ds/`): el marc del web, `RaceRow`, 
 - Proves de navegador (Chromium, mòbil clar i escriptori clar, sense les comparacions de captura, que només valen a la imatge de CI): 192 passen de 192. Hi ha 54 proves noves per a les pàgines del web i la sabatilla en 3D.
 - Pressupost de pes: dins. JS inicial per sota de 30 KB a totes les pàgines; l'escena de la sabatilla afegeix 3,9 KB a l'illa de Three.js; el visor realista, 454,8 KB (excepció acceptada, límit 470).
 - CI a GitHub: `design-system`, `web` i `database` passen. `engines` (informatiu) falla a Firefox, que no té WebGL a CI, com a la Fase 0.
-- Una construcció de producció (`pnpm build`) fa 6 pàgines: portada, dues rutes i les tres llistes. Cap cursa de mostra, cap sabatilla i cap pàgina del catàleg.
+- Una construcció de producció (`pnpm build`) fa 7 pàgines: portada, tres rutes i les tres llistes. Cap cursa de mostra, cap sabatilla i cap pàgina del catàleg.
 - L'adreça inversa del comparador respon amb una pàgina de redirecció (meta refresh), no amb un 301 de servidor: és el que dona una construcció estàtica.
 
 ## Què no s'ha verificat

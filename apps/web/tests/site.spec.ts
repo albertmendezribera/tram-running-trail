@@ -74,12 +74,13 @@ test.describe('Sample content', () => {
 });
 
 test.describe('Home and lists', () => {
-  test('the home leads to both races, both routes and the 3D of a route', async ({ page }) => {
+  test('the home leads to both races, every route and the 3D of a route', async ({ page }) => {
     await open(page, PAGES.home);
     await expect(page.getByRole('img', { name: 'Plànol de Calonge' })).toBeVisible();
     await expect(page.getByRole('link', { name: /Recorre Calonge en 3D/ })).toHaveAttribute('href', '/ca/rutes/calonge/');
     await expect(page.locator('a[href^="/ca/curses/cursa-de-mostra-"]')).toHaveCount(2);
     await expect(page.locator('a[href="/ca/rutes/sils/"]')).toHaveCount(1);
+    await expect(page.locator('a[href="/ca/rutes/palamos/"]')).toHaveCount(1);
   });
 
   test('the section the reader is in is marked in the header', async ({ page }) => {
@@ -298,5 +299,26 @@ test.describe('Route on foot', () => {
     // Once the route is under way the ground by the runner is covered: grass, scrub, stones.
     await page.evaluate(() => (document.querySelector('tram-route-scroller') as HTMLElement & { goTo(share: number): void }).goTo(0.3));
     await expect.poll(async () => Number(await canvas.getAttribute('data-plants')), { timeout: 90_000 }).toBeGreaterThan(500);
+  });
+
+  test('tells a town house by house, names its places and says where each thing comes from', async ({ page }) => {
+    await open(page, '/ca/rutes/palamos/');
+    const scroller = page.locator('tram-route-scroller');
+    // Three sources, each credited next to the view, and what is decoration said as such.
+    await expect(scroller).toContainText('Dirección General del Catastro');
+    await expect(scroller).toContainText('OpenStreetMap');
+    await expect(scroller).toContainText('color de les parets, matolls, herba i pedres, de decoració');
+    await scroller.getByRole('radio', { name: 'A peu' }).check({ force: true });
+    const viewer = scroller.locator('tram-viewer-3d');
+    await viewer.scrollIntoViewIfNeeded();
+    const canvas = viewer.locator('canvas[data-engine^="three-walk"][data-houses]');
+    await expect(canvas).toBeVisible({ timeout: 150_000 });
+    await expect(viewer).toHaveAttribute('data-state', 'ready');
+    // The cadastre tells the houses of the seafront apart, and the map and OpenStreetMap name what the route passes.
+    expect(Number(await canvas.getAttribute('data-houses'))).toBeGreaterThan(2000);
+    expect(Number(await canvas.getAttribute('data-names'))).toBeGreaterThan(40);
+    // A name of the map is written over its place once the runner is near it.
+    await page.evaluate(() => (document.querySelector('tram-route-scroller') as HTMLElement & { goTo(share: number): void }).goTo(0.5));
+    await expect(viewer.locator('[data-scene-label="name"]:not([hidden])').first()).toBeVisible({ timeout: 90_000 });
   });
 });

@@ -93,7 +93,8 @@ const copy = COPY[locale];
 
   /*
    * Labels a scene adds over its canvas: elements with `data-scene-label` inside the
-   * stage, which the scene places with a transform. `km` is a course marker, `place` a name.
+   * stage, which the scene places with a transform. `km` is a course marker, `place` a point of
+   * the course with a name of its own, `name` a place of the map.
    */
   .stage :global([data-scene-labels]) {
     position: absolute;
@@ -130,6 +131,19 @@ const copy = COPY[locale];
     padding: var(--tram-sys-space-1) var(--tram-sys-space-2);
     color: var(--tram-sys-surface);
     background: var(--tram-sys-text);
+  }
+
+  /* `name` is what the map calls a place the route passes: quieter than a marker of the course, with the kind of place before it. */
+  .stage :global([data-scene-label='name'] > span) {
+    display: inline-flex;
+    gap: var(--tram-sys-space-1);
+    align-items: baseline;
+    padding: var(--tram-sys-space-1) var(--tram-sys-space-2);
+  }
+
+  .stage :global([data-scene-label='name'] small) {
+    color: var(--tram-sys-text-muted);
+    font-size: inherit;
   }
 
   .stage :global([data-scene-label][hidden]) {

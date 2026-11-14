@@ -154,3 +154,121 @@ export function polygonsOf(rings: Rings): Point[][][] {
   }
   return polygons;
 }
+
+/** A building as the ICGC maps it: a whole block of houses is often one outline, with one height. */
+export interface Block {
+  heightM: number;
+  /** Outline and courtyards. */
+  polygon: Point[][];
+}
+/** A part of a building as the cadastre has it: one house, or one wing of it, with its floors. */
+export interface HousePart {
+  floors: number;
+  rings: Point[][];
+  use: string | null;
+  year: number | null;
+}
+export interface Built {
+  heightM: number;
+  rings: Point[][];
+  /** Floors above ground, use and year built, where the cadastre gives them. */
+  floors?: number;
+  use?: string;
+  year?: number;
+}
+/** What a floor is taken to measure where the height comes from the count of floors. */
+export const FLOOR_HEIGHT_M = 3;
+
+const areaOf = (ring: ReadonlyArray<Point>): number => {
+  let area = 0;
+  for (let i = 0; i < ring.length; i++) area += ring[i]![0] * ring[(i + 1) % ring.length]![1] - ring[(i + 1) % ring.length]![0] * ring[i]![1];
+  return area / 2;
+};
+/** A point inside a ring: its centre of mass, or failing that a point between it and a corner. */
+function heartOf(ring: ReadonlyArray<Point>): Point {
+  const area = areaOf(ring) || 1;
+  let [cx, cy] = [0, 0];
+  for (let i = 0; i < ring.length; i++) {
+    const [ax, ay] = ring[i]!;
+    const [bx, by] = ring[(i + 1) % ring.length]!;
+    const cross = ax * by - bx * ay;
+    cx += (ax + bx) * cross;
+    cy += (ay + by) * cross;
+  }
+  const centre: Point = [cx / (6 * area), cy / (6 * area)];
+  if (insideRings(centre, [ring])) return centre;
+  for (let i = 0; i < ring.length; i++) {
+    for (let j = i + 2; j < ring.length; j++) {
+      const middle: Point = [(ring[i]![0] + ring[j]![0]) / 2, (ring[i]![1] + ring[j]![1]) / 2];
+      if (insideRings(middle, [ring])) return middle;
+    }
+  }
+  return centre;
+}
+/** A ring without its closing point, without points doubled or lying on the line between their neighbours. */
+export function tidyRing(ring: ReadonlyArray<Point>, slackM = 0.12): Point[] {
+  let points = ring.filter((p, i) => i === 0 || Math.hypot(p[0] - ring[i - 1]![0], p[1] - ring[i - 1]![1]) > 0.05);
+  if (points.length > 1 && Math.hypot(points[0]![0] - points.at(-1)![0], points[0]![1] - points.at(-1)![1]) <= 0.05) points = points.slice(0, -1);
+  for (let changed = true; changed && points.length > 3; ) {
+    changed = false;
+    for (let i = 0; i < points.length && points.length > 3; i++) {
+      const [a, b, c] = [points[(i + points.length - 1) % points.length]!, points[i]!, points[(i + 1) % points.length]!];
+      if (distanceToLine(b, [a, c]) < slackM) {
+        points.splice(i, 1);
+        changed = true;
+      }
+    }
+  }
+  return points;
+}
+
+export interface HousesOptions {
+  blocks: ReadonlyArray<Block>;
+  parts: ReadonlyArray<HousePart>;
+  route: ReadonlyArray<Point>;
+  /** How far from the route a block is told apart into its houses, in metres. */
+  detailM: number;
+  /** The smallest part worth drawing, in square metres. */
+  smallestM2?: number;
+}
+
+/**
+ * The buildings along a route, house by house where the cadastre tells them apart. The ICGC says
+ * where there is a building; near the route, each of its blocks is replaced by the parts the
+ * cadastre has inside it, each with its own floors. A block the cadastre has nothing in, or one
+ * far from the route, stays as the ICGC drew it, with the height it measured.
+ */
+export function housesOf({ blocks, parts, route, detailM, smallestM2 = 8 }: HousesOptions): Built[] {
+  const CELL = 40;
+  const hearts = new Map<string, Array<{ part: HousePart; heart: Point }>>();
+  for (const part of parts) {
+    if (part.floors < 1 || !part.rings[0] || Math.abs(areaOf(part.rings[0])) < smallestM2) continue;
+    const heart = heartOf(part.rings[0]);
+    const key = `${Math.floor(heart[0] / CELL)},${Math.floor(heart[1] / CELL)}`;
+    (hearts.get(key) ?? hearts.set(key, []).get(key)!).push({ part, heart });
+  }
+  const built: Built[] = [];
+  for (const block of blocks) {
+    const outer = block.polygon[0]!;
+    const xs = outer.map((p) => p[0]);
+    const ys = outer.map((p) => p[1]);
+    const inside: HousePart[] = [];
+    if (outer.some((p) => distanceToLine(p, route) <= detailM)) {
+      for (let i = Math.floor(Math.min(...xs) / CELL); i <= Math.floor(Math.max(...xs) / CELL); i++) {
+        for (let j = Math.floor(Math.min(...ys) / CELL); j <= Math.floor(Math.max(...ys) / CELL); j++) {
+          for (const { part, heart } of hearts.get(`${i},${j}`) ?? []) if (insideRings(heart, block.polygon)) inside.push(part);
+        }
+      }
+    }
+    if (!inside.length) {
+      built.push({ heightM: block.heightM, rings: block.polygon.map((ring) => tidyRing(ring)) });
+      continue;
+    }
+    for (const part of inside) {
+      const rings = part.rings.map((ring) => tidyRing(ring)).filter((ring) => ring.length >= 3);
+      if (!rings.length) continue;
+      built.push({ heightM: part.floors * FLOOR_HEIGHT_M, rings, floors: part.floors, ...(part.use ? { use: part.use } : {}), ...(part.year ? { year: part.year } : {}) });
+    }
+  }
+  return built;
+}

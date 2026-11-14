@@ -3,8 +3,9 @@
 // file and nothing else.
 import { type ProfilePoint, summarize } from '@tram/design-system/patterns/elevation.ts';
 import type { Plate } from '@tram/design-system/patterns/route-plate.ts';
-import { CALONGE, SILS } from './profiles';
+import { CALONGE, PALAMOS, SILS } from './profiles';
 import calongePlate from './routes/calonge/plate.json';
+import palamosPlate from './routes/palamos/plate.json';
 import silsPlate from './routes/sils/plate.json';
 
 export type Terrain = 'road' | 'trail' | 'mixed';
@@ -49,6 +50,7 @@ const GPX_CREDIT = 'Recorregut: GPX d’una sortida real. Només se’n publique
 
 export const ROUTES: Route[] = [
   { slug: 'calonge', name: 'Calonge', place: 'Calonge, Baix Empordà', profile: CALONGE, plate: calongePlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, isPlaceholder: false },
+  { slug: 'palamos', name: 'Palamós', place: 'Palamós, Baix Empordà', profile: PALAMOS, plate: palamosPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, isPlaceholder: false },
   { slug: 'sils', name: 'Sils', place: 'Sils, la Selva', profile: SILS, plate: silsPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, isPlaceholder: false },
 ];
 
@@ -100,6 +102,7 @@ export const routeOf = (slug: string): Route => {
 
 export const ICGC_CREDIT = 'Ortofoto i model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
 /** What the view from the ground adds, and how much of it is data. */
-export const WORLD_NOTE = 'A peu: edificis i vials pavimentats del mapa de l’ICGC; arbres segons el seu LiDAR i el mapa de cobertes del sòl, però cap és un arbre concret; el color del terra i de la vegetació és el de l’ortofoto; textures, façanes, matolls, herba i pedres, de decoració.';
+export const WORLD_NOTE =
+  'A peu: edificis, vials pavimentats i topònims del mapa de l’ICGC; cada casa amb les seves plantes i el seu ús, del Cadastre (© Dirección General del Catastro), amb l’alçada comptada a tres metres per planta; bars, comerços i escultures, d’OpenStreetMap (© col·laboradors d’OpenStreetMap, ODbL); arbres segons el LiDAR de l’ICGC i el mapa de cobertes del sòl, però cap és un arbre concret; el color del terra, de la vegetació, de les teulades i del mar és el de l’ortofoto; textures, façanes, color de les parets, matolls, herba i pedres, de decoració.';
 export const DEM_CREDIT = 'Model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
 export const SAMPLE_NOTICE = 'Cursa de mostra: el recorregut és real, però el nom, la data i el dorsal són inventats per provar la pàgina.';

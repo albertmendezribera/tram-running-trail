@@ -1,4 +1,4 @@
-import { type ExpressionSpecification, type GeoJSONSource, LngLat, Map as MapLibreMap, Marker, setWorkerUrl } from 'maplibre-gl';
+import { addProtocol, type ExpressionSpecification, type GeoJSONSource, LngLat, Map as MapLibreMap, Marker, setWorkerUrl } from 'maplibre-gl';
 // As text, not as a stylesheet of the page: the bundler would otherwise ship it with every page of the site.
 import styles from 'maplibre-gl/dist/maplibre-gl.css?inline';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
@@ -24,6 +24,41 @@ export interface RealRouteViewerOptions {
 /** ICGC services for MapLibre: orthophoto and 5 m terrain, CC BY 4.0, no key. */
 const ORTHOPHOTO = 'https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wmts/orto/MON3857NW/{z}/{x}/{y}.png';
 const TERRAIN = 'https://geoserveis.icgc.cat/servei/catalunya/contextmaps-terreny-5m-rgb/wmts/{z}/{x}/{y}.png';
+
+/**
+ * The terrain as the map is given it: the ICGC's tiles, with the sea at sea level. Its tiles carry the
+ * sea bed, and nothing at all further out; a photograph of the water draped over the bed hangs from the
+ * shore like a cliff. Under zero a tile is flattened to zero. Tiles with no sea in them pass untouched.
+ */
+const SEA_LEVEL_PROTOCOL = 'tram-terrain';
+let seaLevelled = false;
+function levelTheSea(): void {
+  if (seaLevelled) return;
+  seaLevelled = true;
+  addProtocol(SEA_LEVEL_PROTOCOL, async ({ url }, abort) => {
+    const response = await fetch(url.replace(`${SEA_LEVEL_PROTOCOL}://`, 'https://'), { signal: abort.signal });
+    if (!response.ok) throw new Error(`terrain tile: ${response.status}`);
+    const original = await response.arrayBuffer();
+    // The pixels are heights, not colour: read as they are.
+    const bitmap = await createImageBitmap(new Blob([original]), { colorSpaceConversion: 'none', premultiplyAlpha: 'none' });
+    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+    const context = canvas.getContext('2d', { willReadFrequently: true })!;
+    context.drawImage(bitmap, 0, 0);
+    bitmap.close();
+    const image = context.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = image.data;
+    // Height = -10000 + (R·65536 + G·256 + B) / 10: zero metres is 100000, which is (1, 134, 160).
+    let sea = false;
+    for (let i = 0; i < pixels.length; i += 4) {
+      if (pixels[i]! * 65536 + pixels[i + 1]! * 256 + pixels[i + 2]! >= 100000) continue;
+      [pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]] = [1, 134, 160, 255];
+      sea = true;
+    }
+    if (!sea) return { data: original };
+    context.putImageData(image, 0, 0);
+    return { data: await (await canvas.convertToBlob({ type: 'image/png' })).arrayBuffer() };
+  });
+}
 
 /** Follow camera, in metres: the same flight as the cartographic viewer. */
 const FOLLOW = { back: 420, up: 260, ahead: 0.04 };
@@ -85,6 +120,7 @@ export async function mountRealRouteViewer({ container, signal, reducedMotion }:
   const color = (name: TramColorName): string => `#${tramThreeColors.night[terrainMode][name].hex.toString(16).padStart(6, '0')}`;
   const point = (p: Vec) => ({ type: 'Feature' as const, properties: {}, geometry: { type: 'Point' as const, coordinates: toLngLat(p).toArray() } });
 
+  levelTheSea();
   const host = document.createElement('div');
   host.style.cssText = 'position:absolute;inset:0';
   container.append(host);
@@ -101,7 +137,7 @@ export async function mountRealRouteViewer({ container, signal, reducedMotion }:
       version: 8,
       sources: {
         orthophoto: { type: 'raster', tiles: [ORTHOPHOTO], tileSize: 256, maxzoom: 20 },
-        terrain: { type: 'raster-dem', tiles: [TERRAIN], tileSize: 512, minzoom: 7, maxzoom: 14 },
+        terrain: { type: 'raster-dem', tiles: [TERRAIN.replace('https://', `${SEA_LEVEL_PROTOCOL}://`)], tileSize: 512, minzoom: 7, maxzoom: 14 },
         route: { type: 'geojson', lineMetrics: true, data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: o.path.map(([lng, lat]) => [lng, lat]) } } },
         runner: { type: 'geojson', data: point(at(o.share ?? 0)) },
         pointer: { type: 'geojson', data: point(at(0)) },

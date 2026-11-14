@@ -16,7 +16,7 @@ const TERRAINS = import.meta.glob<TerrainMeta & { x0: number; y0: number }>('../
 const TRACKS = import.meta.glob<Array<[number, number]>>('../content/routes/*/route.json', { import: 'default' });
 const IMAGES = import.meta.glob<string>('../content/routes/*/terrain.webp', { query: '?url', import: 'default' });
 /** What stands along the route (`world-cli`): asked for only by the view from the ground. */
-const WORLDS = import.meta.glob<{ kinds: TreeKind[]; trees: number[]; buildings: Array<{ h: number; f?: number; u?: number; y?: number; rings: number[][] }>; uses?: string[]; places?: Array<{ n: string; k: string; x: number; y: number; s: number; o?: number }>; land?: { x0: number; y0: number; cols: number; rows: number; cellM: number }; paved?: number[]; walked?: number[] }>('../content/routes/*/world.json', { import: 'default' });
+const WORLDS = import.meta.glob<{ kinds: TreeKind[]; trees: number[]; buildings: Array<{ h: number; f?: number; t?: number; u?: number; y?: number; rings: number[][] }>; uses?: string[]; places?: Array<{ n: string; k: string; x: number; y: number; s: number; o?: number }>; land?: { x0: number; y0: number; cols: number; rows: number; cellM: number }; paved?: number[]; walked?: number[] }>('../content/routes/*/world.json', { import: 'default' });
 const ORTHOS = import.meta.glob<string>('../content/routes/*/ortho.webp', { query: '?url', import: 'default' });
 const LANDS = import.meta.glob<string>('../content/routes/*/land.png', { query: '?url', import: 'default' });
 
@@ -82,7 +82,7 @@ async function start(mode: ViewerMode, context: SceneContext, scroller: TramRout
     // Stored in tenths of a metre from the corner of the terrain.
     const world = {
       trees: Array.from({ length: stored.trees.length / 5 }, (_, i): [number, number, number, TreeKind] => [stored.trees[i * 5]! / 10, stored.trees[i * 5 + 1]! / 10, stored.trees[i * 5 + 2]! / 10, stored.kinds[stored.trees[i * 5 + 4]!] ?? 'oak']),
-      buildings: stored.buildings.map((b) => ({ heightM: b.h, floors: b.f, use: b.u === undefined ? undefined : stored.uses?.[b.u], year: b.y, rings: b.rings.map((ring) => Array.from({ length: ring.length / 2 }, (_, i): [number, number] => [ring[i * 2]! / 10, ring[i * 2 + 1]! / 10])) })),
+      buildings: stored.buildings.map((b) => ({ heightM: b.h, floors: b.f, tallest: b.t, use: b.u === undefined ? undefined : stored.uses?.[b.u], year: b.y, rings: b.rings.map((ring) => Array.from({ length: ring.length / 2 }, (_, i): [number, number] => [ring[i * 2]! / 10, ring[i * 2 + 1]! / 10])) })),
       places: stored.places?.map((p) => ({ name: p.n, kind: p.k, x: p.x / 10, y: p.y / 10, size: p.s, door: p.o === 1 })),
       landmarks: (LANDMARKS[files.slug] ?? []).map((l) => ({ model: l.model, x: l.utm[0] - terrain.x0, y: l.utm[1] - terrain.y0, turn: (l.turnDeg * Math.PI) / 180 })),
       land: stored.land,

@@ -34,6 +34,8 @@ export interface WalkBuilding {
   heightM: number;
   rings: ReadonlyArray<ReadonlyArray<readonly [number, number]>>;
   floors?: number | undefined;
+  /** The floors of the tallest part of the building this is a part of, when that is more. */
+  tallest?: number | undefined;
   use?: string | undefined;
   year?: number | undefined;
 }
@@ -604,6 +606,39 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
     }
     return false;
   };
+  /**
+   * Where the camera runs when there are houses: a track runs along a pavement, an arm's length from the
+   * fronts, and a camera that follows it sees a wall. For each point of the route, how far it is to the
+   * first house on either hand; the camera keeps to the middle of what is clear, a few metres at most
+   * from the track, and comes to it gently.
+   */
+  const CLEAR_REACH_M = 16;
+  const DRIFT_MOST_M = 6;
+  const drift = new Float32Array(samples + 1);
+  for (let i = 0; i <= samples; i++) {
+    const [from, to] = [Math.max(0, i - 1), Math.min(samples, i + 1)];
+    const [tx, ty] = [drawn[to * 2]! - drawn[from * 2]!, drawn[to * 2 + 1]! - drawn[from * 2 + 1]!];
+    const span = Math.hypot(tx, ty) || 1;
+    const clear = (side: number): number => {
+      for (let reach = 1; reach <= CLEAR_REACH_M; reach++) if (indoors(drawn[i * 2]! + (-ty / span) * side * reach, drawn[i * 2 + 1]! + (tx / span) * side * reach)) return reach - 1;
+      return CLEAR_REACH_M;
+    };
+    // To the left of the way it runs is positive. In the open there is nothing to keep clear of.
+    drift[i] = Math.min(DRIFT_MOST_M, Math.max(-DRIFT_MOST_M, (clear(1) - clear(-1)) / 2));
+  }
+  for (let pass = 0; pass < 2; pass++) {
+    const rough = Float32Array.from(drift);
+    for (let i = 0; i <= samples; i++) {
+      let [sum, count] = [0, 0];
+      for (let k = Math.max(0, i - 12); k <= Math.min(samples, i + 12); k++) [sum, count] = [sum + rough[k]!, count + 1];
+      drift[i] = sum / count;
+    }
+  }
+  const driftAt = (share: number): number => {
+    const at = Math.min(samples, Math.max(0, share * samples));
+    const base = Math.min(samples - 1, Math.floor(at));
+    return drift[base]! + (drift[base + 1]! - drift[base]!) * (at - base);
+  };
   /** Sows a cell of a carpet: a grid of places inside it, each a little off its place, and what may grow at each. */
   const sown = (cellM: number, across: number, plant: (gi: number, gj: number, x: number, y: number, clear: (margin: number) => boolean, put: Put) => void) => (i: number, j: number, put: Put): void => {
     const step = cellM / across;
@@ -723,8 +758,8 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   const wallOf = (i: number) => color(WALLS[i]!);
   const takes = (i: number) => step(WALL_SHARES[i]!, tone);
   const plaster = mix(mix(mix(mix(mix(wallOf(0), wallOf(1), takes(0)), wallOf(2), takes(1)), wallOf(3), takes(2)), wallOf(4), takes(3)), wallOf(5), takes(4));
-  // Below the floor a wall is its footing: stone, darker.
-  const footing = texture(paints.earth, vec2(wall.x.mul(1.3), wall.y.mul(1.3))).rgb.mul(vec3(0.62, 0.6, 0.58));
+  // Below the floor a wall is its plinth: the same plaster, darker and rougher. On a slope it is as tall as the slope.
+  const footing = plaster.mul(texture(paints.earth, vec2(wall.x.mul(1.3), wall.y.mul(1.3))).rgb.mul(0.55).add(0.38));
   const walls = mix(facade.mul(plaster).mul(mix(0.8, 1, smoothstep(0.05, 0.6, wall.y))), footing, step(wall.y, 0));
   // A roof is the colour it has in the photograph, where it stands: red tile, a grey terrace, the white of a
   // new sheet. The photograph gives the colour and a texture the grain: tile laid along the slope of a
@@ -961,6 +996,11 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
     onPath(share - CAMERA.back / total, behind);
     if (share * total < CAMERA.back) behind.copy(here).addScaledVector(aim.subVectors(ahead, here).setY(0).normalize(), -(CAMERA.back - share * total)).setY(groundAt(behind.x, -behind.z));
     follow.copy(behind);
+    // Among houses the camera keeps to the middle of the street, not to the pavement the track runs along.
+    const aside = driftAt(share - CAMERA.back / total);
+    aim.subVectors(here, behind).setY(0).normalize();
+    follow.x += aim.z * aside;
+    follow.z -= aim.x * aside;
     follow.y = Math.max(behind.y, groundAt(follow.x, -follow.z)) + CAMERA.up;
     // Start and finish show the whole route; in between the camera runs with the runner.
     flying = ease(0, 0.02, share) * (1 - ease(0.98, 1, share));
@@ -1271,10 +1311,12 @@ function buildingsOf(buildings: ReadonlyArray<WalkBuilding>, groundAt: (x: numbe
     // What is on top: where the photograph shows the warm colour of tile on a roof of the size of a house or a barn, a pitched roof of tile; otherwise a flat one.
     const [red, green, blue] = [0, 1, 2].map((channel) => [0.25, 0.5, 0.75].reduce((sum, t) => sum + photoAt(centre[0] + (outer[0]![0] - centre[0]) * (t - 0.5), centre[1] + (outer[0]![1] - centre[1]) * (t - 0.5))[channel]!, 0) / 3) as [number, number, number];
     const warm = red > blue * 1.18 && red > green * 1.02 && red > 70;
-    const pitched = !holes.length && Math.abs(area) < 600 && (building.floors === undefined ? !shed && Math.abs(area) < 450 : warm);
+    // The cadastre gives the year: a building of three floors or more put up since the fifties is a block of terraces, and so
+    // is the low front at its foot, which is a part of it. Where the cadastre gives no year, a tall one is taken for modern.
+    const block = !shed && (building.year !== undefined ? building.year >= MODERN_FROM && Math.max(floors, building.tallest ?? 0) >= 3 : floors >= 5);
+    const pitched = !block && !holes.length && Math.abs(area) < 600 && (building.floors === undefined ? !shed && Math.abs(area) < 450 : warm);
     const tile = shed ? 0 : pitched ? 1 : 0.5;
-    // The cadastre gives the year: a block of three floors or more built since the fifties is one of terraces. Where it gives none, a tall one is taken for modern.
-    const modern = !shed && !pitched && (building.year !== undefined ? building.year >= MODERN_FROM && floors >= 3 : floors >= 5) ? 1 : 0;
+    const modern = block ? 1 : 0;
     let front = 0;
     const add = (p: readonly [number, number, number], n: readonly [number, number, number], st: readonly [number, number], roof: number, plain = 0): void => {
       positions.push(...p);

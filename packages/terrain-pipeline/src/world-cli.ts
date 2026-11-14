@@ -40,7 +40,14 @@ const WMS = 'https://geoserveis.icgc.cat/servei/catalunya';
 const CANOPY_CELL_M = 20;
 const COVER_CELL_M = 2;
 /** The photograph of the ground, over the whole terrain of the route, and the kinds of ground near it, as textures. */
-const ORTHO = { url: 'https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wms/service', layer: 'orto', cellM: 2, tile: 1800 };
+// The photograph is asked for as fine as a phone can hold in one texture (4,096 pixels a side): a metre
+// to the pixel for a small terrain, and no more pixels in all than a megabyte and a half or so of image.
+// From the ground every pixel counts: a zebra crossing, a strip of grass.
+const ORTHO_SIDE = 4096;
+const ORTHO_PIXELS = 7.2e6;
+const orthoCellM =
+  [1, 1.25, 2, 2.5].find((cellM) => [meta.cols, meta.rows].every((cells) => Number.isInteger((cells * meta.cell) / cellM) && (cells * meta.cell) / cellM <= ORTHO_SIDE) && (meta.cols * meta.rows * meta.cell ** 2) / cellM ** 2 <= ORTHO_PIXELS) ?? 5;
+const ORTHO = { url: 'https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wms/service', layer: 'orto', cellM: orthoCellM, tile: 1800 };
 const LAND_CELL_M = 4;
 const BUILDING_CORRIDOR_M = 260;
 /** Within this distance of the route a block of the map is told apart into the houses the cadastre has in it. */
@@ -354,6 +361,7 @@ const blocks = [...cache.values()]
 const kept = process.env['TRAM_WORLD_CACHE'] ?? join(tmpdir(), 'tram-world');
 const cadastre = await fetchCadastre(tilesNear(route.map(([x, y]): [number, number] => [meta.x0 + x, meta.y0 + y]), HOUSE_CORRIDOR_M), kept);
 const parts = cadastre.parts.map((part) => ({
+  building: part.building,
   floors: part.floors,
   rings: part.rings.map((ring) => ring.map(([x, y]): Point => [x - meta.x0, y - meta.y0])),
   use: cadastre.buildings.get(part.building)?.use ?? null,
@@ -390,6 +398,7 @@ const trees = [...wild, ...street];
 const buildings = houses.map((b) => ({
   h: b.heightM,
   ...(b.floors ? { f: b.floors } : {}),
+  ...(b.tallest ? { t: b.tallest } : {}),
   ...(b.use ? { u: USES.indexOf(b.use) } : {}),
   ...(b.year ? { y: b.year } : {}),
   rings: b.rings.map((ring) => ring.flatMap(([x, y]) => [tenths(x), tenths(y)])),
@@ -439,7 +448,7 @@ const world = {
   treeCorridorM: TREES.corridorM,
   buildingCorridorM: BUILDING_CORRIDOR_M,
   trees: trees.flatMap(([x, y, h, kind]) => [tenths(x), tenths(y), tenths(h), tenths(groundAt([x, y])), TREE_KINDS.indexOf(kind)]),
-  // Height in metres; where the cadastre tells the house apart: `f` floors above ground (the height is then three metres a floor), `u` its use (index of `uses`) and `y` the year it was built.
+  // Height in metres; where the cadastre tells the house apart: `f` floors above ground (the height is then three metres a floor), `t` the floors of the tallest part of its building when that is more, `u` its use (index of `uses`) and `y` the year it was built.
   uses: USES,
   buildings,
   // What is named within reach of the route: name, class, place in tenths of a metre, and the size the ICGC's map writes it in.

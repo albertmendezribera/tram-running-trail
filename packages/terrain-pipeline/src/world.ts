@@ -163,6 +163,8 @@ export interface Block {
 }
 /** A part of a building as the cadastre has it: one house, or one wing of it, with its floors. */
 export interface HousePart {
+  /** The building the part belongs to: a tower and the low front it stands behind are parts of one. */
+  building?: string;
   floors: number;
   rings: Point[][];
   use: string | null;
@@ -171,8 +173,9 @@ export interface HousePart {
 export interface Built {
   heightM: number;
   rings: Point[][];
-  /** Floors above ground, use and year built, where the cadastre gives them. */
+  /** Floors above ground, use and year built, where the cadastre gives them; and the floors of the tallest part of its building. */
   floors?: number;
+  tallest?: number;
   use?: string;
   year?: number;
 }
@@ -247,6 +250,9 @@ export function housesOf({ blocks, parts, route, detailM, smallestM2 = 8 }: Hous
     const key = `${Math.floor(heart[0] / CELL)},${Math.floor(heart[1] / CELL)}`;
     (hearts.get(key) ?? hearts.set(key, []).get(key)!).push({ part, heart });
   }
+  // How tall each building gets: a shop of one floor at the foot of a block of seven is part of that block.
+  const tallest = new Map<string, number>();
+  for (const part of parts) if (part.building) tallest.set(part.building, Math.max(tallest.get(part.building) ?? 0, part.floors));
   const built: Built[] = [];
   for (const block of blocks) {
     const outer = block.polygon[0]!;
@@ -267,7 +273,8 @@ export function housesOf({ blocks, parts, route, detailM, smallestM2 = 8 }: Hous
     for (const part of inside) {
       const rings = part.rings.map((ring) => tidyRing(ring)).filter((ring) => ring.length >= 3);
       if (!rings.length) continue;
-      built.push({ heightM: part.floors * FLOOR_HEIGHT_M, rings, floors: part.floors, ...(part.use ? { use: part.use } : {}), ...(part.year ? { year: part.year } : {}) });
+      const top = part.building ? tallest.get(part.building) : undefined;
+      built.push({ heightM: part.floors * FLOOR_HEIGHT_M, rings, floors: part.floors, ...(top && top > part.floors ? { tallest: top } : {}), ...(part.use ? { use: part.use } : {}), ...(part.year ? { year: part.year } : {}) });
     }
   }
   return built;

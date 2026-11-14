@@ -417,9 +417,17 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
       display: none;
     }
 
-    /* The scale of grades in one line. */
+    /* The scale of grades in one line: its name is kept for those who do not see the swatches. */
     .scroller[data-viewer] .grades {
-      column-gap: var(--tram-sys-space-2);
+      column-gap: var(--tram-sys-space-3);
+    }
+
+    .scroller[data-viewer] .grades > span:first-child {
+      position: absolute;
+      inline-size: var(--tram-sys-line-hairline);
+      block-size: var(--tram-sys-line-hairline);
+      overflow: hidden;
+      clip-path: inset(50%);
     }
 
     .scroller[data-viewer] .foot {

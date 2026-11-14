@@ -24,25 +24,27 @@ Les capes LiDAR arriben com a imatges de grisos que el servei estira de manera d
 
 Primer es va provar dins de MapLibre, amb els arbres en una capa pròpia. Funcionava, però MapLibre no deixa fer ombres ni tocar el terra, i es va refer com a escena de three.js (`three/walk-viewer`), amb el mateix `WebGPURenderer` de la vista cartogràfica.
 
-- **Terra**: la malla del model d'elevacions amb l'ortofoto. De prop una foto aèria no té gra: fins a uns 200 m de la càmera cada tipus de terra (bosc, matollar, prat, conreu, sòl nu) pren un color i un gra propis, i la foto queda com a matís del lloc. De lluny és només la foto.
-- **Camí**: una banda de terra batuda sobre el traçat, que es desfà a les vores, i al mig la línia de la ruta: el que falta, del color del seu pendent; el que s'ha fet, clar.
-- **Arbres**: quatre formes (pi, alzina, caducifoli, olivera) fetes de grumolls arrodonits, dibuixades per instàncies. De prop es tallen més fines i fan ombra; de lluny, més gruixudes. La vora de la copa es menja amb un soroll, perquè acabi en fulles i no en una línia.
-- **Matolls i herba**: de decoració. Es posen segons el tipus de terra del mapa de cobertes, prop del camí; no surten de cap mesura.
-- **Edificis**: murs amb finestres i una teulada (teula a les cases, xapa a les naus grans), a l'alçada del mapa.
+- **Textures**: totes es pinten en un llenç quan arrenca la vista (`textures.ts`): herba, herba seca, fullaraca, terra batuda, asfalt, escorça, teula, un pany de paret amb finestra i porticons, i el fullatge de cada tipus d'arbre. No es baixa cap imatge ni n'hi ha cap de generada per IA.
+- **Terra**: la malla del model d'elevacions. De prop cada tipus de terra del mapa de cobertes ensenya la seva textura (herba al prat, fullaraca al bosc, herba seca i terra al matollar), i l'ortofoto hi posa la claror i una mica del to de cada lloc. De lluny és només l'ortofoto.
+- **Camí i carretera**: el mapa base de l'ICGC diu quins vials són pavimentats. On ho són (un 3 % de Calonge i un 4 % de Sils), asfalt amb les línies blanques; a la resta, terra batuda que es desfà a les vores. Al mig, la línia de la ruta: el que falta, del color del seu pendent; el que s'ha fet, clar.
+- **Arbres**: un cos fosc (tronc amb escorça i el cor de la copa) i, a sobre, làmines de fullatge repartides per la copa, il·luminades com el volum on són. De prop, més làmines i ombra projectada; de lluny, menys. Les fulles que quedarien a tocar de la càmera es deixen de dibuixar.
+- **Matolls i herba**: de decoració. Es posen segons el tipus de terra, prop del camí i mai sobre l'asfalt; no surten de cap mesura.
+- **Edificis**: murs amb un pany de finestra cada tres metres i un per planta, del color de cada casa; teulada a quatre aigües amb ràfec a les cases i coberta plana de xapa a les naus grans.
 - **Llum**: un sol de tarda que fa ombres al voltant del corredor, cel amb núvols, boirina amb la distància i una gradació final (més color, to càlid, cantonades més fosques).
-- **Càmera**: de tercera persona, 19 m darrere del corredor **seguint el camí** (no en línia recta, que travessaria troncs) i a 5,6 m del terra. A la sortida i a l'arribada s'enlaira i ensenya tota la ruta, com les altres vistes.
-- **Corredor**: una figura a mitja gambada sobre un anell del color de senyal.
+- **Càmera**: de tercera persona, 19 m darrere del corredor **seguint el camí** (no en línia recta, que travessaria troncs) i a 5,6 m del terra. En un marc vertical (mòbil) l'angle és més obert. A la sortida i a l'arribada s'enlaira i ensenya tota la ruta.
+- **Corredor**: una figura que mou cames i braços segons els metres recorreguts, sobre un anell del color de senyal.
 - El que creix es talla en trams de ruta i només es dibuixen els propers a la càmera. Dibuixa només quan canvia la posició.
 
 ![Sortida, pineda, poble i ruta plana](E18/walk.jpg)
 
 ## Què no s'ha verificat, i límits
 
-- **No és Red Dead Redemption.** Té l'estructura d'un joc (tercera persona, ombres, vegetació, cel), però amb formes senzilles: arbres de grumolls, cases de prismes amb finestres pintades, cap animació, cap aigua, cap roca.
+- **No és un GTA d'avui, ni el vídeo de referència.** El vídeo «GTA: San Madrid» que es va posar com a objectiu és una animació generada amb IA, no un joc: cada fotograma l'ha pintat un model de vídeo, i això no es pot fer en temps real en un navegador ni sense inventar-se el lloc. El que hi ha s'assembla a un joc de l'època de Vice City: geometria senzilla amb textures a tot arreu. No hi ha cotxes, gent, aigua, roques, tanques ni rètols.
+- **El corredor** mou cames i braços, però és una figura de càpsules, no un personatge.
 - **Cap mòbil real.** S'ha mirat amb la GPU d'aquest Mac (WebGPU) i a mida de mòbil al mateix ordinador. No se sap com va en un telèfon. Per això la vista per defecte continua sent «Realista».
 - **Les proves automàtiques** fan servir un renderitzador per programari: comproven que la vista arrenca i quants arbres hi ha, no com es veu ni a quina velocitat.
 - **El LiDAR és del 2016-2017 i la fotografia és posterior**: on s'ha plantat o talat des de llavors, arbres i foto no coincideixen (es veu a les plantacions de Sils).
 - **Les capes d'arbrat només cobreixen el bosc**: jardins, arbres de carrer i fruiters no hi surten. Les vinyes es deixen sense ceps.
-- **El camí es dibuixa sempre de terra**, també on el recorregut va per asfalt: el mapa base de l'ICGC diu si un vial és pavimentat, i encara no es fa servir.
+- **Segons el mapa de l'ICGC, la ruta de Sils només és pavimentada en un 4 %**: la cursa de mostra que hi passa porta l'etiqueta «Asfalt» perquè és inventada, i no s'hi adiu.
 - **El corredor** de dades és de 110 m a banda i banda per als arbres i de 260 m per als edificis; l'herba, a 11 m del camí. Més enllà el paisatge és la fotografia sobre el relleu.
 - La vista «Cartogràfic» i la «Realista» no tenen arbres ni edificis.

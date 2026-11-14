@@ -60,6 +60,8 @@ const localOf = (tx: number, ty: number, u: number, v: number): Point => {
 };
 
 interface Loaded {
+  /** Roads and paths with a known surface, as lines in tile units. */
+  roads: Array<{ paved: boolean; lines: Point[][] }>;
   buildings: Array<{ heightM: number; polygons: Point[][][] }>;
 }
 const cache = new Map<string, Loaded>();
@@ -70,11 +72,17 @@ async function load(tx: number, ty: number): Promise<Loaded> {
   const response = await fetch(`${TILES}/${ZOOM}/${tx}/${ty}.pbf`);
   if (!response.ok) throw new Error(`ICGC tile ${key}: ${response.status}`);
   const tile = new VectorTile(new PbfReader(new Uint8Array(await response.arrayBuffer())));
-  const loaded: Loaded = { buildings: [] };
+  const loaded: Loaded = { roads: [], buildings: [] };
   const rings = (layer: string, i: number): Point[][] => {
     const feature = tile.layers[layer]!.feature(i);
     return feature.loadGeometry().map((ring) => ring.map((p): Point => [p.x / feature.extent, p.y / feature.extent]));
   };
+  const transportation = tile.layers['transportation'];
+  for (let i = 0; transportation && i < transportation.length; i++) {
+    const { surface } = transportation.feature(i).properties;
+    if (transportation.feature(i).type !== 2 || (surface !== 'paved' && surface !== 'unpaved')) continue;
+    loaded.roads.push({ paved: surface === 'paved', lines: rings('transportation', i) });
+  }
   const building = tile.layers['building'];
   for (let i = 0; building && i < building.length; i++) {
     const { building: kind, render_height: height } = building.feature(i).properties;
@@ -198,6 +206,39 @@ for (let i = 0; i < route.length; i += 4) for (const d of [-40, 0, 40]) {
 }
 console.log([...near].sort((a, b) => b[1] - a[1]).slice(0, 9).map(([name, n]) => `${n} ${name}`).join(' · '));
 
+// What is underfoot along the route: the surface of the nearest road or path of the map, when one runs
+// within a few metres of the track. Where the map has none, nothing is said.
+const tileM = (40075016.686 * Math.cos(((toLngLat(meta.x0, meta.y0)[1]) * Math.PI) / 180)) / scale;
+const lengths = [0];
+for (let i = 1; i < route.length; i++) lengths.push(lengths[i - 1]! + Math.hypot(route[i]![0] - route[i - 1]![0], route[i]![1] - route[i - 1]![1]));
+const surfaces = route.map((point): boolean | null => {
+  const { tx, ty, u, v } = tileOf(point);
+  let best = 10 / tileM;
+  let paved: boolean | null = null;
+  for (const road of cache.get(`${tx}/${ty}`)?.roads ?? []) {
+    for (const line of road.lines) {
+      const d = distanceToLine([u, v], line);
+      if (d < best) [best, paved] = [d, road.paved];
+    }
+  }
+  return paved;
+});
+// A stretch is paved when most of what the map knows within 25 m either way is: one stray point changes nothing.
+const pavedAt = route.map((_, i) => {
+  let [yes, no] = [0, 0];
+  for (let k = 0; k < route.length; k++) {
+    if (Math.abs(lengths[k]! - lengths[i]!) > 25 || surfaces[k] === null) continue;
+    if (surfaces[k]) yes++;
+    else no++;
+  }
+  return yes > no;
+});
+const paved: number[] = [];
+for (let i = 0; i < route.length; i++) {
+  if (pavedAt[i] && !pavedAt[i - 1]) paved.push(Number((lengths[i]! / lengths.at(-1)!).toFixed(4)));
+  if (pavedAt[i] && !pavedAt[i + 1]) paved.push(Number((lengths[i]! / lengths.at(-1)!).toFixed(4)));
+}
+
 // The kinds of ground the view tells apart, from the land-cover map: each gets its own grain up close, and scrub its bushes.
 const GROUND: Array<[RegExp, number]> = [
   [/boscos densos|ribera/i, 1],
@@ -241,6 +282,8 @@ const buildings = [...cache.values()]
 const world = {
   attribution: 'Edificis, variables de l’arbrat (LiDAR 2016-2017) i cobertes del sòl (2024): © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0',
   kinds: TREE_KINDS,
+  // Stretches of the route on a paved road, as shares of its length: from, to, from, to…
+  paved,
   // Where land.png lies: its south-west corner in metres from the corner of the terrain, and the size of its cells.
   land: { x0: box.west - meta.x0, y0: box.south - meta.y0, cols: landCols, rows: landRows, cellM: LAND_CELL_M },
   // Tenths of a metre from the south-west corner of the terrain. Trees: x, y, height, elevation of the ground under it, kind (index of `kinds`).
@@ -253,5 +296,7 @@ const world = {
 const json = JSON.stringify(world);
 writeFileSync(join(dir, 'world.json'), json + '\n');
 const count = (kind: TreeKind): number => trees.filter((tree) => tree[3] === kind).length;
+const pavedShare = paved.reduce((sum, share, i) => sum + (i % 2 ? share - paved[i - 1]! : 0), 0);
+console.log(`paved ${(pavedShare * 100).toFixed(0)} % of the route, in ${paved.length / 2} stretches`);
 console.log(`ortho.webp ${orthoCols}×${orthoRows}, ${(ortho.length / 1024).toFixed(0)} KB · land.png ${landCols}×${landRows}`);
 console.log(`${trees.length} trees (${TREE_KINDS.map((kind) => `${count(kind)} ${kind}`).join(', ')}), ${buildings.length} buildings, world.json ${(json.length / 1024).toFixed(1)} KB`);

@@ -1,11 +1,12 @@
 import * as THREE from 'three/webgpu';
-import { attribute, cameraPosition, color, distance, float, fog, fract, instanceIndex, hash, mix, mx_fractal_noise_float, mx_noise_float, normalView, normalWorld, normalize, pass, positionLocal, positionWorld, rangeFogFactor, saturation, screenUV, smoothstep, step, texture, transformNormalToView, uniform, uv, vec2, vec3, vec4 } from 'three/tsl';
+import { attribute, cameraPosition, color, distance, float, fog, fract, instanceIndex, hash, luminance, mix, mx_fractal_noise_float, mx_noise_float, normalWorld, normalize, pass, positionLocal, positionWorld, rangeFogFactor, saturation, screenUV, smoothstep, texture, transformNormalToView, uniform, uv, vec2, vec3, vec4 } from 'three/tsl';
 import type { SceneContext } from '@tram/design-system/interactive/viewer-3d-shell.ts';
 import { createStage } from '../core/stage.ts';
 import { loadHeights, type TerrainMeta } from '../route-viewer/heights.ts';
 import { tramThreeColors, type TramColorName, type TramTerrain } from '@tram/design-system/three';
 import type { RouteMark, RouteViewer } from '../route-viewer/scene.ts';
 import { plantGeometry, type PlantKind } from './flora.ts';
+import { paintTextures } from './textures.ts';
 
 export interface WalkWorld {
   /** Metres east and north of the south-west corner of the terrain, height of the tree in metres, and its kind. */
@@ -14,6 +15,8 @@ export interface WalkWorld {
   buildings: ReadonlyArray<{ heightM: number; rings: ReadonlyArray<ReadonlyArray<readonly [number, number]>> }>;
   /** Where the image of the kinds of ground lies, and the size of its cells. */
   land?: { x0: number; y0: number; cols: number; rows: number; cellM: number } | undefined;
+  /** Stretches of the route on a paved road, as shares of its length: from, to, from, to… */
+  paved?: readonly number[] | undefined;
 }
 
 export interface WalkViewerOptions {
@@ -42,6 +45,8 @@ const KM_MARK_RANGE = 420;
 const POINT_RADIUS = 28;
 /** Half the width of the path as drawn, in metres. */
 const PATH_HALF = 1.7;
+/** A paved road is wider than a path. */
+const ROAD_HALF = 2.9;
 /** Half the width of the line that marks the route along the middle of the path. */
 const LINE_HALF = 0.2;
 /** The route is cut in stretches, and so is what grows along it: only the stretches near the camera are drawn. */
@@ -59,15 +64,9 @@ const SHADOW_REACH_M = 150;
 const HAZE = 0xdfe8ef;
 const ZENITH = 0x5d93cf;
 /** Greens of each kind of plant, and the wood of a trunk. */
-const LEAF: Record<PlantKind, number> = { pine: 0x4a7a42, oak: 0x66803c, deciduous: 0x86ad4a, olive: 0x98a780, bush: 0x5d733f, grass: 0xb3ad68 };
-const WOOD = 0x57483b;
-/** The ground of each kind the land-cover map tells apart, seen from a few metres: wood, scrub, meadow, crops, built, bare, water. */
-const SOIL = [0x6f6845, 0xa3945f, 0x8aa556, 0xb9a674, 0xaba7a0, 0xc8b894, 0x4d6b7e] as const;
-/** The beaten earth of a path. */
-const DIRT = 0xc9b48f;
+const LEAF: Record<PlantKind, number> = { pine: 0x4a7a42, oak: 0x66803c, deciduous: 0x86ad4a, olive: 0x98a780, bush: 0x7a9450, grass: 0xb3ad68 };
 /** Plaster, from white to ochre, and roofs: tile on a house, sheet on a shed. */
 const WALLS = [0xf1ead9, 0xe6d3ae, 0xd9b98c] as const;
-const TILE = 0xb5593a;
 const SHEET = 0x9a9c9a;
 
 const ease = (edge0: number, edge1: number, x: number): number => {
@@ -131,32 +130,36 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   for (let i = 0; i < vertices.count; i++) vertices.setY(i, lift(data[i]!));
   groundGeometry.computeVertexNormals();
   const groundMaterial = new THREE.MeshStandardNodeMaterial({ roughness: 1, metalness: 0 });
+  const paints = paintTextures();
   const flatWorld = vec3(positionWorld.x, positionWorld.z, 0);
   const away = distance(positionWorld, cameraPosition);
-  const close = smoothstep(220, 12, away);
   // The photograph was taken under its own sun: its lights are held back, so a path does not burn white when lit again.
   const raw = texture(ortho, uv()).rgb.mul(1.5);
   const photo = raw.div(raw.mul(0.55).add(1)).mul(1.2);
-  // From close by a photograph taken from the air has no grain. Each kind of ground gets its own colour and
-  // its own grain there, and the photograph stays as the tint of the place and all there is from afar.
-  let soil = photo;
+  // From close by a photograph taken from the air has no grain. There each kind of ground shows its own
+  // texture (grass, the litter of a wood, bare earth), and the photograph stays as the light and the tint
+  // of the place; from afar it is all there is. Each texture is read at two sizes, so its tile does not show.
+  const tileUV = vec2(positionWorld.x, positionWorld.z).div(3.4);
+  const read = (map: THREE.Texture) => texture(map, tileUV).rgb.mul(0.62).add(texture(map, tileUV.mul(0.19)).rgb.mul(0.38));
+  const [meadow, straw, wood, bare] = [read(paints.grass), read(paints.dryGrass), read(paints.litter), read(paints.earth)];
+  // Unknown ground is taken for dry grass, and scrub is straw with bare earth showing through in patches.
+  const worn = smoothstep(-0.1, 0.5, mx_noise_float(flatWorld.mul(0.11)));
+  const scrub = mix(straw, bare, worn.mul(0.55));
+  let cover = straw;
   if (landMap && o.world.land) {
     const land = o.world.land;
     const ragged = mx_noise_float(flatWorld.mul(0.21)).mul(3.2);
     const at = vec2(positionWorld.x.add(ragged).sub(land.x0).div(land.cols * land.cellM), float(1).sub(positionWorld.z.negate().add(ragged).sub(land.y0).div(land.rows * land.cellM)));
-    const inside = step(0, at.x).mul(step(at.x, 1)).mul(step(0, at.y)).mul(step(at.y, 1));
     const kind = texture(landMap, at).r.mul(255 / 30);
     // How much of each kind a point is: all of one, away from the edge between two.
-    const weights = SOIL.map((_, k) => float(1).sub(kind.sub(k + 1).abs().clamp(0, 1)));
-    const tint = SOIL.map((hex, k) => color(hex).mul(weights[k]!)).reduce((sum, part) => sum.add(part));
-    const known = weights.reduce((sum, weight) => sum.add(weight));
-    // Half the colour of the kind, half the photograph's: a wood in shadow stays darker than a clearing.
-    const own = tint.mul(photo.mul(1.6).add(0.45));
-    soil = mix(photo, own, known.mul(inside).mul(smoothstep(700, 40, away)).mul(0.62));
+    const is = (k: number) => float(1).sub(kind.sub(k).abs().clamp(0, 1));
+    cover = mix(mix(mix(mix(mix(straw, wood, is(1)), scrub, is(2)), meadow, is(3)), bare, is(5).add(is(6)).clamp(0, 1)), straw, is(4));
   }
-  const fine = mx_fractal_noise_float(flatWorld.mul(2.6), 3, 2.2, 0.55);
-  const patches = mx_noise_float(flatWorld.mul(0.3));
-  groundMaterial.colorNode = soil.mul(float(1).add(fine.mul(0.34).add(patches.mul(0.16)).mul(close)));
+  // The texture carries the grain and most of the colour; the photograph, how light or dark this very spot
+  // is and a little of its tint: a ploughed field stays darker than a meadow, without dyeing the grass brown.
+  const light = luminance(photo);
+  const textured = cover.mul(mix(vec3(light, light, light), photo, 0.35).mul(2.6).add(0.62));
+  groundMaterial.colorNode = mix(photo, textured, smoothstep(520, 45, away));
   const ground = new THREE.Mesh(groundGeometry, groundMaterial);
   ground.position.set(sizeX / 2, 0, -sizeZ / 2);
   ground.receiveShadow = true;
@@ -214,11 +217,14 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   const point = new THREE.Vector3();
   const next = new THREE.Vector3();
   /** A band along the route, with its points across at the given offsets (metres from the middle). */
-  const bandOf = (offsets: readonly number[], rise: number): THREE.BufferGeometry => {
+  const pavedAt = (share: number): boolean => (o.world.paved ?? []).some((from, i, all) => i % 2 === 0 && share >= from && share <= all[i + 1]!);
+  const bandOf = (offsets: readonly number[], rise: number, widen = false): THREE.BufferGeometry => {
     const across = offsets.length;
     const positions = new Float32Array((samples + 1) * across * 3);
     const levels = new Float32Array((samples + 1) * across);
     const edges = new Float32Array((samples + 1) * across);
+    const roads = new Float32Array((samples + 1) * across);
+    const uvs = new Float32Array((samples + 1) * across * 2);
     const index: number[] = [];
     let band = 0;
     for (let i = 0; i <= samples; i++) {
@@ -229,7 +235,13 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
       const [tx, tz] = [next.x - point.x, next.z - point.z];
       const length = Math.hypot(tx, tz) || 1;
       while (o.grades && band < o.grades.length - 1 && o.grades[band]!.to < share) band++;
-      offsets.forEach((offset, k) => {
+      const paved = pavedAt(share);
+      offsets.forEach((across0, k) => {
+        // A road is wider than a path.
+        const offset = across0 * (widen && paved ? ROAD_HALF / PATH_HALF : 1);
+        roads[i * across + k] = paved ? 1 : 0;
+        // Across the band from 0 to 1, and along it in metres.
+        uvs.set([(across0 / Math.max(...offsets.map(Math.abs)) + 1) / 2, share * total], (i * across + k) * 2);
         const [x, z] = [point.x + (-tz / length) * offset, point.z + (tx / length) * offset];
         positions.set([x, groundAt(x, -z) + rise, z], (i * across + k) * 3);
         levels[i * across + k] = o.grades?.[band]?.level ?? 0;
@@ -244,16 +256,24 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('level', new THREE.BufferAttribute(levels, 1));
     geometry.setAttribute('edge', new THREE.BufferAttribute(edges, 1));
+    geometry.setAttribute('road', new THREE.BufferAttribute(roads, 1));
+    geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
     geometry.setIndex(index);
     geometry.computeVertexNormals();
     return geometry;
   };
   const offset = { polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 };
   const dirtMaterial = new THREE.MeshStandardNodeMaterial({ roughness: 1, metalness: 0, transparent: true, depthWrite: false, side: THREE.DoubleSide, ...offset });
-  dirtMaterial.colorNode = color(DIRT).mul(mx_fractal_noise_float(vec3(positionWorld.x, positionWorld.z, 0).mul(3.1), 3, 2.1, 0.55).mul(0.22).add(mx_noise_float(vec3(positionWorld.x, positionWorld.z, 4).mul(0.6)).mul(0.14)).add(1));
-  // Worn in the middle, grown over at the sides.
-  dirtMaterial.opacityNode = smoothstep(1, 0.5, attribute('edge', 'float').add(mx_noise_float(vec3(positionWorld.x, positionWorld.z, 9).mul(0.9)).mul(0.22))).mul(0.92);
-  const dirt = new THREE.Mesh(bandOf([-PATH_HALF, -PATH_HALF * 0.55, 0, PATH_HALF * 0.55, PATH_HALF], 0.06), dirtMaterial);
+  const road = attribute('road', 'float');
+  const lane = uv();
+  // Beaten earth where the map has a track or nothing; tarmac, with its lines, where it has a paved road.
+  const beaten = texture(paints.earth, vec2(positionWorld.x, positionWorld.z).div(2.6)).rgb.mul(mx_noise_float(vec3(positionWorld.x, positionWorld.z, 4).mul(0.5)).mul(0.12).add(1.02));
+  const paved = texture(paints.tarmac, vec2(lane.x, lane.y.div(ROAD_HALF * 2))).rgb;
+  dirtMaterial.colorNode = mix(beaten, paved, road);
+  // A path is worn in the middle and grown over at the sides; a road ends where its tarmac ends.
+  const grownOver = smoothstep(1, 0.5, attribute('edge', 'float').add(mx_noise_float(vec3(positionWorld.x, positionWorld.z, 9).mul(0.9)).mul(0.22))).mul(0.94);
+  dirtMaterial.opacityNode = mix(grownOver, float(1), road);
+  const dirt = new THREE.Mesh(bandOf([-PATH_HALF, -PATH_HALF * 0.55, 0, PATH_HALF * 0.55, PATH_HALF], 0.06, true), dirtMaterial);
   dirt.receiveShadow = true;
   const lineMaterial = (): THREE.MeshBasicNodeMaterial => new THREE.MeshBasicNodeMaterial({ transparent: true, opacity: 0.9, depthWrite: false, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 });
   const aheadMaterial = lineMaterial();
@@ -269,68 +289,83 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   doneBand.renderOrder = 3;
 
   // ── What grows along the route, in stretches: each stretch is drawn only when the camera is near it.
-  const stretches: Array<{ coarse: THREE.InstancedMesh; fine: THREE.InstancedMesh; centre: THREE.Vector3; radius: number; small: boolean }> = [];
+  const stretches: Array<{ far: THREE.InstancedMesh[]; near: THREE.InstancedMesh[]; centre: THREE.Vector3; radius: number; small: boolean }> = [];
   const growth = new THREE.Group();
-  const leafNoise = mx_noise_float(positionWorld.mul(0.85)).mul(0.6).add(mx_noise_float(positionWorld.mul(2.9)).mul(0.4));
-  const plantMaterial = (kind: PlantKind): THREE.MeshStandardNodeMaterial => {
-    const material = new THREE.MeshStandardNodeMaterial({ roughness: 0.95, metalness: 0, side: kind === 'grass' ? THREE.DoubleSide : THREE.FrontSide });
-    // No two plants the same green, and no crown one flat green: clumps of leaves in light and in shade.
-    const own = hash(instanceIndex).mul(0.34).add(0.83);
-    // …and the top of a crown catches the sky.
-    // Grass goes from straw to green in patches, as a field does.
-    const base = kind === 'grass' ? mix(color(LEAF.grass), color(0x7f9a4c), smoothstep(-0.2, 0.5, mx_noise_float(vec3(positionWorld.x, positionWorld.z, 3).mul(0.07)))) : color(LEAF[kind]);
-    const leaf = base.mul(own).mul(mix(0.66, 1.3, smoothstep(-0.35, 0.4, leafNoise))).mul(normalWorld.y.mul(0.24).add(0.96));
-    material.colorNode = mix(color(WOOD), leaf, attribute('part', 'float')).mul(attribute('shade', 'float'));
-    // A blade is lit as the ground it grows on, whichever of its two sides is seen.
+  // No two plants the same green: each takes its own shade, by its place in the line.
+  const own = hash(instanceIndex).mul(0.36).add(0.84);
+  const patchy = mx_noise_float(positionWorld.mul(0.55)).mul(0.16).add(1);
+  /** The body of a plant: bark on the trunk, and the heart of the crown in the shade of its own leaves. */
+  const coreMaterial = (kind: PlantKind): THREE.MeshStandardNodeMaterial => {
+    const material = new THREE.MeshStandardNodeMaterial({ roughness: 0.95, metalness: 0 });
+    const barked = texture(paints.bark, uv()).rgb.mul(1.25);
+    material.colorNode = mix(barked, color(LEAF[kind]).mul(own).mul(0.72), attribute('part', 'float')).mul(attribute('shade', 'float'));
+    return material;
+  };
+  /** Its leaves: cards cut out by the picture of a spray of foliage. */
+  const cardMaterial = (kind: PlantKind): THREE.MeshStandardNodeMaterial => {
+    const material = new THREE.MeshStandardNodeMaterial({ roughness: 0.9, metalness: 0, side: THREE.DoubleSide, alphaTest: 0.42 });
+    const picture = texture(kind === 'grass' ? paints.blades : paints.foliage[kind], uv());
+    // Grass goes from straw to green in patches, as a field does; a crown catches the sky on top.
+    const tint = kind === 'grass' ? mix(vec3(1.05, 1, 0.9), vec3(0.78, 1.02, 0.7), smoothstep(-0.2, 0.5, mx_noise_float(vec3(positionWorld.x, positionWorld.z, 3).mul(0.07)))) : vec3(1.75, 1.75, 1.75).mul(normalWorld.y.mul(0.2).add(0.98));
+    material.colorNode = picture.rgb.mul(tint).mul(own).mul(patchy).mul(attribute('shade', 'float'));
+    // Leaves right in front of the lens are let go: a branch across the frame hides the route it stands by.
+    material.opacityNode = kind === 'grass' ? picture.a : picture.a.mul(smoothstep(5, 11, distance(positionWorld, cameraPosition)));
+    // A blade or a leaf is lit as the clump it belongs to, whichever of its two sides is seen.
     if (kind === 'grass') material.normalNode = transformNormalToView(vec3(0, 1, 0));
-    else {
-      // A crown ends in leaves, not in a line: where it turns away from the eye it is eaten into by its own foliage.
-      const facing = normalView.z.abs();
-      const ragged = mx_noise_float(positionWorld.mul(3.4)).mul(0.5).add(mx_noise_float(positionWorld.mul(9)).mul(0.25));
-      material.opacityNode = mix(float(1), smoothstep(0.12, 0.3, facing.add(ragged.mul(0.55))), attribute('part', 'float'));
-      material.alphaTest = 0.5;
-    }
     return material;
   };
   const dummy = new THREE.Object3D();
   const grow = (kind: PlantKind, plants: ReadonlyArray<readonly [number, number, number]>, shadows: boolean): void => {
     if (!plants.length) return;
-    const geometry = plantGeometry(kind);
-    const fineGeometry = plantGeometry(kind, true);
-    const material = plantMaterial(kind);
+    const [coarse, fine] = [plantGeometry(kind), plantGeometry(kind, true)];
+    const [body, foliage] = [coreMaterial(kind), cardMaterial(kind)];
     const byStretch = new Map<number, Array<readonly [number, number, number]>>();
     for (const plant of plants) {
       const stretch = Math.min(STRETCHES - 1, Math.floor(nearest(plant[0], plant[1]).share * STRETCHES));
       (byStretch.get(stretch) ?? byStretch.set(stretch, []).get(stretch)!).push(plant);
     }
-    for (const own of byStretch.values()) {
-      const mesh = new THREE.InstancedMesh(geometry, material, own.length);
-      own.forEach(([x, y, size], i) => {
+    for (const ownPlants of byStretch.values()) {
+      const matrices = new THREE.InstancedMesh(coarse.cards, foliage, ownPlants.length);
+      ownPlants.forEach(([x, y, size], i) => {
         dummy.position.set(x, groundAt(x, y), -y);
         dummy.rotation.set(0, scatter(x, y) * Math.PI * 2, 0);
         // A touch wider or narrower than tall: the same shape never twice.
         const wide = 0.88 + scatter(y, x, 1) * 0.3;
         dummy.scale.set(size * wide, size, size * wide);
         dummy.updateMatrix();
-        mesh.setMatrixAt(i, dummy.matrix);
+        matrices.setMatrixAt(i, dummy.matrix);
       });
-      mesh.instanceMatrix.needsUpdate = true;
-      mesh.computeBoundingSphere();
-      // The same plants twice: cut fine and casting shadows for when the camera is near, coarse for the rest.
-      const fine = new THREE.InstancedMesh(fineGeometry, material, own.length);
-      fine.instanceMatrix = mesh.instanceMatrix;
-      fine.boundingSphere = mesh.boundingSphere;
-      fine.castShadow = shadows;
-      fine.visible = false;
-      stretches.push({ coarse: mesh, fine, centre: mesh.boundingSphere!.center.clone(), radius: mesh.boundingSphere!.radius, small: kind === 'grass' });
-      growth.add(mesh, fine);
+      matrices.instanceMatrix.needsUpdate = true;
+      matrices.computeBoundingSphere();
+      // The same plants in up to four meshes that share their places: body and leaves, cut coarse for
+      // afar and fine for near. Only the fine body casts a shadow: the shape of the crown, not of each leaf.
+      const share = (geometry: THREE.BufferGeometry | null, material: THREE.Material): THREE.InstancedMesh | null => {
+        if (!geometry) return null;
+        const mesh = new THREE.InstancedMesh(geometry, material, ownPlants.length);
+        mesh.instanceMatrix = matrices.instanceMatrix;
+        mesh.boundingSphere = matrices.boundingSphere;
+        mesh.visible = false;
+        growth.add(mesh);
+        return mesh;
+      };
+      growth.add(matrices);
+      const near = [share(fine.core, body), kind === 'grass' ? null : share(fine.cards, foliage)].filter((mesh): mesh is THREE.InstancedMesh => mesh !== null);
+      const far = [share(coarse.core, body), matrices].filter((mesh): mesh is THREE.InstancedMesh => mesh !== null);
+      if (near[0] && fine.core) near[0].castShadow = shadows;
+      stretches.push({ far, near, centre: matrices.boundingSphere!.center.clone(), radius: matrices.boundingSphere!.radius, small: kind === 'grass' });
     }
   };
+  // How far the leaves of a tree reach from its trunk, as a share of its height. A tree whose crown would
+  // hang over the middle of the path is left out: the camera runs there, a little over head height.
+  const REACH: Record<Exclude<PlantKind, 'bush' | 'grass'>, number> = { pine: 0.58, oak: 0.52, deciduous: 0.34, olive: 0.62 };
   for (const kind of ['pine', 'oak', 'deciduous', 'olive'] as const) {
-    grow(kind, o.world.trees.filter((tree) => tree[3] === kind).map(([x, y, h]) => [x, y, h] as const), true);
+    const clear = o.world.trees.filter((tree) => tree[3] === kind && nearest(tree[0], tree[1]).distance > tree[2] * REACH[kind] + 1.2);
+    grow(kind, clear.map(([x, y, h]) => [x, y, h] as const), true);
   }
   /** Every cell of a grid within reach of the route, once: where something small may grow. */
-  const sow = (gridM: number, reachM: number, plant: (i: number, j: number, x: number, y: number, away: number) => void): void => {
+  /** How far from the middle of the route its surface ends, at the point of it nearest to a place. */
+  const edgeAt = (share: number): number => (pavedAt(share) ? ROAD_HALF + 0.5 : PATH_HALF * 0.8);
+  const sow = (gridM: number, reachM: number, plant: (i: number, j: number, x: number, y: number, away: number, edge: number) => void): void => {
     const seen = new Set<number>();
     const reach = Math.ceil(reachM / gridM);
     for (let t = 0; t < track.length; t++) {
@@ -342,8 +377,8 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
           if (seen.has(key)) continue;
           seen.add(key);
           const [px, py] = [(i + scatter(i, j, 2)) * gridM, (j + scatter(i, j, 3)) * gridM];
-          const away = nearest(px, py).distance;
-          if (away <= reachM) plant(i, j, px, py, away);
+          const near = nearest(px, py);
+          if (near.distance <= reachM) plant(i, j, px, py, near.distance, edgeAt(near.share));
         }
       }
     }
@@ -355,12 +390,12 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   if (landKinds) {
     const bushy = [0, 0.16, 0.34, 0.03, 0, 0, 0.05, 0];
     const grassy = [0.3, 0.4, 0.6, 0.95, 0.5, 0, 0.2, 0];
-    sow(5.5, 42, (i, j, x, y, away) => {
-      if (away > 2.8 && scatter(i, j, 4) < bushy[kindAt(x, y)]!) bushes.push([x, y, 0.55 + scatter(i, j, 5) * 0.9]);
+    sow(5.5, 42, (i, j, x, y, away, edge) => {
+      if (away > edge + 1.4 && scatter(i, j, 4) < bushy[kindAt(x, y)]!) bushes.push([x, y, 0.55 + scatter(i, j, 5) * 0.9]);
     });
-    sow(0.95, 11, (i, j, x, y, away) => {
+    sow(1.15, 12, (i, j, x, y, away, edge) => {
       // Thick at the edge of the path, thinner away from it: the camera never leaves the path.
-      if (away > PATH_HALF * 0.8 && scatter(i, j, 6) < grassy[kindAt(x, y)]! * (1 - away / 16)) grass.push([x, y, 0.8 + scatter(i, j, 7) * 0.9]);
+      if (away > edge && scatter(i, j, 6) < grassy[kindAt(x, y)]! * (1 - away / 16)) grass.push([x, y, 0.7 + scatter(i, j, 7) * 0.8]);
     });
   }
   grow('bush', bushes, false);
@@ -372,15 +407,14 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   const tone = attribute('tone', 'float');
   const isRoof = attribute('roof', 'float');
   const wall = uv();
-  // Windows every three metres or so along a wall and one to a floor, each with its sill of shade.
-  const across = fract(wall.x.div(3.1));
-  const up = fract(wall.y.div(2.9));
-  const pane = step(0.3, across).mul(step(across, 0.68)).mul(step(0.3, up)).mul(step(up, 0.78)).mul(step(0.4, wall.y));
+  // One bay of wall and window every three metres or so across, and one to a floor; a darker foot where rain splashes.
+  const facade = texture(paints.bay, vec2(wall.x.div(3.1), wall.y.div(2.9))).rgb;
   const plaster = mix(mix(color(WALLS[0]), color(WALLS[1]), smoothstep(0.2, 0.55, tone)), color(WALLS[2]), smoothstep(0.6, 0.95, tone));
-  const stains = mx_noise_float(vec3(wall.x.mul(0.5), wall.y.mul(1.4), tone.mul(40))).mul(0.07).add(1).mul(mix(0.82, 1, smoothstep(0, 1.6, wall.y)));
-  const glass = vec3(0.1, 0.14, 0.19);
-  const tiles = mix(color(SHEET), color(TILE), step(0.5, tone.mul(0).add(attribute('tiled', 'float')))).mul(mx_noise_float(vec3(positionWorld.x.mul(1.2), positionWorld.z.mul(5), 0)).mul(0.1).add(1));
-  wallMaterial.colorNode = mix(mix(plaster.mul(stains), glass, pane), tiles, isRoof);
+  const walls = facade.mul(plaster).mul(mix(0.74, 1, smoothstep(0.1, 0.9, wall.y)));
+  // Tile laid along the slope of a roof on a house; sheet, with its seams, on a shed.
+  const tiled = texture(paints.tiles, vec2(wall.x.div(2.4), wall.y.div(2.4))).rgb;
+  const sheet = color(SHEET).mul(fract(wall.x.div(1.1)).sub(0.5).abs().mul(0.3).add(0.88));
+  wallMaterial.colorNode = mix(walls, mix(sheet, tiled, attribute('tiled', 'float')), isRoof);
   const buildings = new THREE.Mesh(built, wallMaterial);
   buildings.castShadow = true;
   buildings.receiveShadow = true;
@@ -402,14 +436,16 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   head.position.set(0, 1.66, 0.1);
   head.castShadow = true;
   const figure = new THREE.Group();
-  figure.add(
-    limb(0.15, 0.42, [0, 1.22, 0.04], 0.16),
-    head,
-    limb(0.075, 0.5, [0.1, 0.62, 0.2], -0.6),
-    limb(0.075, 0.5, [-0.1, 0.6, -0.2], 0.75),
-    limb(0.055, 0.36, [0.2, 1.2, -0.12], 0.9),
-    limb(0.055, 0.36, [-0.2, 1.22, 0.16], -0.9),
-  );
+  // Legs swing from the hip and arms from the shoulder: each hangs from a joint that turns with the stride.
+  const joint = (at: readonly [number, number, number], radius: number, length: number): THREE.Group => {
+    const group = new THREE.Group();
+    group.position.set(...at);
+    group.add(limb(radius, length, [0, -(length / 2 + radius), 0], 0));
+    return group;
+  };
+  const legs = [joint([0.1, 0.92, 0], 0.075, 0.6), joint([-0.1, 0.92, 0], 0.075, 0.6)];
+  const arms = [joint([0.21, 1.42, 0], 0.055, 0.42), joint([-0.21, 1.42, 0], 0.055, 0.42)];
+  figure.add(limb(0.15, 0.42, [0, 1.22, 0.04], 0.16), head, ...legs, ...arms);
   const flat = (inner: number, outer: number, material: THREE.Material): THREE.Mesh => {
     const mesh = new THREE.Mesh(new THREE.RingGeometry(inner, outer, 40), material);
     mesh.rotation.x = -Math.PI / 2;
@@ -443,13 +479,13 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   const hazeNear = uniform(120);
   const hazeFar = uniform(2600);
   scene.fogNode = fog(color(HAZE), rangeFogFactor(hazeNear, hazeFar));
-  const sun = new THREE.DirectionalLight(0xffe4bd, 3.2);
+  const sun = new THREE.DirectionalLight(0xffe9c8, 2.7);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
   Object.assign(sun.shadow.camera, { left: -SHADOW_REACH_M, right: SHADOW_REACH_M, top: SHADOW_REACH_M, bottom: -SHADOW_REACH_M, near: 20, far: 1400 });
   sun.shadow.bias = -0.0006;
   sun.shadow.normalBias = 0.7;
-  scene.add(sky, ground, dirt, aheadBand, doneBand, growth, buildings, runner, pointer, sun, sun.target, new THREE.HemisphereLight(0xd6e6ff, 0xb39f80, 2.05));
+  scene.add(sky, ground, dirt, aheadBand, doneBand, growth, buildings, runner, pointer, sun, sun.target, new THREE.HemisphereLight(0xd9e8ff, 0xbfae92, 2.5));
 
   const camera = new THREE.PerspectiveCamera(CAMERA.fov, 1, 0.6, 90000);
   const centre = new THREE.Vector3(sizeX / 2, lift(o.terrain.max) * 0.3, -sizeZ / 2);
@@ -522,6 +558,13 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
     runner.position.copy(here);
     aim.subVectors(ahead, here);
     runner.rotation.y = Math.atan2(aim.x, aim.z);
+    // The stride follows the ground covered: a step every 1.2 m, whichever way the scroll goes.
+    const stride = ((share * total) / 2.4) * Math.PI * 2;
+    legs[0]!.rotation.x = Math.sin(stride) * 0.85;
+    legs[1]!.rotation.x = -Math.sin(stride) * 0.85;
+    arms[0]!.rotation.x = -Math.sin(stride) * 0.9;
+    arms[1]!.rotation.x = Math.sin(stride) * 0.9;
+    figure.position.y = Math.abs(Math.cos(stride)) * 0.07;
     // From the air the runner is a dot: it grows with the distance, as the route does in the other views.
     const reach = camera.position.distanceTo(here);
     runner.scale.setScalar(1 + Math.max(0, reach / 60 - 1) * 0.9);
@@ -536,8 +579,10 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
       const away = camera.position.distanceTo(stretch.centre) - stretch.radius;
       const near = flying > 0.5 && away < FINE_RANGE_M;
       // Grass has one shape and is there only from close by; the rest swap the coarse shape for the fine one.
-      stretch.fine.visible = near && !stretch.small;
-      stretch.coarse.visible = stretch.small ? flying > 0.5 && away < SMALL_RANGE_M : !near && (flying < 0.5 || away < DRAW_RANGE_M);
+      const fineShown = near && !stretch.small;
+      const coarseShown = stretch.small ? flying > 0.5 && away < SMALL_RANGE_M : !near && (flying < 0.5 || away < DRAW_RANGE_M);
+      for (const mesh of stretch.near) mesh.visible = fineShown;
+      for (const mesh of stretch.far) mesh.visible = coarseShown;
     }
     placeLabels();
     doneBand.geometry.setDrawRange(0, Math.round(share * samples) * 6);
@@ -546,7 +591,7 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   let wanted = Math.min(1, Math.max(0, o.share ?? 0));
   let shown = wanted;
   let last = 0;
-  let post: THREE.PostProcessing | undefined;
+  let post: THREE.RenderPipeline | undefined;
   const stage = await createStage(container, {
     resize(w, h) {
       size.width = w;
@@ -595,11 +640,11 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
     throw signal.reason;
   }
   stage.renderer.shadowMap.enabled = true;
-  stage.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  stage.renderer.shadowMap.type = THREE.PCFShadowMap;
   stage.renderer.toneMapping = THREE.ACESFilmicToneMapping;
   stage.renderer.toneMappingExposure = 1.22;
   // The grade of the picture: a little more colour, a warm cast, and corners that fall off, as through a lens.
-  post = new THREE.PostProcessing(stage.renderer);
+  post = new THREE.RenderPipeline(stage.renderer);
   const shot = pass(scene, camera);
   const graded = saturation(shot.rgb, 1.22).mul(vec3(1.045, 1.0, 0.94)).sub(0.5).mul(1.07).add(0.5);
   post.outputNode = vec4(graded.mul(mix(0.74, 1, smoothstep(0.92, 0.3, distance(screenUV, vec2(0.5, 0.5))))), 1);
@@ -676,6 +721,7 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
         for (const material of ([] as THREE.Material[]).concat(mesh.material ?? [])) material.dispose();
       });
       ortho.dispose();
+      paints.dispose();
     },
   };
 }
@@ -741,11 +787,51 @@ function buildingsOf(buildings: WalkWorld['buildings'], groundAt: (x: number, y:
         run += length;
       }
     }
-    const contour = outer.map(([x, y]) => new THREE.Vector2(x, y));
     const holes = building.rings.slice(1).map((ring) => ring.map(([x, y]) => new THREE.Vector2(x, y)));
-    const flat = [...contour, ...holes.flat()];
-    for (const triangle of THREE.ShapeUtils.triangulateShape(contour, holes)) {
-      for (const k of triangle) add([flat[k]!.x, top, -flat[k]!.y], [0, 1, 0], [flat[k]!.x, flat[k]!.y], 1);
+    const xs = outer.map((point) => point[0]);
+    const ys = outer.map((point) => point[1]);
+    if (tile && !holes.length) {
+      // A house: four slopes of tile, from eaves that stand out from the wall up to a flat ridge.
+      const centre = [xs.reduce((sum, x) => sum + x, 0) / xs.length, ys.reduce((sum, y) => sum + y, 0) / ys.length] as const;
+      const rise = Math.min(2.6, Math.max(0.9, Math.min(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) * 0.2));
+      const eaves = outer.map(([x, y]) => {
+        const reach = Math.hypot(x - centre[0], y - centre[1]) || 1;
+        return [x + ((x - centre[0]) / reach) * 0.45, y + ((y - centre[1]) / reach) * 0.45] as const;
+      });
+      const ridge = outer.map(([x, y]) => [centre[0] + (x - centre[0]) * 0.3, centre[1] + (y - centre[1]) * 0.3] as const);
+      for (let i = 0; i < outer.length; i++) {
+        const j = (i + 1) % outer.length;
+        const a = new THREE.Vector3(eaves[i]![0], top, -eaves[i]![1]);
+        const b = new THREE.Vector3(eaves[j]![0], top, -eaves[j]![1]);
+        const c = new THREE.Vector3(ridge[j]![0], top + rise, -ridge[j]![1]);
+        const d = new THREE.Vector3(ridge[i]![0], top + rise, -ridge[i]![1]);
+        const along = new THREE.Vector3().subVectors(b, a);
+        const length = along.length();
+        if (length < 0.05) continue;
+        along.divideScalar(length);
+        const normal = new THREE.Vector3().crossVectors(along, new THREE.Vector3().subVectors(d, a)).normalize();
+        const upwards = normal.y >= 0;
+        if (!upwards) normal.negate();
+        // Tiles run in rows along the eaves and climb the slope.
+        const st = (point: THREE.Vector3): [number, number] => {
+          const from = new THREE.Vector3().subVectors(point, a);
+          const across = from.dot(along);
+          return [across, Math.sqrt(Math.max(0, from.lengthSq() - across * across))];
+        };
+        const quad = [a, b, c, d];
+        for (const k of upwards ? [0, 1, 2, 0, 2, 3] : [0, 2, 1, 0, 3, 2]) add([quad[k]!.x, quad[k]!.y, quad[k]!.z], [normal.x, normal.y, normal.z], st(quad[k]!), 1);
+      }
+      const cap = ridge.map(([x, y]) => new THREE.Vector2(x, y));
+      for (const triangle of THREE.ShapeUtils.triangulateShape(cap, [])) {
+        for (const k of triangle) add([cap[k]!.x, top + rise, -cap[k]!.y], [0, 1, 0], [cap[k]!.x, cap[k]!.y], 1);
+      }
+    } else {
+      // A shed, or a block round a courtyard: a flat roof.
+      const contour = outer.map(([x, y]) => new THREE.Vector2(x, y));
+      const flat = [...contour, ...holes.flat()];
+      for (const triangle of THREE.ShapeUtils.triangulateShape(contour, holes)) {
+        for (const k of triangle) add([flat[k]!.x, top, -flat[k]!.y], [0, 1, 0], [flat[k]!.x, flat[k]!.y], 1);
+      }
     }
   });
   const geometry = new THREE.BufferGeometry();

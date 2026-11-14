@@ -100,6 +100,6 @@ export const routeOf = (slug: string): Route => {
 
 export const ICGC_CREDIT = 'Ortofoto i model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
 /** What the view from the ground adds, and how much of it is data. */
-export const WORLD_NOTE = 'A peu: edificis del mapa de l’ICGC; arbres segons el seu LiDAR i el mapa de cobertes del sòl, però cap és un arbre concret; matolls i herba, de decoració.';
+export const WORLD_NOTE = 'A peu: edificis i vials pavimentats del mapa de l’ICGC; arbres segons el seu LiDAR i el mapa de cobertes del sòl, però cap és un arbre concret; textures, matolls i herba, de decoració.';
 export const DEM_CREDIT = 'Model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
 export const SAMPLE_NOTICE = 'Cursa de mostra: el recorregut és real, però el nom, la data i el dorsal són inventats per provar la pàgina.';

@@ -272,3 +272,70 @@ export function housesOf({ blocks, parts, route, detailM, smallestM2 = 8 }: Hous
   }
   return built;
 }
+
+/**
+ * How much a pixel of the orthophoto looks like the crown of a tree, from 0 to 1. In the ICGC's
+ * photograph a crown is dark and olive rather than green: more green than blue, not much redder
+ * than it is green. A lawn has the hue and is light; a shadow is dark and grey; tile is red;
+ * tarmac and the sea have no more green than blue. None of them is a crown.
+ */
+export function crownOf(red: number, green: number, blue: number): number {
+  const light = 0.3 * red + 0.59 * green + 0.11 * blue;
+  const unit = (value: number): number => Math.min(1, Math.max(0, value));
+  return unit((green - blue - 10) / 12) * unit((18 - (red - green)) / 12) * unit((132 - light) / 30);
+}
+
+export interface TownTreesOptions {
+  route: ReadonlyArray<Point>;
+  /** How much each cell of the photograph looks like a crown (`crownOf`). Row 0 is the north edge; the south-west corner is the origin of the route. */
+  crowns: { cellM: number; cols: number; rows: number; values: Float32Array };
+  /** Where a street tree may stand: among houses or in a park, and not inside a building. */
+  allowed: (point: Point) => boolean;
+  spacingM?: number;
+  corridorM?: number;
+  clearanceM?: number;
+  /** The height given to a tree whose height nobody measured. */
+  heightM?: number;
+}
+
+/**
+ * The trees of a street, a square or a promenade, which the LiDAR tree layers leave out: they only
+ * cover woods. A tree is stood where the photograph shows the dark green of a crown over a few
+ * pixels, one to each patch of ground. That there are trees there is read from the photograph;
+ * which tree, how many to a row and how tall is not known: the height is a usual one.
+ */
+export function townTrees({ route, crowns, allowed, spacingM = 7, corridorM = 70, clearanceM = 3.5, heightM = 9 }: TownTreesOptions): Tree[] {
+  const { cellM, cols, rows, values } = crowns;
+  const at = (col: number, row: number): number => (col < 0 || row < 0 || col >= cols || row >= rows ? 0 : values[row * cols + col]!);
+  const per = Math.max(1, Math.round(spacingM / cellM));
+  const xs = route.map((p) => p[0]);
+  const ys = route.map((p) => p[1]);
+  const [firstCol, lastCol] = [Math.max(0, Math.floor((Math.min(...xs) - corridorM) / cellM)), Math.min(cols - 1, Math.ceil((Math.max(...xs) + corridorM) / cellM))];
+  const [firstRow, lastRow] = [Math.max(0, Math.floor(rows - (Math.max(...ys) + corridorM) / cellM)), Math.min(rows - 1, Math.ceil(rows - (Math.min(...ys) - corridorM) / cellM))];
+  const trees: Tree[] = [];
+  const stood = new Map<string, Point[]>();
+  const cellOf = (p: Point): string => `${Math.floor(p[0] / spacingM)},${Math.floor(p[1] / spacingM)}`;
+  for (let row0 = firstRow - (firstRow % per); row0 <= lastRow; row0 += per) {
+    for (let col0 = firstCol - (firstCol % per); col0 <= lastCol; col0 += per) {
+      // The pixel of this patch that looks most like a crown.
+      let [best, col, row] = [0, 0, 0];
+      for (let r = row0; r < row0 + per; r++) for (let c = col0; c < col0 + per; c++) if (at(c, r) > best) [best, col, row] = [at(c, r), c, r];
+      if (best < 0.5) continue;
+      // A crown is several pixels across: one dark green pixel on its own is a shutter, or a car.
+      let around = 0;
+      for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) around += at(col + dc, row + dr) / 9;
+      if (around < 0.4) continue;
+      const point: Point = [(col + 0.2 + 0.6 * hash(col, row, 31)) * cellM, (rows - row - 0.8 + 0.6 * hash(col, row, 32)) * cellM];
+      const away = distanceToLine(point, route);
+      if (away < clearanceM || away > corridorM || !allowed(point)) continue;
+      // Not two trees in one crown, where it lies across two patches.
+      const [i, j] = cellOf(point).split(',').map(Number) as [number, number];
+      let crowded = false;
+      for (let di = -1; di <= 1 && !crowded; di++) for (let dj = -1; dj <= 1 && !crowded; dj++) crowded = (stood.get(`${i + di},${j + dj}`) ?? []).some((other) => Math.hypot(other[0] - point[0], other[1] - point[1]) < spacingM * 0.7);
+      if (crowded) continue;
+      (stood.get(cellOf(point)) ?? stood.set(cellOf(point), []).get(cellOf(point))!).push(point);
+      trees.push([point[0], point[1], heightM * (0.8 + 0.4 * hash(col, row, 33)), 'deciduous']);
+    }
+  }
+  return trees;
+}

@@ -7,6 +7,7 @@ import { elevationAt, gradeBands, summarize } from '@tram/design-system/patterns
 import { toLngLat } from '@tram/terrain-pipeline/utm';
 type TreeKind = 'pine' | 'oak' | 'deciduous' | 'olive';
 import type { TerrainMeta } from '../three/route-viewer/heights.ts';
+import { LANDMARKS } from '../content/landmarks.ts';
 import type { RouteMark, RouteViewer } from '../three/route-viewer/scene.ts';
 import { MODE_FIELD, preferredMode, rememberMode, type ViewerMode } from './viewer-mode.ts';
 
@@ -83,6 +84,7 @@ async function start(mode: ViewerMode, context: SceneContext, scroller: TramRout
       trees: Array.from({ length: stored.trees.length / 5 }, (_, i): [number, number, number, TreeKind] => [stored.trees[i * 5]! / 10, stored.trees[i * 5 + 1]! / 10, stored.trees[i * 5 + 2]! / 10, stored.kinds[stored.trees[i * 5 + 4]!] ?? 'oak']),
       buildings: stored.buildings.map((b) => ({ heightM: b.h, floors: b.f, use: b.u === undefined ? undefined : stored.uses?.[b.u], year: b.y, rings: b.rings.map((ring) => Array.from({ length: ring.length / 2 }, (_, i): [number, number] => [ring[i * 2]! / 10, ring[i * 2 + 1]! / 10])) })),
       places: stored.places?.map((p) => ({ name: p.n, kind: p.k, x: p.x / 10, y: p.y / 10, size: p.s, door: p.o === 1 })),
+      landmarks: (LANDMARKS[files.slug] ?? []).map((l) => ({ model: l.model, x: l.utm[0] - terrain.x0, y: l.utm[1] - terrain.y0, turn: (l.turnDeg * Math.PI) / 180 })),
       land: stored.land,
       paved: stored.paved,
       walked: stored.walked,

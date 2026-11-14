@@ -7,6 +7,7 @@ import { tramThreeColors, type TramColorName, type TramTerrain } from '@tram/des
 import type { RouteMark, RouteViewer } from '../route-viewer/scene.ts';
 import { type Carpet, carpetFocus, createCarpet, type Put } from './carpet.ts';
 import { plantGeometry, shrubGeometry, stoneGeometry, type PlantKind } from './flora.ts';
+import { buildLandmark, type Landmark } from './landmarks.ts';
 import { paintTextures } from './textures.ts';
 
 export interface WalkWorld {
@@ -19,6 +20,8 @@ export interface WalkWorld {
   buildings: ReadonlyArray<WalkBuilding>;
   /** What is named along the route: the name, its class, and where it is. `door` marks what OpenStreetMap names at the side of the route. */
   places?: ReadonlyArray<{ name: string; kind: string; x: number; y: number; size: number; door?: boolean }> | undefined;
+  /** Buildings modelled by hand: each takes the place of the building the map has where it stands. */
+  landmarks?: ReadonlyArray<Landmark> | undefined;
   /** Where the image of the kinds of ground lies, and the size of its cells. */
   land?: { x0: number; y0: number; cols: number; rows: number; cellM: number } | undefined;
   /** Stretches of the route on a paved road, as shares of its length: from, to, from, to… */
@@ -170,7 +173,9 @@ const DOOR_RANGE_M = 90;
 /** Names that say nothing on the ground: a trail code, a survey point, the town the whole route is in. */
 const PLACE_SKIPPED = new Set(['gr', 'vertex_geodesic', 'municipality', 'town', 'city', 'parada', 'cami', 'sequia', 'torrent', 'stream']);
 /** How many pictures of a bay the strip of facades holds (`textures.ts`). */
-const BAYS = 7;
+const BAYS = 9;
+/** A block of flats from this year on has terraces from side to side, not windows with shutters. */
+const MODERN_FROM = 1955;
 /** A floor is this tall and a bay this wide, more or less: a wall is cut in whole ones. */
 const FLOOR_M = 2.9;
 const BAY_M = 3.1;
@@ -417,7 +422,7 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   const way = attribute('road', 'float');
   const road = way.clamp(0, 1);
   const lane = uv();
-  // Beaten earth where the map has a track or nothing; tarmac, with its lines, where it has a paved road.
+  // Beaten earth where the map has a track or nothing; where it has a paved way, what the photograph shows it paved with.
   const beaten = texture(paints.earth, vec2(positionWorld.x, positionWorld.z).div(2.6)).rgb.mul(mx_noise_float(vec3(positionWorld.x, positionWorld.z, 4).mul(0.5)).mul(0.12).add(1.02));
   // The lines of a road are painted at the edges of its texture: a road with no lines reads the texture between them.
   const unlined = step(2.5, way);
@@ -425,11 +430,20 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   // A track is two ruts packed hard and pale by wheels, with looser, darker earth between them and at the sides.
   const rut = (middle: number) => smoothstep(0.17, 0.03, lane.x.sub(middle).abs());
   const tracked = beaten.mul(rut(0.27).add(rut(0.73)).mul(0.2).add(0.86));
-  // A promenade is paved in pale slabs, with no lines: the joints run across and along it.
+  // What a paved way is paved with is in the photograph: the grey of tarmac, the pale slabs of a promenade,
+  // the gold of packed sand under the trees of a square. The band takes that colour, with the grit of a
+  // surface seen from close by; only where the photograph is the dark grey of a road does it get its lines.
+  const seenFromAir = texture(ortho, vec2(positionWorld.x.div(sizeX), positionWorld.z.negate().div(sizeZ))).level(float(1.5)).rgb.mul(1.5);
+  const ownColour = seenFromAir.div(seenFromAir.mul(0.55).add(1)).mul(1.2);
+  const grit = luminance(texture(paints.tarmac, vec2(lane.x.mul(0.8).add(0.1), lane.y.div(ROAD_HALF * 2))).rgb).div(0.3).clamp(0.82, 1.12);
+  const spread = ownColour.r.max(ownColour.g).max(ownColour.b).sub(ownColour.r.min(ownColour.g).min(ownColour.b));
+  const tarmacked = smoothstep(0.5, 0.36, luminance(ownColour)).mul(smoothstep(0.1, 0.04, spread));
+  // A promenade is laid in slabs: their joints, faint.
   const slab = vec2(lane.x.mul(5), lane.y.div(1.1));
   const joints = smoothstep(0.035, 0.0, slab.x.fract().sub(0.5).abs().sub(0.465).negate().min(slab.y.fract().sub(0.5).abs().sub(0.465).negate()));
-  const stone = vec3(0.62, 0.59, 0.54).mul(mx_noise_float(vec3(slab.x.floor(), slab.y.floor(), 2).mul(3.7)).mul(0.07).add(0.97)).mul(mix(1, 0.72, joints)).mul(luminance(paved).div(0.28).clamp(0.8, 1.15));
-  dirtMaterial.colorNode = mix(tracked, mix(paved, stone, way.sub(1).clamp(0, 1).mul(float(1).sub(unlined))), road);
+  const walked = step(1.5, way).mul(float(1).sub(unlined));
+  const surfaced = mix(ownColour.mul(grit).mul(mix(float(1), float(0.86), joints.mul(walked))), paved, tarmacked.mul(float(1).sub(walked)));
+  dirtMaterial.colorNode = mix(tracked, surfaced, road);
   // A path is worn in the middle and grown over at the sides; a road ends where its tarmac ends.
   const grownOver = smoothstep(1, 0.5, attribute('edge', 'float').add(mx_noise_float(vec3(positionWorld.x, positionWorld.z, 9).mul(0.9)).mul(0.22))).mul(0.94);
   dirtMaterial.opacityNode = mix(grownOver, float(1), road);
@@ -663,11 +677,29 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   };
   // Where OpenStreetMap has a bar or a shop, the wall nearest to it gets a shop front at street level.
   const shops = (o.world.places ?? []).filter((place) => place.door && SHOP_KINDS.has(place.kind)).map((place) => [place.x, place.y] as const);
-  const built = buildingsOf(o.world.buildings, groundAt, photoAt, shops);
+  // A building modelled by hand takes the place of the one the map has under it.
+  const landmarks = o.world.landmarks ?? [];
+  const standsOn = (landmark: Landmark, ring: ReadonlyArray<readonly [number, number]> | undefined): boolean => {
+    let inside = false;
+    for (let i = 0, j = (ring?.length ?? 0) - 1; ring && i < ring.length; j = i++) {
+      const [xi, yi] = ring[i]!;
+      const [xj, yj] = ring[j]!;
+      if (yi > landmark.y !== yj > landmark.y && landmark.x < ((xj - xi) * (landmark.y - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  };
+  const standing = o.world.buildings.filter((building) => !landmarks.some((landmark) => standsOn(landmark, building.rings[0])));
+  const built = buildingsOf(standing, groundAt, photoAt, shops);
+  const handmade = landmarks.map((landmark) => {
+    const model = buildLandmark(landmark.model);
+    model.position.set(landmark.x, groundAt(landmark.x, landmark.y), -landmark.y);
+    model.rotation.y = landmark.turn;
+    return model;
+  });
   const wallMaterial = new THREE.MeshStandardNodeMaterial({ roughness: 0.9, metalness: 0 });
   // A renderer takes eight buffers to a mesh at most: what a wall is goes four to a buffer.
   const look = attribute('look', 'vec4');
-  const more = attribute('more', 'vec2');
+  const more = attribute('more', 'vec3');
   const tone = look.x;
   const isRoof = look.y;
   const wall = uv();
@@ -679,7 +711,10 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   // 1 is a house, a half a block of flats, 0 a shed.
   const isHouse = step(0.25, look.z);
   const upstairs = step(0.45, pick).add(step(0.72, pick)).add(step(0.9, pick));
-  const house = mix(upstairs, step(pick, 0.3).mul(4), atStreet);
+  const old = mix(upstairs, step(pick, 0.3).mul(4), atStreet);
+  // A modern block: a terrace to each bay of each floor, one in four with its awning down; at street level, shops and a door now and then.
+  const block = mix(float(7).add(step(0.75, pick)), mix(float(6), float(4), step(0.72, pick)), atStreet);
+  const house = mix(old, block, more.z);
   // A shed is bare wall, with a gate here and there.
   const shed = mix(float(3), float(5), atStreet.mul(step(0.8, pick)));
   const which = mix(mix(mix(shed, house, isHouse), float(6), more.y.mul(atStreet)), float(3), look.w);
@@ -812,7 +847,7 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   Object.assign(sun.shadow.camera, { left: -SHADOW_REACH_M, right: SHADOW_REACH_M, top: SHADOW_REACH_M, bottom: -SHADOW_REACH_M, near: 20, far: 1400 });
   sun.shadow.bias = -0.0006;
   sun.shadow.normalBias = 0.7;
-  scene.add(sky, ground, ...sea, dirt, aheadBand, doneBand, growth, buildings, runner, pointer, sun, sun.target, new THREE.HemisphereLight(0xd9e8ff, 0xbfae92, 2.25));
+  scene.add(sky, ground, ...sea, ...handmade, dirt, aheadBand, doneBand, growth, buildings, runner, pointer, sun, sun.target, new THREE.HemisphereLight(0xd9e8ff, 0xbfae92, 2.25));
 
   const camera = new THREE.PerspectiveCamera(CAMERA.fov, 1, 0.6, 90000);
   const centre = new THREE.Vector3(sizeX / 2, lift(o.terrain.max) * 0.3, -sizeZ / 2);
@@ -1049,6 +1084,7 @@ export async function mountWalkViewer({ container, signal, reducedMotion }: Scen
   // How much of what stands along the route is told house by house, and how many of its places have a name.
   stage.canvas.dataset['houses'] = String(o.world.buildings.filter((building) => building.floors !== undefined).length);
   stage.canvas.dataset['names'] = String(names.length);
+  stage.canvas.dataset['landmarks'] = String(handmade.length);
 
   const local = new AbortController();
   // Over a photograph the ground is dark: the night colours of the tokens read on it in both themes, as in the realistic view.
@@ -1153,7 +1189,7 @@ function buildingsOf(buildings: ReadonlyArray<WalkBuilding>, groundAt: (x: numbe
   const positions: number[] = [];
   const normals: number[] = [];
   const uvs: number[] = [];
-  /** Tone of the plaster, whether it is roof, what kind of building it is and whether the wall is bare; then whether the roof is pitched and the wall a shop front. */
+  /** Tone of the plaster, whether it is roof, what kind of building it is and whether the wall is bare; then whether the roof is pitched, the wall a shop front and the building a modern block. */
   const looks: number[] = [];
   const mores: number[] = [];
   const areaOf = (ring: ReadonlyArray<readonly [number, number]>): number => {
@@ -1237,13 +1273,15 @@ function buildingsOf(buildings: ReadonlyArray<WalkBuilding>, groundAt: (x: numbe
     const warm = red > blue * 1.18 && red > green * 1.02 && red > 70;
     const pitched = !holes.length && Math.abs(area) < 600 && (building.floors === undefined ? !shed && Math.abs(area) < 450 : warm);
     const tile = shed ? 0 : pitched ? 1 : 0.5;
+    // The cadastre gives the year: a block of three floors or more built since the fifties is one of terraces. Where it gives none, a tall one is taken for modern.
+    const modern = !shed && !pitched && (building.year !== undefined ? building.year >= MODERN_FROM && floors >= 3 : floors >= 5) ? 1 : 0;
     let front = 0;
     const add = (p: readonly [number, number, number], n: readonly [number, number, number], st: readonly [number, number], roof: number, plain = 0): void => {
       positions.push(...p);
       normals.push(...n);
       uvs.push(...st);
       looks.push(tone, roof, tile, plain);
-      mores.push(pitched ? 1 : 0, front);
+      mores.push(pitched ? 1 : 0, front, modern);
     };
     // Walls look outwards whichever way the ring was drawn.
     const outwards = Math.sign(area) || 1;
@@ -1383,6 +1421,6 @@ function buildingsOf(buildings: ReadonlyArray<WalkBuilding>, groundAt: (x: numbe
   geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
   geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
   geometry.setAttribute('look', new THREE.Float32BufferAttribute(looks, 4));
-  geometry.setAttribute('more', new THREE.Float32BufferAttribute(mores, 2));
+  geometry.setAttribute('more', new THREE.Float32BufferAttribute(mores, 3));
   return geometry;
 }

@@ -317,6 +317,9 @@ test.describe('Route on foot', () => {
     // The cadastre tells the houses of the seafront apart, and the map and OpenStreetMap name what the route passes.
     expect(Number(await canvas.getAttribute('data-houses'))).toBeGreaterThan(2000);
     expect(Number(await canvas.getAttribute('data-names'))).toBeGreaterThan(40);
+    // The lighthouse is modelled by hand, and the page says so.
+    expect(await canvas.getAttribute('data-landmarks')).toBe('1');
+    await expect(scroller).toContainText('Modelat a mà a partir de fotografies: Far de Palamós');
     // A name of the map is written over its place once the runner is near it.
     await page.evaluate(() => (document.querySelector('tram-route-scroller') as HTMLElement & { goTo(share: number): void }).goTo(0.5));
     await expect(viewer.locator('[data-scene-label="name"]:not([hidden])').first()).toBeVisible({ timeout: 90_000 });

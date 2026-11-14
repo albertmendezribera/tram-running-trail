@@ -197,3 +197,31 @@ describe('OpenStreetMap', () => {
     assert.equal(osmKind({ office: 'estate_agent' }), null);
   });
 });
+
+describe('street trees', () => {
+  it('takes a dark olive pixel for a crown, and not a lawn, a shadow, a tiled roof, tarmac or the sea', async () => {
+    const { crownOf } = await import('./world.ts');
+    assert.ok(crownOf(114, 107, 82) > 0.6);
+    assert.ok(crownOf(60, 80, 50) > 0.9);
+    for (const [r, g, b] of [[145, 138, 115], [70, 51, 42], [150, 90, 70], [90, 90, 85], [40, 80, 90]] as const) assert.ok(crownOf(r, g, b) < 0.3, `${r},${g},${b}`);
+  });
+
+  it('stands one tree to a crown, where it is allowed, clear of the route and within reach of it', async () => {
+    const { townTrees } = await import('./world.ts');
+    // 40 × 20 cells of 2 m: a crown of 3 × 3 cells north of the route, a lone dark pixel, and a crown too far away.
+    const [cols, rows] = [40, 20];
+    const values = new Float32Array(cols * rows);
+    const crown = (col: number, row: number): void => {
+      for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) values[(row + dr) * cols + col + dc] = 0.9;
+    };
+    crown(10, 12);
+    values[14 * cols + 25] = 0.9;
+    crown(30, 2);
+    const route: Array<[number, number]> = [[0, 4], [80, 4]];
+    const trees = townTrees({ route, crowns: { cellM: 2, cols, rows, values }, allowed: () => true, corridorM: 20 });
+    assert.equal(trees.length, 1);
+    assert.ok(Math.abs(trees[0]![0] - 21) < 3 && Math.abs(trees[0]![1] - 15) < 3, String(trees[0]));
+    assert.equal(trees[0]![3], 'deciduous');
+    assert.equal(townTrees({ route, crowns: { cellM: 2, cols, rows, values }, allowed: () => false, corridorM: 20 }).length, 0);
+  });
+});

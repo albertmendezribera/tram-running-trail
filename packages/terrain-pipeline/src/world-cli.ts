@@ -11,7 +11,7 @@ import { CADASTRE_ATTRIBUTION, fetchCadastre, tilesNear } from './cadastre.ts';
 import { fetchOsmPlaces, OSM_ATTRIBUTION } from './osm.ts';
 import { decodeTerrainRgb } from './terrain-rgb.ts';
 import { toLngLat, toUtm } from './utm.ts';
-import { type Canopy, distanceToLine, forestTrees, groveTrees, housesOf, insideRings, type Point, polygonsOf, TREE_KINDS, type TreeKind } from './world.ts';
+import { type Canopy, crownOf, distanceToLine, forestTrees, groveTrees, housesOf, insideRings, type Point, polygonsOf, townTrees, TREE_KINDS, type TreeKind } from './world.ts';
 
 const [dir] = process.argv.slice(2);
 if (!dir) throw new Error('usage: node src/world-cli.ts <routeDir>');
@@ -233,7 +233,7 @@ const landAt = ([x, y]: Point): string | undefined => {
 const forest = forestTrees({ route, canopy, kindAt: (point) => kindOf(landAt(point)), ...TREES });
 // Olive groves are a crop: the LiDAR tree layers leave them out. Planted in rows about 7 m apart, some 4 m tall.
 const groves = groveTrees({ route, planted: (point) => /oliverars/i.test(landAt(point) ?? ''), kind: 'olive', spacingM: 7, heightM: 4, corridorM: TREES.corridorM });
-const trees = [...forest, ...groves];
+const wild = [...forest, ...groves];
 // What the land-cover map has within reach of the route, for the record of each run.
 const near = new Map<string, number>();
 for (let i = 0; i < route.length; i += 4) for (const d of [-40, 0, 40]) {
@@ -361,6 +361,32 @@ const parts = cadastre.parts.map((part) => ({
 }));
 const USES = ['residential', 'agriculture', 'industrial', 'office', 'retail', 'public'];
 const houses = housesOf({ blocks, parts, route, detailM: HOUSE_CORRIDOR_M });
+
+// The trees of streets, squares and promenades: the LiDAR layers only cover woods, so these are read
+// from the photograph, where it shows the dark green of a crown among houses or in a park.
+const { data: photo } = await sharp(ortho).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+const crowns = new Float32Array(orthoCols * orthoRows);
+for (let i = 0; i < crowns.length; i++) crowns[i] = crownOf(photo[i * 3]!, photo[i * 3 + 1]!, photo[i * 3 + 2]!);
+const roofed = new Map<string, Point[][]>();
+for (const house of houses) {
+  const outer = house.rings[0]!;
+  for (let i = Math.floor(Math.min(...outer.map((p) => p[0])) / 30); i <= Math.floor(Math.max(...outer.map((p) => p[0])) / 30); i++) {
+    for (let j = Math.floor(Math.min(...outer.map((p) => p[1])) / 30); j <= Math.floor(Math.max(...outer.map((p) => p[1])) / 30); j++) (roofed.get(`${i},${j}`) ?? roofed.set(`${i},${j}`, []).get(`${i},${j}`)!).push(outer);
+  }
+}
+const landKindAt = ([x, y]: Point): number => {
+  const col = Math.floor((meta.x0 + x - box.west) / LAND_CELL_M);
+  const row = Math.floor((box.north - (meta.y0 + y)) / LAND_CELL_M);
+  return col < 0 || row < 0 || col >= landCols || row >= landRows ? -1 : kinds[row * landCols + col]! / 30;
+};
+// Built ground, a park, or ground the land-cover map leaves blank by the shore. Woods and scrub have their own trees; crops are not guessed at.
+const TOWN = new Set([0, 3, 5]);
+const street = townTrees({
+  route,
+  crowns: { cellM: ORTHO.cellM, cols: orthoCols, rows: orthoRows, values: crowns },
+  allowed: (point) => TOWN.has(landKindAt(point)) && !(roofed.get(`${Math.floor(point[0] / 30)},${Math.floor(point[1] / 30)}`) ?? []).some((outer) => insideRings(point, [outer])),
+});
+const trees = [...wild, ...street];
 const buildings = houses.map((b) => ({
   h: b.heightM,
   ...(b.floors ? { f: b.floors } : {}),
@@ -407,6 +433,8 @@ const world = {
   // Where land.png lies: its south-west corner in metres from the corner of the terrain, and the size of its cells.
   land: { x0: box.west - meta.x0, y0: box.south - meta.y0, cols: landCols, rows: landRows, cellM: LAND_CELL_M },
   // Tenths of a metre from the south-west corner of the terrain. Trees: x, y, height, elevation of the ground under it, kind (index of `kinds`).
+  // The last `streetTrees` of them are street trees read from the photograph, of a usual height.
+  streetTrees: street.length,
   treeSpacingM: TREES.spacingM,
   treeCorridorM: TREES.corridorM,
   buildingCorridorM: BUILDING_CORRIDOR_M,
@@ -424,4 +452,4 @@ const count = (kind: TreeKind): number => trees.filter((tree) => tree[3] === kin
 const pavedShare = paved.reduce((sum, share, i) => sum + (i % 2 ? share - paved[i - 1]! : 0), 0);
 console.log(`paved ${(pavedShare * 100).toFixed(0)} % of the route, in ${paved.length / 2} stretches`);
 console.log(`ortho.webp ${orthoCols}×${orthoRows}, ${(ortho.length / 1024).toFixed(0)} KB · land.png ${landCols}×${landRows}`);
-console.log(`${trees.length} trees (${TREE_KINDS.map((kind) => `${count(kind)} ${kind}`).join(', ')}), ${buildings.length} buildings (${buildings.filter((b) => 'f' in b).length} houses of the cadastre in ${blocks.length} blocks of the map), ${places.length} names (${doors.size} from OpenStreetMap), world.json ${(json.length / 1024).toFixed(1)} KB`);
+console.log(`${trees.length} trees (${TREE_KINDS.map((kind) => `${count(kind)} ${kind}`).join(', ')}; ${street.length} of them street trees from the photograph), ${buildings.length} buildings (${buildings.filter((b) => 'f' in b).length} houses of the cadastre in ${blocks.length} blocks of the map), ${places.length} names (${doors.size} from OpenStreetMap), world.json ${(json.length / 1024).toFixed(1)} KB`);

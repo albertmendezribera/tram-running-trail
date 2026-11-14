@@ -1,6 +1,7 @@
 ---
 import RouteScroller from '@tram/design-system/interactive/RouteScroller.astro';
 import { ICGC_CREDIT, type Route, WORLD_NOTE } from '../content';
+import { LANDMARKS } from '../content/landmarks';
 import { MODE_FIELD } from '../islands/viewer-mode';
 
 export interface Props {
@@ -10,6 +11,9 @@ export interface Props {
 }
 
 const { route, id = 'route-viewer' } = Astro.props;
+// What was modelled by hand along this route is said with the rest of what the view is made of.
+const handmade = (LANDMARKS[route.slug] ?? []).map((landmark) => landmark.name);
+const handNote = handmade.length ? ` Modelat a mà a partir de fotografies: ${handmade.join(', ')}.` : '';
 ---
 
 <!-- M2, "Recórrer el tram": the route run with the scroll, with its 3D view in three modes. -->
@@ -20,7 +24,7 @@ const { route, id = 'route-viewer' } = Astro.props;
     viewer={{
       id,
       label: `Vol en 3D pel recorregut de ${route.name}`,
-      credit: `${ICGC_CREDIT}. ${WORLD_NOTE}`,
+      credit: `${ICGC_CREDIT}. ${WORLD_NOTE}${handNote}`,
       grades: true,
       modes: { name: MODE_FIELD, legend: 'Com es veu el terreny', value: 'real', options: [{ value: 'walk', label: 'A peu' }, { value: 'real', label: 'Realista' }, { value: 'map', label: 'Cartogràfic' }] },
     }}

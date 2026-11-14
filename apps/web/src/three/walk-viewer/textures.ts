@@ -209,8 +209,60 @@ const sill = (context: CanvasRenderingContext2D, left: number, y: number, wide: 
 };
 
 /**
+ * A bay of a modern block: the terrace runs on into the bays at both sides, so nothing in it stops at an
+ * edge. The wall behind is in the shade of the terrace above; in it, sliding glass from floor to lintel;
+ * in front, the rail and the edge of the floor slab. With an awning let down, or without.
+ */
+const terrace = (context: CanvasRenderingContext2D, size: number, random: () => number, awning: boolean): void => {
+  plaster(context, size, random);
+  // The recess: the back wall in shade, darker under the slab above.
+  const shade = context.createLinearGradient(0, 0, 0, size * 0.8);
+  shade.addColorStop(0, hsl(30, 12, 30, 0.75));
+  shade.addColorStop(1, hsl(30, 12, 52, 0.45));
+  context.fillStyle = shade;
+  context.fillRect(0, size * 0.05, size, size * 0.8);
+  // Sliding doors of glass in a pale frame.
+  const [left, top, wide, tall] = [size * 0.1, size * 0.16, size * 0.8, size * 0.66];
+  context.fillStyle = glassOf(context, left, top, wide, tall);
+  context.fillRect(left, top, wide, tall);
+  context.strokeStyle = hsl(210, 6, 78);
+  context.lineWidth = 3;
+  context.strokeRect(left + 1.5, top + 1.5, wide - 3, tall - 3);
+  context.beginPath();
+  for (const share of [1 / 3, 2 / 3]) {
+    context.moveTo(left + wide * share, top);
+    context.lineTo(left + wide * share, top + tall);
+  }
+  context.stroke();
+  // A curtain half drawn behind one of the panes.
+  context.fillStyle = hsl(40, 20, 84, 0.5);
+  context.fillRect(left + wide * (random() < 0.5 ? 0.02 : 0.68), top + 4, wide * 0.3, tall - 8);
+  if (awning) {
+    context.fillStyle = hsl(24 + random() * 10, 62, 52);
+    context.fillRect(size * 0.06, size * 0.07, size * 0.88, size * 0.3);
+    context.fillStyle = hsl(24, 50, 34, 0.5);
+    for (let x = size * 0.06; x < size * 0.94; x += size * 0.11) context.fillRect(x, size * 0.07, 2, size * 0.3);
+    context.fillStyle = hsl(220, 20, 10, 0.35);
+    context.fillRect(size * 0.06, size * 0.37, size * 0.88, size * 0.05);
+  }
+  // The underside of the slab above, and its shadow.
+  context.fillStyle = hsl(30, 10, 26, 0.7);
+  context.fillRect(0, 0, size, size * 0.055);
+  // The rail: a bar on top, thin uprights, and the edge of the floor it stands on.
+  context.fillStyle = hsl(210, 20, 80, 0.28);
+  context.fillRect(0, size * 0.6, size, size * 0.27);
+  context.fillStyle = hsl(220, 8, 22);
+  context.fillRect(0, size * 0.595, size, 4);
+  for (let x = size / 32; x < size; x += size / 16) context.fillRect(x - 1, size * 0.6, 2, size * 0.27);
+  context.fillStyle = hsl(40, 12, 92);
+  context.fillRect(0, size * 0.87, size, size * 0.13);
+  context.fillStyle = hsl(30, 10, 40, 0.5);
+  context.fillRect(0, size * 0.87, size, 3);
+};
+
+/**
  * The bays of a wall, one picture each: a window with its shutters folded back, a balcony, a window shut,
- * bare wall, a front door, the gate of a shed and a shop front. A wall takes one for each bay of each floor.
+ * bare wall, a front door, the gate of a shed, a shop front and two terraces of a modern block. A wall takes one for each bay of each floor.
  */
 const BAY_PAINTS: Paint[] = [
   (context, size, random) => {
@@ -325,6 +377,9 @@ const BAY_PAINTS: Paint[] = [
     context.fillStyle = hsl(30, 8, 58);
     context.fillRect(0, size - 6, size, 6);
   },
+  // A block of flats of the last sixty years: each floor a terrace from side to side, glass set back behind it.
+  (context, size, random) => terrace(context, size, random, false),
+  (context, size, random) => terrace(context, size, random, true),
 ];
 
 /** The pictures of a bay side by side in one texture: a wall reads the one it wants (`scene.ts`). */

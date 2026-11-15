@@ -3,13 +3,15 @@ export interface Props {
   /** SVG paths in a 1000 × 300 box, from `areaPath` and `linePath`. */
   area: string;
   line: string;
+  /** Names the silhouette for the passage from the row of a list that led here (M6). */
+  transition?: string | undefined;
 }
 
-const { area, line } = Astro.props;
+const { area, line, transition } = Astro.props;
 ---
 
 <!-- Part of RouteScroller: reads --progress and --runner-y from it. Decorative: the figures are in the readout. -->
-<div class="route-silhouette" aria-hidden="true">
+<div class="route-silhouette" aria-hidden="true" style={transition ? `view-transition-name:${transition}` : undefined}>
   <svg class="silhouette" viewBox="0 0 1000 300" preserveAspectRatio="none">
     <g class="ahead">
       <path class="area" d={area}></path>

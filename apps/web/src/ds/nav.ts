@@ -34,7 +34,13 @@ export const GROUPS = [
       { href: '/ds/interactive/viewer-3d-shell/', title: 'Viewer3DShell' },
     ],
   },
-  { title: 'Moments', items: [{ href: '/ds/moments/recorrer-el-tram/', title: 'M2 · Recórrer el tram' }] },
+  {
+    title: 'Moments',
+    items: [
+      { href: '/ds/moments/de-la-quadricula-a-la-corba/', title: 'M1 · De la quadrícula a la corba' },
+      { href: '/ds/moments/recorrer-el-tram/', title: 'M2 · Recórrer el tram' },
+    ],
+  },
 ] as const;
 
 export const NAV = GROUPS.flatMap((group) => group.items.map((item) => ({ ...item, group: group.title })));

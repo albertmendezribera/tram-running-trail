@@ -14,3 +14,23 @@
     font: inherit;
   }
 }
+
+/*
+ * From one page to the next (M6, E11): the browser's own view transitions between documents, with no
+ * script. The page changes at once, with no fade of the whole; only what the two pages share by name
+ * moves: the silhouette of a route in a list grows into the profile of its page. Not with reduced motion.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: var(--tram-sys-motion-slow);
+  }
+}

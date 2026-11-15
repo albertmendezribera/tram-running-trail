@@ -8,9 +8,11 @@ export interface Props {
   route: Route;
   /** Id of the 3D viewer. One per page. */
   id?: string;
+  /** The name the silhouette shares with the row of the list that leads here (M6). */
+  transition?: string;
 }
 
-const { route, id = 'route-viewer' } = Astro.props;
+const { route, id = 'route-viewer', transition } = Astro.props;
 // What was modelled by hand along this route is said with the rest of what the view is made of.
 const handmade = (LANDMARKS[route.slug] ?? []).map((landmark) => landmark.name);
 const handNote = handmade.length ? ` Modelat a mà a partir de fotografies: ${handmade.join(', ')}.` : '';
@@ -21,6 +23,7 @@ const handNote = handmade.length ? ` Modelat a mà a partir de fotografies: ${ha
   <RouteScroller
     points={route.profile}
     name={route.name}
+    transition={transition}
     viewer={{
       id,
       label: `Vol en 3D pel recorregut de ${route.name}`,

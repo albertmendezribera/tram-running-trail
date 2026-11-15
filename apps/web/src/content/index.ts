@@ -42,6 +42,8 @@ export interface Race {
   organizer: string | null;
   source: 'organizer' | 'federation' | 'editorial';
   isPlaceholder: boolean;
+  /** What of the page is not real, said on the page itself, when it is a placeholder. */
+  notice?: string;
   edition: { year: number; startDate: string; status: 'scheduled' | 'cancelled' | 'postponed' | 'finished'; registrationUrl: string | null; bib: number };
   courses: Course[];
 }
@@ -60,12 +62,14 @@ function courseOf(name: string, route: string, profile: readonly ProfilePoint[])
   return { name, distanceM: Math.round(summary.distanceKm * 1000), elevationGainM: Math.round(summary.gainM), route };
 }
 
-// Sample races: the routes are real, but no race is run on them. They exist to
-// build the race page, are marked as placeholders and never reach production.
+// Sample races: the routes are real, and so are their names (a march and a training run), but the
+// dates and bibs are not. They exist to build the race page, are marked as placeholders and never reach production.
 export const RACES: Race[] = [
   {
-    slug: 'cursa-de-mostra-calonge',
-    name: 'Cursa de mostra de Calonge',
+    slug: 'marxa-de-les-tines',
+    // The name of the march the track was recorded at. Its date, organiser and bib are not known here: those of the page are samples.
+    name: 'Marxa de les Tines',
+    notice: 'Versió de proves: el recorregut és el d’una sortida real a la Marxa de les Tines, però la data, el dorsal i la resta de dades de cursa d’aquesta pàgina són de mostra, no les de la marxa.',
     terrain: 'trail',
     countryCode: 'ES',
     region: 'Girona',
@@ -77,8 +81,10 @@ export const RACES: Race[] = [
     courses: [courseOf('12 km', 'calonge', CALONGE)],
   },
   {
-    slug: 'cursa-de-mostra-sils',
-    name: 'Cursa de mostra de Sils',
+    slug: 'easy-run-sils-10k',
+    // A training run, shown as a race to build the race page with a flat route.
+    name: 'Easy Run Sils 10k',
+    notice: 'Versió de proves: és un entrenament real, un rodatge suau de 10 km a Sils, mostrat com a cursa per provar la pàgina. La data i el dorsal són de mostra.',
     terrain: 'road',
     countryCode: 'ES',
     region: 'Girona',
@@ -103,6 +109,6 @@ export const routeOf = (slug: string): Route => {
 export const ICGC_CREDIT = 'Ortofoto i model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
 /** What the view from the ground adds, and how much of it is data. */
 export const WORLD_NOTE =
-  'A peu: edificis, vials pavimentats i topònims del mapa de l’ICGC; cada casa amb les seves plantes i el seu ús, del Cadastre (© Dirección General del Catastro), amb l’alçada comptada a tres metres per planta; bars, comerços i escultures, d’OpenStreetMap (© col·laboradors d’OpenStreetMap, ODbL); arbres segons el LiDAR de l’ICGC i el mapa de cobertes del sòl i, als carrers, on l’ortofoto mostra copes, però cap és un arbre concret; el color del terra, del ferm, de la vegetació, de les teulades i del mar és el de l’ortofoto; les terrasses dels blocs, segons l’any del Cadastre; textures, façanes, color de les parets, matolls, herba i pedres, de decoració.';
+  'A peu: edificis, vials pavimentats i topònims del mapa de l’ICGC; cada casa amb les seves plantes i el seu ús, del Cadastre (© Dirección General del Catastro, consultat el novembre de 2026), amb l’alçada comptada a tres metres per planta; bars, comerços i escultures, d’OpenStreetMap (© col·laboradors d’OpenStreetMap, ODbL); arbres segons el LiDAR de l’ICGC i el mapa de cobertes del sòl i, als carrers, on l’ortofoto mostra copes, però cap és un arbre concret; el color del terra, del ferm, de la vegetació, de les teulades i del mar és el de l’ortofoto; les terrasses dels blocs, segons l’any del Cadastre; textures, façanes, color de les parets, matolls, herba i pedres, de decoració.';
 export const DEM_CREDIT = 'Model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
 export const SAMPLE_NOTICE = 'Cursa de mostra: el recorregut és real, però el nom, la data i el dorsal són inventats per provar la pàgina.';

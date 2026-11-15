@@ -16,7 +16,8 @@
     "test": "node --test \"src/**/*.test.ts\"",
     "typecheck": "tsc -p tsconfig.json",
     "build-world": "node src/world-cli.ts",
-    "fetch-cadastre": "node src/cadastre-cli.ts"
+    "fetch-cadastre": "node src/cadastre-cli.ts",
+    "build-hero": "node src/hero-cli.ts"
   },
   "dependencies": {
     "sharp": "0.34.5"

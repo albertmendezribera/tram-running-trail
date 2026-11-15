@@ -4,6 +4,13 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Moments firma M1 i M6.
+
+- `base.css`: transicions natives entre pàgines (`@view-transition`), sense fosa de la pàgina sencera i només sense moviment reduït (E11).
+- `RaceRow`, `RouteScroller` i `RouteSilhouette`: propietat `transition`, que dona nom a la silueta perquè la de la llista es converteixi en la de la fitxa (M6).
+- Catàleg: pàgina nova «M1 · De la quadrícula a la corba de nivell».
+- `Viewer3DShell`: etiqueta `name` per als noms de lloc sobre una escena.
+
 El visor de rutes al mòbil.
 
 - `RouteScroller` amb visor 3D, per sota de 48rem: la vista ocupa la pantalla (com a mínim el 42 % de l'alçada). El quilòmetre i les tres xifres es redueixen a dues files curtes, el perfil a una franja, i el crèdit passa a sota del recorregut. Abans la vista quedava en una franja d'uns 90 px.

@@ -1,0 +1,56 @@
+---
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import HomeHero from '../../sections/HomeHero.astro';
+---
+
+<header class="intro">
+  <p class="kicker" data-type="text-xs">Moment firma · M1</p>
+  <h1 class="title" data-type="display-lg">De la quadrícula a la corba de nivell</h1>
+  <p class="lede" data-type="text-lg">
+    El plànol d'un poble, en línies, es converteix en el relleu d'una ruta de muntanya mentre fas scroll: el terreny puja, les corbes de nivell entren de la vall cap amunt i prenen el lloc dels carrers, i el recorregut urbà es torna el de muntanya.
+  </p>
+</header>
+
+<HomeHero town="palamos" mountain="calonge">
+  <Stack gap={4}>
+    <Heading level={2} size="md" kicker="Què és dada">Cada línia</Heading>
+    <Text measure>Les illes de cases són les del mapa de l'ICGC; la costa és on s'acaba el seu model d'elevacions; el relleu i les corbes de nivell surten d'aquest model; els dos recorreguts són sortides reals. Són dos llocs diferents, i ho diu el peu.</Text>
+    <Text measure>El primer fotograma és un dibuix que ja ve amb la pàgina. El 3D s'hi posa a sobre quan ha carregat i el scroll el mou. Amb moviment reduït es queda el dibuix, i el pas es fa amb el botó i les fletxes.</Text>
+  </Stack>
+</HomeHero>
+
+<style>
+  .intro {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    padding-block-end: var(--tram-sys-space-5);
+    border-block-end: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+  }
+
+  .kicker {
+    display: flex;
+    align-items: center;
+    gap: var(--tram-sys-space-2);
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .kicker::before {
+    inline-size: var(--tram-sys-space-6);
+    block-size: var(--tram-sys-space-1);
+    background: var(--tram-sys-accent);
+    content: '';
+  }
+
+  .title {
+    margin: 0;
+  }
+
+  .lede {
+    max-inline-size: 46ch;
+    margin: 0;
+  }
+</style>

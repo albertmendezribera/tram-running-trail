@@ -7,6 +7,7 @@ import { describeRoute } from '@tram/design-system/patterns/route-description.ts
 import { summarize } from '@tram/design-system/patterns/elevation.ts';
 import { ICGC_CREDIT, ROUTES, visible } from '../../../content';
 import Site from '../../../layouts/Site.astro';
+import { ogOf } from '../../../og/cards';
 import RouteExperience from '../../../sections/RouteExperience.astro';
 import RouteSheet from '../../../sections/RouteSheet.astro';
 
@@ -19,11 +20,11 @@ const terrain = summary.gainM / Math.max(1, summary.distanceKm) >= 15 ? 'trail' 
 const sentences = describeRoute(route.profile);
 ---
 
-<Site title={`Ruta de ${route.name}`} description={sentences.join(' ')} terrain={terrain} credits={[route.credit, ICGC_CREDIT]}>
+<Site title={`Ruta de ${route.name}`} description={sentences.join(' ')} terrain={terrain} credits={[route.credit, ICGC_CREDIT]} image={ogOf(`rutes/${route.slug}`)}>
   <Stack gap={4}>
     <Heading level={1} size="lg" kicker={`Ruta · ${route.place}`}>{route.name}</Heading>
     <Text size="lg" measure>{sentences[0]} Fes scroll per recórrer-la, o salta directament al full de resultats.</Text>
   </Stack>
-  <RouteExperience route={route} />
+  <RouteExperience route={route} transition={`profile-route-${route.slug}`} />
   <RouteSheet route={route} />
 </Site>

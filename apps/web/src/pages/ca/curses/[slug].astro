@@ -12,6 +12,7 @@ import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import { ICGC_CREDIT, RACES, routeOf, SAMPLE_NOTICE, visible } from '../../../content';
 import Site from '../../../layouts/Site.astro';
+import { ogOf } from '../../../og/cards';
 import RouteExperience from '../../../sections/RouteExperience.astro';
 import RouteSheet from '../../../sections/RouteSheet.astro';
 
@@ -49,7 +50,8 @@ const jsonLd = race.isPlaceholder
   terrain={race.terrain}
   placeholder={race.isPlaceholder}
   credits={[route.credit, ICGC_CREDIT]}
-  notice={race.isPlaceholder ? SAMPLE_NOTICE : undefined}
+  notice={race.isPlaceholder ? (race.notice ?? SAMPLE_NOTICE) : undefined}
+  image={ogOf(`curses/${race.slug}`)}
   jsonLd={jsonLd}
 >
   <Split ratio="3:2">
@@ -61,6 +63,6 @@ const jsonLd = race.isPlaceholder
     </Stack>
     <Bib slot="aside" number={race.edition.bib} terrain={race.terrain} label={race.name} />
   </Split>
-  <RouteExperience route={route} />
+  <RouteExperience route={route} transition={`profile-race-${race.slug}`} />
   <RouteSheet route={route} />
 </Site>

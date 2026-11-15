@@ -20,6 +20,11 @@ export interface Props {
   profile?: readonly ProfilePoint[];
   /** Metres of elevation the silhouette box stands for. The same for every row of a list. */
   scaleM?: number;
+  /**
+   * Names the silhouette for the passage to the page the row leads to (M6): the profile of that page
+   * takes the same name, and the browser turns one into the other. Unique in the page.
+   */
+  transition?: string | undefined;
   locale?: Locale;
 }
 
@@ -29,7 +34,7 @@ const MONTHS: Record<Locale, string[]> = {
   en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 };
 
-const { href, name, place, terrain, date, distanceKm, gainM, profile, scaleM, locale = 'ca' } = Astro.props;
+const { href, name, place, terrain, date, distanceKm, gainM, profile, scaleM, transition, locale = 'ca' } = Astro.props;
 const [year, month, day] = date ? date.split('-').map(Number) : [];
 let silhouette: { area: string; line: string } | undefined;
 if (profile && profile.length > 1) {
@@ -61,7 +66,7 @@ if (profile && profile.length > 1) {
   </span>
   {
     silhouette && (
-      <svg class="silhouette" viewBox="0 0 240 60" preserveAspectRatio="none" aria-hidden="true">
+      <svg class="silhouette" viewBox="0 0 240 60" preserveAspectRatio="none" aria-hidden="true" style={transition ? `view-transition-name:${transition}` : undefined}>
         <path class="area" d={silhouette.area} />
         <path class="line" d={silhouette.line} />
       </svg>

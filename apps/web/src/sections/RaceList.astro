@@ -33,6 +33,7 @@ const scale = Math.max(...rows.map((r) => r.span), 1);
           gainM={course.elevationGainM}
           profile={route.profile}
           scaleM={scale}
+          transition={`profile-race-${race.slug}`}
         />
       </li>
     ))

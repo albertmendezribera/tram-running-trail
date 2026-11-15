@@ -25,6 +25,7 @@ const scale = Math.max(...rows.map((r) => r.summary.highest[1] - r.summary.lowes
           gainM={Math.round(summary.gainM)}
           profile={route.profile}
           scaleM={scale}
+          transition={`profile-route-${route.slug}`}
         />
       </li>
     ))

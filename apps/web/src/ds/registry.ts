@@ -9,6 +9,7 @@ import LayoutFiche from './fiches/LayoutFiche.astro';
 import MediaFiche from './fiches/MediaFiche.astro';
 import MeasureFiche from './fiches/MeasureFiche.astro';
 import ModesFiche from './fiches/ModesFiche.astro';
+import MomentM1 from './fiches/MomentM1.astro';
 import MomentM2 from './fiches/MomentM2.astro';
 import RaceRowFiche from './fiches/RaceRowFiche.astro';
 import RoutePlateFiche from './fiches/RoutePlateFiche.astro';
@@ -43,5 +44,6 @@ export const FICHES = [
   { slug: 'interactive/segmented-control', title: 'SegmentedControl', Page: SegmentedFiche },
   { slug: 'interactive/theme-toggle', title: 'ThemeToggle', Page: ThemeToggleFiche },
   { slug: 'interactive/viewer-3d-shell', title: 'Viewer3DShell', Page: ViewerFiche },
+  { slug: 'moments/de-la-quadricula-a-la-corba', title: 'M1 · De la quadrícula a la corba de nivell', Page: MomentM1 },
   { slug: 'moments/recorrer-el-tram', title: 'M2 · Recórrer el tram', Page: MomentM2 },
 ];

@@ -7,7 +7,7 @@
 | Peça | On | Estat |
 |---|---|---|
 | Portada | `/ca/` | Feta: plànol de Calonge, curses i rutes |
-| Dues curses (muntanya i asfalt) amb visor 3D, perfil i full de resultats | `/ca/curses/cursa-de-mostra-calonge/`, `/ca/curses/cursa-de-mostra-sils/` | Fetes sobre les dues sortides reals. **Les curses són de mostra**: nom, data i dorsal inventats, marcades `isPlaceholder` |
+| Dues curses (muntanya i asfalt) amb visor 3D, perfil i full de resultats | `/ca/curses/marxa-de-les-tines/`, `/ca/curses/easy-run-sils-10k/` | Fetes sobre les dues sortides reals: la Marxa de les Tines (Calonge) i un entrenament a Sils. **Continuen sent de mostra**: els noms són reals, però la data i el dorsal no, i estan marcades `isPlaceholder` |
 | Tres rutes reals | `/ca/rutes/calonge/`, `/ca/rutes/sils/`, `/ca/rutes/palamos/` | Fetes. Palamós és la primera de poble i de costa: s'ha afegit només amb el generador (E18, «Afegir una ruta») |
 | Llistes | `/ca/curses/`, `/ca/rutes/`, `/ca/sabatilles/` | Fetes |
 | Dues sabatilles reals amb radiografia, vista 3D, fitxa tècnica i puntuacions | `/ca/sabatilles/nike/vaporfly-4/`, `/ca/sabatilles/hoka/speedgoat-6/` | Fetes |
@@ -16,6 +16,11 @@
 | E05 · radiografia paramètrica | `docs/explorations/E05-shoe-xray.md` | Decidida |
 | Comparador en 3D | mateixa pàgina del comparador | Fet: les dues sabatilles de costat, girant alhora en mirall |
 | Vista «A peu» del visor de rutes (E18) | les fitxes de cursa i de ruta | Feta en three.js: terreny amb el color de l'ortofoto i gra propi, camí, arbres segons el LiDAR i les cobertes del sòl, catifa d'herba, matolls i pedres que acompanya el corredor, cases una a una amb les plantes del Cadastre i la teulada del color de la foto, mar, noms de lloc de l'ICGC i comerços d'OpenStreetMap, ombres i càmera de tercera persona. No és la vista per defecte |
+| M1 · portada «De la quadrícula a la corba de nivell» | `/ca/`, `/ds/moments/de-la-quadricula-a-la-corba/` | Feta: el plànol de Palamós (illes i costa de l'ICGC) és el primer fotograma, com a dibuix; el scroll el converteix en el relleu de Calonge en 3D. No és una marató, com demana el document: és la sortida urbana que hi ha |
+| M5 · imatges per compartir (E14) | `/og/…png` | Fetes per a curses, rutes i comparacions, en build. No provades a cap xarxa |
+| M6 · transició del perfil de la llista a la fitxa (E11) | llistes i portada → fitxes | Feta amb View Transitions natives, sense JavaScript. Vista només a Chromium |
+| M4 · calendari «l'any com a perfil» | — | **No feta**: és de la Fase 2 i necessita curses reals |
+| Revisió legal | `docs/revisio-legal.md` | Feta des de dins del projecte, no per un advocat. Dos punts oberts: les fotos de marca en un staging públic i la cerca de marques del nom |
 | E04 · dispositius de referència | — | **No feta**: cal tenir els dispositius a la mà |
 
 Les dades viuen en fitxers (`apps/web/src/content/`) amb la forma de l'esquema de la base de dades. Una construcció de producció no inclou cap cursa de mostra ni cap sabatilla pendent de revisió legal; l'entorn de proves, sí.

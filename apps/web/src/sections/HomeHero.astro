@@ -1,0 +1,135 @@
+---
+import Viewer3DShell from '@tram/design-system/interactive/Viewer3DShell.astro';
+import plan from '../content/hero-plan.json';
+import { routeOf } from '../content';
+
+export interface Props {
+  /** The town the plan is of, and the route whose relief it turns into. */
+  town: string;
+  mountain: string;
+}
+
+const { town, mountain } = Astro.props;
+const [from, to] = [routeOf(town), routeOf(mountain)];
+// North is up: the plan counts metres north, a drawing counts them down.
+const points = (line: readonly number[]): string => Array.from({ length: line.length / 2 }, (_, i) => `${line[i * 2]},${Number((plan.heightM - line[i * 2 + 1]!).toFixed(1))}`).join(' ');
+---
+
+<!--
+  M1, "De la quadrícula a la corba de nivell". The plan of a town, as lines, is the first frame: it is in the
+  page as a drawing. The scroll turns it into the relief of a mountain route, in 3D, once the scene has loaded.
+-->
+<div class="hero">
+  <div class="words"><slot /></div>
+  <div class="track" data-home-hero data-mountain={to.slug}>
+  <div class="pin">
+    <div class="view" style={`--shape:${(plan.widthM / plan.heightM).toFixed(4)}`}>
+      <Viewer3DShell id="home-hero" fill label={`Del plànol de ${from.name} al relleu de ${to.name}`} ready="Vista 3D a punt. Fes scroll, o fes servir les fletxes, per passar del plànol al relleu.">
+        <svg slot="poster" class="plan" viewBox={`0 0 ${plan.widthM} ${plan.heightM}`} role="img" aria-label={`Plànol de ${from.name}: illes de cases, línia de costa i el recorregut`}>
+          <g class="blocks">{plan.blocks.map((line) => <polyline points={points(line)} />)}</g>
+          <g class="coast">{plan.coast.map((line) => <polyline points={points(line)} />)}</g>
+          <g class="route">{plan.route.map((line) => <polyline points={points(line)} />)}</g>
+        </svg>
+      </Viewer3DShell>
+    </div>
+    <p class="caption" data-type="text-xs">
+      Del plànol de {from.name} al relleu de {to.name}: dues sortides reals. {plan.attribution}
+    </p>
+  </div>
+  </div>
+</div>
+
+<script>
+  import '../islands/home-hero-boot.ts';
+</script>
+
+<style>
+  /* Words first, the view after; side by side where there is room, and then the words wait while the view plays. */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--tram-sys-grid-gutter);
+    min-inline-size: 0;
+  }
+
+  @media (width >= 64rem) {
+    .hero {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+
+    .words {
+      position: sticky;
+      inset-block-start: var(--tram-sys-space-4);
+      align-self: start;
+    }
+  }
+
+  /* The view stays in place while the page scrolls past this much of the screen: that scroll is the passage from plan to relief. */
+  .track::after {
+    display: block;
+    block-size: 70svh;
+    content: '';
+  }
+
+  .pin {
+    position: sticky;
+    inset-block-start: var(--tram-sys-space-4);
+    display: grid;
+    justify-items: center;
+    gap: var(--tram-sys-space-2);
+  }
+
+  /* As wide as its column, but never taller than the screen can show whole. */
+  .view {
+    inline-size: min(100%, calc(72svh * var(--shape)));
+    aspect-ratio: var(--shape);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    background: var(--tram-sys-surface);
+  }
+
+  .plan {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .plan polyline {
+    fill: none;
+    vector-effect: non-scaling-stroke;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .blocks {
+    stroke: var(--tram-sys-map-contour);
+    stroke-width: var(--tram-sys-line-hairline);
+  }
+
+  .coast {
+    stroke: var(--tram-sys-map-water);
+    stroke-width: var(--tram-sys-line-contour);
+  }
+
+  .route {
+    stroke: var(--tram-sys-data-primary);
+    stroke-width: var(--tram-sys-line-route);
+  }
+
+  .caption {
+    justify-self: stretch;
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+  }
+
+  /* Without motion nothing is driven by the scroll: the plan stands as a drawing, and the page goes on. */
+  @media (prefers-reduced-motion: reduce) {
+    .track::after {
+      content: none;
+    }
+
+    .pin,
+    .words {
+      position: static;
+    }
+  }
+</style>

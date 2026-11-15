@@ -21,6 +21,8 @@ export interface Props {
    * between ways of seeing the terrain: the page listens to its `change` event.
    */
   viewer?: { id: string; label: string; credit?: string; grades?: boolean; modes?: { name: string; legend: string; value: string; options: readonly Option[] } };
+  /** Names the silhouette for the passage from the row of a list that led to this page (M6): the row carries the same name. */
+  transition?: string | undefined;
 }
 
 const COPY = {
@@ -29,7 +31,7 @@ const COPY = {
   en: { km: 'Kilometre', elevation: 'Elevation', gain: 'Elevation gain', grade: 'Grade', climb: 'Climb', start: 'Start', finish: 'Finish', hint: 'Scroll to run the route.', jump: 'Click the profile to jump to a point.', skip: 'Skip the route', profile: 'Profile of' },
 };
 
-const { points, name, locale = 'ca', viewer, id = 'route' } = Astro.props;
+const { points, name, locale = 'ca', viewer, id = 'route', transition } = Astro.props;
 const endId = `${id}-end`;
 const copy = COPY[locale];
 const summary = summarize(points);
@@ -65,7 +67,7 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
           viewer ? (
             <>
             <Viewer3DShell id={viewer.id} label={viewer.label} locale={locale} fill>
-              <RouteSilhouette slot="poster" area={area} line={line} />
+              <RouteSilhouette slot="poster" area={area} line={line} transition={transition} />
               <div slot="text" class="notes" data-type="text-xs">
                 {viewer.grades && (
                   <p class="grades">
@@ -85,7 +87,7 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
             )}
             </>
           ) : (
-            <RouteSilhouette area={area} line={line} />
+            <RouteSilhouette area={area} line={line} transition={transition} />
           )
         }
       </div>

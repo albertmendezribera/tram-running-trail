@@ -12,7 +12,7 @@ const PAGES = {
   compare: COMPARE,
 };
 // These carry a route to run: their long scroll and their 3D are covered by the M2 tests.
-const ROUTE_PAGES = { 'race-trail': '/ca/curses/cursa-de-mostra-calonge/', 'race-road': '/ca/curses/cursa-de-mostra-sils/', 'route-flat': '/ca/rutes/sils/' };
+const ROUTE_PAGES = { 'race-trail': '/ca/curses/marxa-de-les-tines/', 'race-road': '/ca/curses/easy-run-sils-10k/', 'route-flat': '/ca/rutes/sils/' };
 
 const open = async (page: Page, path: string): Promise<void> => {
   await page.goto(path);
@@ -49,7 +49,7 @@ test.describe('Sample content', () => {
     await open(page, ROUTE_PAGES['race-road']);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
     await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0);
-    await expect(page.locator('footer')).toContainText('Cursa de mostra');
+    await expect(page.locator('footer')).toContainText('són de mostra');
     // What nobody organises has no organiser: absent, never made up.
     const organiser = page.locator('dl > div', { hasText: 'Organitza' });
     await expect(organiser).toContainText('—');
@@ -76,9 +76,9 @@ test.describe('Sample content', () => {
 test.describe('Home and lists', () => {
   test('the home leads to both races, every route and the 3D of a route', async ({ page }) => {
     await open(page, PAGES.home);
-    await expect(page.getByRole('img', { name: 'Plànol de Calonge' })).toBeVisible();
+    await expect(page.getByRole('img', { name: /Plànol de Palamós/ })).toBeVisible();
     await expect(page.getByRole('link', { name: /Recorre Calonge en 3D/ })).toHaveAttribute('href', '/ca/rutes/calonge/');
-    await expect(page.locator('a[href^="/ca/curses/cursa-de-mostra-"]')).toHaveCount(2);
+    await expect(page.locator('main a[href^="/ca/curses/"][href$="/"]:not([href="/ca/curses/"])')).toHaveCount(2);
     await expect(page.locator('a[href="/ca/rutes/sils/"]')).toHaveCount(1);
     await expect(page.locator('a[href="/ca/rutes/palamos/"]')).toHaveCount(1);
   });
@@ -94,6 +94,93 @@ test.describe('Home and lists', () => {
     const heights = await page.locator('main a svg.silhouette path:first-of-type').evaluateAll((paths) => paths.map((p) => (p as SVGPathElement).getBBox().height));
     expect(heights).toHaveLength(2);
     expect(Math.min(...heights)).toBeLessThan(Math.max(...heights) / 8);
+  });
+});
+
+test.describe('Home hero (M1)', () => {
+  test.describe.configure({ timeout: 120_000 });
+
+  test('shows the plan of a town as a drawing first, and the scroll turns it into relief', async ({ page }) => {
+    await open(page, PAGES.home);
+    const hero = page.locator('[data-home-hero]');
+    // The first frame comes with the page: blocks, shore and route, as lines.
+    expect(await hero.locator('svg .blocks polyline').count()).toBeGreaterThan(200);
+    await expect(hero.locator('svg .route polyline')).toHaveCount(1);
+    // Two real places, and where the lines come from, said under the view.
+    await expect(hero).toContainText('Del plànol de Palamós al relleu de Calonge');
+    await expect(hero).toContainText('ICGC');
+    const viewer = hero.locator('tram-viewer-3d');
+    await viewer.scrollIntoViewIfNeeded();
+    await expect(viewer).toHaveAttribute('data-state', 'ready', { timeout: 90_000 });
+    const canvas = viewer.locator('canvas[data-engine^="three-hero"]');
+    await expect(canvas).toBeVisible();
+    // Scrolling through what the view holds still for takes the passage to its end, with the view still on screen.
+    await page.evaluate(() => {
+      const host = document.querySelector<HTMLElement>('[data-home-hero]')!;
+      const pin = host.querySelector<HTMLElement>('.pin')!;
+      scrollTo(0, host.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(pin).top) + host.offsetHeight - pin.offsetHeight);
+    });
+    await expect.poll(async () => Number(await canvas.getAttribute('data-progress')), { timeout: 30_000 }).toBeGreaterThan(0.95);
+  });
+
+  test('stays a drawing with reduced motion, and takes no scroll for itself', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.home);
+    const hero = page.locator('[data-home-hero]');
+    await expect(hero.locator('tram-viewer-3d')).toHaveAttribute('data-state', 'poster');
+    await expect(hero.getByRole('button', { name: 'Veure en 3D' })).toBeVisible();
+    // No stretch of page is held for a passage that will not play.
+    const [track, pin] = await hero.evaluate((host) => [(host as HTMLElement).offsetHeight, host.querySelector<HTMLElement>('.pin')!.offsetHeight]);
+    expect(track).toBe(pin);
+  });
+});
+
+test.describe('From a list to its page (M6)', () => {
+  test('the silhouette of a row and the profile of the page it leads to share a name, so one turns into the other', async ({ page }) => {
+    await open(page, PAGES.races);
+    const row = page.locator('main a[href="/ca/curses/marxa-de-les-tines/"]');
+    const name = await row.locator('svg.silhouette').evaluate((svg) => getComputedStyle(svg).viewTransitionName);
+    expect(name).toBe('profile-race-marxa-de-les-tines');
+    // No two things in a page may carry the same name, or the browser gives the passage up.
+    const names = await page.locator('main svg.silhouette').evaluateAll((all) => all.map((svg) => getComputedStyle(svg).viewTransitionName));
+    expect(new Set(names).size).toBe(names.length);
+    await row.click();
+    await expect(page).toHaveURL(/marxa-de-les-tines/);
+    expect(await page.locator('.route-silhouette').evaluate((el) => getComputedStyle(el).viewTransitionName)).toBe(name);
+  });
+
+  test('pages change at once with reduced motion: no passage is asked of the browser', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.races);
+    const asked = await page.evaluate(() => [...document.styleSheets].some((sheet) => [...sheet.cssRules].some(function has(rule: CSSRule): boolean {
+      if (rule.constructor.name === 'CSSViewTransitionRule') return !(rule.parentRule instanceof CSSMediaRule) || matchMedia(rule.parentRule.conditionText).matches;
+      return 'cssRules' in rule ? [...(rule as CSSGroupingRule).cssRules].some(has) : false;
+    })));
+    expect(asked).toBe(false);
+  });
+});
+
+test.describe('Share images (M5)', () => {
+  test('a race, a route and a comparison each name an image of 1200 × 630, built with the site from their own figures', async ({ page, request }) => {
+    for (const path of [ROUTE_PAGES['race-trail'], '/ca/rutes/palamos/', COMPARE]) {
+      await open(page, path);
+      const url = await page.locator('meta[property="og:image"]').getAttribute('content');
+      expect(url).toMatch(/\/og\/.+\.png$/);
+      const response = await request.get(new URL(url!).pathname);
+      expect(response.headers()['content-type']).toContain('image/png');
+      // A PNG says its size right after its signature.
+      const body = await response.body();
+      expect([body.readUInt32BE(16), body.readUInt32BE(20)]).toEqual([1200, 630]);
+      // What the image shows is said in words too: the name and the figures of the page.
+      await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute('content', /\d\s(km|g)\b/);
+      await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+    }
+  });
+
+  test('a page without an image of its own names none', async ({ page }) => {
+    await open(page, PAGES.routes);
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', 'Rutes');
+    await expect(page.locator('meta[property="og:image"]')).toHaveCount(0);
   });
 });
 

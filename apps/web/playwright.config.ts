@@ -44,7 +44,8 @@ export default defineConfig({
       : []),
   ],
   webServer: {
-    command: `pnpm build:ds && pnpm preview --port ${PORT}`,
+    // The build is given its day: the calendar parts races to come from races run, and a capture must not change overnight.
+    command: `TRAM_TODAY=2026-11-15 pnpm build:ds && pnpm preview --port ${PORT}`,
     url: `http://localhost:${PORT}/ds/`,
     reuseExistingServer: false,
     timeout: 180_000,

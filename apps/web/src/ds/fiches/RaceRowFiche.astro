@@ -31,6 +31,16 @@ const code = `<RaceRow href="/ca/curses/…/" name="…" place="…" terrain="tr
   </section>
 
   <section class="fiche-block">
+    <h2 data-type="display-sm">RaceRow compacta</h2>
+    <p class="fiche-note">Per a una llista llarga, com un calendari (`compact`): menys aire, el nom en text i el dia al costat també al mòbil. Sense `gainM` la fila no reserva lloc per al desnivell: és per a quan cap font el dona. Una distància que falta sí que es mostra com a absent.</p>
+    <ul class="fiche-list">
+      <li><RaceRow href="#" name="Cursa d'asfalt amb dues distàncies" place="Vic, Osona" terrain="road" date="2026-11-15" distanceKm={10} compact /></li>
+      <li><RaceRow href="#" name="Cursa de muntanya sense distància a la font" place="Caldes de Montbui, Vallès Oriental" terrain="trail" date="2026-11-15" distanceKm={null} compact /></li>
+      <li><RaceRow href="#" name="Cursa sense terreny dit" place="Barcelona, Barcelonès" date="2026-11-22" distanceKm={5} compact /></li>
+    </ul>
+  </section>
+
+  <section class="fiche-block">
     <h2 data-type="display-sm">TerrainTag</h2>
     <div class="fiche-row"><TerrainTag terrain="road" /><TerrainTag terrain="trail" /><TerrainTag terrain="mixed" /></div>
   </section>

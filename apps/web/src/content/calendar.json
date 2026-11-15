@@ -1,0 +1,2885 @@
+{
+ "accessed": "2026-11-15",
+ "from": "2026-01-01",
+ "to": "2027-12-31",
+ "sources": {
+  "fca": {
+   "name": "Federació Catalana d’Atletisme",
+   "url": "https://fcatletisme.cat/",
+   "terms": "Calendari oficial. Tots els drets reservats pel seu titular: se’n citen fets i s’hi enllaça."
+  },
+  "bcn": {
+   "name": "Ajuntament de Barcelona · Open Data BCN",
+   "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives",
+   "terms": "CC BY 4.0"
+  },
+  "curses-cat": {
+   "name": "Curses.cat",
+   "url": "https://www.curses.cat/calendari",
+   "terms": "Calendari d’una empresa de cronometratge. Se’n citen fets i s’hi enllaça."
+  },
+  "runnea": {
+   "name": "Runnea",
+   "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/",
+   "terms": "Calendari d’un mitjà. Se’n citen fets i s’hi enllaça."
+  }
+ },
+ "places": {
+  "name": "Municipis Catalunya Geo · Generalitat de Catalunya",
+  "url": "https://analisi.transparenciacatalunya.cat/d/9aju-tpwc",
+  "terms": "Dades obertes de la Generalitat"
+ },
+ "races": [
+  {
+   "slug": "42a-mitja-marato-de-sitges-i-quart-de-marato-2026",
+   "name": "42a Mitja Marató de Sitges i Quart de Marató",
+   "date": "2026-01-11",
+   "town": "Sitges",
+   "comarca": "Garraf",
+   "lat": 41.23509,
+   "lon": 1.81184,
+   "terrain": "road",
+   "distancesM": [
+    10549,
+    21097
+   ],
+   "organiser": "Zona Vip Events",
+   "website": "https://www.zonavipevents.com/mitja-sitges/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/42a-mitja-marato-de-sitges-i-quart-de-marato/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-mitja-marato-absolut-i-master-40a-mitja-mara-2026",
+   "name": "Campionat de Catalunya de Mitja Marató Absolut i Màster (40a Mitja Marató Granollers-Les Franqueses-La Garriga) (RFEA)",
+   "date": "2026-01-18",
+   "town": "Granollers",
+   "comarca": "Vallès Oriental",
+   "lat": 41.60809,
+   "lon": 2.28682,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "Associació Esportiva La Mitja",
+   "website": "https://www.lamitja.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-mitja-marato-absolut-i-master-40a-mitja-marato-granollers-les-franqueses-la-garriga-rfea/"
+    }
+   ]
+  },
+  {
+   "slug": "10-km-vilafranca-2026",
+   "name": "10 Km Vilafranca",
+   "date": "2026-01-25",
+   "town": "Vilafranca del Penedès",
+   "comarca": "Alt Penedès",
+   "lat": 41.3465,
+   "lon": 1.69722,
+   "terrain": "road",
+   "distancesM": [
+    10000
+   ],
+   "organiser": "Ajuntament de Vilafranca del Penedès",
+   "website": "https://10k.vilafranca.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/10-km-vilafranca-2/"
+    }
+   ]
+  },
+  {
+   "slug": "10a-agro-llobera-cursa-sant-blai-5-i-10-km-2026",
+   "name": "10a Agro-Llobera Cursa Sant Blai (5 i 10 Km)",
+   "date": "2026-01-25",
+   "town": "el Palau d'Anglesola",
+   "comarca": "Pla d'Urgell",
+   "lat": 41.65165,
+   "lon": 0.88082,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "AA Xafatolls",
+   "website": "https://www.cursadesantblai.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/10a-agro-llobera-cursa-sant-blai-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-5-km-absolut-i-master-cursa-moritz-sant-anto-2026",
+   "name": "Campionat de Catalunya de 5 Km Absolut i Màster (Cursa Moritz Sant Antoni) (5 i 10 Km)",
+   "date": "2026-01-25",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "CA Esport i Natura",
+   "website": "https://cursasantantoni.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-5-km-absolut-i-master-cursa-moritz-sant-antoni-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "20a-cursa-santi-centelles-5-km-2026",
+   "name": "20a Cursa Santi Centelles (5 Km)",
+   "date": "2026-02-01",
+   "town": "Terrassa",
+   "comarca": "Vallès Occidental",
+   "lat": 41.56296,
+   "lon": 2.01029,
+   "terrain": "road",
+   "distancesM": [
+    5000
+   ],
+   "organiser": "Associació Esportiva Mitja Marató de Terrassa",
+   "website": "https://www.mitjaterrassa.org/curses/santi-centelles/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/20a-cursa-santi-centelles-5-km/"
+    }
+   ]
+  },
+  {
+   "slug": "26a-mitja-marato-internacional-de-terrassa-rfea-2026",
+   "name": "26a Mitja Marató Internacional de Terrassa (RFEA)",
+   "date": "2026-02-01",
+   "town": "Terrassa",
+   "comarca": "Vallès Occidental",
+   "lat": 41.56296,
+   "lon": 2.01029,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "Associació Esportiva Mitja Marató de Terrassa",
+   "website": "https://www.mitjaterrassa.org/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/26a-mitja-marato-internacional-de-terrassa-rfea/"
+    }
+   ]
+  },
+  {
+   "slug": "27a-cursa-popular-de-mollet-del-valles-5-i-10-km-circuit-no-homologat-2026",
+   "name": "27a Cursa Popular de Mollet del Vallès (5 i 10 Km) (Circuit no homologat)",
+   "date": "2026-02-01",
+   "town": "Mollet del Vallès",
+   "comarca": "Vallès Oriental",
+   "lat": 41.53541,
+   "lon": 2.21031,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "CA Mollet",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/27a-cursa-popular-de-mollet-del-valles-5-i-10-km-circuit-no-homologat/"
+    }
+   ]
+  },
+  {
+   "slug": "baga-fast-trail-ccp-2026",
+   "name": "Bagà Fast Trail (CCP)",
+   "date": "2026-02-01",
+   "town": "Bagà",
+   "comarca": "Berguedà",
+   "lat": 42.25285,
+   "lon": 1.8626,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": "https://sites.google.com/view/runnersaltbergueda/inici",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/baga-fast-trail-ccp/"
+    }
+   ]
+  },
+  {
+   "slug": "hyundai-mitja-marato-de-barcelona-rfea-2026",
+   "name": "Hyundai Mitja Marató de Barcelona (RFEA)",
+   "date": "2026-02-15",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "Club Esportiu Marató de Barcelona",
+   "website": "https://www.mitjamarato.barcelona/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/hyundai-mitja-marato-de-barcelona-rfea/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-trail-de-promocio-6a-arrels-trail-ccp-2026",
+   "name": "Campionat de Catalunya de Trail de Promoció (6a Arrels Trail) (CCP)",
+   "date": "2026-02-21",
+   "town": "les Franqueses del Vallès",
+   "comarca": "Vallès Oriental",
+   "lat": 41.63631,
+   "lon": 2.29716,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "CA Canovelles",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-trail-de-promocio-6a-arrels-trail-ccp/"
+    }
+   ]
+  },
+  {
+   "slug": "13a-mitja-colomenca-cursa-de-10-km-2026",
+   "name": "13a Mitja Colomenca + Cursa de 10 Km",
+   "date": "2026-02-22",
+   "town": "Santa Coloma de Gramenet",
+   "comarca": "Barcelonès",
+   "lat": 41.45215,
+   "lon": 2.20793,
+   "terrain": "road",
+   "distancesM": [
+    10000
+   ],
+   "organiser": "Unió Colomenca At.",
+   "website": "https://uca.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/13a-mitja-colomenca-cursa-de-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "32a-cursa-de-muntanya-del-farell-2026",
+   "name": "32a Cursa de Muntanya del Farell",
+   "date": "2026-02-22",
+   "town": "Caldes de Montbui",
+   "comarca": "Vallès Oriental",
+   "lat": 41.63459,
+   "lon": 2.16224,
+   "terrain": "trail",
+   "status": "postponed",
+   "distancesM": [],
+   "organiser": "CN Caldes",
+   "website": "https://cncaldes.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/32a-cursa-de-muntanya-del-farell/"
+    }
+   ]
+  },
+  {
+   "slug": "sismica-race-2026",
+   "name": "Sísmica Race",
+   "date": "2026-02-22",
+   "town": "Sant Andreu de la Barca",
+   "comarca": "Baix Llobregat",
+   "lat": 41.45,
+   "lon": 1.9714,
+   "terrain": "trail",
+   "status": "cancelled",
+   "distancesM": [],
+   "organiser": "CA Sant Andreu de la Barca",
+   "website": "https://www.sismicarace.es/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/sismica-race/"
+    }
+   ]
+  },
+  {
+   "slug": "10a-cursa-de-la-dona-de-cornella-5-km-circuit-no-homologat-2026",
+   "name": "10a Cursa de la Dona de Cornellà (5 Km) (Circuit no homologat)",
+   "date": "2026-03-01",
+   "town": "Cornellà de Llobregat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.35517,
+   "lon": 2.07016,
+   "terrain": "road",
+   "distancesM": [
+    5000
+   ],
+   "organiser": "Cornellà At.",
+   "website": "https://www.rockthesport.com/ca/esdeveniment/cursa-de-la-dona-de-cornella-2026",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/10a-cursa-de-la-dona-de-cornella-5-km-circuit-no-homologat/"
+    }
+   ]
+  },
+  {
+   "slug": "30a-mitja-marato-de-la-garrotxa-campionat-territorial-2026",
+   "name": "30a Mitja Marató de La Garrotxa (Campionat Territorial)",
+   "date": "2026-03-01",
+   "town": "Olot",
+   "comarca": "Garrotxa",
+   "lat": 42.18318,
+   "lon": 2.48435,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "CN Olot",
+   "website": "https://www.cnolot.cat/catalan/esdeveniments-mitja-marato-subcategoria",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/30a-mitja-marato-de-la-garrotxa/"
+    }
+   ]
+  },
+  {
+   "slug": "oli-trail-montserrat-promocio-2026",
+   "name": "Oli Trail Montserrat Promoció",
+   "date": "2026-03-07",
+   "town": "Olesa de Montserrat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.54351,
+   "lon": 1.8939,
+   "terrain": "trail",
+   "status": "cancelled",
+   "distancesM": [],
+   "organiser": "CA Olesa",
+   "website": "https://www.olitrail.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/oli-trail-montserrat-promocio/"
+    }
+   ]
+  },
+  {
+   "slug": "37a-mitja-marato-ciutat-de-balaguer-2026",
+   "name": "37a Mitja Marató Ciutat de Balaguer",
+   "date": "2026-03-08",
+   "town": "Balaguer",
+   "comarca": "Noguera",
+   "lat": 41.78972,
+   "lon": 0.80459,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "Runner’s Balaguer CE",
+   "website": "https://www.runners.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/37a-mitja-marato-ciutat-de-balaguer/"
+    }
+   ]
+  },
+  {
+   "slug": "oli-trail-montserrat-2026",
+   "name": "Oli Trail Montserrat",
+   "date": "2026-03-08",
+   "town": "Olesa de Montserrat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.54351,
+   "lon": 1.8939,
+   "terrain": "trail",
+   "status": "cancelled",
+   "distancesM": [],
+   "organiser": "CA Olesa",
+   "website": "https://www.olitrail.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/oli-trail-montserrat/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-despanya-de-marato-absolut-i-master-zurich-marato-de-barcelo-2026",
+   "name": "Campionat d’Espanya de Marató Absolut i Màster (Zurich Marató de Barcelona)",
+   "date": "2026-03-15",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [
+    42195
+   ],
+   "organiser": "Club Esportiu Marató de Barcelona",
+   "website": "https://atletismorfea.es/calendario/campeonato/campeonato-de-espana-de-maraton-absoluto-y-master-0",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-despanya-de-marato-absolut-i-master-zurich-marato-de-barcelona-2/"
+    }
+   ]
+  },
+  {
+   "slug": "petita-jab-trail-ccp-2026",
+   "name": "Petita JAB Trail (CCP)",
+   "date": "2026-03-15",
+   "town": "l'Espunyola",
+   "comarca": "Berguedà",
+   "lat": 42.05356,
+   "lon": 1.76775,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "JAB-Berga",
+   "website": "https://www.jaberga.com/petita",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/petita-jab-trail-ccp/"
+    }
+   ]
+  },
+  {
+   "slug": "1a-edicio-la-mitja-de-rams-2026",
+   "name": "1a edició La Mitja de Rams",
+   "date": "2026-03-22",
+   "town": "Vic",
+   "comarca": "Osona",
+   "lat": 41.92997,
+   "lon": 2.25426,
+   "terrain": "road",
+   "distancesM": [],
+   "organiser": "CEES (Centre d’Estudis el Seminari)",
+   "website": "https://www.lamitjaderams.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/1a-edicio-la-mitja-de-rams/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-trail-absolut-i-sub23-cursa-del-roc-gros-trs-2026",
+   "name": "Campionat de Catalunya de Trail Absolut i Sub23 (Cursa del Roc Gros) (TRS)+(CMT)",
+   "date": "2026-03-22",
+   "town": "Els Hostalets de Balenyà",
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "Associació Cursa del Roc Gros",
+   "website": "https://www.cursadelrocgros.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-trail-absolut-i-sub23-cursa-del-roc-gros-trscmt/"
+    }
+   ]
+  },
+  {
+   "slug": "26a-cursa-de-martorell-5-km-2026",
+   "name": "26a Cursa de Martorell (5 Km)",
+   "date": "2026-03-29",
+   "town": "Martorell",
+   "comarca": "Baix Llobregat",
+   "lat": 41.47434,
+   "lon": 1.93073,
+   "terrain": "road",
+   "distancesM": [
+    5000
+   ],
+   "organiser": "Martorell AC",
+   "website": "https://martorellatletic.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/26a-cursa-de-martorell-5-km/"
+    }
+   ]
+  },
+  {
+   "slug": "31a-mitja-marato-del-pla-de-lestany-2026",
+   "name": "31a Mitja Marató del Pla de l’Estany",
+   "date": "2026-04-12",
+   "town": "Banyoles",
+   "comarca": "Pla de l'Estany",
+   "lat": 42.1164,
+   "lon": 2.7638,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "CN Banyoles",
+   "website": "https://cnbanyoles.cat/competicions/mitja-marato-del-pla-de-lestany/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/31a-mitja-marato-del-pla-de-lestany/"
+    }
+   ]
+  },
+  {
+   "slug": "31a-mitja-marato-montornes-montmelo-vilanova-la-roca-2026",
+   "name": "31a Mitja Marató Montornès-Montmeló-Vilanova-La Roca",
+   "date": "2026-04-12",
+   "town": "Montornès del Vallès",
+   "comarca": "Vallès Oriental",
+   "lat": 41.54526,
+   "lon": 2.26731,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "CA Montornès",
+   "website": "https://mitjamontornes.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/31a-mitja-marato-montornes-montmelo-vilanova-la-roca/"
+    }
+   ]
+  },
+  {
+   "slug": "21a-marato-dempuries-16a-mitja-marato-i-16a-cursa-de-10-km-campionat-t-2026",
+   "name": "21a Marató d’Empúries, 16a Mitja Marató i 16a Cursa de 10 Km (Campionat Territorial) (No es va seguir el Circuit homologat)",
+   "date": "2026-04-19",
+   "town": "l'Escala",
+   "comarca": "Alt Empordà",
+   "lat": 42.12506,
+   "lon": 3.13377,
+   "terrain": "road",
+   "distancesM": [
+    10000,
+    21097,
+    42195
+   ],
+   "organiser": "Àrea d’Esports – Ajuntament de L’Escala",
+   "website": "https://esportslescala.cat/marato-dempuries/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/21a-marato-dempuries-16a-mitja-marato-i-16a-cursa-de-10-km-campionat-territorial/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-milla-urbana-absolut-i-master-2026",
+   "name": "Campionat de Catalunya de Milla Urbana Absolut i Màster",
+   "date": "2026-04-19",
+   "town": "Ripollet",
+   "comarca": "Vallès Occidental",
+   "lat": 41.4965,
+   "lon": 2.15349,
+   "terrain": "road",
+   "distancesM": [
+    1609
+   ],
+   "organiser": "Ripollet UA",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-milla-urbana-absolut-i-master-29a-milla-urbana-de-ripollet-memorial-juan-suarez/"
+    }
+   ]
+  },
+  {
+   "slug": "trail-cerdanyola-trs-cmt-2026",
+   "name": "Trail Cerdanyola (TRS)+(CMT)",
+   "date": "2026-04-19",
+   "town": "Sant Julià de Cerdanyola",
+   "comarca": "Berguedà",
+   "lat": 42.22384,
+   "lon": 1.89292,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "JAB-Berga",
+   "website": "https://www.jaberga.com/trailcerdanyola",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/trail-cerdanyola-trscmt/"
+    }
+   ]
+  },
+  {
+   "slug": "la-bastarda-2026",
+   "name": "La Bastarda",
+   "date": "2026-04-25",
+   "town": "Parets del Vallès",
+   "comarca": "Vallès Oriental",
+   "lat": 41.57317,
+   "lon": 2.23358,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "Club d’Activitats de Muntanya Parets CAM",
+   "website": "https://labastardadelcam.wordpress.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/la-bastarda-2/"
+    }
+   ]
+  },
+  {
+   "slug": "21a-marato-del-mediterrani-5k-10k-mitja-marato-2026",
+   "name": "21a Marató del Mediterrani (5k-10k-Mitja Marató)",
+   "date": "2026-04-26",
+   "town": "Castelldefels",
+   "comarca": "Baix Llobregat",
+   "lat": 41.28027,
+   "lon": 1.97623,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000,
+    21097,
+    42195
+   ],
+   "organiser": "Zona Vip Events",
+   "website": "https://www.zonavipevents.com/marato-del-mediterrani/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/21a-marato-del-mediterrani-5k-10k-mitja-marato/"
+    }
+   ]
+  },
+  {
+   "slug": "34a-milla-urbana-de-santa-eulalia-i-17a-solidaria-ciutat-de-lhospitale-2026",
+   "name": "34a Milla Urbana de Santa Eulàlia i 17a Solidària Ciutat de L’Hospitalet (Circuit no homologat)",
+   "date": "2026-05-01",
+   "town": "l'Hospitalet de Llobregat",
+   "comarca": "Barcelonès",
+   "lat": 41.35946,
+   "lon": 2.09971,
+   "terrain": "road",
+   "distancesM": [
+    1609
+   ],
+   "organiser": "AE Santa Eulàlia",
+   "website": "https://millaurbanasantaeulalia.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/34a-milla-urbana-de-santa-eulalia-i-17a-solidaria-ciutat-de-lhospitalet-circuit-no-homologat/"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-montgat-5-i-10-km-2026",
+   "name": "Cursa de Montgat (5 i 10 Km)",
+   "date": "2026-05-01",
+   "town": "Montgat",
+   "comarca": "Maresme",
+   "lat": 41.46695,
+   "lon": 2.27868,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "CA La Sansi",
+   "website": "https://www.lasansieventos.com/ca/cursa-montgat",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/cursa-de-montgat-5-i-10-km-3/"
+    }
+   ]
+  },
+  {
+   "slug": "30a-cursa-solidaria-de-cardedeu-10-km-circuit-mixte-2026",
+   "name": "30a Cursa Solidària de Cardedeu (10 Km circuit mixte)",
+   "date": "2026-05-03",
+   "town": "Cardedeu",
+   "comarca": "Vallès Oriental",
+   "lat": 41.63829,
+   "lon": 2.35535,
+   "terrain": "road",
+   "distancesM": [
+    10000,
+    15000
+   ],
+   "organiser": "CA Cardedeu",
+   "website": "https://corrigaires.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/30a-cursa-solidaria-de-cardedeu-10-km-circuit-mixte/"
+    }
+   ]
+  },
+  {
+   "slug": "34a-milla-urbana-vila-de-castellar-2026",
+   "name": "34a Milla Urbana Vila de Castellar",
+   "date": "2026-05-09",
+   "town": "Castellar del Vallès",
+   "comarca": "Vallès Occidental",
+   "lat": 41.61856,
+   "lon": 2.08764,
+   "terrain": "road",
+   "distancesM": [
+    1609
+   ],
+   "organiser": "CA Castellar",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/34a-milla-urbana-vila-de-castellar-2/"
+    }
+   ]
+  },
+  {
+   "slug": "26a-cursa-delta-prat-5-i-10-km-2026",
+   "name": "26a Cursa Delta Prat (5 i 10 Km)",
+   "date": "2026-05-10",
+   "town": "el Prat de Llobregat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.33074,
+   "lon": 2.09304,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "Pratenc AA",
+   "website": "https://www.cursadeltaprat.org/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/26a-cursa-delta-prat-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "46a-cursa-el-corte-ingles-10-km-amb-desnivell-2026",
+   "name": "46a Cursa El Corte Inglés (10 Km amb desnivell)",
+   "date": "2026-05-10",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [
+    10000
+   ],
+   "organiser": "El Corte Inglés",
+   "website": "https://lacursa.barcelona/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/46a-cursa-el-corte-ingles-10-km-amb-desnivell/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-trail-per-relleus-mixtos-absolut-master-i-pr-2026",
+   "name": "Campionat de Catalunya de Trail per Relleus Mixtos Absolut, Màster i Promoció (Lloretrail)",
+   "date": "2026-05-10",
+   "town": "Lloret de Mar",
+   "comarca": "Selva",
+   "lat": 41.69862,
+   "lon": 2.8476,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "CA La Sansi",
+   "website": "https://www.lasansi.com/es/lloretdemartrail",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-trail-per-relleus-mixtos-absolut-master-i-promocio/"
+    }
+   ]
+  },
+  {
+   "slug": "16a-cursa-nocturna-de-lhospitalet-5-i-10-km-2026",
+   "name": "16a Cursa Nocturna de L’Hospitalet (5 i 10 km)",
+   "date": "2026-05-16",
+   "town": "l'Hospitalet de Llobregat",
+   "comarca": "Barcelonès",
+   "lat": 41.35946,
+   "lon": 2.09971,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "Seven Mila Events SL",
+   "website": "https://cursanocturnalh.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/16a-cursa-nocturna-de-lhospitalet-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-trail-pujada-vertical-vertical-trail-bergued-2026",
+   "name": "Campionat de Catalunya de Trail Pujada Vertical (Vertical Trail Berguedà)",
+   "date": "2026-05-16",
+   "town": "Cercs",
+   "comarca": "Berguedà",
+   "lat": 42.14605,
+   "lon": 1.86192,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "JAB-Berga",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-trail-pujada-vertical-vertical-trail-bergueda/"
+    }
+   ]
+  },
+  {
+   "slug": "11a-cursa-5-km-13a-cursa-10-km-i-1a-milla-ciutat-de-vilanova-2026",
+   "name": "11a Cursa 5 Km, 13a Cursa 10 Km i 1a Milla Ciutat de Vilanova",
+   "date": "2026-05-17",
+   "town": "Vilanova i la Geltrú",
+   "comarca": "Garraf",
+   "lat": 41.22411,
+   "lon": 1.72618,
+   "terrain": "road",
+   "distancesM": [
+    1609,
+    5000,
+    10000
+   ],
+   "organiser": "CA Atletes vng.org",
+   "website": "https://cursa10kmvng.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/11a-cursa-5-km-13a-cursa-10-km-i-1a-milla-ciutat-de-vilanova/"
+    }
+   ]
+  },
+  {
+   "slug": "17a-run-festival-tossa-de-mar-5-10-21-km-circuits-no-homologats-2026",
+   "name": "17a Run Festival Tossa de Mar (5, 10, 21 Km) (Circuits no homologats)",
+   "date": "2026-05-17",
+   "town": "Tossa de Mar",
+   "comarca": "Selva",
+   "lat": 41.7178,
+   "lon": 2.93084,
+   "terrain": "road",
+   "distancesM": [
+    21000
+   ],
+   "organiser": "Club Esportiu Wefeel",
+   "website": "https://runfestivaltossa.com/info-carrera/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/17a-run-festival-tossa-de-mar-5-10-21-km-circuits-no-homologats/"
+    }
+   ]
+  },
+  {
+   "slug": "21k-lo-port-2026",
+   "name": "21K Lo Port",
+   "date": "2026-05-17",
+   "town": "Tortosa",
+   "comarca": "Baix Ebre",
+   "lat": 40.8109,
+   "lon": 0.52096,
+   "terrain": "road",
+   "distancesM": [
+    21000
+   ],
+   "organiser": "CA Terres de l’Ebre",
+   "website": "https://www.21kloport.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/21k-lo-port-4/"
+    }
+   ]
+  },
+  {
+   "slug": "39a-cursa-popular-nou-barris-5-i-10-km-2026",
+   "name": "39a Cursa Popular Nou Barris (5 i 10 km)",
+   "date": "2026-05-17",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "CA Nou Barris",
+   "website": "https://cursanoubarris.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/39a-cursa-popular-nou-barris-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "12a-cursa-diagonal-dir-guardia-urbana-5-i-10-km-amb-desnivell-2026",
+   "name": "12a Cursa Diagonal DIR Guàrdia Urbana (5 i 10 Km amb desnivell)",
+   "date": "2026-05-24",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "Gestora Clubs DiR",
+   "website": "https://www.dir.cat/ca/cursa-diagonal",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/12a-cursa-diagonal-dir-guardia-urbana-5-i-10-km-amb-desnivell/"
+    }
+   ]
+  },
+  {
+   "slug": "19a-milla-urbana-de-montcada-i-reixac-2026",
+   "name": "19a Milla Urbana de Montcada i Reixac",
+   "date": "2026-05-24",
+   "town": "Montcada i Reixac",
+   "comarca": "Vallès Occidental",
+   "lat": 41.4858,
+   "lon": 2.18777,
+   "terrain": "road",
+   "distancesM": [
+    1609
+   ],
+   "organiser": "JA Montcada",
+   "website": "https://www.jam.cat/lamilla.html",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/19a-milla-urbana-de-montcada-i-reixac/"
+    }
+   ]
+  },
+  {
+   "slug": "senders-de-can-costa-trs-cmt-2026",
+   "name": "Senders de Can Costa (TRS) + (CMT)",
+   "date": "2026-05-24",
+   "town": "Sant Vicenç dels Horts",
+   "comarca": "Baix Llobregat",
+   "lat": 41.39334,
+   "lon": 2.00971,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "Club Esportiu Santvi",
+   "website": "https://sendersdecancosta.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/senders-de-can-costa-trs-cmt/"
+    }
+   ]
+  },
+  {
+   "slug": "guilleries-trail-ccp-2026",
+   "name": "Guilleries Trail (CCP)",
+   "date": "2026-05-30",
+   "town": "Sant Hilari Sacalm",
+   "comarca": "Selva",
+   "lat": 41.87884,
+   "lon": 2.50832,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "MI SPORTS",
+   "website": "https://trailguilleries.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/guilleries-trail-ccp/"
+    }
+   ]
+  },
+  {
+   "slug": "night-trail-lloret-2026",
+   "name": "Night Trail Lloret",
+   "date": "2026-06-06",
+   "town": "Lloret de Mar",
+   "comarca": "Selva",
+   "lat": 41.69862,
+   "lon": 2.8476,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "CA Lloret-La Selva",
+   "website": "https://nighttraillloret.com/ca",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/night-trail-lloret-2/"
+    }
+   ]
+  },
+  {
+   "slug": "8a-milla-del-foc-2026",
+   "name": "8a Milla del Foc",
+   "date": "2026-06-13",
+   "town": "Olesa de Montserrat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.54351,
+   "lon": 1.8939,
+   "terrain": "road",
+   "distancesM": [
+    1609
+   ],
+   "organiser": "CA Olesa",
+   "website": "https://www.cursadelfoc.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/8a-milla-del-foc/"
+    }
+   ]
+  },
+  {
+   "slug": "19a-cursa-del-foc-5-i-10-km-2026",
+   "name": "19a Cursa del Foc (5 i 10 Km)",
+   "date": "2026-06-14",
+   "town": "Olesa de Montserrat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.54351,
+   "lon": 1.8939,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "CA Olesa",
+   "website": "https://www.cursadelfoc.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/19a-cursa-del-foc-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "10a-milla-urbana-de-canet-de-mar-2026",
+   "name": "10a Milla Urbana de Canet de Mar",
+   "date": "2026-06-20",
+   "town": "Canet de Mar",
+   "comarca": "Maresme",
+   "lat": 41.58848,
+   "lon": 2.58243,
+   "terrain": "road",
+   "distancesM": [
+    1609
+   ],
+   "organiser": "Club Atletisme Sport Canet 1980",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/10a-milla-urbana-de-canet-de-mar/"
+    }
+   ]
+  },
+  {
+   "slug": "9a-milla-urbana-ciutat-de-badalona-2026",
+   "name": "9a Milla Urbana Ciutat de Badalona",
+   "date": "2026-06-20",
+   "town": "Badalona",
+   "comarca": "Barcelonès",
+   "lat": 41.45003,
+   "lon": 2.24779,
+   "terrain": "road",
+   "distancesM": [
+    1609
+   ],
+   "organiser": "UGE Badalona",
+   "website": "https://gesport.cat/2026-milla-urbana-badalona/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/9a-milla-urbana-ciutat-de-badalona/"
+    }
+   ]
+  },
+  {
+   "slug": "13a-milla-urbana-de-sant-pere-la-sagrera-2026",
+   "name": "13a Milla Urbana de Sant Pere – La Sagrera",
+   "date": "2026-06-28",
+   "town": "Palau-solità i Plegamans",
+   "comarca": "Vallès Occidental",
+   "lat": 41.58754,
+   "lon": 2.17842,
+   "terrain": "road",
+   "distancesM": [
+    1609
+   ],
+   "organiser": "Club Atlètic Calderí",
+   "website": "https://gestoriapalau.es/santpere/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/13a-milla-urbana-de-sant-pere-la-sagrera/"
+    }
+   ]
+  },
+  {
+   "slug": "19a-la-sansi-viladecans-5-km-2026",
+   "name": "19a La Sansi Viladecans (5 Km)",
+   "date": "2026-07-11",
+   "town": "Viladecans",
+   "comarca": "Baix Llobregat",
+   "lat": 41.3159,
+   "lon": 2.01965,
+   "terrain": "road",
+   "distancesM": [
+    5000
+   ],
+   "organiser": "CA La Sansi",
+   "website": "https://www.lasansi.com/ca/sansi-viladecans",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/19a-la-sansi-viladecans-5-km/"
+    }
+   ]
+  },
+  {
+   "slug": "18a-cursa-de-llafranc-pujada-al-far-de-sant-sebastia-2026",
+   "name": "18a Cursa de Llafranc – Pujada al Far de Sant Sebastià",
+   "date": "2026-07-12",
+   "town": "Llafranc",
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": "road",
+   "status": "cancelled",
+   "distancesM": [],
+   "organiser": "CA Palafrugell – Girona Costa Brava",
+   "website": "https://www.capalafrugell.cat/llafranc/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/18a-cursa-de-llafranc-pujada-al-far-de-sant-sebastia/"
+    }
+   ]
+  },
+  {
+   "slug": "56a-mini-marato-de-calella-de-palafrugell-gp-intersport-sports-77-2026",
+   "name": "56a Mini Marató de Calella de Palafrugell – GP Intersport Sports 77",
+   "date": "2026-08-30",
+   "town": "Calella de Palafrugell",
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": "road",
+   "distancesM": [
+    42195
+   ],
+   "organiser": "CA Palafrugell – Girona Costa Brava",
+   "website": "https://www.capalafrugell.cat/mini-marato-calella-de-palafrugell/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/56a-mini-marato-de-calella-de-palafrugell-gp-intersport-sports-77/"
+    }
+   ]
+  },
+  {
+   "slug": "48a-cursa-de-la-merce-bimbo-global-race-10-km-2026",
+   "name": "48a Cursa de la Mercè Bimbo Global Race (10 Km)",
+   "date": "2026-09-20",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [
+    10000
+   ],
+   "organiser": "Ajuntament de Barcelona (IBE)",
+   "website": "https://www.barcelona.cat/cursamerce/ca",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/48a-cursa-de-la-merce-bimbo-global-race-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-trail-master-trail-del-pont-de-vilomara-2026",
+   "name": "Campionat de Catalunya Trail Màster (Trail del Pont de Vilomara)",
+   "date": "2026-09-26",
+   "town": "el Pont de Vilomara i Rocafort",
+   "comarca": "Bages",
+   "lat": 41.70007,
+   "lon": 1.87062,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "Ajuntament del Pont de Vilomara i Rocafort",
+   "website": "http://cursaelpont.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-trail-master/"
+    }
+   ]
+  },
+  {
+   "slug": "37a-cursa-de-la-llagosta-5-i-10-km-2026",
+   "name": "37a Cursa de La Llagosta (5 i 10 Km)",
+   "date": "2026-09-27",
+   "town": "la Llagosta",
+   "comarca": "Vallès Oriental",
+   "lat": 41.51312,
+   "lon": 2.19361,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "CA La Sansi",
+   "website": "https://www.lasansieventos.com/es/cursa-de-la-llagosta",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/37a-cursa-de-la-llagosta-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "15a-edicio-nocturna-cursa-de-la-tardor-gran-premi-pohlcon-5-i-10-km-2026",
+   "name": "15a edició Nocturna Cursa de la Tardor -Gran Premi Pohlcon- (5 i 10 Km)",
+   "date": "2026-10-03",
+   "town": "Sant Andreu de la Barca",
+   "comarca": "Baix Llobregat",
+   "lat": 41.45,
+   "lon": 1.9714,
+   "terrain": "road",
+   "status": "cancelled",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "CA Sant Andreu de la Barca",
+   "website": "https://cursadelatardor.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/15a-edicio-nocturna-cursa-de-la-tardor-gran-premi-pohlcon-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "la-megalitica-de-tossa-de-mar-2026",
+   "name": "La Megalítica de Tossa de Mar",
+   "date": "2026-10-11",
+   "town": "Tossa de Mar",
+   "comarca": "Selva",
+   "lat": 41.7178,
+   "lon": 2.93084,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "Club Esportiu Fondistes Tossa",
+   "website": "https://lamegalitica.es/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/la-megalitica-de-tossa-de-mar-2/"
+    }
+   ]
+  },
+  {
+   "slug": "16a-cursa-del-remei-10-km-no-homologat-2026",
+   "name": "16a Cursa del Remei (10 Km) (No homologat)",
+   "date": "2026-10-18",
+   "town": "Santa Maria de Palautordera",
+   "comarca": "Vallès Oriental",
+   "lat": 41.69299,
+   "lon": 2.4461,
+   "terrain": "road",
+   "distancesM": [
+    10000
+   ],
+   "organiser": "CA Baix Montseny",
+   "website": "https://atletisme-baixmontseny.cat/organitzacions/els-10-km/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/16a-cursa-del-remei-10-km-no-homologat/"
+    }
+   ]
+  },
+  {
+   "slug": "38a-mitja-marato-de-mollerussa-2026",
+   "name": "38a Mitja Marató de Mollerussa",
+   "date": "2026-10-18",
+   "town": "Mollerussa",
+   "comarca": "Pla d'Urgell",
+   "lat": 41.62981,
+   "lon": 0.89403,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "AA Xafatolls",
+   "website": "https://sites.google.com/mollerussa.cat/mitjamollerussa/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/38a-mitja-marato-de-mollerussa/"
+    }
+   ]
+  },
+  {
+   "slug": "45a-cursa-solidaria-ciutat-de-cornella-la-de-deu-10-km-2026",
+   "name": "45a Cursa solidària Ciutat de Cornellà. La de deu (10 Km)",
+   "date": "2026-10-18",
+   "town": "Cornellà de Llobregat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.35517,
+   "lon": 2.07016,
+   "terrain": "road",
+   "distancesM": [
+    10000
+   ],
+   "organiser": "Cornellà At.",
+   "website": "https://cornellaatletic.com/la-de-deu/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/45a-cursa-solidaria-ciutat-de-cornella-la-de-deu-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "7a-cursa-mercabarna-5-i-10-km-ajornada-al-17-de-gener-de-2026",
+   "name": "7a Cursa Mercabarna (5 i 10 Km) – *Ajornada al 17 de gener de 2027",
+   "date": "2026-10-18",
+   "town": "Interior Recinte Mercabarna",
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "Zona Vip Events",
+   "website": "https://www.cursamercabarna.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/7a-cursa-mercabarna-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "19a-cursa-i-caminada-lluis-companys-5-i-10-km-2026",
+   "name": "19a Cursa i Caminada Lluís Companys (5 i 10 Km)",
+   "date": "2026-10-24",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "Fundació Neus Català",
+   "website": "https://cursacompanys.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/19a-cursa-i-caminada-lluis-companys-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "15a-cursa-solidaria-pais-del-cava-13-400-m-2026",
+   "name": "15a Cursa solidària Païs del Cava (13.400 m.)",
+   "date": "2026-10-25",
+   "town": "Vilafranca del Penedès",
+   "comarca": "Alt Penedès",
+   "lat": 41.3465,
+   "lon": 1.69722,
+   "terrain": "road",
+   "distancesM": [
+    13400
+   ],
+   "organiser": "CE Penedès",
+   "website": "https://www.rockthesport.com/ca/esdeveniment/xv-cursa-solidaria-pais-del-cava-",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/15a-cursa-solidaria-pais-del-cava-13-400-m/"
+    }
+   ]
+  },
+  {
+   "slug": "21a-edicio-10-km-urbans-de-manresa-5-i-10-km-circuits-no-homologats-2026",
+   "name": "21a edició 10 Km Urbans de Manresa (5 i 10 Km) (Circuits no homologats)",
+   "date": "2026-10-25",
+   "town": "Manresa",
+   "comarca": "Bages",
+   "lat": 41.72306,
+   "lon": 1.82693,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "Avinent CA Manresa",
+   "website": "https://clubatleticmanresa.cat/cursa-urbana-de-manresa/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/21a-edicio-10-km-urbans-de-manresa-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "21e-km-de-les-corts-2026",
+   "name": "21è Km de Les Corts",
+   "date": "2026-10-25",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [],
+   "organiser": "Barcelona Atletisme Club",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/21e-km-de-les-corts/"
+    }
+   ]
+  },
+  {
+   "slug": "39a-mitja-marato-del-vendrell-2026",
+   "name": "39a Mitja Marató del Vendrell",
+   "date": "2026-10-25",
+   "town": "el Vendrell",
+   "comarca": "Baix Penedès",
+   "lat": 41.22012,
+   "lon": 1.5351,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "CA Runners El Vendrell",
+   "website": "https://mitjavendrell.runnerselvendrell.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/39a-mitja-marato-del-vendrell/"
+    }
+   ]
+  },
+  {
+   "slug": "el-tast-de-la-mitja-10-km-amb-desnivell-2026",
+   "name": "El Tast de La Mitja (10 Km amb desnivell)",
+   "date": "2026-10-31",
+   "town": "Granollers",
+   "comarca": "Vallès Oriental",
+   "lat": 41.60809,
+   "lon": 2.28682,
+   "terrain": "road",
+   "distancesM": [
+    10000
+   ],
+   "organiser": "Associació Esportiva La Mitja",
+   "website": "https://eltast.lamitja.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/el-tast-de-la-mitja-10-km-amb-desnivell-4/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-10-km-27a-vueling-cursa-bombers-barcelona-2026",
+   "name": "Campionat de Catalunya de 10 Km (27a Vueling Cursa Bombers Barcelona)",
+   "date": "2026-11-08",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [
+    10000
+   ],
+   "organiser": "SEVEN MARKETING ON SPORTS & LEISURE SL",
+   "website": "https://cursadebombers.barcelona/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-10-km-27a-vueling-cursa-bombers-barcelona/"
+    }
+   ]
+  },
+  {
+   "slug": "13a-cursa-dels-3-turons-la-diablada-2026",
+   "name": "13a Cursa dels 3 Turons - La Diablada 2026",
+   "date": "2026-11-15",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.4128,
+   "lon": 2.16648,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    }
+   ]
+  },
+  {
+   "slug": "14a-cursa-benefica-els-10-km-de-les-franqueses-2026",
+   "name": "14a Cursa benèfica Els 10 km de Les Franqueses",
+   "date": "2026-11-15",
+   "town": "les Franqueses del Vallès",
+   "comarca": "Vallès Oriental",
+   "lat": 41.63631,
+   "lon": 2.29716,
+   "terrain": "road",
+   "distancesM": [
+    10000
+   ],
+   "organiser": "CA a 4 el Km",
+   "website": "http://www.els10delesfranqueses.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/14a-cursa-benefica-els-10-km-de-les-franqueses/"
+    }
+   ]
+  },
+  {
+   "slug": "2a-cursa-de-5-i-10k-de-vic-2026",
+   "name": "2a Cursa de 5 i 10k de Vic",
+   "date": "2026-11-15",
+   "town": "Vic",
+   "comarca": "Osona",
+   "lat": 41.92997,
+   "lon": 2.25426,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "Club Natació Vic-ETB",
+   "website": "https://5k10kvic.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/2a-cursa-de-5-i-10k-de-vic/"
+    }
+   ]
+  },
+  {
+   "slug": "32a-cursa-de-muntanya-del-farell-2",
+   "name": "32a Cursa de Muntanya del Farell",
+   "date": "2026-11-15",
+   "town": "Caldes de Montbui",
+   "comarca": "Vallès Oriental",
+   "lat": 41.63459,
+   "lon": 2.16224,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "CN Caldes",
+   "website": "https://cncaldes.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/32a-cursa-de-muntanya-del-farell-2/"
+    }
+   ]
+  },
+  {
+   "slug": "38a-milla-de-la-sagrada-familia-2026",
+   "name": "38a Milla de la Sagrada Familia",
+   "date": "2026-11-15",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.40365,
+   "lon": 2.17561,
+   "terrain": "road",
+   "distancesM": [
+    1609
+   ],
+   "organiser": "Fundació Claror",
+   "website": "https://claror.cat/la-milla/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/38a-milla-de-la-sagrada-familia/"
+    },
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    }
+   ]
+  },
+  {
+   "slug": "46a-cursa-popular-de-sant-marti-2026",
+   "name": "46a Cursa Popular de Sant Martí",
+   "date": "2026-11-15",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.41045,
+   "lon": 2.18246,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    }
+   ]
+  },
+  {
+   "slug": "47e-campionat-datletisme-de-fons-del-ripolles-mitja-marato-2026",
+   "name": "47è Campionat d’Atletisme de Fons del Ripollés (Mitja Marató)",
+   "date": "2026-11-15",
+   "town": "Ripoll",
+   "comarca": "Ripollès",
+   "lat": 42.20105,
+   "lon": 2.19075,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "Ajuntament de Ripoll",
+   "website": "https://www.mitjamarato.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/47e-campionat-datletisme-de-fons-del-ripolles-mitja-marato/"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-solidaria-corre-contra-el-cancer-zona-nord-2026",
+   "name": "Cursa solidària Corre contra el càncer - Zona Nord",
+   "date": "2026-11-15",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.4595,
+   "lon": 2.17593,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    }
+   ]
+  },
+  {
+   "slug": "cims-de-girona-sant-miquel-2026",
+   "name": "CIMS DE GIRONA SANT MIQUEL",
+   "date": "2026-11-19",
+   "town": "Girona",
+   "comarca": "Gironès",
+   "lat": 41.98316,
+   "lon": 2.82487,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "38a-milles-de-cerdanyola-5-km-2026",
+   "name": "38a Milles de Cerdanyola (5 Km)",
+   "date": "2026-11-21",
+   "town": "Cerdanyola del Vallès",
+   "comarca": "Vallès Occidental",
+   "lat": 41.49102,
+   "lon": 2.14072,
+   "terrain": "road",
+   "distancesM": [
+    5000
+   ],
+   "organiser": "CE Cerdanyola Atletisme i Triatló",
+   "website": "https://www.atcerdanyola.com/curses/milles-cerdanyola/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/38a-milles-de-cerdanyola-5-km/"
+    }
+   ]
+  },
+  {
+   "slug": "20a-cursa-de-parets-5-i-10-km-circuits-no-homologats-2026",
+   "name": "20a Cursa de Parets (5 i 10 Km) (Circuits no homologats)",
+   "date": "2026-11-22",
+   "town": "Parets del Vallès",
+   "comarca": "Vallès Oriental",
+   "lat": 41.57317,
+   "lon": 2.23358,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "CA Parets",
+   "website": "https://www.caparets.com/la-cursa",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/20a-cursa-de-parets-5-i-10-km-circuits-no-homologats/"
+    }
+   ]
+  },
+  {
+   "slug": "47a-mitja-marato-espirall-vilafranca-2026",
+   "name": "47a Mitja Marató Espirall – Vilafranca",
+   "date": "2026-11-22",
+   "town": "Vilafranca del Penedès",
+   "comarca": "Alt Penedès",
+   "lat": 41.3465,
+   "lon": 1.69722,
+   "terrain": "road",
+   "distancesM": [
+    21097
+   ],
+   "organiser": "Ajuntament de Vilafranca del Penedès",
+   "website": "https://mitja.vilafranca.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/47a-mitja-marato-espirall-vilafranca/"
+    }
+   ]
+  },
+  {
+   "slug": "xxii-cursa-de-les-dones-central-lechera-asturiana-2026",
+   "name": "XXII Cursa de les Dones Central Lechera Asturiana 2026",
+   "date": "2026-11-22",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.39065,
+   "lon": 2.18533,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    }
+   ]
+  },
+  {
+   "slug": "cims-de-girona-rocacorba-2026",
+   "name": "CIMS DE GIRONA ROCACORBA",
+   "date": "2026-11-26",
+   "town": "Girona",
+   "comarca": "Gironès",
+   "lat": 41.98316,
+   "lon": 2.82487,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "103a-allianz-jean-bouin-rfea-2026",
+   "name": "103a Allianz Jean Bouin (RFEA)",
+   "date": "2026-11-29",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.37303,
+   "lon": 2.15101,
+   "terrain": "road",
+   "distancesM": [],
+   "organiser": "Zona Vip Events",
+   "website": "https://allianzjeanbouin.mundodeportivo.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/103a-allianz-jean-bouin-rfea/"
+    },
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    },
+    {
+     "id": "runnea",
+     "url": "https://www.runnea.com/carreras-populares/cursa-jean-bouin/"
+    }
+   ]
+  },
+  {
+   "slug": "cims-de-girona-els-angels-2026",
+   "name": "CIMS DE GIRONA ELS ANGELS",
+   "date": "2026-12-03",
+   "town": "Girona",
+   "comarca": "Gironès",
+   "lat": 41.98316,
+   "lon": 2.82487,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "10a-mitja-marato-de-figueres-i-10-km-de-figueres-campionat-gironi-de-1-2026",
+   "name": "10a Mitja Marató de Figueres i 10 Km de Figueres (Campionat Gironí de 10 Km)",
+   "date": "2026-12-06",
+   "town": "Figueres",
+   "comarca": "Alt Empordà",
+   "lat": 42.26721,
+   "lon": 2.96089,
+   "terrain": "road",
+   "distancesM": [
+    10000,
+    21097
+   ],
+   "organiser": "AA Mitja Marató de Figueres",
+   "website": "https://mitjafigueres.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/10a-mitja-marato-de-figueres-i-10-km-de-figueres/"
+    }
+   ]
+  },
+  {
+   "slug": "47a-cursa-de-sant-andreu-5-km-2026",
+   "name": "47a Cursa de Sant Andreu (5 Km)",
+   "date": "2026-12-06",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": "road",
+   "distancesM": [
+    5000
+   ],
+   "organiser": "CN Sant Andreu",
+   "website": "https://www.cnsantandreu.com/cursa-de-sant-andreu-2025/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/47a-cursa-de-sant-andreu-5-km/"
+    }
+   ]
+  },
+  {
+   "slug": "37a-mitja-marato-i-10-km-de-vilanova-i-la-geltru-2026",
+   "name": "37a Mitja Marató i 10 Km de Vilanova i la Geltrú",
+   "date": "2026-12-13",
+   "town": "Vilanova i la Geltrú",
+   "comarca": "Garraf",
+   "lat": 41.22411,
+   "lon": 1.72618,
+   "terrain": "road",
+   "distancesM": [
+    10000,
+    21097
+   ],
+   "organiser": "AE Evasión Running Vilanova",
+   "website": "https://mitjavilanova.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/37a-mitja-marato-i-10-km-de-vilanova-i-la-geltru/"
+    }
+   ]
+  },
+  {
+   "slug": "48a-cursa-de-la-sagrera-5-i-10-km-2026",
+   "name": "48a Cursa de La Sagrera (5 i 10 Km)",
+   "date": "2026-12-13",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.41655,
+   "lon": 2.18619,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "Comissió de Festes de La Sagrera",
+   "website": "https://www.cursadelasagrera.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/48a-cursa-de-la-sagrera-5-i-10-km/"
+    },
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    }
+   ]
+  },
+  {
+   "slug": "trail-la-vall-2026",
+   "name": "TRAIL LA VALL",
+   "date": "2026-12-13",
+   "town": "Bellcaire d'Empordà",
+   "comarca": "Baix Empordà",
+   "lat": 42.08101,
+   "lon": 3.09452,
+   "terrain": "trail",
+   "distancesM": [
+    6000,
+    13000,
+    22000,
+    46000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "sant-silvestre-palafrugell-2026",
+   "name": "Sant Silvestre Palafrugell",
+   "date": "2026-12-19",
+   "town": "Palafrugell",
+   "comarca": "Baix Empordà",
+   "lat": 41.91495,
+   "lon": 3.16407,
+   "terrain": null,
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "43a-cursa-de-lindiot-mollerussa-5-i-10-km-2026",
+   "name": "43a Cursa de l’Indiot – Mollerussa (5 i 10 Km)",
+   "date": "2026-12-26",
+   "town": "Mollerussa",
+   "comarca": "Pla d'Urgell",
+   "lat": 41.62981,
+   "lon": 0.89403,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "AA Xafatolls",
+   "website": "https://sites.google.com/mollerussa.cat/indiot",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/43a-cursa-de-lindiot-mollerussa-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "47a-sant-silvestre-del-masnou-5-km-2026",
+   "name": "47a Sant Silvestre del Masnou (5 Km)",
+   "date": "2026-12-26",
+   "town": "el Masnou",
+   "comarca": "Maresme",
+   "lat": 41.47916,
+   "lon": 2.31902,
+   "terrain": "road",
+   "distancesM": [
+    5000
+   ],
+   "organiser": "CA La Sansi",
+   "website": "https://www.lasansi.com/es/sant-silvestre-masnou",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/47a-sant-silvestre-del-masnou-5-km/"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-la-dona-de-la-jonquera-2026",
+   "name": "CURSA DE LA DONA DE LA JONQUERA",
+   "date": "2026-12-26",
+   "town": "la Jonquera",
+   "comarca": "Alt Empordà",
+   "lat": 42.4169,
+   "lon": 2.87316,
+   "terrain": "road",
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": "https://www.curses.cat/donajonquera2025",
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/donajonquera2025"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-sant-esteve-llagostera-2026",
+   "name": "Cursa Sant Esteve Llagostera",
+   "date": "2026-12-26",
+   "town": "Llagostera",
+   "comarca": "Gironès",
+   "lat": 41.82881,
+   "lon": 2.89182,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "sant-silvestre-de-cassa-de-la-selva-2026",
+   "name": "Sant Silvestre de Cassà de la Selva",
+   "date": "2026-12-27",
+   "town": "Cassà de la Selva",
+   "comarca": "Gironès",
+   "lat": 41.88485,
+   "lon": 2.87429,
+   "terrain": null,
+   "distancesM": [
+    12000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "b100-cursa-dels-nassos-5-i-10-km-2026",
+   "name": "B100 Cursa dels Nassos (5 i 10 Km)",
+   "date": "2026-12-31",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.40546,
+   "lon": 2.21256,
+   "terrain": "road",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": "CA La Sansi",
+   "website": "https://www.cursadenassos.barcelona/ca",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/b100-cursa-dels-nassos-5-i-10-km/"
+    },
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    },
+    {
+     "id": "runnea",
+     "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/"
+    }
+   ]
+  },
+  {
+   "slug": "sant-silvestre-cadaques-2026",
+   "name": "Sant Silvestre Cadaqués",
+   "date": "2026-12-31",
+   "town": "Cadaqués",
+   "comarca": "Alt Empordà",
+   "lat": 42.28825,
+   "lon": 3.27585,
+   "terrain": null,
+   "distancesM": [
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "vii-sant-silvestre-cncatalunya-2027",
+   "name": "VII Sant Silvestre CNCatalunya",
+   "date": "2027-01-09",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "mitja-badia-de-roses-2027",
+   "name": "Mitja Badia de Roses",
+   "date": "2027-01-10",
+   "town": "Roses",
+   "comarca": "Alt Empordà",
+   "lat": 42.26341,
+   "lon": 3.17493,
+   "terrain": "road",
+   "distancesM": [
+    7000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "la-mitja-granollers-2027-media-maraton-2027",
+   "name": "La Mitja Granollers 2027 Media Maratón",
+   "date": "2027-01-24",
+   "town": null,
+   "comarca": null,
+   "region": "barcelona",
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "distancesM": [
+    21097
+   ],
+   "organiser": "Asociación Deportiva La Media",
+   "website": null,
+   "sources": [
+    {
+     "id": "runnea",
+     "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/"
+    }
+   ]
+  },
+  {
+   "slug": "la-sussissa-2027",
+   "name": "LA SUSSISSA",
+   "date": "2027-01-24",
+   "town": "Espolla",
+   "comarca": "Alt Empordà",
+   "lat": 42.39127,
+   "lon": 3.00069,
+   "terrain": "trail",
+   "distancesM": [
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-la-dona-lescala-2027",
+   "name": "Cursa de la Dona l'Escala",
+   "date": "2027-01-31",
+   "town": "l'Escala",
+   "comarca": "Alt Empordà",
+   "lat": 42.12506,
+   "lon": 3.13377,
+   "terrain": null,
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "baga-fast-trail-ccp-2027",
+   "name": "Bagà Fast Trail (CCP)",
+   "date": "2027-02-14",
+   "town": "Bagà",
+   "comarca": "Berguedà",
+   "lat": 42.25285,
+   "lon": 1.8626,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/baga-fast-trail-ccp-2/"
+    }
+   ]
+  },
+  {
+   "slug": "hyundai-mitja-marato-de-barcelona-2027-by-brooks-2027",
+   "name": "Hyundai Mitja Marató de Barcelona 2027 by Brooks",
+   "date": "2027-02-14",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38719,
+   "lon": 2.18421,
+   "terrain": null,
+   "distancesM": [
+    21097
+   ],
+   "organiser": "RPM Sports y A.S.O.",
+   "website": null,
+   "sources": [
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    },
+    {
+     "id": "runnea",
+     "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-corre-blau-2027",
+   "name": "Cursa Corre Blau 2027",
+   "date": "2027-02-21",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.41107,
+   "lon": 2.22171,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    }
+   ]
+  },
+  {
+   "slug": "hostrailric-14-km-i-24-km-trs-2027",
+   "name": "Hostrailric 14 km i 24 km (TRS)",
+   "date": "2027-02-21",
+   "town": "Hostalric",
+   "comarca": "Selva",
+   "lat": 41.74581,
+   "lon": 2.64135,
+   "terrain": "trail",
+   "distancesM": [
+    14000,
+    24000
+   ],
+   "organiser": "CE Hostrailric",
+   "website": "https://hostrailric.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/hostrailric-14-km-i-24-km-trs/"
+    }
+   ]
+  },
+  {
+   "slug": "sismica-race-10-km-i-24-km-cmt-2027",
+   "name": "Sísmica Race 10 km i 24 km (CMT)",
+   "date": "2027-02-21",
+   "town": "Sant Andreu de la Barca",
+   "comarca": "Baix Llobregat",
+   "lat": 41.45,
+   "lon": 1.9714,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    24000
+   ],
+   "organiser": "CA Sant Andreu de la Barca",
+   "website": "https://www.sismicarace.es/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/sismica-race-10-km-i-24-km-cmt/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-absolut-i-sub23-senders-de-can-costa-trs-2027",
+   "name": "Campionat de Catalunya Absolut i Sub23 (Senders de Can Costa) (TRS)",
+   "date": "2027-02-28",
+   "town": "Sant Vicenç dels Horts",
+   "comarca": "Baix Llobregat",
+   "lat": 41.39334,
+   "lon": 2.00971,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "Club Esportiu Santvi",
+   "website": "https://sendersdecancosta.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-absolut-i-sub23-senders-de-can-costa-trs/"
+    }
+   ]
+  },
+  {
+   "slug": "mitja-de-cambrils-2027",
+   "name": "Mitja de Cambrils",
+   "date": "2027-02-28",
+   "town": null,
+   "comarca": null,
+   "region": "tarragona",
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": "Ayuntamiento de Cambrils I CA Runners Tarragona",
+   "website": null,
+   "sources": [
+    {
+     "id": "runnea",
+     "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/"
+    }
+   ]
+  },
+  {
+   "slug": "oli-trail-montserrat-promocio-ccp-2027",
+   "name": "Oli Trail Montserrat Promoció (CCP)",
+   "date": "2027-03-06",
+   "town": "Olesa de Montserrat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.54351,
+   "lon": 1.8939,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "CA Olesa",
+   "website": "https://www.olitrail.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/oli-trail-montserrat-promocio-ccp/"
+    }
+   ]
+  },
+  {
+   "slug": "embruixada-trail-2027",
+   "name": "Embruixada trail",
+   "date": "2027-03-07",
+   "town": "Llers",
+   "comarca": "Alt Empordà",
+   "lat": 42.29631,
+   "lon": 2.91161,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "oli-trail-montserrat-13-km-i-24-km-cmt-2027",
+   "name": "Oli Trail Montserrat 13 km i 24 km (CMT)",
+   "date": "2027-03-07",
+   "town": "Olesa de Montserrat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.54351,
+   "lon": 1.8939,
+   "terrain": "trail",
+   "distancesM": [
+    13000,
+    24000
+   ],
+   "organiser": "CA Olesa",
+   "website": "https://www.olitrail.com/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/oli-trail-montserrat-13-km-i-24-km-cmt/"
+    }
+   ]
+  },
+  {
+   "slug": "10a-cursa-i-caminada-trail-pedralbes-antena-solidaria-2027",
+   "name": "10a Cursa i caminada Trail Pedralbes Antena Solidària",
+   "date": "2027-03-13",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.39644,
+   "lon": 2.11291,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    }
+   ]
+  },
+  {
+   "slug": "48a-edicio-zurich-marato-de-barcelona-2027",
+   "name": "48a edició Zurich Marató de Barcelona 2027",
+   "date": "2027-03-14",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": null,
+   "distancesM": [
+    42195
+   ],
+   "organiser": "Ayuntamiento de Barcelona, Plataforma Marató a Barcelona y Federación Catalana de Atletismo y Turismo de Barcelona",
+   "website": null,
+   "sources": [
+    {
+     "id": "bcn",
+     "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    },
+    {
+     "id": "runnea",
+     "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/"
+    }
+   ]
+  },
+  {
+   "slug": "correbocs-dordal-trs-cmt-2027",
+   "name": "Correbocs d’Ordal (TRS) (CMT)",
+   "date": "2027-03-14",
+   "town": "Ordal",
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": "https://www.correbocs.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/correbocs-dordal-trs-cmt/"
+    }
+   ]
+  },
+  {
+   "slug": "la-suada-i-marxa-agullana-2027",
+   "name": "LA SUADA I MARXA AGULLANA",
+   "date": "2027-03-14",
+   "town": "Agullana",
+   "comarca": "Alt Empordà",
+   "lat": 42.3941,
+   "lon": 2.84639,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "petita-jab-trail-ccp-2027",
+   "name": "Petita JAB Trail (CCP)",
+   "date": "2027-03-14",
+   "town": "l'Espunyola",
+   "comarca": "Berguedà",
+   "lat": 42.05356,
+   "lon": 1.76775,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "JAB-Berga",
+   "website": "https://www.jaberga.com/petita",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/petita-jab-trail-ccp-2/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-promocio-rasos-sky-trail-kids-ccp-2027",
+   "name": "Campionat de Catalunya de Promoció (Rasos Sky Trail Kids) (CCP)",
+   "date": "2027-03-21",
+   "town": "Castellar del Riu",
+   "comarca": "Berguedà",
+   "lat": 42.13105,
+   "lon": 1.70873,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "Federació Catalana d’Atletisme",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-promocio-rasos-sky-trail-kids-ccp/"
+    }
+   ]
+  },
+  {
+   "slug": "correpoble-baix-emporda-2027",
+   "name": "CORREPOBLE BAIX EMPORDÀ",
+   "date": "2027-04-03",
+   "town": "Begur",
+   "comarca": "Baix Empordà",
+   "lat": 41.95446,
+   "lon": 3.20732,
+   "terrain": null,
+   "distancesM": [
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "fox-trail-2027",
+   "name": "FOX TRAIL",
+   "date": "2027-04-04",
+   "town": "Sant Llorenç de la Muga",
+   "comarca": "Alt Empordà",
+   "lat": 42.32067,
+   "lon": 2.7901,
+   "terrain": "trail",
+   "distancesM": [
+    7000,
+    15000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "marxa-del-garri-2027",
+   "name": "MARXA DEL GARRÍ",
+   "date": "2027-04-11",
+   "town": "Garrigàs",
+   "comarca": "Alt Empordà",
+   "lat": 42.1935,
+   "lon": 2.95414,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-master-trail-cerdanyola-cmt-2027",
+   "name": "Campionat de Catalunya Màster (Trail Cerdanyola) (CMT)",
+   "date": "2027-04-25",
+   "town": "Sant Julià de Cerdanyola",
+   "comarca": "Berguedà",
+   "lat": 42.22384,
+   "lon": 1.89292,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "JAB-Berga",
+   "website": "https://www.jaberga.com/trailcerdanyola",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-master-trail-cerdanyola-cmt/"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-trail-pujada-vertical-vertical-trail-bergued-2027",
+   "name": "Campionat de Catalunya de Trail Pujada Vertical (Vertical Trail Berguedà)",
+   "date": "2027-05-15",
+   "town": "Berga",
+   "comarca": "Berguedà",
+   "lat": 42.10376,
+   "lon": 1.84585,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "JAB-Berga",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-trail-pujada-vertical-vertical-trail-bergueda-2/"
+    }
+   ]
+  },
+  {
+   "slug": "lo-port-vertical-2027",
+   "name": "Lo Port Vertical",
+   "date": "2027-05-16",
+   "town": "Tortosa",
+   "comarca": "Baix Ebre",
+   "lat": 40.8109,
+   "lon": 0.52096,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "CA Terres de l’Ebre",
+   "website": "https://www.21kloport.cat/ca/lovertical-2/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/lo-port-vertical-2/"
+    }
+   ]
+  },
+  {
+   "slug": "backyard-ultra-montgri-2027",
+   "name": "Backyard Ultra Montgrí",
+   "date": "2027-05-28",
+   "town": "Torroella de Montgrí",
+   "comarca": "Baix Empordà",
+   "lat": 42.04101,
+   "lon": 3.12638,
+   "terrain": null,
+   "distancesM": [
+    7000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-la-dona-castello-dempuries-2027",
+   "name": "CURSA DE LA DONA CASTELLÓ D'EMPÚRIES",
+   "date": "2027-05-30",
+   "town": "Castelló d'Empúries",
+   "comarca": "Alt Empordà",
+   "lat": 42.25858,
+   "lon": 3.07479,
+   "terrain": null,
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "marxa-dels-dolmens-2027",
+   "name": "MARXA DELS DOLMENS",
+   "date": "2027-05-30",
+   "town": "la Jonquera",
+   "comarca": "Alt Empordà",
+   "lat": 42.4169,
+   "lon": 2.87316,
+   "terrain": "trail",
+   "distancesM": [
+    5000,
+    14000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-la-cirera-2027",
+   "name": "CURSA DE LA CIRERA",
+   "date": "2027-06-06",
+   "town": "Terrades",
+   "comarca": "Alt Empordà",
+   "lat": 42.31011,
+   "lon": 2.83901,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    15000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "olla-de-tapis-2027",
+   "name": "OLLA DE TAPIS",
+   "date": "2027-06-20",
+   "town": "Maçanet de Cabrenys",
+   "comarca": "Alt Empordà",
+   "lat": 42.38606,
+   "lon": 2.75039,
+   "terrain": "trail",
+   "distancesM": [
+    9000,
+    20000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "trail-val-daran-utmb-2027",
+   "name": "Trail Val d'Aran UTMB",
+   "date": "2027-07-09",
+   "town": null,
+   "comarca": null,
+   "region": "lerida",
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": "UTMB IBERIA S.L. y la Associació Esportiva TRAIL RUNNERS ARAN",
+   "website": null,
+   "sources": [
+    {
+     "id": "runnea",
+     "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/"
+    }
+   ]
+  },
+  {
+   "slug": "6a-edicio-trails-del-pont-de-vilomara-i-rocafort-2027",
+   "name": "6a edició Trails del Pont de Vilomara i Rocafort",
+   "date": "2027-09-25",
+   "town": "el Pont de Vilomara i Rocafort",
+   "comarca": "Bages",
+   "lat": 41.70007,
+   "lon": 1.87062,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": "Ajuntament del Pont de Vilomara i Rocafort",
+   "website": "https://cursaelpont.cat/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/6a-edicio-trails-del-pont-de-vilomara-i-rocafort/"
+    }
+   ]
+  }
+ ]
+}

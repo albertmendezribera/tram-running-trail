@@ -7,7 +7,9 @@ import Button from '@tram/design-system/primitives/Button.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import { RACES, ROUTES, routeOf, visible } from '../../content';
+import { buildDay, calendarRaces } from '../../content/calendar';
 import Site from '../../layouts/Site.astro';
+import CalendarList from '../../sections/CalendarList.astro';
 import HomeHero from '../../sections/HomeHero.astro';
 import RaceList from '../../sections/RaceList.astro';
 import RouteList from '../../sections/RouteList.astro';
@@ -16,6 +18,9 @@ const races = visible(RACES);
 const routes = visible(ROUTES);
 const sample = races.some((r) => r.isPlaceholder);
 const cover = routeOf('calonge');
+// The next few races of the calendar, from the day the page is built.
+const today = buildDay();
+const next = calendarRaces().filter((race) => race.date >= today && !race.status).slice(0, 6);
 ---
 
 <Site
@@ -37,6 +42,7 @@ const cover = routeOf('calonge');
         <Panel>
           <RaceList races={races} />
         </Panel>
+        {next.length > 0 && <Panel title="Properes al calendari"><CalendarList races={next} level={3} /></Panel>}
         <Link href="/ca/curses/" variant="standalone">Totes les curses</Link>
       </Band>
     )

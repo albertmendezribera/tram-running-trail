@@ -65,7 +65,7 @@ test.describe('Sample content', () => {
     // A training run is a route and says what it was: it is not listed as a race.
     await expect(main(page)).toContainText('Gravada en un entrenament suau: «Easy Run Sils 10k».');
     await open(page, PAGES.races);
-    await expect(main(page)).not.toContainText('Sils');
+    await expect(main(page)).not.toContainText('Easy Run');
   });
 
   test('the shoe pages are kept from search engines until their names are cleared', async ({ page }) => {
@@ -82,7 +82,9 @@ test.describe('Home and lists', () => {
     await open(page, PAGES.home);
     await expect(page.getByRole('img', { name: /Plànol de Palamós/ })).toBeVisible();
     await expect(page.getByRole('link', { name: /Recorre Calonge en 3D/ })).toHaveAttribute('href', '/ca/rutes/calonge/');
-    await expect(page.locator('main a[href^="/ca/curses/"][href$="/"]:not([href="/ca/curses/"])')).toHaveCount(1);
+    await expect(page.locator('main a[href="/ca/curses/marxa-de-les-tines/"]')).toHaveCount(1);
+    // And to the next few races of the calendar, each to its own page.
+    expect(await page.locator('main [data-month] a[href^="/ca/curses/"]').count()).toBeGreaterThan(3);
     await expect(page.locator('a[href="/ca/rutes/sils/"]')).toHaveCount(1);
     await expect(page.locator('a[href="/ca/rutes/palamos/"]')).toHaveCount(1);
   });
@@ -185,6 +187,48 @@ test.describe('Share images (M5)', () => {
     await open(page, PAGES.routes);
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', 'Rutes');
     await expect(page.locator('meta[property="og:image"]')).toHaveCount(0);
+  });
+});
+
+test.describe('Calendar (Phase 2)', () => {
+  test('lists the races of its sources month by month, each a link to its own page, and says where they come from', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.races);
+    const rows = page.locator('main [data-month] li a');
+    expect(await rows.count()).toBeGreaterThan(100);
+    // Every row leads to a page of its own, and no two to the same one.
+    const hrefs = await rows.evaluateAll((links) => links.map((a) => a.getAttribute('href')));
+    expect(new Set(hrefs).size).toBe(hrefs.length);
+    // The months to come can be jumped to.
+    const first = page.locator('nav[aria-label="Mesos del calendari"] a').first();
+    await expect(page.locator(`${await first.getAttribute('href')}`)).toBeVisible();
+    // Each calendar is named, with a link to it.
+    for (const source of ['fcatletisme.cat', 'opendata-ajuntament.barcelona.cat', 'curses.cat', 'runnea.com']) await expect(page.locator(`main a[href*="${source}"]`).first()).toBeVisible();
+    // No source gives the climb, and none is made up: a calendar row has no place for it.
+    await expect(page.locator('main [data-month]').first()).not.toContainText('D+');
+  });
+
+  test('a race of the calendar gives its facts with their source, has no 3D to show, and is kept from search engines while its source has not agreed', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/curses/42a-mitja-marato-de-sitges-i-quart-de-marato-2026/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('42a Mitja Marató de Sitges i Quart de Marató');
+    await expect(main(page)).toContainText('Sitges, Garraf');
+    await expect(main(page)).toContainText('21,1 km');
+    await expect(page.locator('main [data-source] a')).toHaveAttribute('href', /fcatletisme\.cat\/event\//);
+    await expect(main(page)).toContainText('no l\'estimem');
+    await expect(page.locator('tram-viewer-3d')).toHaveCount(0);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0);
+    await expect(page.locator('footer')).toContainText('no és a la versió de producció');
+  });
+
+  test('a race an open source gives is described to search engines', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/curses/103a-allianz-jean-bouin-rfea-2026/');
+    await expect(page.locator('main [data-source]')).toHaveCount(3);
+    await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+    const data = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
+    expect(data).toMatchObject({ '@type': 'SportsEvent', startDate: '2026-11-29' });
   });
 });
 

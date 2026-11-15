@@ -1,24 +1,90 @@
 ---
+import { formatDate } from '@tram/formats';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
 import Heading from '@tram/design-system/primitives/Heading.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import { RACES, visible } from '../../../content';
+import { buildDay, CALENDAR_ACCESSED, CALENDAR_SOURCES, calendarRaces, isOpen } from '../../../content/calendar';
 import Site from '../../../layouts/Site.astro';
+import CalendarList from '../../../sections/CalendarList.astro';
 import RaceList from '../../../sections/RaceList.astro';
 
 const races = visible(RACES);
 const sample = races.some((r) => r.isPlaceholder);
+// The day the page is built parts what is to come from what has been run.
+const today = buildDay();
+const calendar = calendarRaces();
+const coming = calendar.filter((race) => race.date >= today);
+const run = calendar.filter((race) => race.date < today).reverse();
+const pending = calendar.some((race) => !isOpen(race));
+const MONTHS = ['gen.', 'febr.', 'març', 'abr.', 'maig', 'juny', 'jul.', 'ag.', 'set.', 'oct.', 'nov.', 'des.'];
+const months = [...new Set(coming.map((race) => race.date.slice(0, 7)))].map((key) => ({ href: `#mes-${key}`, label: `${MONTHS[Number(key.slice(5)) - 1]} ${key.slice(0, 4)}` }));
+const used = [...new Set(calendar.flatMap((race) => race.sources.map((source) => source.id)))].map((id) => CALENDAR_SOURCES[id]!);
+const notice = pending
+  ? 'Versió de proves: una part de les curses ve de calendaris que encara no ens han donat permís per mostrar-les. Se’n citen fets, amb enllaç a la font, i no són a la versió de producció.'
+  : sample
+    ? 'Versió de proves: la data i el dorsal de la cursa amb recorregut són de mostra.'
+    : undefined;
 ---
 
 <Site
   title="Curses"
-  description="Curses d'asfalt i de muntanya, amb el recorregut en 3D, el perfil i les xifres de cada una."
-  placeholder={sample}
-  notice={sample ? 'Les curses d’aquesta llista són de mostra: els recorreguts són reals, però no s’hi disputa cap cursa.' : undefined}
+  description="Calendari de curses d'asfalt i de muntanya de Catalunya, amb la data, el lloc i les distàncies de cada una i la font de cada dada."
+  placeholder={sample || pending}
+  credits={used.map((source) => `Calendari: ${source.name}`)}
+  notice={notice}
 >
   <Stack gap={4}>
     <Heading level={1} size="lg" kicker="Calendari">Curses</Heading>
-    <Text size="lg" measure>Asfalt i muntanya a la mateixa llista, i tots els perfils a la mateixa escala: una cursa plana es veu plana al costat d'una de muntanya.</Text>
+    <Text size="lg" measure>Asfalt i muntanya a la mateixa llista. De cada cursa, la data, el lloc i les distàncies, i d'on surt cada dada. Les que tenen el recorregut es poden recórrer en 3D.</Text>
   </Stack>
-  {races.length > 0 ? <RaceList races={races} /> : <Text tone="muted">Encara no hi ha cap cursa publicada.</Text>}
+  {
+    races.length > 0 && (
+      <Band tone="tint" title="Amb el recorregut en 3D">
+        <Panel>
+          <RaceList races={races} />
+        </Panel>
+      </Band>
+    )
+  }
+  {
+    coming.length > 0 && (
+      <Band tone="plain" title={`Properes curses · ${coming.length}`}>
+        <Stack gap={6}>
+          <nav aria-label="Mesos del calendari">
+            <Cluster>{months.map((month) => <Link href={month.href}>{month.label}</Link>)}</Cluster>
+          </nav>
+          <CalendarList races={coming} level={3} />
+        </Stack>
+      </Band>
+    )
+  }
+  {
+    run.length > 0 && (
+      <Band tone="alt" title={`Ja disputades · ${run.length}`}>
+        <Panel>
+          <CalendarList races={run} level={3} anchor="fet" />
+        </Panel>
+      </Band>
+    )
+  }
+  {races.length + calendar.length === 0 && <Text tone="muted">Encara no hi ha cap cursa publicada.</Text>}
+  {
+    calendar.length > 0 && (
+      <Band tone="tint" title="D'on surten les curses">
+        <Panel>
+          <Stack gap={3}>
+            <Stack gap={2} as="ul">
+              {used.map((source) => <li><Stack gap={1}><Link href={source.url}>{source.name}</Link><Text size="sm" tone="muted">{source.terms}</Text></Stack></li>)}
+            </Stack>
+            <Text size="sm" tone="muted">Consultat el {formatDate(CALENDAR_ACCESSED, 'ca')}. De cada cursa només se'n prenen fets: nom, data, lloc, distàncies, organitzador i web. Cap font diu el desnivell, i no l'estimem.</Text>
+          </Stack>
+        </Panel>
+      </Band>
+    )
+  }
 </Site>

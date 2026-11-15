@@ -1,0 +1,67 @@
+---
+import { formatDate, formatMeasure } from '@tram/formats';
+import Facts from '@tram/design-system/patterns/Facts.astro';
+import TerrainTag from '@tram/design-system/patterns/TerrainTag.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { CALENDAR_ACCESSED, type CalendarRace, PLACES_SOURCE, placeOf, sourcesOf } from '../content/calendar';
+
+export interface Props {
+  race: CalendarRace;
+  /** The day the page is built: a race before it has been run. */
+  today: string;
+}
+
+const { race, today } = Astro.props;
+const state = race.status === 'postponed' ? 'Ajornada' : race.status === 'cancelled' ? 'Suspesa' : race.date < today ? 'Disputada' : 'Programada';
+const facts = [
+  { label: 'Data', value: formatDate(race.date, 'ca') },
+  { label: 'Lloc', value: placeOf(race) },
+  { label: 'Estat', value: state },
+  { label: 'Distàncies', value: race.distancesM.length ? race.distancesM.map((m) => formatMeasure(Number((m / 1000).toFixed(2)), 'km', 'ca')).join(' · ') : null },
+  { label: 'Organitza', value: race.organiser },
+  { label: 'Web de la cursa', value: race.website ? 'Web oficial' : null, ...(race.website ? { href: race.website } : {}) },
+];
+const sources = sourcesOf(race);
+---
+
+<!-- A race of the calendar: what its sources say of it, and where each thing comes from. It has no route yet. -->
+<Stack gap={5}>
+  <Heading level={1} size="lg" kicker="Cursa">{race.name}</Heading>
+  {race.terrain && <Cluster><TerrainTag terrain={race.terrain} /></Cluster>}
+  <Facts facts={facts} />
+</Stack>
+
+<Band tone="tint" title="Recorregut">
+  <Panel>
+    <Stack gap={3}>
+      <Text measure>Encara no tenim el recorregut d'aquesta cursa. Quan l'organitzador en doni el track, aquí hi haurà el vol en 3D sobre el terreny real, el perfil amb el pendent de cada tram i les xifres. El desnivell tampoc el diu cap de les fonts, i no l'estimem.</Text>
+      <Link href="/ca/rutes/calonge/" variant="standalone">Mira com es veu una ruta amb el seu track</Link>
+    </Stack>
+  </Panel>
+</Band>
+
+<Band tone="alt" title="D'on surt aquesta informació">
+  <Panel>
+    <Stack gap={3}>
+      <Stack gap={2} as="ul">
+        {
+          sources.map((source) => (
+            <li data-source>
+              <Stack gap={1}>
+                <Link href={source.link}>{source.name}</Link>
+                <Text size="sm" tone="muted">{source.terms}</Text>
+              </Stack>
+            </li>
+          ))
+        }
+      </Stack>
+      <Text size="sm" tone="muted">Consultat el {formatDate(CALENDAR_ACCESSED, 'ca')}. Només se'n prenen fets (nom, data, lloc, distàncies, organitzador i web); la data pot haver canviat des de llavors: comprova-la al web de la cursa. El municipi i la comarca surten de les dades obertes de la Generalitat: <Link href={PLACES_SOURCE.url}>{PLACES_SOURCE.name}</Link></Text>
+    </Stack>
+  </Panel>
+</Band>

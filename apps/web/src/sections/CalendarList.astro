@@ -1,0 +1,50 @@
+---
+import RaceRow from '@tram/design-system/patterns/RaceRow.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import { type CalendarRace, placeOf } from '../content/calendar';
+
+export interface Props {
+  races: readonly CalendarRace[];
+  /** Heading level of each month. */
+  level?: 2 | 3;
+  /** What the id of each month starts with, so it can be jumped to. Two lists in a page need two. */
+  anchor?: string;
+}
+
+const MONTHS = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+const { races, level = 2, anchor = 'mes' } = Astro.props;
+// A month to a group, in the order the races come. A race with several distances shows the longest; its page has them all.
+const STATE = { postponed: ' (ajornada)', cancelled: ' (suspesa)' } as const;
+const km = (metres: number | undefined): number | null => (metres === undefined ? null : Number((metres / 1000).toFixed(2)));
+const rowOf = (race: CalendarRace) => ({
+  href: `/ca/curses/${race.slug}/`,
+  name: `${race.name}${race.status ? STATE[race.status] : ''}`,
+  place: placeOf(race) ?? 'Lloc sense dada',
+  terrain: race.terrain ?? undefined,
+  date: race.date,
+  distanceKm: km(race.distancesM.at(-1)),
+});
+const months: Array<{ key: string; title: string; rows: Array<ReturnType<typeof rowOf>> }> = [];
+for (const race of races) {
+  const key = race.date.slice(0, 7);
+  if (months.at(-1)?.key !== key) months.push({ key, title: `${MONTHS[Number(key.slice(5)) - 1]} ${key.slice(0, 4)}`, rows: [] });
+  months.at(-1)!.rows.push(rowOf(race));
+}
+---
+
+<!-- The calendar as a list, month by month. No race here has a route yet, and no source gives its climb: the row has no place for it. -->
+<Stack gap={7}>
+  {
+    months.map((month) => (
+      <section id={`${anchor}-${month.key}`} data-month={month.key}>
+        <Stack gap={3}>
+          <Heading level={level} size="sm">{month.title}</Heading>
+          <Stack gap={0} as="ul">
+            {month.rows.map((row) => <li><RaceRow {...row} compact /></li>)}
+          </Stack>
+        </Stack>
+      </section>
+    ))
+  }
+</Stack>

@@ -10,59 +10,93 @@ import Heading from '@tram/design-system/primitives/Heading.astro';
 import Split from '@tram/design-system/primitives/Split.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
-import { ICGC_CREDIT, RACES, routeOf, SAMPLE_NOTICE, visible } from '../../../content';
+import { ICGC_CREDIT, type Race, RACES, routeOf, SAMPLE_NOTICE, visible } from '../../../content';
+import { buildDay, type CalendarRace, calendarRaces, isOpen, placeOf, sourcesOf } from '../../../content/calendar';
 import Site from '../../../layouts/Site.astro';
 import { ogOf } from '../../../og/cards';
+import CalendarRaceBody from '../../../sections/CalendarRace.astro';
 import RouteExperience from '../../../sections/RouteExperience.astro';
 import RouteSheet from '../../../sections/RouteSheet.astro';
 
-export const getStaticPaths = (() => visible(RACES).map((race) => ({ params: { slug: race.slug }, props: { race } }))) satisfies GetStaticPaths;
+// Two kinds of race share these addresses: the ones with a route to run, and the ones of the calendar,
+// which so far have only what their sources say of them.
+export const getStaticPaths = (() => [
+  ...visible(RACES).map((race) => ({ params: { slug: race.slug }, props: { race, entry: undefined as CalendarRace | undefined } })),
+  ...calendarRaces().map((entry) => ({ params: { slug: entry.slug }, props: { race: undefined as Race | undefined, entry } })),
+]) satisfies GetStaticPaths;
 
-const { race } = Astro.props;
-const course = race.courses[0]!;
-const route = routeOf(course.route);
-const sentences = describeRoute(route.profile);
+const { race, entry } = Astro.props;
+const today = buildDay();
+const course = race?.courses[0];
+const route = course ? routeOf(course.route) : undefined;
+const sentences = route ? describeRoute(route.profile) : [];
 const STATUS = { scheduled: 'Programada', cancelled: 'Cancel·lada', postponed: 'Ajornada', finished: 'Disputada' } as const;
-const facts = [
-  { label: 'Data', value: formatDate(race.edition.startDate, 'ca') },
-  { label: 'Lloc', value: race.place },
-  { label: 'Estat', value: STATUS[race.edition.status] },
-  { label: 'Organitza', value: race.organizer },
-  { label: 'Inscripció', value: race.edition.registrationUrl ? 'Oberta' : null, ...(race.edition.registrationUrl ? { href: race.edition.registrationUrl } : {}) },
-];
-// schema.org only for races that exist: a sample race is described to nobody (CLAUDE.md 11).
-const jsonLd = race.isPlaceholder
-  ? undefined
-  : {
-      '@context': 'https://schema.org',
-      '@type': 'SportsEvent',
-      name: race.name,
-      startDate: race.edition.startDate,
-      eventStatus: `https://schema.org/Event${{ scheduled: 'Scheduled', cancelled: 'Cancelled', postponed: 'Postponed', finished: 'Scheduled' }[race.edition.status]}`,
-      location: { '@type': 'Place', name: race.place, address: { '@type': 'PostalAddress', addressRegion: race.region, addressCountry: race.countryCode } },
-      ...(race.organizer ? { organizer: { '@type': 'Organization', name: race.organizer } } : {}),
-    };
+const facts = race
+  ? [
+      { label: 'Data', value: formatDate(race.edition.startDate, 'ca') },
+      { label: 'Lloc', value: race.place },
+      { label: 'Estat', value: STATUS[race.edition.status] },
+      { label: 'Organitza', value: race.organizer },
+      { label: 'Inscripció', value: race.edition.registrationUrl ? 'Oberta' : null, ...(race.edition.registrationUrl ? { href: race.edition.registrationUrl } : {}) },
+    ]
+  : [];
+// schema.org only for races that exist and may be published: a sample race, or one read from a calendar that
+// has not given its permission, is described to nobody (CLAUDE.md 11).
+const event = (name: string, date: string, place: string | null, organiser: string | null, status: string, website?: string | null) => ({
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  name,
+  startDate: date,
+  eventStatus: `https://schema.org/Event${status}`,
+  ...(place ? { location: { '@type': 'Place', name: place, address: { '@type': 'PostalAddress', addressRegion: 'Catalunya', addressCountry: 'ES' } } } : {}),
+  ...(organiser ? { organizer: { '@type': 'Organization', name: organiser } } : {}),
+  ...(website ? { url: website } : {}),
+});
+const jsonLd = race
+  ? race.isPlaceholder
+    ? undefined
+    : event(race.name, race.edition.startDate, race.place, race.organizer, { scheduled: 'Scheduled', cancelled: 'Cancelled', postponed: 'Postponed', finished: 'Scheduled' }[race.edition.status])
+  : entry && isOpen(entry)
+    ? event(entry.name, entry.date, placeOf(entry), entry.organiser, entry.status === 'postponed' ? 'Postponed' : entry.status === 'cancelled' ? 'Cancelled' : 'Scheduled', entry.website)
+    : undefined;
+const pending = entry && !isOpen(entry);
 ---
 
-<Site
-  title={race.name}
-  description={`${race.name}, ${race.place}. ${sentences.join(' ')}`}
-  terrain={race.terrain}
-  placeholder={race.isPlaceholder}
-  credits={[route.credit, ICGC_CREDIT]}
-  notice={race.isPlaceholder ? (race.notice ?? SAMPLE_NOTICE) : undefined}
-  image={ogOf(`curses/${race.slug}`)}
-  jsonLd={jsonLd}
->
-  <Split ratio="3:2">
-    <Stack gap={5}>
-      <Heading level={1} size="lg" kicker={`Cursa · ${course.name}`}>{race.name}</Heading>
-      <Cluster><TerrainTag terrain={race.terrain} /></Cluster>
-      <Text size="lg" measure>{sentences[0]} Fes scroll per recórrer-la quilòmetre a quilòmetre.</Text>
-      <Facts facts={facts} />
-    </Stack>
-    <Bib slot="aside" number={race.edition.bib} terrain={race.terrain} label={race.name} />
-  </Split>
-  <RouteExperience route={route} transition={`profile-race-${race.slug}`} />
-  <RouteSheet route={route} />
-</Site>
+{
+  race && route && course ? (
+    <Site
+      title={race.name}
+      description={`${race.name}, ${race.place}. ${sentences.join(' ')}`}
+      terrain={race.terrain}
+      placeholder={race.isPlaceholder}
+      credits={[route.credit, ICGC_CREDIT]}
+      notice={race.isPlaceholder ? (race.notice ?? SAMPLE_NOTICE) : undefined}
+      image={ogOf(`curses/${race.slug}`)}
+      jsonLd={jsonLd}
+    >
+      <Split ratio="3:2">
+        <Stack gap={5}>
+          <Heading level={1} size="lg" kicker={`Cursa · ${course.name}`}>{race.name}</Heading>
+          <Cluster><TerrainTag terrain={race.terrain} /></Cluster>
+          <Text size="lg" measure>{sentences[0]} Fes scroll per recórrer-la quilòmetre a quilòmetre.</Text>
+          <Facts facts={facts} />
+        </Stack>
+        <Bib slot="aside" number={race.edition.bib} terrain={race.terrain} label={race.name} />
+      </Split>
+      <RouteExperience route={route} transition={`profile-race-${race.slug}`} />
+      <RouteSheet route={route} />
+    </Site>
+  ) : entry ? (
+    <Site
+      title={entry.name}
+      description={`${entry.name}${placeOf(entry) ? `, ${placeOf(entry)}` : ''}, ${formatDate(entry.date, 'ca')}. Data, lloc, distàncies i web de la cursa, amb la font de cada dada.`}
+      terrain={entry.terrain ?? 'mixed'}
+      placeholder={pending}
+      credits={sourcesOf(entry).map((source) => `Calendari: ${source.name}`)}
+      notice={pending ? 'Versió de proves: aquesta cursa ve d’un calendari que encara no ens ha donat permís per mostrar-la. Se’n citen fets, amb enllaç a la font, i no és a la versió de producció.' : undefined}
+      jsonLd={jsonLd}
+    >
+      <CalendarRaceBody race={entry} today={today} />
+    </Site>
+  ) : null
+}

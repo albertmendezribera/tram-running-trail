@@ -1,6 +1,6 @@
 # E19 · D'on surten les curses del calendari
 
-**Estat:** explorada, amb una recomanació; cap dada importada · **Data:** 2026-11-15 · **Recomanació:** començar amb les dades obertes de Barcelona, demanar permís a la Federació Catalana d'Atletisme, i que el track vingui de cada organitzador
+**Estat:** explorada i importada a l'entorn de proves · **Data:** 2026-11-15 · **Decisió del titular:** posar-les totes, citant la font i enllaçant-hi; a producció només hi entren les de llicència oberta mentre les altres fonts no donin permís
 
 ## Pregunta
 
@@ -64,10 +64,35 @@ Copiar el calendari d'un agregador o d'una federació sense permís no és cap o
 > Gràcies,
 > [nom i contacte]
 
+## Què s'ha fet després (15 de novembre de 2026)
+
+El titular del projecte va decidir posar totes les curses, citant les fonts i enllaçant-hi, i afegir-hi Runnea i curses.cat.
+
+- `apps/web/scripts/import-calendar.mjs` llegeix quatre calendaris i n'escriu `apps/web/src/content/calendar.json`: **136 curses** de l'1 de gener de 2026 al 31 de desembre de 2027.
+
+| Font | Curses | Notes |
+|---|---|---|
+| Federació Catalana d'Atletisme | 102 | Ruta i trail. Se'n deixen fora 30: campionats d'Espanya i internacionals que es fan fora de Catalunya |
+| Curses.cat | 23 | Calendari d'una empresa de cronometratge de Girona, amb municipi, distàncies i web. Se'n deixen fora BTT, caminades, marxes i una cursa virtual |
+| Ajuntament de Barcelona | 12 | Les úniques amb llicència oberta (CC BY 4.0). 115 actes de l'agenda no són curses a peu |
+| Runnea | 7 | Només diu la província. Es llegeix el que publica per als cercadors (schema.org) |
+
+- **Una cursa que surt a dos calendaris és una sola entrada** amb les dues fonts (mateix dia, mateix municipi i noms que s'assemblen). N'hi ha 6 que surten a més d'una font.
+- **De cada cursa només fets:** nom, data, municipi, distàncies, organitzador i web. Cap text, cap imatge. La distància es llegeix del nom quan hi és («5 i 10 Km», «Mitja Marató»); 91 de 136 en tenen. **Cap té desnivell ni track.**
+- **El municipi i la comarca** surten de les dades obertes de la Generalitat («Municipis Catalunya Geo»); 128 de 136 hi casen.
+- **Cada fitxa diu d'on surt** cada cursa, amb enllaç a la pàgina de la font, la data de consulta i les condicions de cada font.
+- **A producció només hi entren les que té una font de llicència oberta** (les de Barcelona). La resta es veuen a l'entorn de proves, amb `noindex` i un avís, fins que la seva font doni permís. És la mateixa regla que ja tenen les sabatilles.
+
+**No s'ha importat:** la FEEC (l'agenda de competicions es carrega amb JavaScript i el calendari de caminades és un PDF de 2025), ni cap altra font de les no mirades.
+
+**Riscos que queden oberts** (`docs/revisio-legal.md`): l'avís legal de la FCA reserva tots els drets; ni Runnea ni curses.cat han estat avisats. Citar i enllaçar és de bona pràctica, però no és un permís.
+
 ## Què no s'ha verificat, i límits
 
 - **Les curses de la FEEC no s'han comptat**: només les caminades, i d'un PDF de 2025.
 - **Quantes de les 88 curses de ruta de la FCA són fora de Catalunya** no s'ha comptat; en una mostra de 12 n'hi havia 3.
 - **El total de curses populars que es fan a Catalunya en un any** no se sap. Les federacions només porten les que s'hi inscriuen; la majoria de curses de poble no hi són.
 - **Les condicions d'ús** de la FCA s'han llegit al seu avís legal; les de la FEEC, no.
-- **No s'ha importat res**: la interfície de la FCA s'ha consultat per comptar, i les respostes no són al repositori.
+- **Les dates poden canviar**: el calendari és una fotografia del dia de la consulta. No hi ha cap actualització automàtica; cal tornar a córrer l'importador.
+- **Cap cursa s'ha comprovat contra el web del seu organitzador.**
+- **Les curses de Runnea no tenen municipi**, només província, i tres no s'han pogut casar amb cap altra font.

@@ -4,6 +4,10 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Calendari (Fase 2).
+
+- `RaceRow`: propietat `compact`, per a llistes llargues, i `gainM` opcional (sense, la fila no reserva lloc per al desnivell).
+
 Moments firma M1 i M6.
 
 - `base.css`: transicions natives entre pàgines (`@view-transition`), sense fosa de la pàgina sencera i només sense moviment reduït (E11).

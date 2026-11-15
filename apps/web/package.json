@@ -10,6 +10,8 @@
     "deploy:staging": "sh scripts/deploy-staging.sh",
     "preview": "astro preview",
     "typecheck": "astro check",
+    "test": "node --test \"scripts/*.test.mjs\"",
+    "import-calendar": "node scripts/import-calendar.mjs",
     "test:visual": "playwright test",
     "test:visual:docker": "sh scripts/visual-docker.sh",
     "budget": "node scripts/check-budget.mjs",

@@ -16,7 +16,7 @@
 | 8 | Street View i fotos de Wikimedia | Correcte: només s'han mirat |
 | 9 | Tracks GPX | Correcte per als tres actuals; la pujada d'usuaris demanarà molt més |
 | 10 | Avís legal, privacitat i galetes | **No existeixen**: obligatoris abans de producció |
-| 11 | Curses reals (Fase 2) | Per decidir: la font de dades és una qüestió legal, no només tècnica |
+| 11 | Curses reals (Fase 2) | Importades de quatre calendaris per decisió del titular, citant i enllaçant. Només les de llicència oberta poden anar a producció |
 | 12 | Codi i tipografia | Correcte |
 
 ## 1 · Fotos de les marques a staging
@@ -101,6 +101,14 @@ Avui no hi ha res publicat a producció, i no s'hi pot publicar sense això:
 El calendari necessita centenars de curses. La data i el lloc d'una cursa són fets, però els calendaris de federacions i agregadors són bases de dades protegides, i els logotips i cartells tenen drets. Les opcions netes són: que cada organitzador doni les seves dades, un acord amb una federació, o dades obertes on n'hi hagi. Copiar el calendari d'un altre web no n'és una.
 
 La Marxa de les Tines surt ara amb el seu nom real. La pàgina diu que la data i el dorsal són de mostra, i no entra a producció. Per publicar-la com a cursa real caldrien la data, l'organitzador i, per cortesia, que ho sàpiga.
+
+### Actualització del 15 de novembre de 2026: el calendari
+
+El titular va decidir importar les curses de quatre calendaris citant la font i enllaçant-hi (E19): la Federació Catalana d'Atletisme, l'Ajuntament de Barcelona, Curses.cat i Runnea. Són 136 curses.
+
+- **Què s'hi ha fet per reduir el risc:** només fets (nom, data, municipi, distàncies, organitzador, web), cap text ni imatge; cada fitxa enllaça la pàgina de la font i en diu les condicions; les que no venen d'una font oberta porten `noindex` i **no entren a producció**.
+- **Què continua sent un risc:** l'avís legal de la FCA reserva tots els drets i només permet l'ús personal, i un calendari és una base de dades amb protecció pròpia. Citar i enllaçar no és un permís. Cap de les tres fonts no obertes ha estat avisada.
+- **Què cal per treure'l:** el correu a la FCA (l'esborrany és a E19) i un avís a Curses.cat i Runnea. Fins llavors, que es quedin a l'entorn de proves.
 
 ## 12 · Codi i tipografia
 

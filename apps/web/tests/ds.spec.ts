@@ -20,6 +20,7 @@ const PAGES = {
   'shoe-xray': '/ds/patterns/shoe-xray/',
   'shoe-sheet': '/ds/patterns/shoe-sheet/',
   'segmented-control': '/ds/interactive/segmented-control/',
+  select: '/ds/interactive/select/',
   'theme-toggle': '/ds/interactive/theme-toggle/',
   viewer: '/ds/interactive/viewer-3d-shell/',
 };

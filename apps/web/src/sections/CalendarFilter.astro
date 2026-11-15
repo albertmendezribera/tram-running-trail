@@ -1,0 +1,78 @@
+---
+import { formatMeasure } from '@tram/formats';
+import Select from '@tram/design-system/interactive/Select.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import type { CalendarRace } from '../content/calendar';
+
+export interface Props {
+  /** Every race the page lists: the filters are built from what they are. */
+  races: readonly CalendarRace[];
+}
+
+const { races } = Astro.props;
+const km = (value: number): string => formatMeasure(value, 'km', 'ca');
+/** A race is what its source calls it: a march, or a race on a ground the source names. */
+const typeOf = (race: CalendarRace): string => (race.kind === 'march' ? 'march' : (race.terrain ?? 'unknown'));
+const count = (is: (race: CalendarRace) => boolean): number => races.filter(is).length;
+const TYPES = [
+  { value: 'road', label: 'Asfalt' },
+  { value: 'trail', label: 'Muntanya' },
+  { value: 'mixed', label: 'Cros' },
+  { value: 'march', label: 'Marxes' },
+  { value: 'unknown', label: 'Terreny sense dada' },
+];
+// Edges in kilometres: a race is in a band when one of its distances is.
+const BANDS = [
+  { value: 'fins-5', label: `Fins a ${km(5)}`, from: 0, to: 5 },
+  { value: '5-10', label: `De ${km(5)} a ${km(10)}`, from: 5, to: 10 },
+  { value: '10-21', label: `De ${km(10)} a la mitja marató`, from: 10, to: 21.1 },
+  { value: '21-42', label: 'De la mitja a la marató', from: 21.1, to: 42.2 },
+  { value: 'ultra', label: 'Més que una marató', from: 42.2, to: Infinity },
+];
+const bandsOf = (race: CalendarRace): string[] => (race.distancesM.length ? BANDS.filter((band) => race.distancesM.some((m) => m / 1000 > band.from && m / 1000 <= band.to)).map((band) => band.value) : ['sense']);
+const comarques = [...new Set(races.map((race) => race.comarca).filter((c): c is string => Boolean(c)))].sort((a, b) => a.localeCompare(b, 'ca'));
+const types = [{ value: '', label: 'Tots els tipus' }, ...TYPES.filter((t) => count((r) => typeOf(r) === t.value) > 0).map((t) => ({ value: t.value, label: `${t.label} (${count((r) => typeOf(r) === t.value)})` }))];
+const bands = [
+  { value: '', label: 'Totes les distàncies' },
+  ...BANDS.filter((b) => count((r) => bandsOf(r).includes(b.value)) > 0).map((b) => ({ value: b.value, label: `${b.label} (${count((r) => bandsOf(r).includes(b.value))})` })),
+  ...(count((r) => !r.distancesM.length) ? [{ value: 'sense', label: `Distància sense dada (${count((r) => !r.distancesM.length)})` }] : []),
+];
+const places = [
+  { value: '', label: 'Totes les comarques' },
+  ...comarques.map((c) => ({ value: c, label: `${c} (${count((r) => r.comarca === c)})` })),
+  ...(count((r) => !r.comarca) ? [{ value: 'sense', label: `Comarca sense dada (${count((r) => !r.comarca)})` }] : []),
+];
+// What the filters match against, by the address of each race: its type, its bands of distance and its comarca.
+const index = Object.fromEntries(races.map((race) => [race.slug, [typeOf(race), bandsOf(race), race.comarca ?? 'sense']]));
+---
+
+<!--
+  The filters of the calendar (CLAUDE.md 8.3). The list is whole in the page; a small island hides what the
+  filters leave out, working over the index below. No source gives the climb, so there is no filter by it.
+-->
+<form class="filter" data-calendar-filter data-total={races.length}>
+  <script type="application/json" set:html={JSON.stringify(index)} />
+  <Stack gap={3}>
+    <Cluster gap={4} align="end">
+      <Select name="tipus" label="Tipus" options={types} value="" />
+      <Select name="distancia" label="Distància" options={bands} value="" />
+      <Select name="comarca" label="Comarca" options={places} value="" />
+      <Button type="button" variant="quiet"><span data-reset>Treu els filtres</span></Button>
+    </Cluster>
+    <Text size="sm" tone="muted"><span data-status role="status">{`${races.length} proves.`}</span> Cap font diu el desnivell: no es pot filtrar per ell.</Text>
+  </Stack>
+</form>
+
+<script>
+  import '../islands/calendar-filter.ts';
+</script>
+
+<style>
+  /* Until the island is ready, and without JavaScript, the filters would do nothing: they keep their place, so nothing moves, and are not shown. */
+  .filter:not([data-ready]) {
+    visibility: hidden;
+  }
+</style>

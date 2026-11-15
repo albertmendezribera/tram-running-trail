@@ -208,6 +208,44 @@ test.describe('Calendar (Phase 2)', () => {
     await expect(page.locator('main [data-month]').first()).not.toContainText('D+');
   });
 
+  test('filters the list by type, distance and comarca, says how many are left, and keeps the choice in the address', async ({ page }) => {
+    await open(page, PAGES.races);
+    const filter = page.locator('[data-calendar-filter][data-ready]');
+    await expect(filter).toBeVisible();
+    const status = filter.locator('[data-status]');
+    const shown = page.locator('main [data-race]:visible');
+    const all = await shown.count();
+    await expect(status).toHaveText(`${all} proves.`);
+    // Marches only: fewer rows, every one of them a march, and the months left empty are gone with their links.
+    await filter.locator('select[name="tipus"]').selectOption('march');
+    const marches = await shown.count();
+    expect(marches).toBeGreaterThan(10);
+    expect(marches).toBeLessThan(all);
+    await expect(status).toHaveText(`${marches} de ${all} proves.`);
+    await expect(page).toHaveURL(/\?tipus=march$/);
+    expect(await page.locator('main [data-month]:visible').count()).toBeLessThan(await page.locator('main [data-month]').count());
+    // With a comarca on top, the march of Pals is among what is left.
+    await filter.locator('select[name="comarca"]').selectOption('Baix Empordà');
+    await expect(page.locator('main [data-race]:visible a[href="/ca/curses/32a-marxa-dels-arrossars-2026/"]')).toBeVisible();
+    // A choice that leaves nothing says so, and taking the filters off brings everything back.
+    await filter.locator('select[name="distancia"]').selectOption('ultra');
+    await expect(status).toHaveText('Cap prova amb aquests filtres.');
+    await filter.getByRole('button', { name: 'Treu els filtres' }).click();
+    await expect(status).toHaveText(`${all} proves.`);
+    expect(await shown.count()).toBe(all);
+    await expect(page).toHaveURL(/\/ca\/curses\/$/);
+    // No source gives the climb, and the page says why there is no filter for it.
+    await expect(filter).toContainText('no es pot filtrar per ell');
+  });
+
+  test('a link to a filtered calendar opens it filtered', async ({ page }) => {
+    await open(page, `${PAGES.races}?tipus=trail&distancia=21-42`);
+    const filter = page.locator('[data-calendar-filter][data-ready]');
+    await expect(filter.locator('select[name="tipus"]')).toHaveValue('trail');
+    await expect(filter.locator('select[name="distancia"]')).toHaveValue('21-42');
+    await expect(filter.locator('[data-status]')).toHaveText(/^\d+ de \d+ proves\.$/);
+  });
+
   test('a race of the calendar gives its facts with their source, has no 3D to show, and is kept from search engines while its source has not agreed', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await open(page, '/ca/curses/42a-mitja-marato-de-sitges-i-quart-de-marato-2026/');

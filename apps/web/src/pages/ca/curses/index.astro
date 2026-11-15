@@ -10,6 +10,7 @@ import Text from '@tram/design-system/primitives/Text.astro';
 import { RACES, visible } from '../../../content';
 import { buildDay, CALENDAR_ACCESSED, CALENDAR_SOURCES, calendarRaces, isOpen } from '../../../content/calendar';
 import Site from '../../../layouts/Site.astro';
+import CalendarFilter from '../../../sections/CalendarFilter.astro';
 import CalendarList from '../../../sections/CalendarList.astro';
 import RaceList from '../../../sections/RaceList.astro';
 
@@ -52,23 +53,24 @@ const notice = pending
       </Band>
     )
   }
+  {calendar.length > 0 && <CalendarFilter races={calendar} />}
   {
     coming.length > 0 && (
-      <Band tone="plain" title={`Properes curses · ${coming.length}`}>
+      <Band tone="plain" title="Properes">
         <Stack gap={6}>
           <nav aria-label="Mesos del calendari">
             <Cluster>{months.map((month) => <Link href={month.href}>{month.label}</Link>)}</Cluster>
           </nav>
-          <CalendarList races={coming} level={3} />
+          <div data-calendar-list><CalendarList races={coming} level={3} /></div>
         </Stack>
       </Band>
     )
   }
   {
     run.length > 0 && (
-      <Band tone="alt" title={`Ja disputades · ${run.length}`}>
+      <Band tone="alt" title="Ja disputades">
         <Panel>
-          <CalendarList races={run} level={3} anchor="fet" />
+          <div data-calendar-list><CalendarList races={run} level={3} anchor="fet" /></div>
         </Panel>
       </Band>
     )

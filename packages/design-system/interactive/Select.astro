@@ -1,0 +1,82 @@
+---
+import Icon from '../primitives/Icon.astro';
+
+export interface Option {
+  value: string;
+  label: string;
+}
+
+export interface Props {
+  /** Name of the field in its form. */
+  name: string;
+  /** What is being chosen, written over the field. */
+  label: string;
+  options: readonly Option[];
+  /** The option selected. */
+  value?: string;
+}
+
+// The browser's own select: on a phone it opens the system's picker, and the keyboard, the
+// focus and the `change` event come from the browser.
+const { name, label, options, value } = Astro.props;
+---
+
+<label class="field">
+  <span class="label" data-type="text-xs">{label}</span>
+  <span class="box">
+    <select class="select" name={name} data-type="text-sm">
+      {options.map((o) => <option value={o.value} selected={o.value === value}>{o.label}</option>)}
+    </select>
+    <span class="mark"><Icon name="arrow-down" size="sm" /></span>
+  </span>
+</label>
+
+<style>
+  .field {
+    display: grid;
+    gap: var(--tram-sys-space-1);
+    min-inline-size: 0;
+  }
+
+  .label {
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .box {
+    position: relative;
+    display: grid;
+  }
+
+  .select {
+    min-block-size: var(--tram-sys-space-9);
+    min-inline-size: 0;
+    padding-inline: var(--tram-sys-space-3) var(--tram-sys-space-8);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    border-radius: var(--tram-sys-radius-soft);
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface);
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .select:hover {
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .select:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  /* The arrow says it opens; it is not a button of its own. */
+  .mark {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: var(--tram-sys-space-3);
+    display: grid;
+    align-items: center;
+    color: var(--tram-sys-text);
+    pointer-events: none;
+  }
+</style>

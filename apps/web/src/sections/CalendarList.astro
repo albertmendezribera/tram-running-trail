@@ -18,6 +18,10 @@ const { races, level = 2, anchor = 'mes' } = Astro.props;
 const STATE = { postponed: ' (ajornada)', cancelled: ' (suspesa)' } as const;
 const km = (metres: number | undefined): number | null => (metres === undefined ? null : Number((metres / 1000).toFixed(2)));
 const rowOf = (race: CalendarRace) => ({
+  slug: race.slug,
+  props: propsOf(race),
+});
+const propsOf = (race: CalendarRace) => ({
   href: `/ca/curses/${race.slug}/`,
   name: `${race.name}${race.status ? STATE[race.status] : ''}`,
   place: placeOf(race) ?? 'Lloc sense dada',
@@ -41,7 +45,7 @@ for (const race of races) {
         <Stack gap={3}>
           <Heading level={level} size="sm">{month.title}</Heading>
           <Stack gap={0} as="ul">
-            {month.rows.map((row) => <li><RaceRow {...row} compact /></li>)}
+            {month.rows.map((row) => <li data-race={row.slug}><RaceRow {...row.props} compact /></li>)}
           </Stack>
         </Stack>
       </section>

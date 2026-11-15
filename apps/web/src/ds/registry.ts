@@ -14,6 +14,7 @@ import MomentM2 from './fiches/MomentM2.astro';
 import RaceRowFiche from './fiches/RaceRowFiche.astro';
 import RoutePlateFiche from './fiches/RoutePlateFiche.astro';
 import SegmentedFiche from './fiches/SegmentedFiche.astro';
+import SelectFiche from './fiches/SelectFiche.astro';
 import ShoeSheetFiche from './fiches/ShoeSheetFiche.astro';
 import ShoeXrayFiche from './fiches/ShoeXrayFiche.astro';
 import SiteChromeFiche from './fiches/SiteChromeFiche.astro';
@@ -42,6 +43,7 @@ export const FICHES = [
   { slug: 'patterns/shoe-xray', title: 'ShoeXray', Page: ShoeXrayFiche },
   { slug: 'patterns/shoe-sheet', title: 'Fitxa de sabatilla', Page: ShoeSheetFiche },
   { slug: 'interactive/segmented-control', title: 'SegmentedControl', Page: SegmentedFiche },
+  { slug: 'interactive/select', title: 'Select', Page: SelectFiche },
   { slug: 'interactive/theme-toggle', title: 'ThemeToggle', Page: ThemeToggleFiche },
   { slug: 'interactive/viewer-3d-shell', title: 'Viewer3DShell', Page: ViewerFiche },
   { slug: 'moments/de-la-quadricula-a-la-corba', title: 'M1 · De la quadrícula a la corba de nivell', Page: MomentM1 },

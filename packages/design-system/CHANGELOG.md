@@ -7,6 +7,8 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 Calendari (Fase 2).
 
 - `RaceRow`: propietat `compact`, per a llistes llargues, i `gainM` opcional (sense, la fila no reserva lloc per al desnivell).
+- `Select` (interactiu nou, amb fitxa): triar entre més de quatre opcions, amb el selector del navegador.
+- `base.css`: el que porta `hidden` no es dibuixa, sigui quin sigui el `display` del component.
 
 Moments firma M1 i M6.
 

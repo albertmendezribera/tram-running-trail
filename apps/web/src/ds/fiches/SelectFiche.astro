@@ -1,0 +1,43 @@
+---
+import Select from '@tram/design-system/interactive/Select.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const COMARQUES = [
+  { value: '', label: 'Totes les comarques' },
+  { value: 'Baix Empordà', label: 'Baix Empordà' },
+  { value: 'Garraf', label: 'Garraf' },
+  { value: 'Vallès Oriental', label: 'Vallès Oriental' },
+];
+const code = `<Select
+  name="comarca"
+  label="Comarca"
+  value=""
+  options={[{ value: '', label: 'Totes les comarques' }, { value: 'Garraf', label: 'Garraf' }]}
+/>`;
+---
+
+<Fiche
+  group="Interactiu"
+  title="Select"
+  use="Triar una opció entre moltes, o entre més de quatre: una comarca, una franja de distàncies."
+  avoid="Quatre opcions o menys que convé veure totes alhora: és un SegmentedControl."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Estats</h2>
+    <div class="fiche-row" data-testid="states">
+      <Select name="states" label="Comarca" value="Garraf" options={COMARQUES} />
+      <Select name="unset" label="Comarca" options={COMARQUES} />
+    </div>
+    <p class="fiche-note">És el selector del navegador: al mòbil obre el del sistema. L'etiqueta va sempre a sobre, visible. No té estats de càrrega ni d'error propis.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">
+      {MODES.map((m, i) => <Mode {...m}><Select name={`mode-${i}`} label="Comarca" value="Garraf" options={COMARQUES} /></Mode>)}
+    </div>
+  </section>
+</Fiche>

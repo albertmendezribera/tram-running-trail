@@ -13,6 +13,11 @@
   code {
     font: inherit;
   }
+
+  /* What is hidden stays hidden, whatever display a component gives its element: a filter hides rows and links. */
+  [hidden] {
+    display: none !important;
+  }
 }
 
 /*

@@ -67,7 +67,7 @@ Copiar el calendari d'un agregador o d'una federació sense permís no és cap o
 ## Què no s'ha verificat, i límits
 
 - **Les curses de la FEEC no s'han comptat**: només les caminades, i d'un PDF de 2025.
-- **Quantes de les 88 curses de ruta de la FCA són fora de Catalunya** no s'ha comptat; en una mostra de 12 n'hi havia 4.
+- **Quantes de les 88 curses de ruta de la FCA són fora de Catalunya** no s'ha comptat; en una mostra de 12 n'hi havia 3.
 - **El total de curses populars que es fan a Catalunya en un any** no se sap. Les federacions només porten les que s'hi inscriuen; la majoria de curses de poble no hi són.
 - **Les condicions d'ús** de la FCA s'han llegit al seu avís legal; les de la FEEC, no.
 - **No s'ha importat res**: la interfície de la FCA s'ha consultat per comptar, i les respostes no són al repositori.

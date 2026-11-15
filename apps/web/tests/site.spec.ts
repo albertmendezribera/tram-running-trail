@@ -12,7 +12,7 @@ const PAGES = {
   compare: COMPARE,
 };
 // These carry a route to run: their long scroll and their 3D are covered by the M2 tests.
-const ROUTE_PAGES = { 'race-trail': '/ca/curses/marxa-de-les-tines/', 'race-road': '/ca/curses/easy-run-sils-10k/', 'route-flat': '/ca/rutes/sils/' };
+const ROUTE_PAGES = { 'race-trail': '/ca/curses/marxa-de-les-tines/', 'route-flat': '/ca/rutes/sils/' };
 
 const open = async (page: Page, path: string): Promise<void> => {
   await page.goto(path);
@@ -46,7 +46,7 @@ for (const [name, path] of Object.entries({ ...PAGES, ...ROUTE_PAGES })) {
 test.describe('Sample content', () => {
   test('a sample race says so, is not indexable and is described to no search engine', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await open(page, ROUTE_PAGES['race-road']);
+    await open(page, ROUTE_PAGES['race-trail']);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
     await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0);
     await expect(page.locator('footer')).toContainText('són de mostra');
@@ -62,6 +62,10 @@ test.describe('Sample content', () => {
     await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
     await expect(main(page)).toContainText('9,99 km');
     await expect(main(page).getByText('Asfalt', { exact: true })).toHaveCount(0);
+    // A training run is a route and says what it was: it is not listed as a race.
+    await expect(main(page)).toContainText('Gravada en un entrenament suau: «Easy Run Sils 10k».');
+    await open(page, PAGES.races);
+    await expect(main(page)).not.toContainText('Sils');
   });
 
   test('the shoe pages are kept from search engines until their names are cleared', async ({ page }) => {
@@ -74,11 +78,11 @@ test.describe('Sample content', () => {
 });
 
 test.describe('Home and lists', () => {
-  test('the home leads to both races, every route and the 3D of a route', async ({ page }) => {
+  test('the home leads to the race, every route and the 3D of a route', async ({ page }) => {
     await open(page, PAGES.home);
     await expect(page.getByRole('img', { name: /Plànol de Palamós/ })).toBeVisible();
     await expect(page.getByRole('link', { name: /Recorre Calonge en 3D/ })).toHaveAttribute('href', '/ca/rutes/calonge/');
-    await expect(page.locator('main a[href^="/ca/curses/"][href$="/"]:not([href="/ca/curses/"])')).toHaveCount(2);
+    await expect(page.locator('main a[href^="/ca/curses/"][href$="/"]:not([href="/ca/curses/"])')).toHaveCount(1);
     await expect(page.locator('a[href="/ca/rutes/sils/"]')).toHaveCount(1);
     await expect(page.locator('a[href="/ca/rutes/palamos/"]')).toHaveCount(1);
   });
@@ -88,11 +92,11 @@ test.describe('Home and lists', () => {
     await expect(page.locator('header nav a[aria-current="page"]')).toHaveText('Sabatilles');
   });
 
-  test('a flat race is drawn flat next to a mountain one', async ({ page }) => {
-    await open(page, PAGES.races);
-    // Both silhouettes share one vertical scale: the flat one uses a sliver of its box.
+  test('a flat route is drawn flat next to a mountain one', async ({ page }) => {
+    await open(page, PAGES.routes);
+    // Every silhouette shares one vertical scale: a flat one uses a sliver of its box.
     const heights = await page.locator('main a svg.silhouette path:first-of-type').evaluateAll((paths) => paths.map((p) => (p as SVGPathElement).getBBox().height));
-    expect(heights).toHaveLength(2);
+    expect(heights).toHaveLength(3);
     expect(Math.min(...heights)).toBeLessThan(Math.max(...heights) / 8);
   });
 });

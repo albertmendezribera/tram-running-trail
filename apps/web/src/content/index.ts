@@ -21,6 +21,8 @@ export interface Route {
   source: 'gpx' | 'organizer' | 'editorial';
   /** Where the track comes from, in words, for the page. */
   credit: string;
+  /** What the outing was, when it is known: said on the page of the route. */
+  origin?: string;
   isPlaceholder: boolean;
 }
 
@@ -51,9 +53,9 @@ export interface Race {
 const GPX_CREDIT = 'Recorregut: GPX d’una sortida real. Només se’n publiquen la distància, l’altitud i el traçat.';
 
 export const ROUTES: Route[] = [
-  { slug: 'calonge', name: 'Calonge', place: 'Calonge, Baix Empordà', profile: CALONGE, plate: calongePlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, isPlaceholder: false },
+  { slug: 'calonge', name: 'Calonge', place: 'Calonge, Baix Empordà', profile: CALONGE, plate: calongePlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, origin: 'Gravada a la Marxa de les Tines.', isPlaceholder: false },
   { slug: 'palamos', name: 'Palamós', place: 'Palamós, Baix Empordà', profile: PALAMOS, plate: palamosPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, isPlaceholder: false },
-  { slug: 'sils', name: 'Sils', place: 'Sils, la Selva', profile: SILS, plate: silsPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, isPlaceholder: false },
+  { slug: 'sils', name: 'Sils', place: 'Sils, la Selva', profile: SILS, plate: silsPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, origin: 'Gravada en un entrenament suau: «Easy Run Sils 10k».', isPlaceholder: false },
 ];
 
 // The figures of a course come from its track, never typed by hand.
@@ -62,8 +64,9 @@ function courseOf(name: string, route: string, profile: readonly ProfilePoint[])
   return { name, distanceM: Math.round(summary.distanceKm * 1000), elevationGainM: Math.round(summary.gainM), route };
 }
 
-// Sample races: the routes are real, and so are their names (a march and a training run), but the
-// dates and bibs are not. They exist to build the race page, are marked as placeholders and never reach production.
+// A sample race: its route is real, and so is its name (the march the track was recorded at), but its
+// date and bib are not. It exists to build the race page, is marked as a placeholder and never reaches
+// production. The run at Sils was a training run, not a race: it is a route and nothing else.
 export const RACES: Race[] = [
   {
     slug: 'marxa-de-les-tines',
@@ -79,21 +82,6 @@ export const RACES: Race[] = [
     isPlaceholder: true,
     edition: { year: 2027, startDate: '2027-03-14', status: 'scheduled', registrationUrl: null, bib: 1427 },
     courses: [courseOf('12 km', 'calonge', CALONGE)],
-  },
-  {
-    slug: 'easy-run-sils-10k',
-    // A training run, shown as a race to build the race page with a flat route.
-    name: 'Easy Run Sils 10k',
-    notice: 'Versió de proves: és un entrenament real, un rodatge suau de 10 km a Sils, mostrat com a cursa per provar la pàgina. La data i el dorsal són de mostra.',
-    terrain: 'road',
-    countryCode: 'ES',
-    region: 'Girona',
-    place: 'Sils, la Selva',
-    organizer: null,
-    source: 'editorial',
-    isPlaceholder: true,
-    edition: { year: 2027, startDate: '2027-04-11', status: 'scheduled', registrationUrl: null, bib: 208 },
-    courses: [courseOf('10 km', 'sils', SILS)],
   },
 ];
 

@@ -7,7 +7,7 @@
 | Peça | On | Estat |
 |---|---|---|
 | Portada | `/ca/` | Feta: plànol de Calonge, curses i rutes |
-| Dues curses (muntanya i asfalt) amb visor 3D, perfil i full de resultats | `/ca/curses/marxa-de-les-tines/`, `/ca/curses/easy-run-sils-10k/` | Fetes sobre les dues sortides reals: la Marxa de les Tines (Calonge) i un entrenament a Sils. **Continuen sent de mostra**: els noms són reals, però la data i el dorsal no, i estan marcades `isPlaceholder` |
+| Una cursa de muntanya amb visor 3D, perfil i full de resultats. **Falta la d'asfalt** que demana la fase: la sortida de Sils era un entrenament, no una cursa, i ara només és una ruta | `/ca/curses/marxa-de-les-tines/` | Feta sobre la sortida real a la Marxa de les Tines (Calonge). **Continua sent de mostra**: el nom és real, però la data i el dorsal no, i està marcada `isPlaceholder` |
 | Tres rutes reals | `/ca/rutes/calonge/`, `/ca/rutes/sils/`, `/ca/rutes/palamos/` | Fetes. Palamós és la primera de poble i de costa: s'ha afegit només amb el generador (E18, «Afegir una ruta») |
 | Llistes | `/ca/curses/`, `/ca/rutes/`, `/ca/sabatilles/` | Fetes |
 | Dues sabatilles reals amb radiografia, vista 3D, fitxa tècnica i puntuacions | `/ca/sabatilles/nike/vaporfly-4/`, `/ca/sabatilles/hoka/speedgoat-6/` | Fetes |

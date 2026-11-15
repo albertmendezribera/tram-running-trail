@@ -28,7 +28,7 @@ L'SVG propi. La imatge és gairebé tota dibuix (perfil, traçat, siluetes), que
 - **Una ruta plana es dibuixa plana**: la caixa del perfil val 100 m com a mínim, igual que a la pàgina.
 - **La comparació** porta les dues sabatilles de perfil, una sobre l'altra i taló amb taló, com la radiografia, i pes i drop de totes dues.
 
-![Les imatges de la Marxa de les Tines, Easy Run Sils 10k, la ruta de Palamós i la comparació](E14/og.png)
+![Les imatges de la Marxa de les Tines, la ruta de Sils, la ruta de Palamós i la comparació](E14/og.png)
 
 ## Què no s'ha verificat, i límits
 
@@ -36,4 +36,4 @@ L'SVG propi. La imatge és gairebé tota dibuix (perfil, traçat, siluetes), que
 - **El pes de la lletra no és el de la pàgina.** Els fitxers de font són variables, i la llibreria només en sap dibuixar el pes per defecte: 700 per a la lletra de dorsal (la pàgina fa servir 800) i 400 per al text. La de dorsal s'engruixeix amb un traç del mateix color perquè s'hi acosti. Per tenir el pes exacte caldria afegir una font estàtica.
 - **Només mode clar.** No hi ha versió de nit.
 - **La portada, les llistes i les fitxes de sabatilla no tenen imatge pròpia.**
-- **Les curses de mostra també en tenen**, amb el seu nom. No entren a producció.
+- **La cursa de mostra també en té**, amb el seu nom. No entra a producció.

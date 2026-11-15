@@ -23,6 +23,8 @@ export interface CalendarRace {
   region?: string;
   /** What is underfoot, where a source says it. */
   terrain: Terrain | null;
+  /** A march or a walk: on foot, and not against the clock. Left out, it is a race. */
+  kind?: 'march';
   /** Postponed or cancelled, where the source says so. */
   status?: 'postponed' | 'cancelled';
   /** Every distance the source gives, in metres. Empty when it gives none: never estimated. */
@@ -38,8 +40,11 @@ export const CALENDAR_ACCESSED = data.accessed;
 export const PLACES_SOURCE = data.places as CalendarSource;
 const ALL = data.races as CalendarRace[];
 
-/** Calendars published under an open licence. A race read only from the others waits for their permission to reach production. */
-const OPEN = new Set(['bcn']);
+/**
+ * What may reach production: calendars published under an open licence, and what an organiser says of its own
+ * race on its own page. A race read only from the others waits for their permission.
+ */
+const OPEN = new Set(['bcn', 'own']);
 export const isOpen = (race: CalendarRace): boolean => race.sources.some((source) => OPEN.has(source.id));
 
 /** Staging shows every race; a production build only those an open source gives (docs/revisio-legal.md). */

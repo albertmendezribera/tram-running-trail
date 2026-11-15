@@ -104,11 +104,12 @@ La Marxa de les Tines surt ara amb el seu nom real. La pàgina diu que la data i
 
 ### Actualització del 15 de novembre de 2026: el calendari
 
-El titular va decidir importar les curses de quatre calendaris citant la font i enllaçant-hi (E19): la Federació Catalana d'Atletisme, l'Ajuntament de Barcelona, Curses.cat i Runnea. Són 136 curses.
+El titular va decidir importar les curses de diversos calendaris citant la font i enllaçant-hi (E19): la Federació Catalana d'Atletisme, l'Ajuntament de Barcelona, Curses.cat, Runnea i, en una segona tanda, gotrail.run i el circuit de caminades de resistència de la FEEC. Són 326 proves, 155 de les quals venen de gotrail, un agregador comercial que reserva tots els drets: és la part amb més risc.
 
 - **Què s'hi ha fet per reduir el risc:** només fets (nom, data, municipi, distàncies, organitzador, web), cap text ni imatge; cada fitxa enllaça la pàgina de la font i en diu les condicions; les que no venen d'una font oberta porten `noindex` i **no entren a producció**.
 - **Què continua sent un risc:** l'avís legal de la FCA reserva tots els drets i només permet l'ús personal, i un calendari és una base de dades amb protecció pròpia. Citar i enllaçar no és un permís. Cap de les tres fonts no obertes ha estat avisada.
-- **Què cal per treure'l:** el correu a la FCA (l'esborrany és a E19) i un avís a Curses.cat i Runnea. Fins llavors, que es quedin a l'entorn de proves.
+- **Què cal per treure'l:** el correu a la FCA (l'esborrany és a E19) i un avís a Curses.cat, Runnea, gotrail i la FEEC. Fins llavors, que es quedin a l'entorn de proves.
+- **Què s'ha respectat:** dues empreses de cronometratge (ChampionChip i Lasttiming) prohibeixen al seu `robots.txt` l'accés als agents d'Anthropic, i no s'han llegit.
 
 ## 12 · Codi i tipografia
 

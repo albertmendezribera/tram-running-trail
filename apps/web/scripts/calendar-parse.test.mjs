@@ -39,6 +39,13 @@ describe('the same race in two calendars', () => {
     assert.ok(alike('103a Allianz Jean Bouin (RFEA)', '103a Cursa Allianz Jean Bouin - Trofeu Internacional Ciutat de Barcelona'));
     assert.ok(alike('B100 Cursa dels Nassos 2026 - Sant Silvestre de Barcelona', 'Cursa dels Nassos'));
     assert.ok(!alike('46a Cursa Popular de Sant Martí', '38a Milla de la Sagrada Familia'));
+    // A name that looks like a Roman numeral is still a name; an edition written in one is not.
+    assert.ok(alike('Up Xic Trail', 'Up Xic Trail'));
+    assert.ok(alike('XXII Cursa de les Dones', '22a Cursa de les Dones 2026'));
+    assert.ok(!alike('Up Xic Trail', 'Historic Trail Calafell'));
+    assert.ok(alike('13a Cursa dels 3 Turons - La Diablada 2026', 'Cros 3Turons-La Diablada'));
+    // The words every race has do not make two races the same one.
+    assert.ok(!alike('Cursa de la Dona', 'Cursa de Sant Esteve'));
   });
 
   it('reads names written for a web page', () => {

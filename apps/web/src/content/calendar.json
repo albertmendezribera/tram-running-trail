@@ -22,6 +22,21 @@
    "name": "Runnea",
    "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/",
    "terms": "Calendari d’un mitjà. Se’n citen fets i s’hi enllaça."
+  },
+  "gotrail": {
+   "name": "gotrail.run",
+   "url": "https://gotrail.run/trail-running-calendar/spain/cataluna",
+   "terms": "Calendari d’un agregador de curses de muntanya. Tots els drets reservats pel seu titular: se’n citen fets i s’hi enllaça."
+  },
+  "feec": {
+   "name": "FEEC · Circuit Català de Caminades de Resistència",
+   "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf",
+   "terms": "Calendari oficial del circuit, en PDF. Se’n citen fets i s’hi enllaça."
+  },
+  "own": {
+   "name": "Web de l’organitzador",
+   "url": "",
+   "terms": "Llegit a la pàgina de qui organitza la prova."
   }
  },
  "places": {
@@ -344,6 +359,29 @@
    ]
   },
   {
+   "slug": "14a-travessa-rubi-montserrat-2026",
+   "name": "14a Travessa Rubí-Montserrat",
+   "date": "2026-03-01",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "status": "cancelled",
+   "distancesM": [
+    46000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
    "slug": "30a-mitja-marato-de-la-garrotxa-campionat-territorial-2026",
    "name": "30a Mitja Marató de La Garrotxa (Campionat Territorial)",
    "date": "2026-03-01",
@@ -381,6 +419,28 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/oli-trail-montserrat-promocio/"
+    }
+   ]
+  },
+  {
+   "slug": "26a-marxa-dels-castells-de-la-segarra-2026",
+   "name": "26a Marxa dels Castells de la Segarra",
+   "date": "2026-03-08",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    56000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
     }
    ]
   },
@@ -426,6 +486,28 @@
    ]
   },
   {
+   "slug": "11a-marxa-del-setge-de-cardona-2026",
+   "name": "11a Marxa del Setge de Cardona",
+   "date": "2026-03-15",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    52000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
    "slug": "campionat-despanya-de-marato-absolut-i-master-zurich-marato-de-barcelo-2026",
    "name": "Campionat d’Espanya de Marató Absolut i Màster (Zurich Marató de Barcelona)",
    "date": "2026-03-15",
@@ -462,6 +544,28 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/petita-jab-trail-ccp/"
+    }
+   ]
+  },
+  {
+   "slug": "10a-travessada-molins-de-rei-a-vilafranca-de-penedes-2026",
+   "name": "10a Travessada Molins de Rei a Vilafranca de Penedès",
+   "date": "2026-03-22",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    45590
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
     }
    ]
   },
@@ -504,6 +608,28 @@
    ]
   },
   {
+   "slug": "15a-almogaver-2026",
+   "name": "15a Almogàver",
+   "date": "2026-03-28",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    61000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
    "slug": "26a-cursa-de-martorell-5-km-2026",
    "name": "26a Cursa de Martorell (5 Km)",
    "date": "2026-03-29",
@@ -521,6 +647,28 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/26a-cursa-de-martorell-5-km/"
+    }
+   ]
+  },
+  {
+   "slug": "16a-caminada-carenes-2026",
+   "name": "16a Caminada Carenes",
+   "date": "2026-04-11",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    52000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
     }
    ]
   },
@@ -590,6 +738,28 @@
    ]
   },
   {
+   "slug": "23a-riudoms-la-mola-riudoms-2026",
+   "name": "23a Riudoms - la Mola - Riudoms",
+   "date": "2026-04-19",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    53000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
    "slug": "campionat-de-catalunya-de-milla-urbana-absolut-i-master-2026",
    "name": "Campionat de Catalunya de Milla Urbana Absolut i Màster",
    "date": "2026-04-19",
@@ -645,6 +815,28 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/la-bastarda-2/"
+    }
+   ]
+  },
+  {
+   "slug": "17a-cinc-cims-2026",
+   "name": "17a Cinc Cims",
+   "date": "2026-04-26",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    53000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
     }
    ]
   },
@@ -716,6 +908,28 @@
    ]
   },
   {
+   "slug": "22a-marxa-de-resistencia-7-cims-2026",
+   "name": "22a Marxa de resistència 7 Cims",
+   "date": "2026-05-03",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    54700
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
    "slug": "30a-cursa-solidaria-de-cardedeu-10-km-circuit-mixte-2026",
    "name": "30a Cursa Solidària de Cardedeu (10 Km circuit mixte)",
    "date": "2026-05-03",
@@ -755,6 +969,28 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/34a-milla-urbana-vila-de-castellar-2/"
+    }
+   ]
+  },
+  {
+   "slug": "36a-la-romanica-2026",
+   "name": "36a La Romànica",
+   "date": "2026-05-09",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    79000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
     }
    ]
   },
@@ -839,6 +1075,28 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/16a-cursa-nocturna-de-lhospitalet-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "50a-travessa-del-montseny-2026",
+   "name": "50a Travessa del Montseny",
+   "date": "2026-05-16",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    47000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
     }
    ]
   },
@@ -1049,6 +1307,50 @@
    ]
   },
   {
+   "slug": "29a-caminada-reus-prades-reus-2026",
+   "name": "29a Caminada\"Reus - Prades - Reus\"",
+   "date": "2026-06-07",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    54800
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
+   "slug": "2a-marxa-barcelona-montserrat-2026",
+   "name": "2a Marxa Barcelona - Montserrat",
+   "date": "2026-06-13",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    62000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
    "slug": "8a-milla-del-foc-2026",
    "name": "8a Milla del Foc",
    "date": "2026-06-13",
@@ -1109,6 +1411,28 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/10a-milla-urbana-de-canet-de-mar/"
+    }
+   ]
+  },
+  {
+   "slug": "19a-transfronterera-cap-de-rec-2026",
+   "name": "19a Transfronterera Cap de Rec",
+   "date": "2026-06-20",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    49000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
     }
    ]
   },
@@ -1217,6 +1541,50 @@
    ]
   },
   {
+   "slug": "4a-transmontserrat-2026",
+   "name": "4a TransMontserrat",
+   "date": "2026-09-12",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    49720
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
+   "slug": "47a-matagalls-montserrat-2026",
+   "name": "47a Matagalls - Montserrat",
+   "date": "2026-09-19",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    83400
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
    "slug": "48a-cursa-de-la-merce-bimbo-global-race-10-km-2026",
    "name": "48a Cursa de la Mercè Bimbo Global Race (10 Km)",
    "date": "2026-09-20",
@@ -1234,6 +1602,28 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/48a-cursa-de-la-merce-bimbo-global-race-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "34a-marxa-rasos-manresa-2026",
+   "name": "34a Marxa Rasos Manresa",
+   "date": "2026-09-26",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    80500
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
     }
    ]
   },
@@ -1302,6 +1692,48 @@
    ]
   },
   {
+   "slug": "24a-trenkakames-2026",
+   "name": "24a Trenkakames",
+   "date": "2026-10-03",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    55000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
+   "slug": "56e-cros-ciutat-de-mataro-2026",
+   "name": "56è Cros Ciutat de Mataró",
+   "date": "2026-10-04",
+   "town": "Mataró",
+   "comarca": "Maresme",
+   "lat": 41.53981,
+   "lon": 2.4449,
+   "terrain": "mixed",
+   "status": "cancelled",
+   "distancesM": [],
+   "organiser": "GA Lluïsos Mataró",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/56e-cros-ciutat-de-mataro/"
+    }
+   ]
+  },
+  {
    "slug": "la-megalitica-de-tossa-de-mar-2026",
    "name": "La Megalítica de Tossa de Mar",
    "date": "2026-10-11",
@@ -1317,6 +1749,69 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/la-megalitica-de-tossa-de-mar-2/"
+    }
+   ]
+  },
+  {
+   "slug": "11a-la-mola-santa-2026",
+   "name": "11a La Mola - Santa",
+   "date": "2026-10-17",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    50000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
+   "slug": "3r-cros-de-castello-dempuries-2026",
+   "name": "3r Cros de Castelló d’Empúries",
+   "date": "2026-10-17",
+   "town": "Castelló d'Empúries",
+   "comarca": "Alt Empordà",
+   "lat": 42.25858,
+   "lon": 3.07479,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "Consell Esportiu de l’Alt Empordà",
+   "website": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&amp;id_act=1368&amp;nom_jornada=4t-Cros-Castello-dEmpuries&amp;id_jornada=657",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/3r-cros-de-castello-dempuries/"
+    }
+   ]
+  },
+  {
+   "slug": "12a-marxa-de-resistencia-la-llopa-2026",
+   "name": "12a Marxa de Resistència La Llopa",
+   "date": "2026-10-18",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    54000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
     }
    ]
   },
@@ -1384,6 +1879,26 @@
    ]
   },
   {
+   "slug": "48e-cros-vila-de-castellar-37e-memorial-pere-hernandez-2026",
+   "name": "48è Cros Vila de Castellar – 37è Memorial Pere Hernández",
+   "date": "2026-10-18",
+   "town": "Castellar del Vallès",
+   "comarca": "Vallès Occidental",
+   "lat": 41.61856,
+   "lon": 2.08764,
+   "terrain": "mixed",
+   "status": "cancelled",
+   "distancesM": [],
+   "organiser": "CA Castellar",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/48e-cros-vila-de-castellar-37e-memorial-pere-hernandez/"
+    }
+   ]
+  },
+  {
    "slug": "7a-cursa-mercabarna-5-i-10-km-ajornada-al-17-de-gener-de-2026",
    "name": "7a Cursa Mercabarna (5 i 10 Km) – *Ajornada al 17 de gener de 2027",
    "date": "2026-10-18",
@@ -1424,6 +1939,28 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/19a-cursa-i-caminada-lluis-companys-5-i-10-km/"
+    }
+   ]
+  },
+  {
+   "slug": "32a-la-marxassa-2026",
+   "name": "32a La Marxassa",
+   "date": "2026-10-24",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    66500
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
     }
    ]
   },
@@ -1511,6 +2048,25 @@
    ]
   },
   {
+   "slug": "campionat-de-catalunya-de-cros-de-relleus-mixtos-totes-les-categories-2026",
+   "name": "Campionat de Catalunya de Cros de Relleus Mixtos (totes les categories) (24è Cros de Canovelles)",
+   "date": "2026-10-25",
+   "town": "Canovelles",
+   "comarca": "Vallès Oriental",
+   "lat": 41.62176,
+   "lon": 2.27697,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "CA Canovelles",
+   "website": "/wp-content/uploads/2026/10/reg-20261025-croscanovelles.pdf",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-cros-de-relleus-mixtos-24e-cros-de-canovelles/"
+    }
+   ]
+  },
+  {
    "slug": "el-tast-de-la-mitja-10-km-amb-desnivell-2026",
    "name": "El Tast de La Mitja (10 Km amb desnivell)",
    "date": "2026-10-31",
@@ -1528,6 +2084,107 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/el-tast-de-la-mitja-10-km-amb-desnivell-4/"
+    }
+   ]
+  },
+  {
+   "slug": "2a-caminada-resistencia-vila-de-suria-2026",
+   "name": "2a Caminada Resistencia \"Vila de Súria\"",
+   "date": "2026-11-01",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    46500
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-cros-per-clubs-totes-les-categories-43e-cros-2026",
+   "name": "Campionat de Catalunya de Cros per Clubs (totes les categories) (43è Cros Ciutat de Vic)",
+   "date": "2026-11-01",
+   "town": "Vic",
+   "comarca": "Osona",
+   "lat": 41.92997,
+   "lon": 2.25426,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "CA Vic",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-cros-per-clubs-43e-cros-ciutat-de-vic/"
+    }
+   ]
+  },
+  {
+   "slug": "26e-cros-ciutat-de-cerdanyola-2026",
+   "name": "26è Cros Ciutat de Cerdanyola",
+   "date": "2026-11-07",
+   "town": "Cerdanyola del Vallès",
+   "comarca": "Vallès Occidental",
+   "lat": 41.49102,
+   "lon": 2.14072,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "CE Cerdanyola Atletisme i Triatló",
+   "website": "https://www.atcerdanyola.com/curses/crosCerdanyola/",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/26e-cros-ciutat-de-cerdanyola/"
+    }
+   ]
+  },
+  {
+   "slug": "31a-marxa-del-garraf-2026",
+   "name": "31a Marxa del Garraf",
+   "date": "2026-11-08",
+   "town": null,
+   "comarca": null,
+   "lat": null,
+   "lon": null,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    46000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "feec",
+     "url": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf"
+    }
+   ]
+  },
+  {
+   "slug": "60e-cros-internacional-de-catalunya-ciutat-de-granollers-rfea-2026",
+   "name": "60è Cros Internacional de Catalunya Ciutat de Granollers (RFEA)",
+   "date": "2026-11-08",
+   "town": "Granollers",
+   "comarca": "Vallès Oriental",
+   "lat": 41.60809,
+   "lon": 2.28682,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "CA Granollers",
+   "website": "/wp-content/uploads/2026/09/reg-20261108-crosgranollersdiptic.pdf",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/60e-cros-internacional-de-catalunya-ciutat-de-granollers-rfea/"
     }
    ]
   },
@@ -1561,13 +2218,19 @@
    "lat": 41.4128,
    "lon": 2.16648,
    "terrain": null,
-   "distancesM": [],
+   "distancesM": [
+    13000
+   ],
    "organiser": null,
    "website": null,
    "sources": [
     {
      "id": "bcn",
      "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cros-3turons-la-diablada"
     }
    ]
   },
@@ -1589,6 +2252,25 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/14a-cursa-benefica-els-10-km-de-les-franqueses/"
+    }
+   ]
+  },
+  {
+   "slug": "26e-cros-ciutat-de-gava-2026",
+   "name": "26è Cros Ciutat de Gavà",
+   "date": "2026-11-15",
+   "town": "Gavà",
+   "comarca": "Baix Llobregat",
+   "lat": 41.30612,
+   "lon": 2.00477,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "CA Gavà",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/26e-cros-ciutat-de-gava/"
     }
    ]
   },
@@ -1623,13 +2305,20 @@
    "lat": 41.63459,
    "lon": 2.16224,
    "terrain": "trail",
-   "distancesM": [],
+   "distancesM": [
+    12000,
+    24000
+   ],
    "organiser": "CN Caldes",
    "website": "https://cncaldes.cat/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/32a-cursa-de-muntanya-del-farell-2/"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-muntanya-del-farell-caldes-de-montbui"
     }
    ]
   },
@@ -1699,6 +2388,113 @@
    ]
   },
   {
+   "slug": "51e-cros-de-santa-coloma-de-farners-2026",
+   "name": "51è Cros de Santa Coloma de Farners",
+   "date": "2026-11-15",
+   "town": "Santa Coloma de Farners",
+   "comarca": "Selva",
+   "lat": 41.8615,
+   "lon": 2.66278,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "Consell Esportiu de la Selva",
+   "website": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&amp;id_act=1368&amp;nom_jornada=51e-Cros-Santa-Coloma-Farners&amp;id_jornada=658",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/51e-cros-de-santa-coloma-de-farners/"
+    }
+   ]
+  },
+  {
+   "slug": "burriacxtrem-2026",
+   "name": "BurriacXtrem",
+   "date": "2026-11-15",
+   "town": "Argentona",
+   "comarca": "Maresme",
+   "lat": 41.55564,
+   "lon": 2.40052,
+   "terrain": null,
+   "distancesM": [
+    11000,
+    29000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/burriacxtrem"
+    }
+   ]
+  },
+  {
+   "slug": "cross-can-mercader-2026",
+   "name": "Cross Can Mercader",
+   "date": "2026-11-15",
+   "town": "Cornellà de Llobregat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.35517,
+   "lon": 2.07016,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    9000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cross-can-mercader"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-benefica-malalties-minoritaries-2026",
+   "name": "Cursa Benèfica Malalties Minoritàries",
+   "date": "2026-11-15",
+   "town": "Badalona",
+   "comarca": "Barcelonès",
+   "lat": 41.45003,
+   "lon": 2.24779,
+   "terrain": null,
+   "distancesM": [
+    8000,
+    12000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-benefica-malalties-minoritaries/2026-11-15"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-muntanya-de-girona-2026",
+   "name": "Cursa de Muntanya de Girona",
+   "date": "2026-11-15",
+   "town": "Girona",
+   "comarca": "Gironès",
+   "lat": 41.98316,
+   "lon": 2.82487,
+   "terrain": "trail",
+   "distancesM": [
+    13000,
+    50000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-muntanya-de-girona-cmg"
+    }
+   ]
+  },
+  {
    "slug": "cursa-solidaria-corre-contra-el-cancer-zona-nord-2026",
    "name": "Cursa solidària Corre contra el càncer - Zona Nord",
    "date": "2026-11-15",
@@ -1707,13 +2503,151 @@
    "lat": 41.4595,
    "lon": 2.17593,
    "terrain": null,
-   "distancesM": [],
+   "distancesM": [
+    11000
+   ],
    "organiser": null,
    "website": null,
    "sources": [
     {
      "id": "bcn",
      "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/corre-contra-el-cancer-barcelona-zona-nord"
+    }
+   ]
+  },
+  {
+   "slug": "historic-trail-calafell-2026",
+   "name": "Historic Trail Calafell",
+   "date": "2026-11-15",
+   "town": "Calafell",
+   "comarca": "Baix Penedès",
+   "lat": 41.20096,
+   "lon": 1.56871,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    18000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/historic-trail-calafell"
+    }
+   ]
+  },
+  {
+   "slug": "marxa-bonesvalls-2026",
+   "name": "Marxa Bonesvalls",
+   "date": "2026-11-15",
+   "town": "Olesa de Bonesvalls",
+   "comarca": "Alt Penedès",
+   "lat": 41.3517,
+   "lon": 1.85076,
+   "terrain": null,
+   "distancesM": [
+    14000,
+    30000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/marxa-bonesvalls"
+    }
+   ]
+  },
+  {
+   "slug": "querroigtrail-2026",
+   "name": "Querroigtrail",
+   "date": "2026-11-15",
+   "town": "Portbou",
+   "comarca": "Alt Empordà",
+   "lat": 42.42638,
+   "lon": 3.16247,
+   "terrain": "trail",
+   "distancesM": [
+    9000,
+    23000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/querroigtrail"
+    }
+   ]
+  },
+  {
+   "slug": "up-xic-trail-2026",
+   "name": "Up Xic Trail",
+   "date": "2026-11-15",
+   "town": "Sant Hipòlit de Voltregà",
+   "comarca": "Osona",
+   "lat": 42.01555,
+   "lon": 2.2362,
+   "terrain": "trail",
+   "distancesM": [
+    5000,
+    20000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/up-xic-trail"
+    }
+   ]
+  },
+  {
+   "slug": "vandekames-2026",
+   "name": "Vandekames",
+   "date": "2026-11-15",
+   "town": "Vandellòs",
+   "comarca": null,
+   "lat": 41.0195,
+   "lon": 0.83162,
+   "terrain": null,
+   "distancesM": [
+    7000,
+    30000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/vandekames"
+    }
+   ]
+  },
+  {
+   "slug": "vinya-cross-solidari-oller-del-mas-2026",
+   "name": "Vinya-Cross Solidari Oller del Mas",
+   "date": "2026-11-15",
+   "town": "Manresa",
+   "comarca": "Bages",
+   "lat": 41.72306,
+   "lon": 1.82693,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/vinya-cross-solidari-oller-del-mas"
     }
    ]
   },
@@ -1733,6 +2667,10 @@
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/lliga-cronoescalada-nocturna-cims-de-girona"
     }
    ]
   },
@@ -1754,6 +2692,113 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/38a-milles-de-cerdanyola-5-km/"
+    }
+   ]
+  },
+  {
+   "slug": "9e-cros-de-cardedeu-2026",
+   "name": "9è Cros de Cardedeu",
+   "date": "2026-11-21",
+   "town": "Cardedeu",
+   "comarca": "Vallès Oriental",
+   "lat": 41.63829,
+   "lon": 2.35535,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "CA Cardedeu",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/9e-cros-de-cardedeu/"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cros-de-cardedeu"
+    }
+   ]
+  },
+  {
+   "slug": "cros-semi-urba-de-llavaneres-2026",
+   "name": "Cros Semi Urbà de Llavaneres",
+   "date": "2026-11-21",
+   "town": "Sant Andreu de Llavaneres",
+   "comarca": "Maresme",
+   "lat": 41.57446,
+   "lon": 2.48335,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cros-semi-urba-de-llavaneres"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-fosca-2026",
+   "name": "Cursa Fosca",
+   "date": "2026-11-21",
+   "town": "Torrelles de Foix",
+   "comarca": "Alt Penedès",
+   "lat": 41.38847,
+   "lon": 1.56894,
+   "terrain": null,
+   "distancesM": [
+    12000,
+    22000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursafosca"
+    }
+   ]
+  },
+  {
+   "slug": "roc-de-la-clusa-trail-2026",
+   "name": "Roc de la Clusa Trail",
+   "date": "2026-11-21",
+   "town": "Castell de l'Areny",
+   "comarca": "Berguedà",
+   "lat": 42.17322,
+   "lon": 1.9452,
+   "terrain": "trail",
+   "distancesM": [
+    17000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/roc-de-la-clusa"
+    }
+   ]
+  },
+  {
+   "slug": "10k-montbrio-del-camp-2026",
+   "name": "10K Montbrio del Camp",
+   "date": "2026-11-22",
+   "town": "Montbrió del Camp",
+   "comarca": "Baix Camp",
+   "lat": 41.12068,
+   "lon": 1.00379,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/10k-montbrio-del-camp"
     }
    ]
   },
@@ -1780,6 +2825,48 @@
    ]
   },
   {
+   "slug": "27e-cros-ciutat-de-girona-2026",
+   "name": "27è Cros Ciutat de Girona",
+   "date": "2026-11-22",
+   "town": "Girona",
+   "comarca": "Gironès",
+   "lat": 41.98316,
+   "lon": 2.82487,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "Consell Esportiu del Gironès",
+   "website": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&amp;id_act=1368&amp;nom_jornada=27e-Cros-Ciutat-Girona&amp;id_jornada=659",
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/27e-cros-ciutat-de-girona/"
+    }
+   ]
+  },
+  {
+   "slug": "32a-marxa-dels-arrossars-2026",
+   "name": "32a Marxa dels Arrossars",
+   "date": "2026-11-22",
+   "town": "Pals",
+   "comarca": "Baix Empordà",
+   "lat": 41.97108,
+   "lon": 3.14508,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    12000,
+    16000
+   ],
+   "organiser": "Jovent del Bruel",
+   "website": "https://joventdelbruel.ffames.cat/tickets/6-32a-marxa-dels-arrossars",
+   "sources": [
+    {
+     "id": "own",
+     "url": "https://joventdelbruel.ffames.cat/tickets/6-32a-marxa-dels-arrossars"
+    }
+   ]
+  },
+  {
    "slug": "47a-mitja-marato-espirall-vilafranca-2026",
    "name": "47a Mitja Marató Espirall – Vilafranca",
    "date": "2026-11-22",
@@ -1797,6 +2884,208 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/47a-mitja-marato-espirall-vilafranca/"
+    }
+   ]
+  },
+  {
+   "slug": "53e-cros-antoni-amoros-2026",
+   "name": "53è Cros Antoni Amorós",
+   "date": "2026-11-22",
+   "town": "Santa Coloma de Gramenet",
+   "comarca": "Barcelonès",
+   "lat": 41.45215,
+   "lon": 2.20793,
+   "terrain": "mixed",
+   "distancesM": [
+    5000,
+    7000
+   ],
+   "organiser": "Unió Colomenca At.",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/53e-cros-antoni-amoros/"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cros-antoni-amoros"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-muntanya-de-llagostera-2026",
+   "name": "Cursa de Muntanya de Llagostera",
+   "date": "2026-11-22",
+   "town": "Llagostera",
+   "comarca": "Gironès",
+   "lat": 41.82881,
+   "lon": 2.89182,
+   "terrain": "trail",
+   "distancesM": [
+    9000,
+    20000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-muntanya-de-llagostera"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-on-deu-va-perdre-lespardenya-2026",
+   "name": "Cursa On Déu Va Perdre l'Espardenya",
+   "date": "2026-11-22",
+   "town": "Bovera",
+   "comarca": "Garrigues",
+   "lat": 41.32654,
+   "lon": 0.63892,
+   "terrain": null,
+   "distancesM": [
+    6000,
+    14000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-on-deu-va-perdre-lespardenya"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-solidaria-cng4camins-2026",
+   "name": "Cursa solidària CNG4Camins",
+   "date": "2026-11-22",
+   "town": "Granollers",
+   "comarca": "Vallès Oriental",
+   "lat": 41.60809,
+   "lon": 2.28682,
+   "terrain": null,
+   "distancesM": [
+    6000,
+    15000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-solidaria-cng4camins"
+    }
+   ]
+  },
+  {
+   "slug": "gualba-trail-2026",
+   "name": "Gualba Trail",
+   "date": "2026-11-22",
+   "town": "Gualba",
+   "comarca": "Vallès Oriental",
+   "lat": 41.73205,
+   "lon": 2.50192,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/gualba-trail"
+    }
+   ]
+  },
+  {
+   "slug": "lo-pastisset-2026",
+   "name": "Lo Pastisset",
+   "date": "2026-11-22",
+   "town": "Benifallet",
+   "comarca": "Baix Ebre",
+   "lat": 40.97431,
+   "lon": 0.51798,
+   "terrain": null,
+   "distancesM": [
+    8000,
+    28000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/lo-pastisset"
+    }
+   ]
+  },
+  {
+   "slug": "passafred-2026",
+   "name": "Passafred",
+   "date": "2026-11-22",
+   "town": "Blanes",
+   "comarca": "Selva",
+   "lat": 41.67403,
+   "lon": 2.79161,
+   "terrain": null,
+   "distancesM": [
+    13000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/passafred"
+    }
+   ]
+  },
+  {
+   "slug": "vilarnau-correcava-2026",
+   "name": "Vilarnau Correcava",
+   "date": "2026-11-22",
+   "town": "Espiells",
+   "comarca": null,
+   "lat": 41.43939,
+   "lon": 1.81188,
+   "terrain": null,
+   "distancesM": [
+    8000,
+    12000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/vilarnau-correcava"
+    }
+   ]
+  },
+  {
+   "slug": "vilaverd-skyrace-2026",
+   "name": "Vilaverd Skyrace",
+   "date": "2026-11-22",
+   "town": "Vilaverd",
+   "comarca": "Conca de Barberà",
+   "lat": 41.33687,
+   "lon": 1.17735,
+   "terrain": "trail",
+   "distancesM": [
+    6000,
+    42000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/vilaverd-skyrace"
     }
    ]
   },
@@ -1839,6 +3128,90 @@
    ]
   },
   {
+   "slug": "cros-de-pineda-2026",
+   "name": "Cros de Pineda",
+   "date": "2026-11-28",
+   "town": "Pineda de Mar",
+   "comarca": "Maresme",
+   "lat": 41.62752,
+   "lon": 2.68953,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cros-de-pineda"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-del-tractor-2026",
+   "name": "Cursa del Tractor",
+   "date": "2026-11-28",
+   "town": "Casserres",
+   "comarca": "Berguedà",
+   "lat": 42.01436,
+   "lon": 1.84129,
+   "terrain": null,
+   "distancesM": [
+    12000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-del-tractor"
+    }
+   ]
+  },
+  {
+   "slug": "trail-popular-dhivern-de-sant-climent-2026",
+   "name": "Trail Popular d’Hivern de Sant Climent",
+   "date": "2026-11-28",
+   "town": "Sant Climent de Llobregat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.33707,
+   "lon": 1.99642,
+   "terrain": "trail",
+   "distancesM": [
+    8000,
+    11000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-popular-dhivern-de-sant-climent"
+    }
+   ]
+  },
+  {
+   "slug": "ultra-penedes-2026",
+   "name": "Ultra Penedès",
+   "date": "2026-11-28",
+   "town": "Sant Jaume dels Domenys",
+   "comarca": "Baix Penedès",
+   "lat": 41.29963,
+   "lon": 1.55927,
+   "terrain": null,
+   "distancesM": [
+    13000,
+    55000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/ultra-penedes"
+    }
+   ]
+  },
+  {
    "slug": "103a-allianz-jean-bouin-rfea-2026",
    "name": "103a Allianz Jean Bouin (RFEA)",
    "date": "2026-11-29",
@@ -1866,6 +3239,157 @@
    ]
   },
   {
+   "slug": "35e-cros-de-vidreres-campionat-gironi-2026",
+   "name": "35è Cros de Vidreres (Campionat Gironí)",
+   "date": "2026-11-29",
+   "town": "Vidreres",
+   "comarca": "Selva",
+   "lat": 41.78967,
+   "lon": 2.78033,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "Consell Esportiu de la Selva",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/35e-cros-de-vidreres/"
+    }
+   ]
+  },
+  {
+   "slug": "avenc-trail-cunit-2026",
+   "name": "Avenc Trail Cunit",
+   "date": "2026-11-29",
+   "town": "Cunit",
+   "comarca": "Baix Penedès",
+   "lat": 41.19809,
+   "lon": 1.63484,
+   "terrain": "trail",
+   "distancesM": [
+    5000,
+    13000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/avenc-trail-cunit"
+    }
+   ]
+  },
+  {
+   "slug": "bell-race-2026",
+   "name": "Bell Race",
+   "date": "2026-11-29",
+   "town": "Sallent",
+   "comarca": "Bages",
+   "lat": 41.82406,
+   "lon": 1.89467,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/bell-race"
+    }
+   ]
+  },
+  {
+   "slug": "ii-caminada-recuperacio-tca-2026",
+   "name": "II Caminada Recuperació TCA",
+   "date": "2026-11-29",
+   "town": "Cassà de la Selva",
+   "comarca": "Gironès",
+   "lat": 41.88485,
+   "lon": 2.87429,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "la-nocturna-trinxavambes-2026",
+   "name": "La Nocturna Trinxavambes",
+   "date": "2026-11-29",
+   "town": "Vallromanes",
+   "comarca": "Vallès Oriental",
+   "lat": 41.53184,
+   "lon": 2.29835,
+   "terrain": null,
+   "distancesM": [
+    10000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/la-nocturna-trinxavambes"
+    }
+   ]
+  },
+  {
+   "slug": "pujada-a-sant-pau-2026",
+   "name": "Pujada a Sant Pau",
+   "date": "2026-11-29",
+   "town": "La Bleda",
+   "comarca": null,
+   "lat": 41.34646,
+   "lon": 1.65425,
+   "terrain": null,
+   "distancesM": [
+    11000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/pujada-a-sant-pau"
+    }
+   ]
+  },
+  {
+   "slug": "trail-les-ermites-ulldemolins-2026",
+   "name": "Trail Les Ermites – Ulldemolins",
+   "date": "2026-11-29",
+   "town": "Ulldemolins",
+   "comarca": "Priorat",
+   "lat": 41.32238,
+   "lon": 0.87633,
+   "terrain": "trail",
+   "distancesM": [
+    6000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trailseries-les-ermites"
+    }
+   ]
+  },
+  {
    "slug": "cims-de-girona-els-angels-2026",
    "name": "CIMS DE GIRONA ELS ANGELS",
    "date": "2026-12-03",
@@ -1881,6 +3405,49 @@
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "backyard-ultra-llagostera-2026",
+   "name": "Backyard Ultra Llagostera",
+   "date": "2026-12-05",
+   "town": "Llagostera",
+   "comarca": "Gironès",
+   "lat": 41.82881,
+   "lon": 2.89182,
+   "terrain": null,
+   "distancesM": [
+    7000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/back-yard-ultra-llagostera"
+    }
+   ]
+  },
+  {
+   "slug": "imperial-tarraco-trail-2026",
+   "name": "Imperial Tàrraco Trail",
+   "date": "2026-12-05",
+   "town": "Tarragona",
+   "comarca": "Tarragonès",
+   "lat": 41.11743,
+   "lon": 1.25436,
+   "terrain": "trail",
+   "distancesM": [
+    12000,
+    26000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/imperial-tarraco-trail"
     }
    ]
   },
@@ -1928,6 +3495,196 @@
    ]
   },
   {
+   "slug": "cros-de-malgrat-2026",
+   "name": "Cros de Malgrat",
+   "date": "2026-12-08",
+   "town": "Malgrat de Mar",
+   "comarca": "Maresme",
+   "lat": 41.6455,
+   "lon": 2.74074,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cros-de-malgrat"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-quintos-2026",
+   "name": "Cursa de Quintos",
+   "date": "2026-12-08",
+   "town": "Aiguafreda",
+   "comarca": "Osona",
+   "lat": 41.76889,
+   "lon": 2.2494,
+   "terrain": null,
+   "distancesM": [
+    12000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-quintos"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-popular-de-porqueres-2026",
+   "name": "Cursa Popular de Porqueres",
+   "date": "2026-12-08",
+   "town": "Sant Vincenç de Camós",
+   "comarca": null,
+   "lat": 42.09415,
+   "lon": 2.76707,
+   "terrain": null,
+   "distancesM": [
+    7000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-popular-de-porqueres"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-cec-collserola-2026",
+   "name": "Cursa CEC-Collserola",
+   "date": "2026-12-12",
+   "town": "Barcelona",
+   "comarca": "Barcelonès",
+   "lat": 41.38241,
+   "lon": 2.17724,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-cec-collserola"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-la-llum-2026",
+   "name": "Cursa de la Llum",
+   "date": "2026-12-12",
+   "town": "Ripoll",
+   "comarca": "Ripollès",
+   "lat": 42.20105,
+   "lon": 2.19075,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-la-llum"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-ens-mou-cardedeu-2026",
+   "name": "Cursa Ens Mou Cardedeu",
+   "date": "2026-12-12",
+   "town": "Cardedeu",
+   "comarca": "Vallès Oriental",
+   "lat": 41.63829,
+   "lon": 2.35535,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-ens-mou-cardedeu"
+    }
+   ]
+  },
+  {
+   "slug": "marxa-solidaria-per-la-marato-de-riudarenes-2026",
+   "name": "Marxa Solidària per La Marató de Riudarenes",
+   "date": "2026-12-12",
+   "town": "Riudarenes",
+   "comarca": "Selva",
+   "lat": 41.82194,
+   "lon": 2.71651,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    5000,
+    9000,
+    14000,
+    42195
+   ],
+   "organiser": null,
+   "website": "https://www.curses.cat/riudarenes2026/",
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/riudarenes2026/"
+    }
+   ]
+  },
+  {
+   "slug": "trail-ardenya-2026",
+   "name": "Trail Ardenya",
+   "date": "2026-12-12",
+   "town": "Santa Cristina d'Aro",
+   "comarca": "Baix Empordà",
+   "lat": 41.81207,
+   "lon": 2.9969,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    23000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-ardenya"
+    }
+   ]
+  },
+  {
+   "slug": "23e-cros-de-banyoles-2026",
+   "name": "23è Cros de Banyoles",
+   "date": "2026-12-13",
+   "town": "Banyoles",
+   "comarca": "Pla de l'Estany",
+   "lat": 42.1164,
+   "lon": 2.7638,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "CN Banyoles",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/23e-cros-de-banyoles/"
+    }
+   ]
+  },
+  {
    "slug": "37a-mitja-marato-i-10-km-de-vilanova-i-la-geltru-2026",
    "name": "37a Mitja Marató i 10 Km de Vilanova i la Geltrú",
    "date": "2026-12-13",
@@ -1946,6 +3703,44 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/37a-mitja-marato-i-10-km-de-vilanova-i-la-geltru/"
+    }
+   ]
+  },
+  {
+   "slug": "43e-cros-de-vila-seca-2026",
+   "name": "43è Cros de Vila-seca",
+   "date": "2026-12-13",
+   "town": "Vila-seca",
+   "comarca": "Tarragonès",
+   "lat": 41.11095,
+   "lon": 1.14481,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "CA Vila-seca",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/43e-cros-de-vila-seca/"
+    }
+   ]
+  },
+  {
+   "slug": "44e-cros-vila-de-ripollet-2026",
+   "name": "44è Cros Vila de Ripollet",
+   "date": "2026-12-13",
+   "town": "Ripollet",
+   "comarca": "Vallès Occidental",
+   "lat": 41.4965,
+   "lon": 2.15349,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "Ripollet UA",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/44e-cros-vila-de-ripollet/"
     }
    ]
   },
@@ -1976,6 +3771,130 @@
    ]
   },
   {
+   "slug": "cros-dalella-2026",
+   "name": "Cros d'Alella",
+   "date": "2026-12-13",
+   "town": "Alella",
+   "comarca": "Maresme",
+   "lat": 41.49384,
+   "lon": 2.29514,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cros-dalella"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-dorientacio-solidaria-dalguaire-2026",
+   "name": "Cursa d'Orientació Solidària d'Alguaire",
+   "date": "2026-12-13",
+   "town": "Alguaire",
+   "comarca": "Segrià",
+   "lat": 41.73618,
+   "lon": 0.58374,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-dorientacio-solidaria-dalguaire"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-solidaria-dels-avets-2026",
+   "name": "Cursa Solidària dels Avets",
+   "date": "2026-12-13",
+   "town": "Sant Celoni",
+   "comarca": "Vallès Oriental",
+   "lat": 41.68996,
+   "lon": 2.49252,
+   "terrain": null,
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-solidaria-dels-avets"
+    }
+   ]
+  },
+  {
+   "slug": "entre-cabanes-2026",
+   "name": "Entre Cabanes",
+   "date": "2026-12-13",
+   "town": "Preixana",
+   "comarca": "Urgell",
+   "lat": 41.6069,
+   "lon": 1.0386,
+   "terrain": null,
+   "distancesM": [
+    6000,
+    20000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/entre-cabanes"
+    }
+   ]
+  },
+  {
+   "slug": "la-neorural-2026",
+   "name": "La Neorural",
+   "date": "2026-12-13",
+   "town": "Martorelles",
+   "comarca": "Vallès Oriental",
+   "lat": 41.5257,
+   "lon": 2.24277,
+   "terrain": null,
+   "distancesM": [
+    25000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/la-neorural"
+    }
+   ]
+  },
+  {
+   "slug": "trail-la-riera-de-gaia-2026",
+   "name": "Trail La Riera de Gaià",
+   "date": "2026-12-13",
+   "town": "la Riera de Gaià",
+   "comarca": "Tarragonès",
+   "lat": 41.16484,
+   "lon": 1.36139,
+   "terrain": "trail",
+   "distancesM": [
+    9000,
+    20000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-trail-la-riera-de-gaia"
+    }
+   ]
+  },
+  {
    "slug": "trail-la-vall-2026",
    "name": "TRAIL LA VALL",
    "date": "2026-12-13",
@@ -1996,6 +3915,31 @@
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-la-vall"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-nadal-bigues-i-riells-del-fai-2026",
+   "name": "Cursa de Nadal Bigues i Riells del Fai",
+   "date": "2026-12-19",
+   "town": "Bigues i Riells",
+   "comarca": null,
+   "lat": 41.67693,
+   "lon": 2.22597,
+   "terrain": null,
+   "distancesM": [
+    9000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-nadal-bigues-i-riells-del-fai"
     }
    ]
   },
@@ -2017,6 +3961,150 @@
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "campionat-de-catalunya-de-cros-totes-les-categories-11e-cros-ate-de-to-2026",
+   "name": "Campionat de Catalunya de Cros (totes les categories) (11è Cros ATE de Tortosa – GP Eduard Fornós)",
+   "date": "2026-12-20",
+   "town": "Tortosa",
+   "comarca": "Baix Ebre",
+   "lat": 40.8109,
+   "lon": 0.52096,
+   "terrain": "mixed",
+   "distancesM": [],
+   "organiser": "CA Terres de l’Ebre",
+   "website": null,
+   "sources": [
+    {
+     "id": "fca",
+     "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-cros-11e-cros-ate-de-tortosa-gp-eduard-fornos/"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-nadal-trail-colldejou-2026",
+   "name": "Cursa de Nadal - Trail Colldejou",
+   "date": "2026-12-20",
+   "town": "Colldejou",
+   "comarca": "Baix Camp",
+   "lat": 41.10006,
+   "lon": 0.88831,
+   "terrain": "trail",
+   "distancesM": [
+    6000,
+    22000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-nadal-trail-colldejou"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-nadal-sant-sadurni-danoia-2026",
+   "name": "Cursa de Nadal Sant Sadurní d'Anoia",
+   "date": "2026-12-20",
+   "town": "Sant Sadurní d'Anoia",
+   "comarca": "Alt Penedès",
+   "lat": 41.42421,
+   "lon": 1.7873,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-nadal-sant-sadurni-danoia"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-del-gall-riudecanyes-2026",
+   "name": "Cursa del Gall Riudecanyes",
+   "date": "2026-12-20",
+   "town": "Riudecanyes",
+   "comarca": "Baix Camp",
+   "lat": 41.13002,
+   "lon": 0.96095,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-del-gall-riudecanyes"
+    }
+   ]
+  },
+  {
+   "slug": "descoberta-run-fontcoberta-2026",
+   "name": "Descoberta Run - Fontcoberta",
+   "date": "2026-12-20",
+   "town": "Fontcoberta",
+   "comarca": "Pla de l'Estany",
+   "lat": 42.14287,
+   "lon": 2.78952,
+   "terrain": null,
+   "distancesM": [
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/descoberta-run-fontcoberta"
+    }
+   ]
+  },
+  {
+   "slug": "trailseries-costa-daurada-2026",
+   "name": "Trailseries Costa Daurada",
+   "date": "2026-12-20",
+   "town": "Tarragona",
+   "comarca": "Tarragonès",
+   "lat": 41.11743,
+   "lon": 1.25436,
+   "terrain": "trail",
+   "distancesM": [
+    5000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trailseries-costa-daurada/2026-12-20"
+    }
+   ]
+  },
+  {
+   "slug": "pujada-a-la-mola-per-nadal-2026",
+   "name": "Pujada a la Mola per Nadal",
+   "date": "2026-12-25",
+   "town": "Matadepera",
+   "comarca": "Vallès Occidental",
+   "lat": 41.59664,
+   "lon": 2.02675,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/pujada-a-la-mola-per-nadal"
     }
    ]
   },
@@ -2085,6 +4173,27 @@
    ]
   },
   {
+   "slug": "cursa-del-bolet-2026",
+   "name": "Cursa del Bolet",
+   "date": "2026-12-26",
+   "town": "Ullastrell",
+   "comarca": "Vallès Occidental",
+   "lat": 41.5269,
+   "lon": 1.95689,
+   "terrain": null,
+   "distancesM": [
+    6000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-del-bolet"
+    }
+   ]
+  },
+  {
    "slug": "cursa-sant-esteve-llagostera-2026",
    "name": "Cursa Sant Esteve Llagostera",
    "date": "2026-12-26",
@@ -2107,6 +4216,90 @@
    ]
   },
   {
+   "slug": "sant-silvestre-manresana-2026",
+   "name": "Sant Silvestre Manresana",
+   "date": "2026-12-26",
+   "town": "Manresa",
+   "comarca": "Bages",
+   "lat": 41.72306,
+   "lon": 1.82693,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/sant-silvestre-manresana"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-nadal-de-torrelavit-2026",
+   "name": "Cursa de Nadal de Torrelavit",
+   "date": "2026-12-27",
+   "town": "el Pla del Penedès",
+   "comarca": "Alt Penedès",
+   "lat": 41.41837,
+   "lon": 1.71028,
+   "terrain": null,
+   "distancesM": [
+    6000,
+    11000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-nadal-de-torrelavit"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-dels-nassos-doliana-2026",
+   "name": "Cursa dels Nassos d'Oliana",
+   "date": "2026-12-27",
+   "town": "Oliana",
+   "comarca": "Alt Urgell",
+   "lat": 42.06616,
+   "lon": 1.31195,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    11000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-dels-nassos-doliana"
+    }
+   ]
+  },
+  {
+   "slug": "la-sotabosc-2026",
+   "name": "La Sotabosc",
+   "date": "2026-12-27",
+   "town": "Sant Esteve de Palautordera",
+   "comarca": "Vallès Oriental",
+   "lat": 41.70354,
+   "lon": 2.43518,
+   "terrain": null,
+   "distancesM": [
+    13000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/la-sotabosc"
+    }
+   ]
+  },
+  {
    "slug": "sant-silvestre-de-cassa-de-la-selva-2026",
    "name": "Sant Silvestre de Cassà de la Selva",
    "date": "2026-12-27",
@@ -2124,6 +4317,28 @@
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "sant-silvestre-muntanya-penedes-2026",
+   "name": "Sant Silvestre Muntanya Penedès",
+   "date": "2026-12-27",
+   "town": "Vilafranca del Penedès",
+   "comarca": "Alt Penedès",
+   "lat": 41.3465,
+   "lon": 1.69722,
+   "terrain": "trail",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/sant-silvestre-muntanya-penedes"
     }
    ]
   },
@@ -2179,6 +4394,27 @@
    ]
   },
   {
+   "slug": "cursa-la-torronada-2027",
+   "name": "Cursa la Torronada",
+   "date": "2027-01-02",
+   "town": "Calldetenes",
+   "comarca": "Osona",
+   "lat": 41.92412,
+   "lon": 2.28427,
+   "terrain": null,
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-la-torronada"
+    }
+   ]
+  },
+  {
    "slug": "vii-sant-silvestre-cncatalunya-2027",
    "name": "VII Sant Silvestre CNCatalunya",
    "date": "2027-01-09",
@@ -2201,6 +4437,115 @@
    ]
   },
   {
+   "slug": "canitrail-dordal-2027",
+   "name": "Canitrail d’Ordal",
+   "date": "2027-01-10",
+   "town": "Subirats",
+   "comarca": "Alt Penedès",
+   "lat": 41.38241,
+   "lon": 1.79465,
+   "terrain": "trail",
+   "distancesM": [
+    6000,
+    16000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/canitrail-dordal"
+    }
+   ]
+  },
+  {
+   "slug": "cinc-cims-corbera-de-llobregat-2027",
+   "name": "Cinc Cims Corbera de Llobregat",
+   "date": "2027-01-10",
+   "town": "Corbera de Llobregat",
+   "comarca": "Baix Llobregat",
+   "lat": 41.4161,
+   "lon": 1.9277,
+   "terrain": null,
+   "distancesM": [
+    10000,
+    27000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cinc-cims-corbera-de-llobregat"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-mar-i-murtra-2027",
+   "name": "Cursa Mar i Murtra",
+   "date": "2027-01-10",
+   "town": "Blanes",
+   "comarca": "Selva",
+   "lat": 41.67403,
+   "lon": 2.79161,
+   "terrain": null,
+   "distancesM": [
+    9000,
+    20000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-mar-i-murtra"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-reis-sant-julia-de-cerdanyola-2027",
+   "name": "Cursa Reis Sant Julià de Cerdanyola",
+   "date": "2027-01-10",
+   "town": "Sant Julià de Cerdanyola",
+   "comarca": "Berguedà",
+   "lat": 42.22384,
+   "lon": 1.89292,
+   "terrain": null,
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-reis-sant-julia-de-cerdanyola"
+    }
+   ]
+  },
+  {
+   "slug": "la-navarclina-2027",
+   "name": "La Navarclina",
+   "date": "2027-01-10",
+   "town": "Navarcles",
+   "comarca": "Bages",
+   "lat": 41.75163,
+   "lon": 1.90376,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/la-navarclina"
+    }
+   ]
+  },
+  {
    "slug": "mitja-badia-de-roses-2027",
    "name": "Mitja Badia de Roses",
    "date": "2027-01-10",
@@ -2219,6 +4564,175 @@
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "sant-mateu-xtrail-2027",
+   "name": "Sant Mateu Xtrail",
+   "date": "2027-01-10",
+   "town": "Premià de Dalt",
+   "comarca": "Maresme",
+   "lat": 41.50731,
+   "lon": 2.34246,
+   "terrain": "trail",
+   "distancesM": [
+    8000,
+    23000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/sant-mateu-xtrail"
+    }
+   ]
+  },
+  {
+   "slug": "cros-popular-de-les-franqueses-del-valles-2027",
+   "name": "Cros Popular de les Franqueses del Vallès",
+   "date": "2027-01-16",
+   "town": "Llerona",
+   "comarca": null,
+   "lat": 41.64781,
+   "lon": 2.29783,
+   "terrain": null,
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cros-popular-de-les-franqueses-del-valles"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-popular-de-camos-2027",
+   "name": "Cursa Popular de Camós",
+   "date": "2027-01-17",
+   "town": "Sant Vincenç de Camós",
+   "comarca": null,
+   "lat": 42.09415,
+   "lon": 2.76707,
+   "terrain": null,
+   "distancesM": [
+    8000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-popular-de-camos"
+    }
+   ]
+  },
+  {
+   "slug": "ganxotrail-2027",
+   "name": "Ganxotrail",
+   "date": "2027-01-17",
+   "town": "Sant Feliu de Guíxols",
+   "comarca": "Baix Empordà",
+   "lat": 41.78045,
+   "lon": 3.0284,
+   "terrain": "trail",
+   "distancesM": [
+    13000,
+    18000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/ganxotrail"
+    }
+   ]
+  },
+  {
+   "slug": "the-last-lap-backyard-ultra-vilabella-2027",
+   "name": "The Last Lap Backyard Ultra Vilabella",
+   "date": "2027-01-22",
+   "town": "Vilabella",
+   "comarca": "Alt Camp",
+   "lat": 41.24675,
+   "lon": 1.32991,
+   "terrain": null,
+   "distancesM": [
+    7000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/the-last-lap-backyard-ultra-vilabella"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-atletica-run-run-la-vall-del-terri-2027",
+   "name": "Cursa Atlètica Run-Run La Vall del Terri",
+   "date": "2027-01-24",
+   "town": "Cornellà del Terri",
+   "comarca": "Pla de l'Estany",
+   "lat": 42.08914,
+   "lon": 2.81566,
+   "terrain": null,
+   "distancesM": [
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-atletica-run-run-la-vall-del-terri"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-loli-de-les-borges-blanques-2027",
+   "name": "Cursa de l'Oli de les Borges Blanques",
+   "date": "2027-01-24",
+   "town": "les Borges Blanques",
+   "comarca": "Garrigues",
+   "lat": 41.52063,
+   "lon": 0.86916,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-loli-de-les-borges-blanques"
+    }
+   ]
+  },
+  {
+   "slug": "la-llanera-trail-2027",
+   "name": "La Llanera Trail",
+   "date": "2027-01-24",
+   "town": "Sentmenat",
+   "comarca": "Vallès Occidental",
+   "lat": 41.60926,
+   "lon": 2.13619,
+   "terrain": "trail",
+   "distancesM": [
+    12000,
+    43000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/la-llanera-trail"
     }
    ]
   },
@@ -2273,7 +4787,7 @@
    "comarca": "Alt Empordà",
    "lat": 42.12506,
    "lon": 3.13377,
-   "terrain": null,
+   "terrain": "trail",
    "distancesM": [
     5000
    ],
@@ -2283,6 +4797,76 @@
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-la-dona-trail"
+    }
+   ]
+  },
+  {
+   "slug": "marxa-castells-altafulla-2027",
+   "name": "Marxa Castells Altafulla",
+   "date": "2027-01-31",
+   "town": "Altafulla",
+   "comarca": "Tarragonès",
+   "lat": 41.14227,
+   "lon": 1.3769,
+   "terrain": null,
+   "distancesM": [
+    16000,
+    26000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/marxa-castells-altafulla"
+    }
+   ]
+  },
+  {
+   "slug": "trail-del-senglar-cabrera-2027",
+   "name": "Trail del Senglar - Cabrera",
+   "date": "2027-01-31",
+   "town": "Cabrera de Mar",
+   "comarca": "Maresme",
+   "lat": 41.52601,
+   "lon": 2.39331,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-del-senglar-cabrera"
+    }
+   ]
+  },
+  {
+   "slug": "santkutrail-2027",
+   "name": "Santkutrail",
+   "date": "2027-02-06",
+   "town": "Sant Cugat Sesgarrigues",
+   "comarca": "Alt Penedès",
+   "lat": 41.36262,
+   "lon": 1.75236,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    20000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/santkutrail"
     }
    ]
   },
@@ -2302,6 +4886,47 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/baga-fast-trail-ccp-2/"
+    }
+   ]
+  },
+  {
+   "slug": "creixelltrail-2027",
+   "name": "Creixelltrail",
+   "date": "2027-02-14",
+   "town": "Creixell",
+   "comarca": "Tarragonès",
+   "lat": 41.16774,
+   "lon": 1.44063,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/creixelltrail"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-al-castell-de-sant-miquel-2027",
+   "name": "Cursa al Castell de Sant Miquel",
+   "date": "2027-02-14",
+   "town": "Gerona",
+   "comarca": null,
+   "lat": 41.9794,
+   "lon": 2.82143,
+   "terrain": null,
+   "distancesM": [
+    12000,
+    24000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-al-castell-de-sant-miquel"
     }
    ]
   },
@@ -2327,6 +4952,116 @@
     {
      "id": "runnea",
      "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/"
+    }
+   ]
+  },
+  {
+   "slug": "marxa-solidaria-vilafant-2027",
+   "name": "MARXA SOLIDARIA VILAFANT",
+   "date": "2027-02-14",
+   "town": "Vilafant",
+   "comarca": "Alt Empordà",
+   "lat": 42.24663,
+   "lon": 2.9378,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": "HTTPS://www.curses.cat",
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "HTTPS://www.curses.cat"
+    }
+   ]
+  },
+  {
+   "slug": "travessa-trail-2027",
+   "name": "Travessa Trail",
+   "date": "2027-02-19",
+   "town": "Prades",
+   "comarca": "Baix Camp",
+   "lat": 41.30979,
+   "lon": 0.98819,
+   "terrain": "trail",
+   "distancesM": [
+    45000,
+    140000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/travessa-trail"
+    }
+   ]
+  },
+  {
+   "slug": "training-event-trailcat100-2027",
+   "name": "Training Event Trailcat100",
+   "date": "2027-02-20",
+   "town": "Cala Romana",
+   "comarca": null,
+   "lat": 41.12655,
+   "lon": 1.2871,
+   "terrain": "trail",
+   "distancesM": [
+    50000,
+    150000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/training-event-trailcat100"
+    }
+   ]
+  },
+  {
+   "slug": "c-t-t-trail-2027",
+   "name": "C.T.T. Trail",
+   "date": "2027-02-21",
+   "town": "Cala Romana",
+   "comarca": null,
+   "lat": 41.12655,
+   "lon": 1.2871,
+   "terrain": "trail",
+   "distancesM": [
+    11000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/ctt-trail"
+    }
+   ]
+  },
+  {
+   "slug": "cros-de-sant-pau-2027",
+   "name": "Cros de Sant Pau",
+   "date": "2027-02-21",
+   "town": "Sant Pere de Ribes",
+   "comarca": "Garraf",
+   "lat": 41.2623,
+   "lon": 1.77211,
+   "terrain": null,
+   "distancesM": [
+    12000,
+    25000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cros-de-sant-pau"
     }
    ]
   },
@@ -2359,6 +5094,7 @@
    "lon": 2.64135,
    "terrain": "trail",
    "distancesM": [
+    10000,
     14000,
     24000
    ],
@@ -2368,6 +5104,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/hostrailric-14-km-i-24-km-trs/"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-hostrailric"
     }
    ]
   },
@@ -2394,6 +5134,50 @@
    ]
   },
   {
+   "slug": "xtrail-series-run-mataro-2027",
+   "name": "Xtrail Series Run Mataró",
+   "date": "2027-02-21",
+   "town": "Mataró",
+   "comarca": "Maresme",
+   "lat": 41.53981,
+   "lon": 2.4449,
+   "terrain": "trail",
+   "distancesM": [
+    6000,
+    22000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/xtrail-series-run-mataro"
+    }
+   ]
+  },
+  {
+   "slug": "sitges-rock-trail-2027",
+   "name": "Sitges Rock Trail",
+   "date": "2027-02-27",
+   "town": "Sitges",
+   "comarca": "Garraf",
+   "lat": 41.23509,
+   "lon": 1.81184,
+   "terrain": "trail",
+   "distancesM": [
+    12000,
+    25000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/sitges-rock-trail"
+    }
+   ]
+  },
+  {
    "slug": "campionat-de-catalunya-absolut-i-sub23-senders-de-can-costa-trs-2027",
    "name": "Campionat de Catalunya Absolut i Sub23 (Senders de Can Costa) (TRS)",
    "date": "2027-02-28",
@@ -2402,13 +5186,42 @@
    "lat": 41.39334,
    "lon": 2.00971,
    "terrain": "trail",
-   "distancesM": [],
+   "distancesM": [
+    13000,
+    21000
+   ],
    "organiser": "Club Esportiu Santvi",
    "website": "https://sendersdecancosta.com/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/campionat-de-catalunya-absolut-i-sub23-senders-de-can-costa-trs/"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/senders-de-can-costa"
+    }
+   ]
+  },
+  {
+   "slug": "la-bufavents-2027",
+   "name": "La Bufavents",
+   "date": "2027-02-28",
+   "town": "el Perelló",
+   "comarca": "Baix Ebre",
+   "lat": 40.87496,
+   "lon": 0.712,
+   "terrain": null,
+   "distancesM": [
+    8000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/la-bufavents"
     }
    ]
   },
@@ -2429,6 +5242,50 @@
     {
      "id": "runnea",
      "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/"
+    }
+   ]
+  },
+  {
+   "slug": "trail-del-senglar-llavaneres-2027",
+   "name": "Trail del Senglar - Llavaneres",
+   "date": "2027-02-28",
+   "town": "Sant Andreu de Llavaneres",
+   "comarca": "Maresme",
+   "lat": 41.57446,
+   "lon": 2.48335,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-del-senglar-llavaneres"
+    }
+   ]
+  },
+  {
+   "slug": "volta-al-panta-dutxesa-2027",
+   "name": "Volta al Pantà d’Utxesa",
+   "date": "2027-02-28",
+   "town": "Aitona",
+   "comarca": "Segrià",
+   "lat": 41.49461,
+   "lon": 0.45898,
+   "terrain": null,
+   "distancesM": [
+    7000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/volta-al-panta-dutxesa"
     }
    ]
   },
@@ -2504,13 +5361,64 @@
    "lat": 41.39644,
    "lon": 2.11291,
    "terrain": "trail",
-   "distancesM": [],
+   "distancesM": [
+    7000,
+    23000
+   ],
    "organiser": null,
    "website": null,
    "sources": [
     {
      "id": "bcn",
      "url": "https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives"
+    },
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/antena-solidaria"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-4-termes-2027",
+   "name": "Cursa 4 Termes",
+   "date": "2027-03-13",
+   "town": "Mont-roig del Camp",
+   "comarca": "Baix Camp",
+   "lat": 41.0873,
+   "lon": 0.95812,
+   "terrain": null,
+   "distancesM": [
+    32000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-4-termes"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-les-vetes-2027",
+   "name": "Cursa les VETES",
+   "date": "2027-03-13",
+   "town": "Salt",
+   "comarca": "Gironès",
+   "lat": 41.97505,
+   "lon": 2.79206,
+   "terrain": "road",
+   "kind": "march",
+   "distancesM": [
+    5000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
     }
    ]
   },
@@ -2559,6 +5467,28 @@
    ]
   },
   {
+   "slug": "cursa-del-roc-gros-2027",
+   "name": "Cursa del Roc Gros",
+   "date": "2027-03-14",
+   "town": "Els Hostalets de Balenyà",
+   "comarca": null,
+   "lat": 41.81249,
+   "lon": 2.23485,
+   "terrain": null,
+   "distancesM": [
+    12000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-del-roc-gros"
+    }
+   ]
+  },
+  {
    "slug": "la-suada-i-marxa-agullana-2027",
    "name": "LA SUADA I MARXA AGULLANA",
    "date": "2027-03-14",
@@ -2597,6 +5527,50 @@
    ]
   },
   {
+   "slug": "trail-serralavella-2027",
+   "name": "Trail Serralavella",
+   "date": "2027-03-14",
+   "town": "Ullastrell",
+   "comarca": "Vallès Occidental",
+   "lat": 41.5269,
+   "lon": 1.95689,
+   "terrain": "trail",
+   "distancesM": [
+    11000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-serralavella"
+    }
+   ]
+  },
+  {
+   "slug": "bacanard-trail-2027",
+   "name": "Bacanard Trail",
+   "date": "2027-03-21",
+   "town": "Begur",
+   "comarca": "Baix Empordà",
+   "lat": 41.95446,
+   "lon": 3.20732,
+   "terrain": "trail",
+   "distancesM": [
+    14000,
+    38000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/bacanard-trail"
+    }
+   ]
+  },
+  {
    "slug": "campionat-de-catalunya-de-promocio-rasos-sky-trail-kids-ccp-2027",
    "name": "Campionat de Catalunya de Promoció (Rasos Sky Trail Kids) (CCP)",
    "date": "2027-03-21",
@@ -2612,6 +5586,28 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-promocio-rasos-sky-trail-kids-ccp/"
+    }
+   ]
+  },
+  {
+   "slug": "cursa-de-lairosa-2027",
+   "name": "Cursa de L'Airosa",
+   "date": "2027-03-27",
+   "town": "Mas de Barberans",
+   "comarca": "Montsià",
+   "lat": 40.73567,
+   "lon": 0.37388,
+   "terrain": null,
+   "distancesM": [
+    10000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-de-lairosa"
     }
    ]
   },
@@ -2633,6 +5629,72 @@
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "runthrough-trails-girona-2027",
+   "name": "RunThrough Trails Girona",
+   "date": "2027-04-03",
+   "town": "Girona",
+   "comarca": "Gironès",
+   "lat": 41.98316,
+   "lon": 2.82487,
+   "terrain": "trail",
+   "distancesM": [
+    15000,
+    55000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/runthrough-trails-girona"
+    }
+   ]
+  },
+  {
+   "slug": "sobrepuny-trail-2027",
+   "name": "Sobrepuny Trail",
+   "date": "2027-04-03",
+   "town": "la Nou de Berguedà",
+   "comarca": "Berguedà",
+   "lat": 42.16588,
+   "lon": 1.8851,
+   "terrain": "trail",
+   "distancesM": [
+    8000,
+    37000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/sobrepuny-trail"
+    }
+   ]
+  },
+  {
+   "slug": "ultra-trail-muntanyes-costa-daurada-2027",
+   "name": "Ultra Trail Muntanyes Costa Daurada",
+   "date": "2027-04-03",
+   "town": "Prades",
+   "comarca": "Baix Camp",
+   "lat": 41.30979,
+   "lon": 0.98819,
+   "terrain": "trail",
+   "distancesM": [
+    7000,
+    87000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/ultra-trail-muntanyes-costa-daurada"
     }
    ]
   },
@@ -2659,6 +5721,104 @@
    ]
   },
   {
+   "slug": "trail-de-vallforners-2027",
+   "name": "Trail de Vallforners",
+   "date": "2027-04-04",
+   "town": "Cànoves i Samalús",
+   "comarca": "Vallès Oriental",
+   "lat": 41.69392,
+   "lon": 2.35294,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-de-vallforners"
+    }
+   ]
+  },
+  {
+   "slug": "oxfam-intermon-trailwalker-penedes-2027",
+   "name": "Oxfam Intermón Trailwalker Penedès",
+   "date": "2027-04-10",
+   "town": "Vilafranca del Penedès",
+   "comarca": "Alt Penedès",
+   "lat": 41.3465,
+   "lon": 1.69722,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/oxfam-intermon-trailwalker-girona"
+    }
+   ]
+  },
+  {
+   "slug": "trencacims-pauls-2027",
+   "name": "Trencacims Paüls",
+   "date": "2027-04-10",
+   "town": "Paüls",
+   "comarca": "Baix Ebre",
+   "lat": 40.92238,
+   "lon": 0.40016,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trencacims-pauls"
+    }
+   ]
+  },
+  {
+   "slug": "ultra-montseny-2027",
+   "name": "Ultra Montseny",
+   "date": "2027-04-10",
+   "town": "Viladrau",
+   "comarca": "Osona",
+   "lat": 41.84769,
+   "lon": 2.38995,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/ultra-montseny"
+    }
+   ]
+  },
+  {
+   "slug": "caminada-daiguafreda-2027",
+   "name": "Caminada d’Aiguafreda",
+   "date": "2027-04-11",
+   "town": "Aiguafreda",
+   "comarca": "Osona",
+   "lat": 41.76889,
+   "lon": 2.2494,
+   "terrain": null,
+   "distancesM": [
+    10000,
+    20000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/caminada-daiguafreda"
+    }
+   ]
+  },
+  {
    "slug": "marxa-del-garri-2027",
    "name": "MARXA DEL GARRÍ",
    "date": "2027-04-11",
@@ -2674,6 +5834,137 @@
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "trail-montgri-2027",
+   "name": "Trail Montgrí",
+   "date": "2027-04-11",
+   "town": "Torroella de Montgrí",
+   "comarca": "Baix Empordà",
+   "lat": 42.04101,
+   "lon": 3.12638,
+   "terrain": "trail",
+   "distancesM": [
+    35000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-montgri"
+    }
+   ]
+  },
+  {
+   "slug": "xtrail-series-run-orrius-2027",
+   "name": "Xtrail Series Run Òrrius",
+   "date": "2027-04-11",
+   "town": "Mataró",
+   "comarca": "Maresme",
+   "lat": 41.53981,
+   "lon": 2.4449,
+   "terrain": "trail",
+   "distancesM": [
+    7000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/xtrail-series-run-orrius"
+    }
+   ]
+  },
+  {
+   "slug": "costa-brava-stage-run-2027",
+   "name": "Costa Brava Stage Run",
+   "date": "2027-04-16",
+   "town": "Blanes",
+   "comarca": "Selva",
+   "lat": 41.67403,
+   "lon": 2.79161,
+   "terrain": null,
+   "distancesM": [
+    80000,
+    120000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/costa-brava-stage-run"
+    }
+   ]
+  },
+  {
+   "slug": "oncodines-trail-2027",
+   "name": "OnCodines Trail",
+   "date": "2027-04-17",
+   "town": "l'Ametlla del Vallès",
+   "comarca": "Vallès Oriental",
+   "lat": 41.66939,
+   "lon": 2.26152,
+   "terrain": "trail",
+   "distancesM": [
+    48000,
+    80000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/oncodines-trail"
+    }
+   ]
+  },
+  {
+   "slug": "heracles-race-2027",
+   "name": "Heracles Race",
+   "date": "2027-04-18",
+   "town": "Caldes de Malavella",
+   "comarca": "Selva",
+   "lat": 41.83898,
+   "lon": 2.80976,
+   "terrain": null,
+   "distancesM": [
+    6000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/heracles-race"
+    }
+   ]
+  },
+  {
+   "slug": "trail-vall-de-ribes-2027",
+   "name": "Trail Vall de Ribes",
+   "date": "2027-04-24",
+   "town": "Ribes de Freser",
+   "comarca": "Ripollès",
+   "lat": 42.30631,
+   "lon": 2.16793,
+   "terrain": "trail",
+   "distancesM": [
+    9000,
+    42000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-vall-de-ribes"
     }
    ]
   },
@@ -2697,6 +5988,201 @@
    ]
   },
   {
+   "slug": "marato-vies-verdes-girona-2027",
+   "name": "Marató Vies Verdes Girona",
+   "date": "2027-04-25",
+   "town": "Platja d'Aro",
+   "comarca": null,
+   "lat": 41.81795,
+   "lon": 3.06686,
+   "terrain": null,
+   "distancesM": [
+    10000,
+    42000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/marato-vies-verdes-girona"
+    }
+   ]
+  },
+  {
+   "slug": "trail-del-senglar-cabrils-2027",
+   "name": "Trail del Senglar - Cabrils",
+   "date": "2027-04-25",
+   "town": "Cabrils",
+   "comarca": "Maresme",
+   "lat": 41.52622,
+   "lon": 2.36772,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-del-senglar-cabrils"
+    }
+   ]
+  },
+  {
+   "slug": "ultra-vimar-2027",
+   "name": "Ultra Vimar",
+   "date": "2027-05-01",
+   "town": "Platja d'Aro",
+   "comarca": null,
+   "lat": 41.81795,
+   "lon": 3.06686,
+   "terrain": null,
+   "distancesM": [
+    16000,
+    103000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/ultra-vimar"
+    }
+   ]
+  },
+  {
+   "slug": "cm-vall-darbucies-2027",
+   "name": "CM Vall d'Arbúcies",
+   "date": "2027-05-08",
+   "town": "Arbúcies",
+   "comarca": "Selva",
+   "lat": 41.816,
+   "lon": 2.51375,
+   "terrain": null,
+   "distancesM": [
+    10000,
+    28000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cm-vall-darbucies"
+    }
+   ]
+  },
+  {
+   "slug": "la-romanica-navas-2027",
+   "name": "La Romànica Navàs",
+   "date": "2027-05-08",
+   "town": "Navàs",
+   "comarca": "Bages",
+   "lat": 41.89984,
+   "lon": 1.87934,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/la-romanica-navas"
+    }
+   ]
+  },
+  {
+   "slug": "les-classiques-de-berga-2027",
+   "name": "Les Clàssiques de Berga",
+   "date": "2027-05-08",
+   "town": "Berga",
+   "comarca": "Berguedà",
+   "lat": 42.10376,
+   "lon": 1.84585,
+   "terrain": null,
+   "distancesM": [
+    13000,
+    45000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/les-classiques-de-berga"
+    }
+   ]
+  },
+  {
+   "slug": "skyrace-pic-de-lorri-2027",
+   "name": "Skyrace Pic de l'Orri",
+   "date": "2027-05-08",
+   "town": "Vilamur",
+   "comarca": null,
+   "lat": 42.37968,
+   "lon": 1.1608,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    51000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/skyrace-pic-de-lorri"
+    }
+   ]
+  },
+  {
+   "slug": "ultra-trail-barcelona-2027",
+   "name": "Ultra Trail Barcelona",
+   "date": "2027-05-09",
+   "town": "Sant Fruitós de Bages",
+   "comarca": "Bages",
+   "lat": 41.75067,
+   "lon": 1.87327,
+   "terrain": "trail",
+   "distancesM": [
+    6000,
+    61000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/ultra-trail-barcelona"
+    }
+   ]
+  },
+  {
+   "slug": "xtrail-series-run-vallgorguina-2027",
+   "name": "Xtrail Series Run Vallgorguina",
+   "date": "2027-05-09",
+   "town": "Vallgorguina",
+   "comarca": "Vallès Oriental",
+   "lat": 41.64726,
+   "lon": 2.51152,
+   "terrain": "trail",
+   "distancesM": [
+    6000,
+    20000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/xtrail-series-run-vallgorguina"
+    }
+   ]
+  },
+  {
    "slug": "campionat-de-catalunya-de-trail-pujada-vertical-vertical-trail-bergued-2027",
    "name": "Campionat de Catalunya de Trail Pujada Vertical (Vertical Trail Berguedà)",
    "date": "2027-05-15",
@@ -2716,6 +6202,49 @@
    ]
   },
   {
+   "slug": "trail-lagulla-2027",
+   "name": "Trail l'Agulla",
+   "date": "2027-05-15",
+   "town": "el Catllar",
+   "comarca": "Tarragonès",
+   "lat": 41.17548,
+   "lon": 1.32614,
+   "terrain": "trail",
+   "distancesM": [
+    11000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-lagulla"
+    }
+   ]
+  },
+  {
+   "slug": "desafio-barcelona-2027",
+   "name": "Desafío Barcelona",
+   "date": "2027-05-16",
+   "town": "Pineda de Mar",
+   "comarca": "Maresme",
+   "lat": 41.62752,
+   "lon": 2.68953,
+   "terrain": null,
+   "distancesM": [
+    6000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/desafio-barcelona"
+    }
+   ]
+  },
+  {
    "slug": "lo-port-vertical-2027",
    "name": "Lo Port Vertical",
    "date": "2027-05-16",
@@ -2731,6 +6260,92 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/lo-port-vertical-2/"
+    }
+   ]
+  },
+  {
+   "slug": "run-festival-tossa-de-mar-2027",
+   "name": "Run Festival Tossa de Mar",
+   "date": "2027-05-16",
+   "town": "Tossa de Mar",
+   "comarca": "Selva",
+   "lat": 41.7178,
+   "lon": 2.93084,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/run-festival-tossa-de-mar"
+    }
+   ]
+  },
+  {
+   "slug": "caraamon-2027",
+   "name": "Caraamon",
+   "date": "2027-05-22",
+   "town": "Barruera",
+   "comarca": null,
+   "lat": 42.50556,
+   "lon": 0.80114,
+   "terrain": null,
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/caraamon"
+    }
+   ]
+  },
+  {
+   "slug": "green-urban-badalona-5k-2027",
+   "name": "Green Urban Badalona 5k",
+   "date": "2027-05-23",
+   "town": "Badalona",
+   "comarca": "Barcelonès",
+   "lat": 41.45003,
+   "lon": 2.24779,
+   "terrain": null,
+   "distancesM": [
+    5000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/green-urban-badalona-5k"
+    }
+   ]
+  },
+  {
+   "slug": "trail-comaminyana-2027",
+   "name": "Trail Comaminyana",
+   "date": "2027-05-23",
+   "town": "Barruera",
+   "comarca": null,
+   "lat": 42.50556,
+   "lon": 0.80114,
+   "terrain": "trail",
+   "distancesM": [
+    7000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-comaminyana"
     }
    ]
   },
@@ -2756,6 +6371,49 @@
    ]
   },
   {
+   "slug": "good-loop-backyard-ultra-2027",
+   "name": "Good Loop Backyard Ultra",
+   "date": "2027-05-28",
+   "town": "el Pla de Santa Maria",
+   "comarca": "Alt Camp",
+   "lat": 41.36536,
+   "lon": 1.28883,
+   "terrain": null,
+   "distancesM": [
+    7000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/good-loop-backyard-ultra"
+    }
+   ]
+  },
+  {
+   "slug": "la-cabanera-30k-2027",
+   "name": "La Cabanera 30K",
+   "date": "2027-05-29",
+   "town": "la Torre de Cabdella",
+   "comarca": "Pallars Jussà",
+   "lat": 42.42193,
+   "lon": 0.98233,
+   "terrain": null,
+   "distancesM": [
+    12000,
+    29000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/la-cabanera-30k"
+    }
+   ]
+  },
+  {
    "slug": "cursa-de-la-dona-castello-dempuries-2027",
    "name": "CURSA DE LA DONA CASTELLÓ D'EMPÚRIES",
    "date": "2027-05-30",
@@ -2766,6 +6424,29 @@
    "terrain": null,
    "distancesM": [
     5000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "curses-cat",
+     "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "marxa-de-lordi-2027",
+   "name": "MARXA DE L'ORDI",
+   "date": "2027-05-30",
+   "town": "Ordis",
+   "comarca": "Alt Empordà",
+   "lat": 42.21877,
+   "lon": 2.90672,
+   "terrain": null,
+   "kind": "march",
+   "distancesM": [
+    6000,
+    13000
    ],
    "organiser": null,
    "website": null,
@@ -2799,6 +6480,28 @@
    ]
   },
   {
+   "slug": "cursa-del-serrat-llobater-2027",
+   "name": "Cursa del Serrat Llobater",
+   "date": "2027-06-05",
+   "town": "Sant Feliu Sasserra",
+   "comarca": "Bages",
+   "lat": 41.94481,
+   "lon": 2.02249,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    12000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/cursa-del-serrat-llobater"
+    }
+   ]
+  },
+  {
    "slug": "cursa-de-la-cirera-2027",
    "name": "CURSA DE LA CIRERA",
    "date": "2027-06-06",
@@ -2817,6 +6520,108 @@
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    }
+   ]
+  },
+  {
+   "slug": "camino-de-dragones-2027",
+   "name": "Camino de Dragones",
+   "date": "2027-06-12",
+   "town": "Setcases",
+   "comarca": "Ripollès",
+   "lat": 42.37496,
+   "lon": 2.30137,
+   "terrain": null,
+   "distancesM": [
+    300000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/camino-de-dragones"
+    }
+   ]
+  },
+  {
+   "slug": "la-ribalera-2027",
+   "name": "La Ribalera",
+   "date": "2027-06-13",
+   "town": "Tírvia",
+   "comarca": "Pallars Sobirà",
+   "lat": 42.51515,
+   "lon": 1.24288,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/la-ribalera"
+    }
+   ]
+  },
+  {
+   "slug": "garmin-mountain-festival-vall-de-boi-2027",
+   "name": "Garmin Mountain Festival - Vall de Boí",
+   "date": "2027-06-18",
+   "town": "Barruera",
+   "comarca": null,
+   "lat": 42.50556,
+   "lon": 0.80114,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/garmin-mountain-festival-vall-de-boi"
+    }
+   ]
+  },
+  {
+   "slug": "nocturna-fredes-pauls-2027",
+   "name": "Nocturna Fredes-Pauls",
+   "date": "2027-06-19",
+   "town": "Paüls",
+   "comarca": "Baix Ebre",
+   "lat": 40.92238,
+   "lon": 0.40016,
+   "terrain": null,
+   "distancesM": [
+    45000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/nocturna-fredes-pauls"
+    }
+   ]
+  },
+  {
+   "slug": "survivor-barcelona-2027",
+   "name": "Survivor Barcelona",
+   "date": "2027-06-19",
+   "town": "Cardona",
+   "comarca": "Bages",
+   "lat": 41.91311,
+   "lon": 1.68033,
+   "terrain": null,
+   "distancesM": [
+    6000,
+    10000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/survivor-barcelona-sesgueioles"
     }
    ]
   },
@@ -2843,6 +6648,25 @@
    ]
   },
   {
+   "slug": "val-daran-by-utmb-2027",
+   "name": "Val d'Aran by UTMB",
+   "date": "2027-07-07",
+   "town": "Salardú",
+   "comarca": null,
+   "lat": 42.70703,
+   "lon": 0.90102,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/val-daran-by-utmb"
+    }
+   ]
+  },
+  {
    "slug": "trail-val-daran-utmb-2027",
    "name": "Trail Val d'Aran UTMB",
    "date": "2027-07-09",
@@ -2863,6 +6687,197 @@
    ]
   },
   {
+   "slug": "caminada-de-gosol-2027",
+   "name": "Caminada de Gósol",
+   "date": "2027-07-11",
+   "town": "Gósol",
+   "comarca": "Berguedà",
+   "lat": 42.23704,
+   "lon": 1.66063,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-de-gosol"
+    }
+   ]
+  },
+  {
+   "slug": "trail-els-esterregalls-2027",
+   "name": "Trail Els Esterregalls",
+   "date": "2027-07-11",
+   "town": "All",
+   "comarca": null,
+   "lat": 42.39727,
+   "lon": 1.83884,
+   "terrain": "trail",
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-els-esterregalls"
+    }
+   ]
+  },
+  {
+   "slug": "trail-vielha-molieres-2027",
+   "name": "Trail Vielha Molieres 3010",
+   "date": "2027-07-17",
+   "town": "Vielha",
+   "comarca": null,
+   "lat": 42.70301,
+   "lon": 0.79325,
+   "terrain": "trail",
+   "distancesM": [
+    13000,
+    43000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-vielha-molieres-3010"
+    }
+   ]
+  },
+  {
+   "slug": "marxa-la-borda-del-pubill-2027",
+   "name": "Marxa la Borda del Pubill",
+   "date": "2027-08-07",
+   "town": "Ribera de Cardós",
+   "comarca": null,
+   "lat": 42.56244,
+   "lon": 1.2261,
+   "terrain": null,
+   "distancesM": [
+    6000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/marxa-la-borda-del-pubill"
+    }
+   ]
+  },
+  {
+   "slug": "marato-valls-de-cardos-2027",
+   "name": "Marató Valls de Cardós",
+   "date": "2027-09-04",
+   "town": "Ribera de Cardós",
+   "comarca": null,
+   "lat": 42.56244,
+   "lon": 1.2261,
+   "terrain": null,
+   "distancesM": [
+    6000,
+    42000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/marato-valls-de-cardos"
+    }
+   ]
+  },
+  {
+   "slug": "marxa-de-laigua-de-sant-magi-2027",
+   "name": "Marxa de l'Aigua de Sant Magí",
+   "date": "2027-09-04",
+   "town": "Tarragona",
+   "comarca": "Tarragonès",
+   "lat": 41.11743,
+   "lon": 1.25436,
+   "terrain": null,
+   "distancesM": [
+    18000,
+    35000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/marxa-de-laigua-de-sant-magi"
+    }
+   ]
+  },
+  {
+   "slug": "pedraforca-xtrail-2027",
+   "name": "Pedraforca Xtrail",
+   "date": "2027-09-04",
+   "town": "Saldes",
+   "comarca": "Berguedà",
+   "lat": 42.22932,
+   "lon": 1.73615,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    42000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/pedraforca-xtrail"
+    }
+   ]
+  },
+  {
+   "slug": "marrana-skyrace-2027",
+   "name": "Marrana Skyrace",
+   "date": "2027-09-05",
+   "town": "Setcases",
+   "comarca": "Ripollès",
+   "lat": 42.37496,
+   "lon": 2.30137,
+   "terrain": "trail",
+   "distancesM": [
+    8000,
+    23000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/marrana-skyrace"
+    }
+   ]
+  },
+  {
+   "slug": "taga-2027",
+   "name": "Taga 2040",
+   "date": "2027-09-18",
+   "town": "Sant Joan de les Abadesses",
+   "comarca": "Ripollès",
+   "lat": 42.23281,
+   "lon": 2.28483,
+   "terrain": null,
+   "distancesM": [
+    9000,
+    28000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/taga-2040"
+    }
+   ]
+  },
+  {
    "slug": "6a-edicio-trails-del-pont-de-vilomara-i-rocafort-2027",
    "name": "6a edició Trails del Pont de Vilomara i Rocafort",
    "date": "2027-09-25",
@@ -2878,6 +6893,113 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/6a-edicio-trails-del-pont-de-vilomara-i-rocafort/"
+    }
+   ]
+  },
+  {
+   "slug": "valls-del-freser-2027",
+   "name": "Valls del Freser",
+   "date": "2027-09-27",
+   "town": "Ribes de Freser",
+   "comarca": "Ripollès",
+   "lat": 42.30631,
+   "lon": 2.16793,
+   "terrain": null,
+   "distancesM": [
+    15000,
+    32000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/valls-del-freser"
+    }
+   ]
+  },
+  {
+   "slug": "salomon-ultra-pirineu-2027",
+   "name": "Salomon Ultra Pirineu",
+   "date": "2027-10-01",
+   "town": "Bagà",
+   "comarca": "Berguedà",
+   "lat": 42.25285,
+   "lon": 1.8626,
+   "terrain": null,
+   "distancesM": [],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/salomon-ultra-pirineu"
+    }
+   ]
+  },
+  {
+   "slug": "barcelona-spartan-weekend-2027",
+   "name": "Barcelona Spartan Weekend",
+   "date": "2027-10-16",
+   "town": "Santa Susanna",
+   "comarca": "Maresme",
+   "lat": 41.6355,
+   "lon": 2.70707,
+   "terrain": null,
+   "distancesM": [
+    5000,
+    21000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/barcelona-spartan-trifecta-weekend"
+    }
+   ]
+  },
+  {
+   "slug": "trail-del-bisaura-2027",
+   "name": "Trail del Bisaura",
+   "date": "2027-10-16",
+   "town": "Sant Quirze de Besora",
+   "comarca": "Osona",
+   "lat": 42.10029,
+   "lon": 2.22223,
+   "terrain": "trail",
+   "distancesM": [
+    7000,
+    45000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/trail-del-bisaura"
+    }
+   ]
+  },
+  {
+   "slug": "muntanyes-de-prades-epic-trail-2027",
+   "name": "Muntanyes de Prades Epic Trail",
+   "date": "2027-11-06",
+   "town": "Prades",
+   "comarca": "Baix Camp",
+   "lat": 41.30979,
+   "lon": 0.98819,
+   "terrain": "trail",
+   "distancesM": [
+    13000,
+    50000
+   ],
+   "organiser": null,
+   "website": null,
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/muntanyes-de-prades-epic-trail"
     }
    ]
   }

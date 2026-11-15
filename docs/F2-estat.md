@@ -9,8 +9,8 @@ La fase es va començar amb la Fase 1 sense tancar (hi falta una cursa d'asfalt 
 | Peça | On | Estat |
 |---|---|---|
 | Exploració de fonts (E19) | `docs/explorations/E19-race-data-sources.md` | Feta |
-| Importador de curses | `apps/web/scripts/import-calendar.mjs` (`pnpm --filter @tram/web import-calendar`) | Fet per a quatre fonts. Es corre a mà |
-| Calendari | `/ca/curses/` | **136 curses** de 2026 i 2027, mes a mes, amb salts per mes. Sense filtres encara |
+| Importador de curses | `apps/web/scripts/import-calendar.mjs` (`pnpm --filter @tram/web import-calendar`) | Fet per a sis fonts, més les proves llegides a mà al web del seu organitzador. Es corre a mà |
+| Calendari | `/ca/curses/` | **326 curses i marxes** de 2026 i 2027 (223 de properes), mes a mes, amb salts per mes. Sense filtres encara |
 | Fitxa d'una cursa del calendari | `/ca/curses/<slug>/` | Feta: fets, estat, web de la cursa i fonts. Sense recorregut ni desnivell |
 | Properes curses a la portada | `/ca/` | Fet: les sis següents |
 | Fila compacta per a llistes llargues | `RaceRow` amb `compact` | Feta al sistema de disseny |
@@ -18,7 +18,7 @@ La fase es va començar amb la Fase 1 sense tancar (hi falta una cursa d'asfalt 
 
 ## Què falta de l'encàrrec
 
-- **300 curses:** n'hi ha 136. Falten la FEEC i el calendari de ruta de 2027 de la FCA, que encara no està publicat.
+- **300 curses:** n'hi ha 326, però només 13 poden anar a producció. La resta depèn del permís de les seves fonts.
 - **Filtres** per distància, terreny, desnivell i ubicació.
 - **Pàgines per faceta** (terreny × territori, distància × any), generades només si tenen contingut.
 - **M4, «l'any com a perfil»:** s'ha de repensar, perquè cap font dona el desnivell (E19).
@@ -29,5 +29,6 @@ La fase es va començar amb la Fase 1 sense tancar (hi falta una cursa d'asfalt 
 ## Què no s'ha verificat
 
 - **Cap cursa s'ha comprovat contra el web del seu organitzador**, i les dates són les del dia de la consulta.
-- **Permisos:** només les 12 curses de Barcelona venen d'una font de llicència oberta. La resta no entra a producció (`docs/revisio-legal.md`).
-- **Rendiment de la llista** en un mòbil real: són 136 files en una sola pàgina.
+- **Permisos:** només les 12 curses de Barcelona i la marxa llegida al web del seu organitzador poden anar a producció. La resta no hi entra (`docs/revisio-legal.md`).
+- **El terreny de 137 proves no se sap**, i 53 no tenen comarca reconeguda (noms de barri, o en castellà, a la font).
+- **Rendiment de la llista** en un mòbil real: són 326 files en una sola pàgina.

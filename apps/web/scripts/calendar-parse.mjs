@@ -39,8 +39,9 @@ export function distancesOf(text, { trail = false } = {}) {
 }
 
 // ── Whether two names are of the same race: what is left of each without numbers, editions and the words every race has.
-const words = (name) => new Set(plain(name).replace(/\b(\d+[ae]?|[ivxlc]+|edicio|cursa|de|del|la|el|les|els|i|a|per|by|popular|trofeu|campionat|catalunya|absolut|master|rfea|km|k)\b/g, ' ').split(/\s+/).filter((w) => w.length > 2));
+const words = (name) => new Set(plain(name).replace(/\b(\d+[ae]?|(?=[ivxlc]+\b)c{0,3}(?:xc|xl|l?x{0,3})(?:ix|iv|v?i{0,3})|edicio|cursa|de|del|la|el|les|els|i|a|per|by|popular|trofeu|campionat|catalunya|absolut|master|rfea|km|k|trail|muntanya|marxa|caminada|cros|popular)\b/g, ' ').split(/\s+/).filter((w) => w.length > 2));
 export const alike = (a, b) => {
+  if (plain(a) === plain(b)) return true;
   const [wa, wb] = [words(a), words(b)];
   const shared = [...wa].filter((w) => wb.has(w)).length;
   return shared >= 1 && shared / Math.min(wa.size, wb.size) >= 0.5;

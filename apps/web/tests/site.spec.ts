@@ -195,7 +195,7 @@ test.describe('Calendar (Phase 2)', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await open(page, PAGES.races);
     const rows = page.locator('main [data-month] li a');
-    expect(await rows.count()).toBeGreaterThan(100);
+    expect(await rows.count()).toBeGreaterThan(300);
     // Every row leads to a page of its own, and no two to the same one.
     const hrefs = await rows.evaluateAll((links) => links.map((a) => a.getAttribute('href')));
     expect(new Set(hrefs).size).toBe(hrefs.length);
@@ -203,7 +203,7 @@ test.describe('Calendar (Phase 2)', () => {
     const first = page.locator('nav[aria-label="Mesos del calendari"] a').first();
     await expect(page.locator(`${await first.getAttribute('href')}`)).toBeVisible();
     // Each calendar is named, with a link to it.
-    for (const source of ['fcatletisme.cat', 'opendata-ajuntament.barcelona.cat', 'curses.cat', 'runnea.com']) await expect(page.locator(`main a[href*="${source}"]`).first()).toBeVisible();
+    for (const source of ['fcatletisme.cat', 'opendata-ajuntament.barcelona.cat', 'curses.cat', 'runnea.com', 'gotrail.run', 'feec.cat']) await expect(page.locator(`main a[href*="${source}"]`).first()).toBeVisible();
     // No source gives the climb, and none is made up: a calendar row has no place for it.
     await expect(page.locator('main [data-month]').first()).not.toContainText('D+');
   });
@@ -220,6 +220,19 @@ test.describe('Calendar (Phase 2)', () => {
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
     await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0);
     await expect(page.locator('footer')).toContainText('no és a la versió de producció');
+  });
+
+  test('a march read on its organiser\'s own page is on the calendar as a march, with that page as its source', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/curses/32a-marxa-dels-arrossars-2026/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('32a Marxa dels Arrossars');
+    await expect(main(page)).toContainText('Marxa a peu');
+    await expect(main(page)).toContainText('Pals, Baix Empordà');
+    await expect(main(page)).toContainText('22 de novembre');
+    await expect(main(page)).toContainText('Jovent del Bruel');
+    await expect(page.locator('main [data-source] a')).toHaveAttribute('href', /joventdelbruel/);
+    // What an organiser says of its own march may be told to anyone.
+    await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
   });
 
   test('a race an open source gives is described to search engines', async ({ page }) => {

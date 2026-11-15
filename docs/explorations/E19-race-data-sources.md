@@ -83,7 +83,27 @@ El titular del projecte va decidir posar totes les curses, citant les fonts i en
 - **Cada fitxa diu d'on surt** cada cursa, amb enllaç a la pàgina de la font, la data de consulta i les condicions de cada font.
 - **A producció només hi entren les que té una font de llicència oberta** (les de Barcelona). La resta es veuen a l'entorn de proves, amb `noindex` i un avís, fins que la seva font doni permís. És la mateixa regla que ja tenen les sabatilles.
 
-**No s'ha importat:** la FEEC (l'agenda de competicions es carrega amb JavaScript i el calendari de caminades és un PDF de 2025), ni cap altra font de les no mirades.
+### Segona tanda, el mateix dia: «més curses»
+
+El titular va demanar-ne més, i va posar d'exemple una marxa de Pals d'aquell diumenge. Era la 32a Marxa dels Arrossars (22 de novembre de 2026, Jovent del Bruel), que no sortia a cap dels calendaris llegits.
+
+- **Les marxes i caminades hi entren**, marcades com a marxa. Abans es deixaven fora.
+- **Fonts noves:**
+
+| Font | Proves | Notes |
+|---|---|---|
+| gotrail.run | 155 | Agregador de curses de muntanya, amb nom, dia, municipi i distància més curta i més llarga. Es llegeix el que publica per als cercadors. Tots els drets reservats |
+| FEEC, Circuit Català de Caminades de Resistència 2026 | 23 | D'un PDF, transcrit a `apps/web/scripts/calendar-feec-cccr-2026.json`: data, nom i quilòmetres. Sense municipi |
+| FCA, cros | 17 | S'afegeix la categoria de cros a ruta i trail |
+| Curses.cat, marxes i caminades | 5 | Les que abans es deixaven fora |
+| Web de l'organitzador | 1 | La de Pals, llegida a mà a `calendar-own.json`. És la manera neta d'afegir-ne una: el que un organitzador diu de la seva pròpia prova |
+
+- **Total: 326 proves** (223 de properes), 29 de les quals són marxes. 248 tenen alguna distància, 273 tenen municipi i comarca reconeguts, i 17 surten a més d'una font.
+- **A producció n'hi entren 13**: les 12 de Barcelona i la de Pals.
+- **No s'han llegit ChampionChip (xipgroc.cat) ni Lasttiming**: el seu `robots.txt` prohibeix expressament l'accés als agents d'Anthropic, i s'ha respectat.
+- **El terreny de 137 proves no se sap**: gotrail és un calendari de muntanya amb curses urbanes i d'asfalt barrejades, i només es diu «muntanya» quan el nom ho diu.
+
+**No s'ha importat:** la resta de la FEEC (l'agenda de competicions es carrega amb JavaScript i el calendari de caminades és un PDF de 2025), ni cap altra font de les no mirades.
 
 **Riscos que queden oberts** (`docs/revisio-legal.md`): l'avís legal de la FCA reserva tots els drets; ni Runnea ni curses.cat han estat avisats. Citar i enllaçar és de bona pràctica, però no és un permís.
 

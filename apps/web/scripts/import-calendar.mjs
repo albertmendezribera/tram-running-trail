@@ -2,7 +2,7 @@
 // src/content/calendar.json. Every race keeps the source it was read from and a link to it.
 // Only facts are taken: name, date, town, distances, organiser and its website. No text, no image.
 // Usage: node scripts/import-calendar.mjs [fromDate=2026-01-01] [toDate=2027-12-31]
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { alike, bare, distancesOf, plain, unescape } from './calendar-parse.mjs';
 
 const [FROM = '2026-01-01', TO = '2027-12-31'] = process.argv.slice(2);
@@ -20,6 +20,9 @@ const SOURCES = {
   bcn: { name: 'Ajuntament de Barcelona · Open Data BCN', url: 'https://opendata-ajuntament.barcelona.cat/data/dataset/agenda-activitats-esportives', terms: 'CC BY 4.0' },
   'curses-cat': { name: 'Curses.cat', url: 'https://www.curses.cat/calendari', terms: 'Calendari d’una empresa de cronometratge. Se’n citen fets i s’hi enllaça.' },
   runnea: { name: 'Runnea', url: 'https://www.runnea.com/carreras-populares/calendario/catalunya/', terms: 'Calendari d’un mitjà. Se’n citen fets i s’hi enllaça.' },
+  gotrail: { name: 'gotrail.run', url: 'https://gotrail.run/trail-running-calendar/spain/cataluna', terms: 'Calendari d’un agregador de curses de muntanya. Tots els drets reservats pel seu titular: se’n citen fets i s’hi enllaça.' },
+  feec: { name: 'FEEC · Circuit Català de Caminades de Resistència', url: 'https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf', terms: 'Calendari oficial del circuit, en PDF. Se’n citen fets i s’hi enllaça.' },
+  own: { name: 'Web de l’organitzador', url: '', terms: 'Llegit a la pàgina de qui organitza la prova.' },
 };
 const PLACES = { name: 'Municipis Catalunya Geo · Generalitat de Catalunya', url: 'https://analisi.transparenciacatalunya.cat/d/9aju-tpwc', terms: 'Dades obertes de la Generalitat' };
 
@@ -47,7 +50,8 @@ const left = {};
 const leave = (source, why) => void (left[`${source}: ${why}`] = (left[`${source}: ${why}`] ?? 0) + 1);
 
 // ── Federació Catalana d'Atletisme: the calendar of its website, by category.
-for (const [category, terrain] of [['ruta', 'road'], ['trail-muntanya', 'trail']]) {
+// Road, trail and cross-country: races on foot. Race walking and track meetings are another calendar.
+for (const [category, terrain] of [['ruta', 'road'], ['trail-muntanya', 'trail'], ['cros', 'mixed']]) {
   for (let page = 1; ; page++) {
     const data = await (await get(`https://fcatletisme.cat/wp-json/tribe/events/v1/events?per_page=50&page=${page}&categories=${category}&start_date=${FROM}&end_date=${TO}`)).json();
     for (const event of data.events ?? []) {
@@ -128,11 +132,12 @@ for (const [category, terrain] of [['ruta', 'road'], ['trail-muntanya', 'trail']
     const spans = [...article.matchAll(/<span><i class="bi bi-([a-z-]+)[^>]*><\/i>([\s\S]*?)<\/span>/g)].map(([, icon, value]) => [icon, unescape(value)]);
     const written = spans.find(([icon]) => icon === 'geo-alt')?.[1] ?? '';
     const lengths = spans.filter(([icon]) => icon !== 'geo-alt' && icon !== 'calendar-event').map(([, value]) => value).join(' ');
-    // A calendar of everything the company times: mountain bikes and walks are not races on foot.
-    if (/\bbtt\b/.test(kind) || !/cursa|trail|popular|urbana|backyard|cronoescalada/.test(kind)) {
-      leave('curses-cat', `no és una cursa a peu (${kind})`);
+    // A calendar of everything the company times: mountain bikes are not on foot. A march or a walk is, and is kept as one.
+    if (/\bbtt\b/.test(kind) || !/cursa|trail|popular|urbana|backyard|cronoescalada|marxa|caminada/.test(kind)) {
+      leave('curses-cat', `no és a peu (${kind})`);
       continue;
     }
+    const march = /marxa|caminada/.test(kind) && !/cursa|trail/.test(kind);
     if (!name || !day) continue;
     // A race run wherever each runner is has no place on a calendar of places.
     if (/\bvirtual\b/i.test(name)) {
@@ -143,7 +148,7 @@ for (const [category, terrain] of [['ruta', 'road'], ['trail-muntanya', 'trail']
     if (date < FROM || date > TO) continue;
     const link = /href="([^"]+)"[^>]*class="btn/.exec(article)?.[1] ?? /class="cc-nom" href="([^"]+)"/.exec(article)?.[1] ?? null;
     const own = link && !/^https?:\/\/(www\.)?curses\.cat\/?$/.test(link) ? link : null;
-    found.push({ name, date, town: townOf(written) ?? (written ? { name: written, comarca: null, lat: null, lon: null } : null), terrain: /trail|cronoescalada/.test(kind) ? 'trail' : /urbana|ruta/.test(kind) ? 'road' : null, distancesM: distancesOf(`${name} ${lengths}`, { trail: /trail|cronoescalada/.test(kind) }), organiser: null, website: own, source: { id: 'curses-cat', url: own ?? SOURCES['curses-cat'].url } });
+    found.push({ ...(march ? { kind: 'march' } : {}), name, date, town: townOf(written) ?? (written ? { name: written, comarca: null, lat: null, lon: null } : null), terrain: /trail|cronoescalada/.test(kind) ? 'trail' : /urbana|ruta/.test(kind) ? 'road' : null, distancesM: distancesOf(`${name} ${lengths}`, { trail: /trail|cronoescalada/.test(kind) }), organiser: null, website: own, source: { id: 'curses-cat', url: own ?? SOURCES['curses-cat'].url } });
   }
 }
 
@@ -170,18 +175,71 @@ for (const [category, terrain] of [['ruta', 'road'], ['trail-muntanya', 'trail']
   }
 }
 
+// ── gotrail.run: what each page of its calendar for Catalonia says to search engines (schema.org): name, day, town.
+for (let page = 1; page <= 20; page++) {
+  // The page after the last one does not exist.
+  const html = await get(`${SOURCES.gotrail.url}${page > 1 ? `?page=${page}` : ''}`).then((response) => response.text(), () => '');
+  let events = [];
+  for (const [, json] of html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) {
+    try {
+      const data = JSON.parse(json);
+      if (data['@type'] === 'ItemList') events = data.itemListElement.map((entry) => entry.item).filter((item) => item?.['@type'] === 'SportsEvent');
+    } catch {
+      // Not data: nothing to read.
+    }
+  }
+  if (!events.length) break;
+  for (const event of events) {
+    const date = (event.startDate ?? '').slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < FROM || date > TO) continue;
+    const written = event.location?.address?.addressLocality ?? event.location?.name ?? '';
+    const geo = event.location?.geo;
+    const town = townOf(written) ?? (written ? { name: written, comarca: null, lat: geo ? Number(Number(geo.latitude).toFixed(5)) : null, lon: geo ? Number(Number(geo.longitude).toFixed(5)) : null } : null);
+    // "You can run between 13 and 50 kilometers": the shortest and the longest it offers. "You can run 21 kilometers": the one.
+    const [, low, high] = /between (\d+(?:\.\d+)?) and (\d+(?:\.\d+)?) kilometers/.exec(event.description ?? '') ?? [];
+    const [, only] = /You can run (\d+(?:\.\d+)?) kilometers/.exec(event.description ?? '') ?? [];
+    const name = unescape(event.name);
+    // It is a calendar of trail running with some road and urban races in it: the ground is said only when the name says it.
+    found.push({ name, date, town, terrain: /trail|muntanya|skyrace|vertical/i.test(name) ? 'trail' : null, distancesM: [low, high, only].filter(Boolean).map((km) => Math.round(Number(km) * 1000)).sort((a, b) => a - b), organiser: null, website: null, source: { id: 'gotrail', url: event.url } });
+  }
+  await pause(800);
+}
+
+// ── FEEC: the resistance marches of its Catalan circuit, read once from its PDF into a file of this folder.
+{
+  const read = JSON.parse(readFileSync(new URL('./calendar-feec-cccr-2026.json', import.meta.url), 'utf8'));
+  for (const march of read.marches) {
+    if (march.date < FROM || march.date > TO) continue;
+    found.push({ kind: 'march', ...(march.status ? { status: march.status } : {}), name: march.name, date: march.date, town: null, terrain: null, distancesM: [Math.round(march.km * 1000)], organiser: null, website: null, source: { id: 'feec', url: read.source } });
+  }
+}
+
+// ── What was read by hand on the page of an organiser.
+{
+  const read = JSON.parse(readFileSync(new URL('./calendar-own.json', import.meta.url), 'utf8'));
+  for (const race of read.races) {
+    found.push({ ...(race.kind ? { kind: race.kind } : {}), name: race.name, date: race.date, town: townOf(race.town) ?? { name: race.town, comarca: null, lat: null, lon: null }, terrain: race.terrain ?? null, distancesM: (race.distancesKm ?? []).map((km) => Math.round(km * 1000)), organiser: race.organiser ?? null, website: race.website ?? null, source: { id: 'own', url: race.website } });
+  }
+}
+
 // ── One race, one entry: the same race read from two calendars keeps both sources.
-const ORDER = ['fca', 'curses-cat', 'bcn', 'runnea'];
+// What an organiser says of its own race comes first; then the federations, the timing company, the city and the aggregators.
+const ORDER = ['own', 'fca', 'feec', 'curses-cat', 'bcn', 'gotrail', 'runnea'];
 found.sort((a, b) => ORDER.indexOf(a.source.id) - ORDER.indexOf(b.source.id));
 const races = [];
 for (const entry of found) {
-  const same = races.find((race) => race.date === entry.date && (!entry.town || !race.town || bare(race.town.name) === bare(entry.town.name)) && alike(race.name, entry.name));
+  // The day and the name; and the town, when both calendars name a municipality (one may name a neighbourhood of it).
+  const same = races.find((race) => race.date === entry.date && (!entry.town?.comarca || !race.town?.comarca || bare(race.town.name) === bare(entry.town.name)) && alike(race.name, entry.name));
   if (same) {
     if (!same.sources.some((s) => s.id === entry.source.id)) same.sources.push(entry.source);
     same.distancesM = [...new Set([...same.distancesM, ...entry.distancesM])].sort((a, b) => a - b);
     same.website ??= entry.website;
     same.organiser ??= entry.organiser;
     same.terrain ??= entry.terrain;
+    same.kind ??= entry.kind;
+    same.status ??= entry.status;
+    if (same.town && !same.town.comarca && entry.town?.comarca) same.town = entry.town;
+    same.town ??= entry.town;
     // The city's own data says where in the city, not just the middle of it.
     if (entry.source.id === 'bcn' && entry.town?.lat && same.town) same.town = { ...same.town, lat: entry.town.lat, lon: entry.town.lon };
     continue;
@@ -197,7 +255,7 @@ const out = races
     let slug = `${plain(race.name).replace(/'/g, '').replace(/\s+/g, '-').replace(/-\d{4}$/, '').slice(0, 70).replace(/-+$/, '')}-${race.date.slice(0, 4)}`;
     for (let n = 2; slugs.has(slug); n++) slug = slug.replace(/(-\d+)?$/, '') + `-${n}`;
     slugs.add(slug);
-    return { slug, name: race.name, date: race.date, town: race.town?.name ?? null, comarca: race.town?.comarca ?? null, ...(race.region && !race.town ? { region: race.region } : {}), lat: race.town?.lat ?? null, lon: race.town?.lon ?? null, terrain: race.terrain, ...(race.status ? { status: race.status } : {}), distancesM: race.distancesM, organiser: race.organiser, website: race.website, sources: race.sources };
+    return { slug, name: race.name, date: race.date, town: race.town?.name ?? null, comarca: race.town?.comarca ?? null, ...(race.region && !race.town ? { region: race.region } : {}), lat: race.town?.lat ?? null, lon: race.town?.lon ?? null, terrain: race.terrain, ...(race.kind ? { kind: race.kind } : {}), ...(race.status ? { status: race.status } : {}), distancesM: race.distancesM, organiser: race.organiser, website: race.website, sources: race.sources };
   });
 
 writeFileSync(new URL('../src/content/calendar.json', import.meta.url), JSON.stringify({ accessed: new Date().toISOString().slice(0, 10), from: FROM, to: TO, sources: SOURCES, places: PLACES, races: out }, null, 1) + '\n');

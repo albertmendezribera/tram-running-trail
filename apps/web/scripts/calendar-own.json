@@ -1,0 +1,15 @@
+{
+ "note": "Curses i marxes preses a mà de la pàgina del seu propi organitzador. Cada una diu d'on s'ha llegit i quin dia.",
+ "races": [
+  {
+   "name": "32a Marxa dels Arrossars",
+   "date": "2026-11-22",
+   "town": "Pals",
+   "kind": "march",
+   "distancesKm": [12, 16],
+   "organiser": "Jovent del Bruel",
+   "website": "https://joventdelbruel.ffames.cat/tickets/6-32a-marxa-dels-arrossars",
+   "read": "2026-11-15"
+  }
+ ]
+}

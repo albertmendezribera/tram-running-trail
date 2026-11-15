@@ -1,0 +1,123 @@
+{
+ "source": "https://www.feec.cat/wp-content/uploads/2025/07/Puntuacions-_-CCCR26.pdf",
+ "read": "2026-11-15",
+ "note": "Circuit Català de Caminades de Resistència 2026 (FEEC): calendari i puntuacions. Llegit del PDF: data, nom i quilòmetres. El desnivell acumulat del PDF no s'ha pres: no es pot casar amb cada fila amb seguretat.",
+ "marches": [
+  {
+   "name": "14a Travessa Rubí-Montserrat",
+   "date": "2026-03-01",
+   "km": 46.0,
+   "status": "cancelled"
+  },
+  {
+   "name": "26a Marxa dels Castells de la Segarra",
+   "date": "2026-03-08",
+   "km": 56.0
+  },
+  {
+   "name": "11a Marxa del Setge de Cardona",
+   "date": "2026-03-15",
+   "km": 52.0
+  },
+  {
+   "name": "10a Travessada Molins de Rei a Vilafranca de Penedès",
+   "date": "2026-03-22",
+   "km": 45.59
+  },
+  {
+   "name": "15a Almogàver",
+   "date": "2026-03-28",
+   "km": 61.0
+  },
+  {
+   "name": "16a Caminada Carenes",
+   "date": "2026-04-11",
+   "km": 52.0
+  },
+  {
+   "name": "23a Riudoms - la Mola - Riudoms",
+   "date": "2026-04-19",
+   "km": 53.0
+  },
+  {
+   "name": "17a Cinc Cims",
+   "date": "2026-04-26",
+   "km": 53.0
+  },
+  {
+   "name": "22a Marxa de resistència 7 Cims",
+   "date": "2026-05-03",
+   "km": 54.7
+  },
+  {
+   "name": "36a La Romànica",
+   "date": "2026-05-09",
+   "km": 79.0
+  },
+  {
+   "name": "50a Travessa del Montseny",
+   "date": "2026-05-16",
+   "km": 47.0
+  },
+  {
+   "name": "29a Caminada\"Reus - Prades - Reus\"",
+   "date": "2026-06-07",
+   "km": 54.8
+  },
+  {
+   "name": "2a Marxa Barcelona - Montserrat",
+   "date": "2026-06-13",
+   "km": 62.0
+  },
+  {
+   "name": "19a Transfronterera Cap de Rec",
+   "date": "2026-06-20",
+   "km": 49.0
+  },
+  {
+   "name": "4a TransMontserrat",
+   "date": "2026-09-12",
+   "km": 49.72
+  },
+  {
+   "name": "47a Matagalls - Montserrat",
+   "date": "2026-09-19",
+   "km": 83.4
+  },
+  {
+   "name": "34a Marxa Rasos Manresa",
+   "date": "2026-09-26",
+   "km": 80.5
+  },
+  {
+   "name": "24a Trenkakames",
+   "date": "2026-10-03",
+   "km": 55.0
+  },
+  {
+   "name": "11a La Mola - Santa",
+   "date": "2026-10-17",
+   "km": 50.0
+  },
+  {
+   "name": "12a Marxa de Resistència La Llopa",
+   "date": "2026-10-18",
+   "km": 54.0
+  },
+  {
+   "name": "32a La Marxassa",
+   "date": "2026-10-24",
+   "km": 66.5
+  },
+  {
+   "name": "2a Caminada Resistencia \"Vila de Súria\"",
+   "date": "2026-11-01",
+   "km": 46.5
+  },
+  {
+   "name": "31a Marxa del Garraf",
+   "date": "2026-11-08",
+   "km": 46.0
+  }
+ ]
+}

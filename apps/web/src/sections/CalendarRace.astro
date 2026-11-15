@@ -20,6 +20,7 @@ export interface Props {
 const { race, today } = Astro.props;
 const state = race.status === 'postponed' ? 'Ajornada' : race.status === 'cancelled' ? 'Suspesa' : race.date < today ? 'Disputada' : 'Programada';
 const facts = [
+  { label: 'Tipus', value: race.kind === 'march' ? 'Marxa a peu' : 'Cursa' },
   { label: 'Data', value: formatDate(race.date, 'ca') },
   { label: 'Lloc', value: placeOf(race) },
   { label: 'Estat', value: state },
@@ -32,7 +33,7 @@ const sources = sourcesOf(race);
 
 <!-- A race of the calendar: what its sources say of it, and where each thing comes from. It has no route yet. -->
 <Stack gap={5}>
-  <Heading level={1} size="lg" kicker="Cursa">{race.name}</Heading>
+  <Heading level={1} size="lg" kicker={race.kind === 'march' ? 'Marxa' : 'Cursa'}>{race.name}</Heading>
   {race.terrain && <Cluster><TerrainTag terrain={race.terrain} /></Cluster>}
   <Facts facts={facts} />
 </Stack>
@@ -54,7 +55,7 @@ const sources = sourcesOf(race);
           sources.map((source) => (
             <li data-source>
               <Stack gap={1}>
-                <Link href={source.link}>{source.name}</Link>
+                <Link href={source.link}>{source.name === 'Web de l’organitzador' && race.organiser ? `${source.name}: ${race.organiser}` : source.name}</Link>
                 <Text size="sm" tone="muted">{source.terms}</Text>
               </Stack>
             </li>

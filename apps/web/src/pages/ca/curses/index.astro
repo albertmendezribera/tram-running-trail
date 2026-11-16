@@ -13,6 +13,7 @@ import { facetDoors, hrefOf } from '../../../content/facets';
 import Site from '../../../layouts/Site.astro';
 import CalendarFilter from '../../../sections/CalendarFilter.astro';
 import CalendarList from '../../../sections/CalendarList.astro';
+import CalendarYear from '../../../sections/CalendarYear.astro';
 import RaceList from '../../../sections/RaceList.astro';
 
 const races = visible(RACES);
@@ -54,6 +55,13 @@ const notice = pending
         <Panel>
           <RaceList races={races} />
         </Panel>
+      </Band>
+    )
+  }
+  {
+    calendar.length > 0 && (
+      <Band tone="plain" title="L'any com a perfil">
+        <div class="coming"><CalendarYear races={calendar} today={today} /></div>
       </Band>
     )
   }

@@ -1,0 +1,51 @@
+---
+import { layoutStrip, type Mark, sharedScale } from '@tram/design-system/patterns/calendar-strip.ts';
+import CalendarStrip from '@tram/design-system/patterns/CalendarStrip.astro';
+import CalendarStripKey from '@tram/design-system/patterns/CalendarStripKey.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+// A made-up year, the same at every build: spring and autumn full, summer thin, as a real calendar is.
+const WEEKENDS = ['01-17', '02-07', '02-21', '03-07', '03-14', '03-21', '04-11', '04-18', '04-25', '05-09', '05-16', '05-23', '06-06', '06-20', '07-11', '09-12', '09-26', '10-03', '10-10', '10-17', '10-24', '11-07', '11-14', '11-21', '12-05', '12-19'];
+const marks: Mark[] = WEEKENDS.flatMap((day, i) => {
+  const date = `2027-${day}`;
+  const past = date < '2027-05-01';
+  const some: Mark[] = [{ date, side: i % 2 ? 'down' : 'up', weight: ((i % 4) + 1) as 1 | 2 | 3 | 4, past }];
+  if (i % 3 === 0) some.push({ date, side: 'down', weight: ((i % 3) + 2) as 2 | 3 | 4, past }, { date, side: 'up', weight: 1, past });
+  if (i % 4 === 1) some.push({ date, side: 'aside', weight: i % 8 === 1 ? null : 2, past });
+  if (i % 5 === 2) some.push({ date, side: 'up', weight: 3, past }, { date, side: 'up', weight: 2, past });
+  return some;
+});
+const strip = layoutStrip(2027, marks);
+const scale = sharedScale([strip]);
+const names = { up: 'd’asfalt', down: 'de muntanya', aside: 'sense terreny', none: 'cap prova' };
+const links = { '03': '#', '05': '#', '10': '#' };
+const code = `const strip = layoutStrip(2027, marks); // marks: { date, side: 'up' | 'down' | 'aside', weight: 1–4 | null, past? }
+<CalendarStrip strip={strip} scale={sharedScale([strip])} links={{ '03': '#mes-2027-03' }}
+  names={{ up: 'd’asfalt', down: 'de muntanya', aside: 'sense terreny', none: 'cap prova' }} />
+<CalendarStripKey up="Asfalt, cap amunt" down="Muntanya, cap avall" weights={[…]} narrow="…" />`;
+---
+
+<Fiche
+  group="Patró"
+  title="CalendarStrip"
+  use="Veure un any de curses d'un cop d'ull (M4): una franja de setmanes amb una marca per prova. Un costat creix cap amunt i l'altre cap avall, i així es veu quin pesa més i quan."
+  avoid="Fer-la servir sola: no diu cap nom ni cap data, i va sempre amb la llista a la qual porten els seus mesos. Tampoc és un gràfic de barres per llegir-hi xifres."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Un any</h2>
+    <p class="fiche-note">
+      Dades inventades. Cada marca és tan gruixuda com llarga és la prova (quatre passos); les estretes no tenen distància coneguda, les buides no són de cap dels dos costats i les clares ja han passat. Només els mesos amb enllaç són portes. El dibuix s'estira a l'amplada
+      que té: no porta text ni cap forma que l'estirament espatlli.
+    </p>
+    <div data-testid="strip"><CalendarStrip strip={strip} scale={scale} links={links} names={names} /></div>
+    <CalendarStripKey up="Asfalt, cap amunt" down="Muntanya, cap avall" aside="A sota: sense terreny" weights={['Curta', 'Mitja', 'Llarga', 'Ultra']} narrow="Estreta: sense distància" past="En clar: ja passada" />
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">{MODES.map((m) => <Mode {...m}><CalendarStrip strip={strip} scale={scale} names={names} /></Mode>)}</div>
+  </section>
+</Fiche>

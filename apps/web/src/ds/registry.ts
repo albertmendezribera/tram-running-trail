@@ -1,5 +1,6 @@
 import ActionsFiche from './fiches/ActionsFiche.astro';
 import BibFiche from './fiches/BibFiche.astro';
+import CalendarStripFiche from './fiches/CalendarStripFiche.astro';
 import ClimbFiche from './fiches/ClimbFiche.astro';
 import DataTableFiche from './fiches/DataTableFiche.astro';
 import ElevationFiche from './fiches/ElevationFiche.astro';
@@ -41,6 +42,7 @@ export const FICHES = [
   { slug: 'patterns/climb-list', title: 'ClimbList', Page: ClimbFiche },
   { slug: 'patterns/route-plate', title: 'RoutePlate', Page: RoutePlateFiche },
   { slug: 'patterns/locator-map', title: 'LocatorMap', Page: LocatorMapFiche },
+  { slug: 'patterns/calendar-strip', title: 'CalendarStrip', Page: CalendarStripFiche },
   { slug: 'patterns/race-row', title: 'RaceRow, TerrainTag i Facts', Page: RaceRowFiche },
   { slug: 'patterns/site-chrome', title: 'Capçalera i peu', Page: SiteChromeFiche },
   { slug: 'patterns/shoe-xray', title: 'ShoeXray', Page: ShoeXrayFiche },

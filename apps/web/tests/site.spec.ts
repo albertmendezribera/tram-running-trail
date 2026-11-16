@@ -326,6 +326,54 @@ test.describe('Calendar (Phase 2)', () => {
   });
 });
 
+test.describe('The year as a profile (M4)', () => {
+  test('draws every race of the calendar as a mark on its year, road up and mountain down, and says how to read it', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.races);
+    const years = page.locator('main [data-year]');
+    expect(await years.count()).toBeGreaterThan(1);
+    // A mark to a race: as many as the list has rows.
+    expect(await years.locator('svg rect').count()).toBe(await page.locator('main [data-race]').count());
+    // Road grows up from the line and mountain down; what is of neither is under both.
+    const sides = await years.first().locator('svg').evaluate((svg) => {
+      const line = Number(svg.querySelector('line')!.getAttribute('y1'));
+      const edges = (side: string, edge: 'top' | 'bottom') => [...svg.querySelectorAll(`rect[data-side="${side}"]`)].map((rect) => Number(rect.getAttribute('y')) + (edge === 'bottom' ? Number(rect.getAttribute('height')) : 0));
+      return { line, up: Math.max(...edges('up', 'bottom')), down: Math.min(...edges('down', 'top')), lowestDown: Math.max(...edges('down', 'bottom')), aside: Math.min(...edges('aside', 'top')) };
+    });
+    expect(sides.up).toBeLessThanOrEqual(sides.line);
+    expect(sides.down).toBeGreaterThanOrEqual(sides.line);
+    expect(sides.aside).toBeGreaterThan(sides.lowestDown);
+    // The drawing has no words: the key beside it names every mark, and the page says what the height is not.
+    for (const words of ['Asfalt, cap amunt', 'Muntanya, cap avall', 'cros i proves sense terreny a la font', 'Més que una marató', 'sense distància a la font', 'ja disputada']) await expect(main(page)).toContainText(words);
+    await expect(main(page)).toContainText('no el desnivell de cap cursa');
+    // The drawing is not what a screen reader reads: the months are.
+    await expect(years.first().locator('svg')).toHaveAttribute('aria-hidden', 'true');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
+  });
+
+  test('each month with races is a way into its part of the list, and says what it holds', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.races);
+    const doors = page.locator('main [data-year] a');
+    const hrefs = await doors.evaluateAll((links) => links.map((link) => link.getAttribute('href')!));
+    expect(hrefs.length).toBeGreaterThan(12);
+    // Every door leads to a month that is in the list.
+    for (const href of hrefs) await expect(page.locator(href), href).toHaveCount(1);
+    // A month to come leads among the races to come; a month gone, among those run.
+    await expect(page.locator('main [data-year="2027"]').getByRole('link', { name: /^Març 2027: / })).toHaveAttribute('href', '#mes-2027-03');
+    await expect(page.locator('main [data-year="2026"]').getByRole('link', { name: /^Maig 2026: / })).toHaveAttribute('href', '#fet-2026-05');
+    // What a month holds is said in words, side by side as the drawing shows it.
+    await expect(page.locator('main [data-year="2026"]').getByRole('link', { name: /^Novembre 2026: \d+ d’asfalt, \d+ de muntanya, \d+ de cros o sense terreny a la font$/ })).toHaveCount(1);
+    // A door is wide enough for a finger, on a phone too.
+    const widths = await doors.evaluateAll((links) => links.map((link) => link.getBoundingClientRect().width));
+    expect(Math.min(...widths)).toBeGreaterThanOrEqual(24);
+    // Following one moves the page to that month.
+    await page.locator('main [data-year="2027"]').getByRole('link', { name: /^Març 2027: / }).click();
+    await expect(page).toHaveURL(/#mes-2027-03$/);
+    await expect(page.locator('#mes-2027-03')).toBeInViewport();
+  });
+});
+
 test.describe('Calendar by facet (Phase 2)', () => {
   test('a kind of race has a page of its own, with its races to come, the rule that puts them there and the cuts that follow', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });

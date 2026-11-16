@@ -1,0 +1,93 @@
+---
+export interface Props {
+  /** What grows up, what grows down and what sits in the lane underneath. Left out, a strip without that lane. */
+  up: string;
+  down: string;
+  aside?: string | undefined;
+  /** What each thickness stands for, from the thinnest to the thickest. */
+  weights: readonly [string, string, string, string];
+  /** What a narrow mark is: one of unknown weight. */
+  narrow: string;
+  /** What a faint mark is: one already past. Left out when the strip has none. */
+  past?: string | undefined;
+}
+
+const { up, down, aside, weights, narrow, past } = Astro.props;
+---
+
+<!-- How to read a CalendarStrip: every mark it draws, with its name. The strip has no words of its own. -->
+<dl class="key" data-type="text-xs">
+  <div class="entry"><dt><span class="mark" data-side="up" data-weight="2"></span></dt><dd>{up}</dd></div>
+  <div class="entry"><dt><span class="mark" data-side="down" data-weight="2"></span></dt><dd>{down}</dd></div>
+  {aside && <div class="entry"><dt><span class="mark" data-side="aside" data-weight="2"></span></dt><dd>{aside}</dd></div>}
+  {weights.map((label, i) => <div class="entry"><dt><span class="mark" data-weight={i + 1}></span></dt><dd>{label}</dd></div>)}
+  <div class="entry"><dt><span class="mark" data-weight="1" data-narrow></span></dt><dd>{narrow}</dd></div>
+  {past && <div class="entry"><dt><span class="mark" data-past data-weight="2"></span></dt><dd>{past}</dd></div>}
+</dl>
+
+<style>
+  .key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tram-sys-space-2) var(--tram-sys-space-5);
+    margin: 0;
+    color: var(--tram-sys-text-muted);
+  }
+
+  .entry {
+    display: flex;
+    align-items: center;
+    gap: var(--tram-sys-space-2);
+  }
+
+  dt {
+    display: grid;
+    place-items: center;
+    inline-size: var(--tram-sys-space-4);
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  /* The same marks as on the strip, at the size they are read: a step of thickness is a hairline doubled. */
+  .mark {
+    display: block;
+    inline-size: var(--tram-sys-space-4);
+    block-size: calc(var(--tram-sys-space-1) * var(--steps, 1));
+    background: var(--tram-sys-text);
+  }
+
+  .mark[data-weight='2'] {
+    --steps: 2;
+  }
+
+  .mark[data-weight='3'] {
+    --steps: 3;
+  }
+
+  .mark[data-weight='4'] {
+    --steps: 4;
+  }
+
+  .mark[data-narrow] {
+    inline-size: var(--tram-sys-space-2);
+  }
+
+  .mark[data-side='up'] {
+    background: var(--tram-sys-data-road);
+  }
+
+  .mark[data-side='down'] {
+    background: var(--tram-sys-data-trail);
+  }
+
+  .mark[data-side='aside'] {
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-text-muted);
+    background: var(--tram-sys-surface);
+  }
+
+  .mark[data-past] {
+    background: var(--tram-sys-rule);
+  }
+</style>

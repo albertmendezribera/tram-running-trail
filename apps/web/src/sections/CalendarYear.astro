@@ -1,0 +1,61 @@
+---
+import { formatMeasure } from '@tram/formats';
+import { layoutStrip, type Mark, sharedScale } from '@tram/design-system/patterns/calendar-strip.ts';
+import CalendarStrip from '@tram/design-system/patterns/CalendarStrip.astro';
+import CalendarStripKey from '@tram/design-system/patterns/CalendarStripKey.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import type { CalendarRace } from '../content/calendar';
+
+export interface Props {
+  /** Every race the page lists. */
+  races: readonly CalendarRace[];
+  /** The day the page is built: a race before it has been run. */
+  today: string;
+}
+
+const { races, today } = Astro.props;
+// How thick a mark is: the longest distance of its race, in four steps. Edges in metres, the upper one inside.
+const STEPS = [10_000, 21_100, 42_200];
+const weightOf = (race: CalendarRace): Mark['weight'] => (race.distancesM.length ? ((STEPS.filter((edge) => Math.max(...race.distancesM) > edge).length + 1) as 1 | 2 | 3 | 4) : null);
+// Which way a mark grows is the ground its source names. Cros, and every race whose source names none, grows neither way.
+const marks: Mark[] = races.map((race) => ({ date: race.date, side: race.terrain === 'road' ? 'up' : race.terrain === 'trail' ? 'down' : 'aside', weight: weightOf(race), past: race.date < today }));
+const years = [...new Set(races.map((race) => Number(race.date.slice(0, 4))))].sort();
+const strips = years.map((year) => layoutStrip(year, marks));
+const scale = sharedScale(strips);
+// A month leads to itself in the list: among the races to come when it has any, among those run otherwise.
+const linksOf = (year: number): Record<string, string> =>
+  Object.fromEntries(
+    [...new Set(races.filter((race) => race.date.startsWith(`${year}-`)).map((race) => race.date.slice(5, 7)))].map((month) => [month, races.some((race) => race.date.startsWith(`${year}-${month}`) && race.date >= today) ? `#mes-${year}-${month}` : `#fet-${year}-${month}`]),
+  );
+const km = (metres: number): string => formatMeasure(metres / 1000, 'km', 'ca');
+const count = (side: Mark['side']): number => marks.filter((mark) => mark.side === side).length;
+---
+
+<!--
+  M4, «the year as a profile» (CLAUDE.md 7.7). The plan gave each mark the height of its climb; no source
+  gives the climb of a race, and none is estimated, so the marks are stacked week by week instead and the
+  height of the profile is how much is run that week (E07). Road grows up and mountain grows down.
+-->
+<Stack gap={6}>
+  <Text measure>
+    Cada marca és una prova, posada a la setmana que es fa. Les d'asfalt creixen cap amunt i les de muntanya cap avall; com més llarga és la prova, més gruixuda la marca. De {races.length} proves, {count('up')} són d'asfalt i {count('down')} de muntanya; les altres {count('aside')}
+    són cros o proves de les quals cap font diu el terreny, i van a la franja de sota.
+  </Text>
+  {
+    strips.map((strip) => (
+      <div data-year={strip.year}>
+        <CalendarStrip strip={strip} scale={scale} links={linksOf(strip.year)} names={{ up: 'd’asfalt', down: 'de muntanya', aside: 'de cros o sense terreny a la font', none: 'cap prova' }} />
+      </div>
+    ))
+  }
+  <CalendarStripKey
+    up="Asfalt, cap amunt"
+    down="Muntanya, cap avall"
+    aside="A sota: cros i proves sense terreny a la font"
+    weights={[`Fins a ${km(STEPS[0]!)}`, `Fins a la mitja marató`, `Fins a la marató`, `Més que una marató`]}
+    narrow="Estreta: sense distància a la font"
+    past={marks.some((mark) => mark.past) ? 'En clar: ja disputada' : undefined}
+  />
+  <Text size="sm" tone="muted" measure>L'alçada del perfil és quant es corre cada setmana, no el desnivell de cap cursa: cap font el diu, i no l'estimem. Cada mes porta a la seva part de la llista.</Text>
+</Stack>

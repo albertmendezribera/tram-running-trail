@@ -1,0 +1,218 @@
+---
+import type { Locale } from '@tram/formats';
+import type { Side, Strip } from './calendar-strip.ts';
+
+export interface Props {
+  /** The year laid out: `layoutStrip(year, marks)`. */
+  strip: Strip;
+  /** The tallest stack of each side the strip is drawn to. Two strips drawn to the same one can be compared (`sharedScale`). */
+  scale: Record<Side, number>;
+  /** Where each month leads, by its number: `{ '11': '#mes-2026-11' }`. A month left out is not a link. */
+  links?: Readonly<Record<string, string>>;
+  /** What the marks of each side are, as they follow a number («9 d’asfalt»), and what a month without any is said to have. */
+  names: { up: string; down: string; aside: string; none: string };
+  locale?: Locale;
+}
+
+const MONTHS: Record<Locale, { long: string[]; short: string[] }> = {
+  ca: { long: ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'], short: ['gen.', 'febr.', 'març', 'abr.', 'maig', 'juny', 'jul.', 'ag.', 'set.', 'oct.', 'nov.', 'des.'] },
+  es: { long: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'], short: ['ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sept.', 'oct.', 'nov.', 'dic.'] },
+  en: { long: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], short: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] },
+};
+
+const { strip, scale, links = {}, names, locale = 'ca' } = Astro.props;
+// The drawing in its own units: a week is one wide and a step of thickness one tall. It is stretched to
+// the box it is given, so it holds no text and no shape that stretching would spoil.
+/** The lane of the marks of neither side stands this many steps under the rest. */
+const GAP = scale.aside ? Math.max(2, Math.round((scale.up + scale.down) * 0.08)) : 0;
+const height = scale.up + scale.down + GAP + scale.aside;
+const LINES = { up: scale.up, down: scale.up, aside: scale.up + scale.down + GAP };
+/** The paper left between two marks, as a share of a week and of a step. */
+const [BETWEEN_X, BETWEEN_Y, NARROW] = [0.1, 0.14, 0.5];
+const cells = strip.cells.map((cell) => {
+  const wide = cell.narrow ? NARROW : 1 - BETWEEN_X * 2;
+  const y = cell.side === 'up' ? LINES.up - cell.from - cell.thick : LINES[cell.side] + cell.from;
+  return { x: cell.column + (1 - wide) / 2, y: y + BETWEEN_Y / 2, width: wide, height: cell.thick - BETWEEN_Y, side: cell.side, past: cell.past };
+});
+const said = (count: Record<Side, number>): string => {
+  const parts = (['up', 'down', 'aside'] as const).filter((side) => count[side] > 0).map((side) => `${count[side]} ${names[side]}`);
+  return parts.length ? parts.join(', ') : names.none;
+};
+const months = strip.months.map((month, i) => ({ ...month, href: links[month.month], long: MONTHS[locale].long[i]!, short: MONTHS[locale].short[i]!, said: said(month.count) }));
+const percent = (share: number): string => `${(share * 100).toFixed(3)}%`;
+---
+
+<!--
+  A year as a profile (M4): a strip of weeks, a mark to an event. One kind grows up from the line and the
+  other down, so the weight of each is seen at a glance; a mark is as thick as its event is long. It is a
+  drawing with no script. Under it, each month is a way into the list the strip always comes with.
+-->
+<div class="strip">
+  <p class="year" data-type="display-md" data-numeric="tabular">{strip.year}</p>
+  <div class="plot">
+    <ol class="months">
+      {
+        months.map((month) => (
+          <li class="month" style={`inset-inline-start:${percent(month.from)};inline-size:${percent(month.to - month.from)}`}>
+            {month.href ? (
+              <a class="door" href={month.href}>
+                <span class="name" data-type="text-xs" aria-hidden="true"><span class="short">{month.short}</span><span class="letter">{month.long[0]}</span></span>
+                <span class="said">{`${month.long} ${strip.year}: ${month.said}`}</span>
+              </a>
+            ) : (
+              <span class="door">
+                <span class="name" data-type="text-xs" aria-hidden="true"><span class="short">{month.short}</span><span class="letter">{month.long[0]}</span></span>
+                <span class="said">{`${month.long} ${strip.year}: ${month.said}`}</span>
+              </span>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+    <svg class="marks" viewBox={`0 0 ${strip.columns} ${height}`} preserveAspectRatio="none" aria-hidden="true">
+      {cells.map((cell) => <rect x={cell.x.toFixed(2)} y={cell.y.toFixed(2)} width={cell.width.toFixed(2)} height={cell.height.toFixed(2)} data-side={cell.side} data-past={cell.past ? '' : undefined} />)}
+      <line class="line" x1="0" x2={strip.columns} y1={LINES.up} y2={LINES.up}></line>
+      {scale.aside > 0 && <line class="line" data-aside x1="0" x2={strip.columns} y1={LINES.aside} y2={LINES.aside} />}
+    </svg>
+  </div>
+</div>
+
+<style>
+  .strip {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+    min-inline-size: 0;
+  }
+
+  .year {
+    margin: 0;
+    color: var(--tram-sys-text);
+  }
+
+  /* The drawing over the months, and under both a line of names: the months are the doors, the drawing does not take the clicks. */
+  .plot {
+    position: relative;
+    block-size: calc(var(--tram-sys-space-12) * 2.5 + var(--tram-sys-space-7));
+  }
+
+  .marks {
+    position: absolute;
+    inset: 0 0 var(--tram-sys-space-7);
+    inline-size: 100%;
+    block-size: calc(100% - var(--tram-sys-space-7));
+    pointer-events: none;
+  }
+
+  .marks rect[data-side='up'] {
+    fill: var(--tram-sys-data-road);
+  }
+
+  .marks rect[data-side='down'] {
+    fill: var(--tram-sys-data-trail);
+  }
+
+  /* What has been run stays on the strip, faint: the shape of the year is the whole year. */
+  .marks rect[data-past] {
+    fill: var(--tram-sys-rule);
+  }
+
+  /* A mark of neither side is an outline: it is not known which way it would grow. */
+  .marks rect[data-side='aside'] {
+    fill: var(--tram-sys-surface);
+    stroke: var(--tram-sys-text-muted);
+    stroke-width: var(--tram-sys-line-hairline);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .marks rect[data-side='aside'][data-past] {
+    stroke: var(--tram-sys-rule);
+  }
+
+  .line {
+    stroke: var(--tram-sys-text);
+    stroke-width: var(--tram-sys-line-strong);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .line[data-aside] {
+    stroke: var(--tram-sys-rule-strong);
+    stroke-width: var(--tram-sys-line-hairline);
+  }
+
+  .months {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .month {
+    position: absolute;
+    inset-block: 0;
+    border-inline-start: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+  }
+
+  .door {
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    block-size: 100%;
+    color: var(--tram-sys-text-muted);
+    text-decoration: none;
+  }
+
+  a.door {
+    color: var(--tram-sys-text);
+  }
+
+  a.door:hover {
+    background: var(--tram-sys-surface-alt);
+  }
+
+  a.door:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: calc(var(--tram-sys-line-strong) * -1);
+  }
+
+  .name {
+    display: grid;
+    align-items: center;
+    block-size: var(--tram-sys-space-7);
+    text-transform: uppercase;
+  }
+
+  a.door .name {
+    text-decoration: underline;
+    text-underline-offset: var(--tram-sys-space-1);
+  }
+
+  .letter {
+    display: none;
+  }
+
+  /* Read out, not drawn: what each month holds. */
+  .said {
+    position: absolute;
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-line-hairline);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* On a phone a month is as wide as a finger: its name is its first letter, and the strip is lower. */
+  @media (width < 48rem) {
+    .plot {
+      block-size: calc(var(--tram-sys-space-12) * 1.75 + var(--tram-sys-space-7));
+    }
+
+    .short {
+      display: none;
+    }
+
+    .letter {
+      display: inline;
+    }
+  }
+</style>

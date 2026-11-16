@@ -16,6 +16,7 @@ const PAGES = {
   'climb-list': '/ds/patterns/climb-list/',
   'route-plate': '/ds/patterns/route-plate/',
   'locator-map': '/ds/patterns/locator-map/',
+  'calendar-strip': '/ds/patterns/calendar-strip/',
   'race-row': '/ds/patterns/race-row/',
   'site-chrome': '/ds/patterns/site-chrome/',
   'shoe-xray': '/ds/patterns/shoe-xray/',

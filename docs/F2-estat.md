@@ -17,6 +17,7 @@ La fase es va començar amb la Fase 1 sense tancar (hi falta una cursa d'asfalt 
 | Mapa de comarques | `LocatorMap` + `apps/web/scripts/import-comarques.mjs` | Fet: els límits de les 43 comarques són de l'ICGC (CC BY 4.0), aprimats a 600 m. Un punt per lloc amb proves; a les pàgines d'una comarca, el mapa s'hi acosta |
 | Sitemaps i `robots.txt` | `apps/web/scripts/sitemap.mjs`, enganxat a la compilació | Fets: un sitemap per tipus de pàgina (curses, rutes, sabatilles, comparar, pàgines) i un índex, escrits a partir de les pàgines que la compilació ha fet. Hi surt tota pàgina que no porta `noindex`, amb la seva adreça canònica; res s'hi apunta a mà. `check-sitemap` ho comprova al CI. La compilació de staging no en té, i el seu `robots.txt` no anomena cap sitemap |
 | Camí de la pàgina (`BreadcrumbList`) | `SiteTrail`, a `layouts/Site.astro` | Fet: totes les pàgines menys la portada mostren d'on pengen, i les que s'ofereixen als cercadors els ho diuen amb `BreadcrumbList` (CLAUDE.md 11). Una pàgina amb `noindex` mostra el camí i no en diu res als cercadors |
+| «L'any com a perfil» (M4) | `/ca/curses/`, `CalendarStrip` | Fet, repensat (E07): una franja per any amb una marca per prova, asfalt amunt i muntanya avall, apilades per setmana, amb el gruix segons la distància. L'alçada no és el desnivell, que cap font dona. Cada mes porta a la seva part de la llista |
 | Fitxa d'una cursa del calendari | `/ca/curses/<slug>/` | Feta: fets, estat, web de la cursa i fonts. Sense recorregut ni desnivell |
 | Properes curses a la portada | `/ca/` | Fet: les sis següents |
 | Fila compacta per a llistes llargues | `RaceRow` amb `compact` | Feta al sistema de disseny |
@@ -27,7 +28,7 @@ La fase es va començar amb la Fase 1 sense tancar (hi falta una cursa d'asfalt 
 - **300 curses:** n'hi ha 326, però només 13 poden anar a producció. La resta depèn del permís de les seves fonts.
 - **Facetes que no hi són:** per província o per municipi (les fonts donen municipi i comarca; la província només es podria deduir), per any sol i tipus × any. Les pàgines per faceta no tenen imatge per compartir.
 - **`hreflang`:** el web només és en català; quan hi hagi castellà i anglès, cada pàgina i els sitemaps han de dir les seves germanes. Els sitemaps tampoc diuen `lastmod`: no hi ha una data fiable de l'últim canvi de cada pàgina.
-- **M4, «l'any com a perfil»:** s'ha de repensar, perquè cap font dona el desnivell (E19).
+- **M4 sense validar:** la franja està feta, però la prova amb 3–5 corredors que demana E07 no. No segueix els filtres ni la cerca.
 - **Cerca de tot el web** (E13): la del calendari hi és, per nom i població; cercar sabatilles, rutes o «a prop de» no.
 - **Base de dades:** les curses viuen en un fitxer. El projecte de Supabase l'ha de crear el titular.
 - **Tracks:** cap cursa del calendari en té.

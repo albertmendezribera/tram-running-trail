@@ -1,9 +1,13 @@
 ---
 ---
 
-<!-- The frame of a page: the page margin, the header on top, the content, the footer at the bottom. -->
-<div class="frame">
+<!--
+  The frame of a page: the page margin, the header on top, the content, the footer at the bottom. A page
+  that hangs from another may say so between the header and the content (slot `trail`).
+-->
+<div class="frame" data-trail={Astro.slots.has('trail') ? '' : undefined}>
   <slot name="header" />
+  {Astro.slots.has('trail') && <div class="trail"><slot name="trail" /></div>}
   <main class="main"><slot /></main>
   <slot name="footer" />
 </div>
@@ -15,6 +19,19 @@
     grid-template-rows: auto 1fr auto;
     min-block-size: 100dvh;
     padding-inline: var(--tram-sys-grid-margin);
+  }
+
+  .frame[data-trail] {
+    grid-template-rows: auto auto 1fr auto;
+  }
+
+  .trail {
+    padding-block-start: var(--tram-sys-space-3);
+  }
+
+  /* Under the trail the content starts sooner: the trail is its first line. */
+  .frame[data-trail] .main {
+    padding-block-start: var(--tram-sys-space-4);
   }
 
   .main {

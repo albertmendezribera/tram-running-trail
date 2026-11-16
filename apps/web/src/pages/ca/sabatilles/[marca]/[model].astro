@@ -60,7 +60,7 @@ const others = visibleShoes().filter((s) => s !== shoe);
 const jsonLd = { '@context': 'https://schema.org', '@type': 'Product', name, brand: { '@type': 'Brand', name: shoe.brand.name }, category: shoe.terrain === 'trail' ? 'Sabatilles de trail running' : 'Sabatilles de running d’asfalt', weight: { '@type': 'QuantitativeValue', value: specs.weightG, unitCode: 'GRM' } };
 ---
 
-<Site title={name} description={`${name}: ${shoe.summary} Radiografia amb cotes, fitxa tècnica mesurada i declarada, i puntuacions de comparadors independents.`} terrain={shoe.terrain} placeholder={shoe.isPlaceholder || shoe.legalReview !== 'cleared'} notice={SHOE_NOTICE} jsonLd={jsonLd}>
+<Site title={name} trail={[{ label: 'Sabatilles', href: '/ca/sabatilles/' }]} description={`${name}: ${shoe.summary} Radiografia amb cotes, fitxa tècnica mesurada i declarada, i puntuacions de comparadors independents.`} terrain={shoe.terrain} placeholder={shoe.isPlaceholder || shoe.legalReview !== 'cleared'} notice={SHOE_NOTICE} jsonLd={jsonLd}>
   <Split>
     <Stack gap={5}>
       <Heading level={1} size="lg" kicker={`Sabatilla · ${shoe.brand.name}`}>{shoe.model}</Heading>

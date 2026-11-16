@@ -321,7 +321,7 @@ test.describe('Calendar (Phase 2)', () => {
     await open(page, '/ca/curses/103a-allianz-jean-bouin-rfea-2026/');
     await expect(page.locator('main [data-source]')).toHaveCount(3);
     await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
-    const data = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
+    const data = JSON.parse((await page.locator('script[type="application/ld+json"]:not([data-breadcrumbs])').textContent())!);
     expect(data).toMatchObject({ '@type': 'SportsEvent', startDate: '2026-11-29' });
   });
 });
@@ -340,7 +340,7 @@ test.describe('Calendar by facet (Phase 2)', () => {
     // The cuts that follow are pages too: the same kind, comarca by comarca.
     const onward = page.getByRole('navigation', { name: 'Més talls d’aquest calendari' });
     await expect(onward.getByRole('link', { name: /^Baix Empordà \(\d+\)$/ })).toHaveAttribute('href', '/ca/curses/trail/baix-emporda/');
-    await expect(main(page).getByRole('link', { name: 'Tot el calendari' })).toHaveAttribute('href', '/ca/curses/');
+    await expect(page.getByRole('navigation', { name: 'Camí fins a aquesta pàgina' }).getByRole('link', { name: 'Curses' })).toHaveAttribute('href', '/ca/curses/');
     // While a race on it comes from a calendar that has not agreed, the page is kept from search engines.
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://tramrun.com/ca/curses/trail/');
@@ -410,6 +410,56 @@ test.describe('Calendar by facet (Phase 2)', () => {
     const lists = page.getByRole('navigation', { name: 'Llistes on surt aquesta prova' });
     await expect(lists.getByRole('link', { name: 'Marxes i caminades' })).toHaveAttribute('href', '/ca/curses/marxes/');
     await expect(lists.getByRole('link', { name: 'Curses al Baix Empordà' })).toHaveAttribute('href', '/ca/curses/baix-emporda/');
+  });
+});
+
+test.describe('Trail (breadcrumbs)', () => {
+  const trail = (page: Page) => page.getByRole('navigation', { name: 'Camí fins a aquesta pàgina' });
+
+  test('every page but the home page shows the way back up, one link to a step', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const WAYS: Array<[path: string, steps: Array<[label: string, href: string]>]> = [
+      [PAGES.races, [['Inici', '/ca/']]],
+      [PAGES.routes, [['Inici', '/ca/']]],
+      ['/ca/sabatilles/', [['Inici', '/ca/']]],
+      ['/ca/rutes/calonge/', [['Inici', '/ca/'], ['Rutes', '/ca/rutes/']]],
+      ['/ca/curses/32a-marxa-dels-arrossars-2026/', [['Inici', '/ca/'], ['Curses', '/ca/curses/']]],
+      ['/ca/curses/trail/', [['Inici', '/ca/'], ['Curses', '/ca/curses/']]],
+      ['/ca/curses/trail/baix-emporda/', [['Inici', '/ca/'], ['Curses', '/ca/curses/'], ['Curses de muntanya', '/ca/curses/trail/']]],
+      ['/ca/curses/marato/2027/', [['Inici', '/ca/'], ['Curses', '/ca/curses/'], ['Maratons', '/ca/curses/marato/']]],
+    ];
+    for (const [path, steps] of WAYS) {
+      await open(page, path);
+      const links = trail(page).getByRole('link');
+      expect(await links.evaluateAll((all) => all.map((a) => [a.textContent, a.getAttribute('href')])), path).toEqual(steps);
+      // It comes before the content, and does not push the page sideways.
+      expect(await trail(page).evaluate((nav) => Boolean(nav.compareDocumentPosition(document.querySelector('main')!) & Node.DOCUMENT_POSITION_FOLLOWING)), path).toBe(true);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), path).toBe(0);
+    }
+    await open(page, '/ca/');
+    await expect(trail(page)).toHaveCount(0);
+    await expect(page.locator('script[data-breadcrumbs]')).toHaveCount(0);
+  });
+
+  test('a page offered to search engines tells them the same way, down to itself; a page kept from them tells nothing', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/rutes/calonge/');
+    const data = JSON.parse((await page.locator('script[data-breadcrumbs]').textContent())!);
+    expect(data['@type']).toBe('BreadcrumbList');
+    expect(data.itemListElement).toEqual([
+      { '@type': 'ListItem', position: 1, name: 'Inici', item: 'https://tramrun.com/ca/' },
+      { '@type': 'ListItem', position: 2, name: 'Rutes', item: 'https://tramrun.com/ca/rutes/' },
+      { '@type': 'ListItem', position: 3, name: 'Ruta de Calonge', item: 'https://tramrun.com/ca/rutes/calonge/' },
+    ]);
+    // What search engines are told is what the page shows, plus the page itself.
+    expect(await trail(page).getByRole('link').allTextContents()).toEqual(['Inici', 'Rutes']);
+    // An open race has its own schema.org and the trail beside it.
+    await open(page, '/ca/curses/103a-allianz-jean-bouin-rfea-2026/');
+    await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(2);
+    // A facet that lists races whose calendar has not agreed is kept from search engines: it shows its trail and tells none.
+    await open(page, '/ca/curses/trail/baix-emporda/');
+    await expect(trail(page)).toBeVisible();
+    await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0);
   });
 });
 
@@ -504,7 +554,7 @@ test.describe('Shoe sheet', () => {
 
   test('describes the shoe as a product, without ratings that are not ours', async ({ page }) => {
     await open(page, PAGES['shoe-road']);
-    const data = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent()) ?? '{}');
+    const data = JSON.parse((await page.locator('script[type="application/ld+json"]:not([data-breadcrumbs])').textContent()) ?? '{}');
     expect(data['@type']).toBe('Product');
     expect(data.brand.name).toBe('Nike');
     expect(data.aggregateRating).toBeUndefined();

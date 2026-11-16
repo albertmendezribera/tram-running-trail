@@ -1,6 +1,7 @@
 ---
 import SiteFooter from '@tram/design-system/patterns/SiteFooter.astro';
 import SiteHeader from '@tram/design-system/patterns/SiteHeader.astro';
+import SiteTrail from '@tram/design-system/patterns/SiteTrail.astro';
 import Fiche from '../Fiche.astro';
 
 const links = [
@@ -10,6 +11,7 @@ const links = [
 ];
 const code = `<SiteFrame>
   <SiteHeader slot="header" home="/ca/" links={links} current={Astro.url.pathname} />
+  <SiteTrail slot="trail" items={[{ label: 'Inici', href: '/ca/' }, { label: 'Curses', href: '/ca/curses/' }]} />
   …
   <SiteFooter slot="footer" credits={[…]} notice="…" />
 </SiteFrame>`;
@@ -17,7 +19,7 @@ const code = `<SiteFrame>
 
 <Fiche
   group="Patró"
-  title="SiteFrame, SiteHeader i SiteFooter"
+  title="SiteFrame, SiteHeader, SiteTrail i SiteFooter"
   js="ThemeToggle: 0,4 KB"
   use="El marc de totes les pàgines del web: la barra de dalt amb les seccions i el mode nit, el contingut amb el marge de la graella, i el peu amb els crèdits de les dades."
   avoid="Menús desplegables o barres enganxoses: la barra és una sola línia i es queda a dalt de la pàgina."
@@ -27,6 +29,12 @@ const code = `<SiteFrame>
     <h2 data-type="display-sm">Capçalera</h2>
     <p class="fiche-note">La secció on és el lector porta l'accent. En un mòbil les seccions passen a una segona línia, i la barra no es trenca mai per atzar.</p>
     <div class="fiche-chrome"><SiteHeader home="/ca/" links={links} current="/ca/curses/cursa/" /></div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Camí</h2>
+    <p class="fiche-note">D'on penja la pàgina, un pas per enllaç, entre la capçalera i el contingut. La pàgina mateixa no hi surt: la diu el títol, just a sota. La portada no en porta. El traç entre dos passos no es llegeix en veu alta.</p>
+    <div data-testid="trail"><SiteTrail items={[{ label: 'Inici', href: '/ca/' }, { label: 'Curses', href: '/ca/curses/' }, { label: 'Curses de muntanya', href: '/ca/curses/trail/' }]} /></div>
   </section>
 
   <section class="fiche-block">

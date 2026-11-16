@@ -8,6 +8,7 @@ Calendari (Fase 2).
 
 - `RaceRow`: propietat `compact`, per a llistes llargues, i `gainM` opcional (sense, la fila no reserva lloc per al desnivell).
 - `Select` (interactiu nou, amb fitxa): triar entre més de quatre opcions, amb el selector del navegador.
+- `SiteTrail` (patró nou, a la fitxa del marc) i ranura `trail` a `SiteFrame`: el camí des de la portada fins a la pàgina, entre la capçalera i el contingut. Amb camí, el contingut comença més amunt.
 - `LocatorMap` (patró nou, amb fitxa): un mapa en SVG per situar coses sobre el territori, amb una peça destacada i un punt per lloc. Sense script.
 - `SearchField` (interactiu nou, amb fitxa): el camp de cerca del navegador, amb l'etiqueta a sobre i sense text de mostra. Icona nova `search`.
 - `base.css`: el que porta `hidden` no es dibuixa, sigui quin sigui el `display` del component.

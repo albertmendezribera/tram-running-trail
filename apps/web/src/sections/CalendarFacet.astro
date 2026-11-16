@@ -12,7 +12,7 @@ import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import { buildDay, CALENDAR_ACCESSED, CALENDAR_SOURCES, isOpen, placeOf } from '../content/calendar';
 import { COMARCA_MAP, COMARQUES_CREDIT, onMap, viewOf } from '../content/comarques';
-import { type Facet, hrefOf, onwardFrom } from '../content/facets';
+import { type Facet, facets, hrefOf, onwardFrom } from '../content/facets';
 import Site from '../layouts/Site.astro';
 import CalendarList from './CalendarList.astro';
 
@@ -52,6 +52,8 @@ const view = facet.comarca ? viewOf(facet.comarca) : undefined;
 const mapLabel = `Mapa ${view ? `de la comarca i les del voltant` : 'de Catalunya per comarques'} amb ${count(points.length, 'lloc marcat', 'llocs marcats')}: on es fan les proves d’aquesta pàgina${facet.comarca ? `. La comarca destacada és ${facet.comarca}` : ''}.`;
 const caption = `Cada punt és un lloc amb proves d’aquesta pàgina; com més gros, més n’hi ha.${unplaced ? ` ${count(unplaced, 'prova no és al mapa', 'proves no són al mapa')}: la font no en diu un lloc que hi puguem situar.` : ''}`;
 const onward = onwardFrom(facet);
+// A crossing hangs from the facet its address starts with: `trail/baix-emporda` from `trail`.
+const above = facet.path.includes('/') ? facets().filter((other) => other.path === facet.path.split('/')[0]) : [];
 const itemList = pending
   ? undefined
   : {
@@ -66,6 +68,7 @@ const itemList = pending
 <!-- A facet of the calendar (CLAUDE.md 3 and 8.3): the races of one kind, one comarca or one distance, as a list and on a map. -->
 <Site
   title={facet.title}
+  trail={[{ label: 'Curses', href: '/ca/curses/' }, ...above.map((other) => ({ label: other.title, href: hrefOf(other) }))]}
   description={`${facet.title}: ${lead} ${upcoming} De cada prova, la data, el lloc i les distàncies, amb la font de cada dada.`.replace(/\s+/g, ' ')}
   placeholder={pending}
   credits={[...used.map((source) => `Calendari: ${source.name}`), COMARQUES_CREDIT]}
@@ -77,7 +80,6 @@ const itemList = pending
       <Heading level={1} size="lg" kicker={facet.kicker}>{facet.title}</Heading>
       <Text size="lg" measure><span data-lead>{lead}</span> {upcoming}</Text>
       <Text size="sm" tone="muted" measure>{facet.rule}</Text>
-      <Link href="/ca/curses/" variant="standalone">Tot el calendari</Link>
     </Stack>
     <div slot="aside" class="place">
       <Figure caption={caption} credit={COMARQUES_CREDIT}>

@@ -73,6 +73,7 @@ const pending = entry && !isOpen(entry);
   race && route && course ? (
     <Site
       title={race.name}
+      trail={[{ label: 'Curses', href: '/ca/curses/' }]}
       description={`${race.name}, ${race.place}. ${sentences.join(' ')}`}
       terrain={race.terrain}
       placeholder={race.isPlaceholder}
@@ -96,6 +97,7 @@ const pending = entry && !isOpen(entry);
   ) : entry ? (
     <Site
       title={entry.name}
+      trail={[{ label: 'Curses', href: '/ca/curses/' }]}
       description={`${entry.name}${placeOf(entry) ? `, ${placeOf(entry)}` : ''}, ${formatDate(entry.date, 'ca')}. Data, lloc, distàncies i web de la cursa, amb la font de cada dada.`}
       terrain={entry.terrain ?? 'mixed'}
       placeholder={pending}

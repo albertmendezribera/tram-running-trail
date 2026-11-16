@@ -60,7 +60,7 @@ const photoNote = hasPhotos
 const scoresOf = (shoe: Shoe) => shoe.scores.map((s) => ({ ...s, source: sourceOf(shoe, s.source).name, url: sourceOf(shoe, s.source).url }));
 ---
 
-<Site title={`${nameA} vs ${nameB}`} description={`${nameA} i ${nameB}, comparades: radiografia superposada amb cotes, diferències en mil·límetres i grams, i puntuacions de comparadors independents.`} placeholder notice={SHOE_NOTICE} image={ogOf(`comparar/${pairSlug(a, b)}`)}>
+<Site title={`${nameA} vs ${nameB}`} trail={[{ label: 'Sabatilles', href: '/ca/sabatilles/' }]} description={`${nameA} i ${nameB}, comparades: radiografia superposada amb cotes, diferències en mil·límetres i grams, i puntuacions de comparadors independents.`} placeholder notice={SHOE_NOTICE} image={ogOf(`comparar/${pairSlug(a, b)}`)}>
   <Stack gap={5}>
     <Heading level={1} size="lg" kicker="Comparador · Radiografia">{`${nameA} vs ${nameB}`}</Heading>
     <Stack gap={2}>{sentences.map((s) => <Text size="lg" measure>{s}</Text>)}</Stack>

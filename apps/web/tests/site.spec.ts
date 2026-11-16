@@ -413,6 +413,19 @@ test.describe('Calendar by facet (Phase 2)', () => {
   });
 });
 
+test.describe('Robots and sitemaps', () => {
+  test('the test environment names no sitemap and shuts no crawler out: what keeps it from search engines is said on every response', async ({ page }) => {
+    const robots = await page.request.get('/robots.txt');
+    expect(robots.status()).toBe(200);
+    const text = await robots.text();
+    expect(text).toMatch(/^User-agent: \*$/m);
+    expect(text).not.toMatch(/Sitemap/);
+    expect(text).not.toMatch(/^Disallow: \//m);
+    // The sitemaps are of the site itself: `check-sitemap` reads them on its build.
+    expect((await page.request.get('/sitemap-index.xml')).status()).toBe(404);
+  });
+});
+
 test.describe('RoutePlate', () => {
   test('draws the route on its contours with kilometre marks, scale and credit, and ships no script', async ({ page }) => {
     await open(page, '/ds/patterns/route-plate/');

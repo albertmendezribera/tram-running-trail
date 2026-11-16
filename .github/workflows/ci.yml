@@ -41,6 +41,8 @@ jobs:
       - run: pnpm --filter @tram/web build
       # CLAUDE.md 6.7: the catalogue never reaches production.
       - run: test ! -e apps/web/dist/ds
+      # CLAUDE.md 11: the sitemaps list the pages offered to search engines, and only those.
+      - run: pnpm --filter @tram/web check-sitemap
       # CLAUDE.md 10: the performance budget, measured on the build with the catalogue.
       - run: pnpm --filter @tram/web build:ds
       - run: pnpm --filter @tram/web budget

@@ -1,5 +1,9 @@
 // @ts-check
+import { fileURLToPath } from 'node:url';
 import { defineConfig, fontProviders } from 'astro/config';
+import { writeSitemaps } from './scripts/sitemap.mjs';
+
+const SITE = 'https://tramrun.com';
 
 // The cssVariable names match the ref tokens on purpose: Astro's declaration is
 // unlayered, so it wins over @layer tram.tokens and adds the optimised fallbacks.
@@ -27,12 +31,25 @@ const fontFamily = (name, cssVariable, file, weight, standIn) => ({
 // CLAUDE.md 3: prerender by default; on-demand rendering only where needed.
 // The Cloudflare adapter is added with the first server island.
 export default defineConfig({
-  site: 'https://tramrun.com',
+  site: SITE,
   output: 'static',
   trailingSlash: 'always',
   fonts: [
     fontFamily('Sofia Sans Extra Condensed', '--tram-ref-font-display', 'sofia-sans-extra-condensed-latin-700-900.woff2', '700 900', 'TRAM display fallback'),
     fontFamily('Sofia Sans', '--tram-ref-font-text', 'sofia-sans-latin-400-700.woff2', '400 700', 'TRAM text fallback'),
+  ],
+  integrations: [
+    {
+      // CLAUDE.md 11: the sitemaps, one to a kind of page, and robots.txt, from the pages the build made.
+      // The build with the catalogue is the test environment: it gets no sitemap.
+      name: 'tram-sitemaps',
+      hooks: {
+        'astro:build:done': async ({ dir, logger }) => {
+          const { files, urls } = await writeSitemaps(fileURLToPath(dir), SITE, { staging: process.env['TRAM_DS'] === '1' });
+          logger.info(`${files.join(', ')}${urls ? `: ${urls} addresses` : ''}`);
+        },
+      },
+    },
   ],
   i18n: {
     locales: ['ca', 'es', 'en'],

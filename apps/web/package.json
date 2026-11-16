@@ -13,6 +13,7 @@
     "test": "node --test \"scripts/*.test.mjs\"",
     "import-calendar": "node scripts/import-calendar.mjs",
     "import-comarques": "node scripts/import-comarques.mjs",
+    "check-sitemap": "node scripts/check-sitemap.mjs",
     "test:visual": "playwright test",
     "test:visual:docker": "sh scripts/visual-docker.sh",
     "budget": "node scripts/check-budget.mjs",

@@ -10,6 +10,7 @@ import Panel from '@tram/design-system/primitives/Panel.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import { CALENDAR_ACCESSED, type CalendarRace, PLACES_SOURCE, placeOf, sourcesOf } from '../content/calendar';
+import { facetsOf, hrefOf } from '../content/facets';
 
 export interface Props {
   race: CalendarRace;
@@ -29,6 +30,8 @@ const facts = [
   { label: 'Web de la cursa', value: race.website ? 'Web oficial' : null, ...(race.website ? { href: race.website } : {}) },
 ];
 const sources = sourcesOf(race);
+// The lists this race is one of: its kind, its comarca, its distances.
+const lists = facetsOf(race);
 ---
 
 <!-- A race of the calendar: what its sources say of it, and where each thing comes from. It has no route yet. -->
@@ -36,6 +39,16 @@ const sources = sourcesOf(race);
   <Heading level={1} size="lg" kicker={race.kind === 'march' ? 'Marxa' : 'Cursa'}>{race.name}</Heading>
   {race.terrain && <Cluster><TerrainTag terrain={race.terrain} /></Cluster>}
   <Facts facts={facts} />
+  {
+    lists.length > 0 && (
+      <nav aria-label="Llistes on surt aquesta prova">
+        <Cluster gap={4}>
+          <Text size="sm" tone="muted">Més com aquesta:</Text>
+          {lists.map((facet) => <Link href={hrefOf(facet)}>{facet.title}</Link>)}
+        </Cluster>
+      </nav>
+    )
+  }
 </Stack>
 
 <Band tone="tint" title="Recorregut">

@@ -12,6 +12,7 @@ import ModesFiche from './fiches/ModesFiche.astro';
 import MomentM1 from './fiches/MomentM1.astro';
 import MomentM2 from './fiches/MomentM2.astro';
 import RaceRowFiche from './fiches/RaceRowFiche.astro';
+import LocatorMapFiche from './fiches/LocatorMapFiche.astro';
 import RoutePlateFiche from './fiches/RoutePlateFiche.astro';
 import SegmentedFiche from './fiches/SegmentedFiche.astro';
 import SearchFieldFiche from './fiches/SearchFieldFiche.astro';
@@ -39,6 +40,7 @@ export const FICHES = [
   { slug: 'patterns/elevation-profile', title: 'ElevationProfile', Page: ElevationFiche },
   { slug: 'patterns/climb-list', title: 'ClimbList', Page: ClimbFiche },
   { slug: 'patterns/route-plate', title: 'RoutePlate', Page: RoutePlateFiche },
+  { slug: 'patterns/locator-map', title: 'LocatorMap', Page: LocatorMapFiche },
   { slug: 'patterns/race-row', title: 'RaceRow, TerrainTag i Facts', Page: RaceRowFiche },
   { slug: 'patterns/site-chrome', title: 'Capçalera i peu', Page: SiteChromeFiche },
   { slug: 'patterns/shoe-xray', title: 'ShoeXray', Page: ShoeXrayFiche },

@@ -1,0 +1,135 @@
+---
+import { formatDate } from '@tram/formats';
+import LocatorMap from '@tram/design-system/patterns/LocatorMap.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Figure from '@tram/design-system/primitives/Figure.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Split from '@tram/design-system/primitives/Split.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { buildDay, CALENDAR_ACCESSED, CALENDAR_SOURCES, isOpen, placeOf } from '../content/calendar';
+import { COMARCA_MAP, COMARQUES_CREDIT, onMap, viewOf } from '../content/comarques';
+import { type Facet, hrefOf, onwardFrom } from '../content/facets';
+import Site from '../layouts/Site.astro';
+import CalendarList from './CalendarList.astro';
+
+export interface Props {
+  facet: Facet;
+}
+
+const { facet } = Astro.props;
+const today = buildDay();
+const coming = facet.races.filter((race) => race.date >= today);
+const run = facet.races.filter((race) => race.date < today).reverse();
+const next = coming[0];
+// A page that lists a race whose calendar has not agreed is kept from search engines, as that race's own page is.
+const pending = facet.races.some((race) => !isOpen(race));
+const used = [...new Set(facet.races.flatMap((race) => race.sources.map((source) => source.id)))].map((id) => CALENDAR_SOURCES[id]!);
+
+// One dot to a place, however many races start there. A race whose source gives no place a map can hold is counted apart.
+const places = new Map<string, { x: number; y: number; count: number }>();
+let unplaced = 0;
+for (const race of facet.races) {
+  const { lat, lon } = race as { lat?: number | null; lon?: number | null };
+  if (!lat || !lon) {
+    unplaced += 1;
+    continue;
+  }
+  const spot = onMap(lat, lon);
+  const key = `${spot.x} ${spot.y}`;
+  places.set(key, { ...spot, count: (places.get(key)?.count ?? 0) + 1 });
+}
+const points = [...places.values()].filter((point) => point.x >= 0 && point.x <= COMARCA_MAP.width && point.y >= 0 && point.y <= COMARCA_MAP.height);
+unplaced += places.size - points.length;
+
+const count = (n: number, one: string, many: string): string => `${n} ${n === 1 ? one : many}`;
+const lead = `${count(facet.races.length, 'prova', 'proves')} al calendari: ${coming.length ? `${count(coming.length, 'encara per disputar', 'encara per disputar')}` : 'cap per disputar'} i ${run.length ? count(run.length, 'ja disputada', 'ja disputades') : 'cap de disputada'}.`;
+const upcoming = next ? `La propera és ${next.name}, el ${formatDate(next.date, 'ca')}${placeOf(next) ? `, a ${placeOf(next)}` : ''}.` : '';
+const view = facet.comarca ? viewOf(facet.comarca) : undefined;
+const mapLabel = `Mapa ${view ? `de la comarca i les del voltant` : 'de Catalunya per comarques'} amb ${count(points.length, 'lloc marcat', 'llocs marcats')}: on es fan les proves d’aquesta pàgina${facet.comarca ? `. La comarca destacada és ${facet.comarca}` : ''}.`;
+const caption = `Cada punt és un lloc amb proves d’aquesta pàgina; com més gros, més n’hi ha.${unplaced ? ` ${count(unplaced, 'prova no és al mapa', 'proves no són al mapa')}: la font no en diu un lloc que hi puguem situar.` : ''}`;
+const onward = onwardFrom(facet);
+const itemList = pending
+  ? undefined
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: facet.title,
+      numberOfItems: facet.races.length,
+      itemListElement: [...coming, ...run].map((race, i) => ({ '@type': 'ListItem', position: i + 1, name: race.name, url: new URL(`/ca/curses/${race.slug}/`, Astro.site).href })),
+    };
+---
+
+<!-- A facet of the calendar (CLAUDE.md 3 and 8.3): the races of one kind, one comarca or one distance, as a list and on a map. -->
+<Site
+  title={facet.title}
+  description={`${facet.title}: ${lead} ${upcoming} De cada prova, la data, el lloc i les distàncies, amb la font de cada dada.`.replace(/\s+/g, ' ')}
+  placeholder={pending}
+  credits={[...used.map((source) => `Calendari: ${source.name}`), COMARQUES_CREDIT]}
+  notice={pending ? 'Versió de proves: una part d’aquestes curses ve de calendaris que encara no ens han donat permís per mostrar-les. Se’n citen fets, amb enllaç a la font, i no són a la versió de producció.' : undefined}
+  jsonLd={itemList}
+>
+  <Split ratio="3:2">
+    <Stack gap={5}>
+      <Heading level={1} size="lg" kicker={facet.kicker}>{facet.title}</Heading>
+      <Text size="lg" measure><span data-lead>{lead}</span> {upcoming}</Text>
+      <Text size="sm" tone="muted" measure>{facet.rule}</Text>
+      <Link href="/ca/curses/" variant="standalone">Tot el calendari</Link>
+    </Stack>
+    <div slot="aside" class="place">
+      <Figure caption={caption} credit={COMARQUES_CREDIT}>
+        <LocatorMap width={COMARCA_MAP.width} height={COMARCA_MAP.height} view={view} areas={COMARCA_MAP.areas} active={facet.comarca} points={points} label={mapLabel} />
+      </Figure>
+    </div>
+  </Split>
+
+  {
+    onward.length > 0 && (
+      <nav class="onward" aria-label="Més talls d’aquest calendari">
+        <Stack gap={2}>
+          {onward.map((group) => (
+            <Cluster gap={4}>
+              <Text size="sm" tone="muted">{group.title}:</Text>
+              {group.links.map((other) => <Link href={hrefOf(other)}>{`${other.label} (${other.races.length})`}</Link>)}
+            </Cluster>
+          ))}
+        </Stack>
+      </nav>
+    )
+  }
+
+  {
+    coming.length > 0 && (
+      <Band tone="plain" title="Properes">
+        <div class="coming"><CalendarList races={coming} level={3} /></div>
+      </Band>
+    )
+  }
+  {
+    run.length > 0 && (
+      <Band tone="alt" title="Ja disputades">
+        <Panel>
+          <CalendarList races={run} level={3} anchor="fet" />
+        </Panel>
+      </Band>
+    )
+  }
+  <Text size="sm" tone="muted" measure>Consultat el {formatDate(CALENDAR_ACCESSED, 'ca')}. De cada prova només se’n prenen fets, amb enllaç a la font a la seva fitxa. Cap font diu el desnivell, i no l’estimem.</Text>
+</Site>
+
+<style>
+  /* The map no wider than it reads well: the whole country in the width of a hand. */
+  .place {
+    max-inline-size: calc(var(--tram-sys-space-12) * 4.5);
+  }
+
+  /* A band runs edge to edge on a phone, for the panels it holds. This list is in no panel, and keeps the page's margin. */
+  @media (width < 48rem) {
+    .coming {
+      padding-inline: var(--tram-sys-grid-margin);
+    }
+  }
+</style>

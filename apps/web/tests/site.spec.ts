@@ -326,6 +326,93 @@ test.describe('Calendar (Phase 2)', () => {
   });
 });
 
+test.describe('Calendar by facet (Phase 2)', () => {
+  test('a kind of race has a page of its own, with its races to come, the rule that puts them there and the cuts that follow', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/curses/trail/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Curses de muntanya');
+    await expect(page.locator('main [data-lead]')).toHaveText(/^\d+ proves al calendari: \d+ encara per disputar i \d+ ja disputad(a|es)\.$/);
+    await expect(main(page)).toContainText('El tipus és el que diu la font de cada prova');
+    // Every row is a mountain race, and leads to its own page.
+    const rows = page.locator('main [data-race] a');
+    expect(await rows.count()).toBeGreaterThan(50);
+    expect(await page.locator('main [data-race] a:not([data-terrain="trail"])').count()).toBe(0);
+    // The cuts that follow are pages too: the same kind, comarca by comarca.
+    const onward = page.getByRole('navigation', { name: 'Més talls d’aquest calendari' });
+    await expect(onward.getByRole('link', { name: /^Baix Empordà \(\d+\)$/ })).toHaveAttribute('href', '/ca/curses/trail/baix-emporda/');
+    await expect(main(page).getByRole('link', { name: 'Tot el calendari' })).toHaveAttribute('href', '/ca/curses/');
+    // While a race on it comes from a calendar that has not agreed, the page is kept from search engines.
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://tramrun.com/ca/curses/trail/');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
+  });
+
+  test('a map without script places the races: every comarca drawn, a dot to a place, and the page’s comarca marked', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/curses/trail/baix-emporda/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Curses de muntanya al Baix Empordà');
+    const map = page.getByRole('img', { name: /^Mapa de la comarca i les del voltant amb \d+ llocs? marcats?/ });
+    await expect(map).toBeVisible();
+    await expect(map.locator('.land path')).toHaveCount(43);
+    await expect(map.locator('.land path[data-active]')).toHaveCount(1);
+    expect(await map.locator('.dot').count()).toBeGreaterThan(1);
+    // Every dot is inside the window the map shows.
+    const inside = await map.evaluate((svg: SVGSVGElement) => {
+      const { x, y, width, height } = svg.viewBox.baseVal;
+      return [...svg.querySelectorAll<SVGPathElement>('.dot')].every((dot) => {
+        const [px, py] = dot.getAttribute('d')!.slice(1).split(/[ h]/).map(Number);
+        return px! >= x && px! <= x + width && py! >= y && py! <= y + height;
+      });
+    });
+    expect(inside).toBe(true);
+    await expect(main(page)).toContainText('Límits de comarca: © Institut Cartogràfic i Geològic de Catalunya');
+    // Every race listed is of the comarca, and the way out widens the list.
+    expect(await page.locator('main [data-race]').count()).toBe(await page.locator('main [data-race]', { hasText: 'Baix Empordà' }).count());
+    const onward = page.getByRole('navigation', { name: 'Més talls d’aquest calendari' });
+    await expect(onward.getByRole('link', { name: /^Curses de muntanya a tot Catalunya/ })).toHaveAttribute('href', '/ca/curses/trail/');
+    await expect(onward.getByRole('link', { name: /^Curses al Baix Empordà/ })).toHaveAttribute('href', '/ca/curses/baix-emporda/');
+    // The page ships no script of its own for any of it.
+    expect(await page.locator('main script').count()).toBe(0);
+  });
+
+  test('a distance in a year lists the races of that distance run that year, and says how a race comes to count', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/curses/marato/2027/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Maratons del 2027');
+    await expect(main(page)).toContainText(/una distància d’entre 42\skm i 42,4\skm/);
+    const dates = await page.locator('main [data-race] time').evaluateAll((times) => times.map((time) => time.getAttribute('datetime')));
+    expect(dates.length).toBeGreaterThan(1);
+    expect(dates.every((date) => date!.startsWith('2027-'))).toBe(true);
+    await expect(page.locator('main [data-race] a[href="/ca/curses/48a-edicio-zurich-marato-de-barcelona-2027/"]')).toBeVisible();
+    const onward = page.getByRole('navigation', { name: 'Més talls d’aquest calendari' });
+    await expect(onward.getByRole('link', { name: /^Tots els anys/ })).toHaveAttribute('href', '/ca/curses/marato/');
+  });
+
+  test('a cut with no races is no page', async ({ page }) => {
+    for (const path of ['/ca/curses/cros/pallars-sobira/', '/ca/curses/marato/2031/', '/ca/curses/alta-ribagorca/']) {
+      const response = await page.goto(path);
+      expect(response!.status(), path).toBe(404);
+    }
+  });
+
+  test('the calendar and each race lead to the cuts they are part of', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.races);
+    const doors = page.getByRole('navigation', { name: 'El calendari per tipus, distància i comarca' });
+    await expect(doors.getByRole('link', { name: /^Curses de muntanya \(\d+\)$/ })).toHaveAttribute('href', '/ca/curses/trail/');
+    await expect(doors.getByRole('link', { name: /^Maratons \(\d+\)$/ })).toHaveAttribute('href', '/ca/curses/marato/');
+    await expect(doors.getByRole('link', { name: /^Baix Empordà \(\d+\)$/ })).toHaveAttribute('href', '/ca/curses/baix-emporda/');
+    // Every door opens on a page that exists.
+    const hrefs = await doors.getByRole('link').evaluateAll((links) => links.map((link) => link.getAttribute('href')!));
+    expect(hrefs.length).toBeGreaterThan(20);
+    for (const href of hrefs) expect((await page.request.get(href)).status(), href).toBe(200);
+    await open(page, '/ca/curses/32a-marxa-dels-arrossars-2026/');
+    const lists = page.getByRole('navigation', { name: 'Llistes on surt aquesta prova' });
+    await expect(lists.getByRole('link', { name: 'Marxes i caminades' })).toHaveAttribute('href', '/ca/curses/marxes/');
+    await expect(lists.getByRole('link', { name: 'Curses al Baix Empordà' })).toHaveAttribute('href', '/ca/curses/baix-emporda/');
+  });
+});
+
 test.describe('RoutePlate', () => {
   test('draws the route on its contours with kilometre marks, scale and credit, and ships no script', async ({ page }) => {
     await open(page, '/ds/patterns/route-plate/');

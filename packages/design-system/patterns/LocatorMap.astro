@@ -1,0 +1,102 @@
+---
+export interface Area {
+  name: string;
+  /** Its outline as SVG path data, in the units of the map. */
+  d: string;
+}
+
+export interface Point {
+  /** Where it is, in the units of the map. */
+  x: number;
+  y: number;
+  /** How many things are there: the dot grows with it. */
+  count: number;
+}
+
+export interface Props {
+  /** Size of the drawing, in its own units. */
+  width: number;
+  height: number;
+  /** The part of the drawing to show, when it is not all of it: `[x, y, width, height]` in its units. */
+  view?: readonly [number, number, number, number] | undefined;
+  /** The pieces of the land, each with its outline. */
+  areas: readonly Area[];
+  /** The area the page is about, by its name. */
+  active?: string | undefined;
+  points: readonly Point[];
+  /** What the map shows, in words: its only text, for who cannot see it. */
+  label: string;
+}
+
+const { width, height, view, areas, active, points, label } = Astro.props;
+// The big dots first, so a small one beside a city is drawn over it and not under.
+const dots = [...points].sort((a, b) => b.count - a.count).map((point) => ({ ...point, size: (1.5 + Math.min(Math.sqrt(point.count), 4.5)).toFixed(2) }));
+---
+
+<!--
+  A map to place things on, not to travel by: the land in pieces, one of them marked, and a dot where
+  something is. A drawing in SVG, with no script and no tiles. The dots keep their size whatever the
+  size of the map: each is a line of no length with a round end.
+-->
+<svg class="map" viewBox={(view ?? [0, 0, width, height]).join(' ')} role="img" aria-label={label}>
+  <g class="land">{areas.map((area) => <path d={area.d} data-active={area.name === active ? '' : undefined} />)}</g>
+  {areas.filter((area) => area.name === active).map((area) => <path class="marked" d={area.d} />)}
+  <g class="dots">
+    {
+      dots.map((dot) => (
+        <g style={`--size:${dot.size}`}>
+          <path class="rim" d={`M${dot.x} ${dot.y}h0`} />
+          <path class="dot" d={`M${dot.x} ${dot.y}h0`} />
+        </g>
+      ))
+    }
+  </g>
+</svg>
+
+<style>
+  .map {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    /* A view of a part of the land is a window on it: what is outside is not drawn. */
+    overflow: hidden;
+  }
+
+  /* The borders are the paper showing between the pieces. */
+  .land path {
+    fill: var(--tram-sys-surface-alt);
+    stroke: var(--tram-sys-surface);
+    stroke-width: var(--tram-sys-line-hairline);
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .land path[data-active] {
+    fill: var(--tram-sys-surface-tint);
+  }
+
+  .marked {
+    fill: none;
+    stroke: var(--tram-sys-text);
+    stroke-width: var(--tram-sys-line-strong);
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* Each dot with a rim of paper, so two that touch are still two. */
+  .dots path {
+    fill: none;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .rim {
+    stroke: var(--tram-sys-surface);
+    stroke-width: calc(var(--tram-sys-space-1) * var(--size) + var(--tram-sys-line-strong) * 2);
+  }
+
+  .dot {
+    stroke: var(--tram-sys-data-primary);
+    stroke-width: calc(var(--tram-sys-space-1) * var(--size));
+  }
+</style>

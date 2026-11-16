@@ -1,0 +1,72 @@
+---
+import LocatorMap from '@tram/design-system/patterns/LocatorMap.astro';
+import Figure from '@tram/design-system/primitives/Figure.astro';
+import { COMARCA_MAP, COMARQUES_CREDIT, onMap, viewOf } from '../../content/comarques';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+// Real towns, with made-up counts: the catalogue's data are samples.
+const TOWNS = [
+  { lat: 41.3874, lon: 2.1686, count: 14 },
+  { lat: 41.9794, lon: 2.8214, count: 6 },
+  { lat: 41.6176, lon: 0.62, count: 3 },
+  { lat: 41.1189, lon: 1.2445, count: 4 },
+  { lat: 41.9301, lon: 2.2549, count: 2 },
+  { lat: 42.1036, lon: 1.8456, count: 5 },
+  { lat: 40.8126, lon: 0.5214, count: 1 },
+];
+const points = TOWNS.map((town) => ({ ...onMap(town.lat, town.lon), count: town.count }));
+const bergueda = points.filter((_, i) => i === 5);
+const code = `<LocatorMap
+  width={map.width} height={map.height} areas={map.areas}
+  points={[{ x: 1890, y: 1420, count: 14 }]}
+  label="Mapa de Catalunya per comarques amb 7 llocs marcats."
+/>
+<LocatorMap … active="Berguedà" view={viewOf('Berguedà')} />`;
+---
+
+<Fiche
+  group="Patró"
+  title="LocatorMap"
+  use="Situar coses sobre el territori d'un cop d'ull: on es fan les curses d'una llista. Un dibuix en SVG, sense script ni tessel·les; el punt creix amb el nombre de coses que hi ha."
+  avoid="Navegar pel territori o seguir un recorregut: no es mou ni s'amplia (per a una ruta hi ha RoutePlate i el visor 3D). No porta noms: va sempre al costat d'una llista que els diu."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Tot el territori</h2>
+    <p class="fiche-note">Les vores entre peces són el paper que es veu entre elles. Els punts tenen la mateixa mida sigui quina sigui la del mapa, i un rivet de paper perquè dos que es toquen es continuïn veient dos.</p>
+    <div class="fiche-plate" data-testid="whole">
+      <Figure caption="Cada punt és un lloc amb proves; com més gros, més n'hi ha." credit={COMARQUES_CREDIT}>
+        <LocatorMap width={COMARCA_MAP.width} height={COMARCA_MAP.height} areas={COMARCA_MAP.areas} points={points} label="Mapa de Catalunya per comarques amb 7 llocs marcats." />
+      </Figure>
+    </div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Una peça destacada</h2>
+    <p class="fiche-note">Amb <code>active</code> i <code>view</code>, el mapa és una finestra sobre una peça i les del voltant.</p>
+    <div class="fiche-plate" data-testid="zoomed">
+      <LocatorMap width={COMARCA_MAP.width} height={COMARCA_MAP.height} view={viewOf('Berguedà')} areas={COMARCA_MAP.areas} active="Berguedà" points={bergueda} label="Mapa del Berguedà i les comarques del voltant amb 1 lloc marcat." />
+    </div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">
+      {
+        MODES.map((m) => (
+          <Mode {...m}>
+            <LocatorMap width={COMARCA_MAP.width} height={COMARCA_MAP.height} view={viewOf('Berguedà')} areas={COMARCA_MAP.areas} active="Berguedà" points={bergueda} label="Mapa del Berguedà i les comarques del voltant amb 1 lloc marcat." />
+          </Mode>
+        ))
+      }
+    </div>
+  </section>
+</Fiche>
+
+<style>
+  .fiche-plate {
+    max-inline-size: calc(var(--tram-sys-space-12) * 4.5);
+  }
+</style>

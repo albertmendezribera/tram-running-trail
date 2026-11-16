@@ -9,6 +9,7 @@ import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import { RACES, visible } from '../../../content';
 import { buildDay, CALENDAR_ACCESSED, CALENDAR_SOURCES, calendarRaces, isOpen } from '../../../content/calendar';
+import { facetDoors, hrefOf } from '../../../content/facets';
 import Site from '../../../layouts/Site.astro';
 import CalendarFilter from '../../../sections/CalendarFilter.astro';
 import CalendarList from '../../../sections/CalendarList.astro';
@@ -26,6 +27,8 @@ const MONTHS = ['gen.', 'febr.', 'març', 'abr.', 'maig', 'juny', 'jul.', 'ag.',
 const months = [...new Set(coming.map((race) => race.date.slice(0, 7)))].map((key) => ({ href: `#mes-${key}`, label: `${MONTHS[Number(key.slice(5)) - 1]} ${key.slice(0, 4)}` }));
 // Every calendar read; what was read on an organiser's own page has no one address to point to.
 const used = [...new Set(calendar.flatMap((race) => race.sources.map((source) => source.id)))].map((id) => CALENDAR_SOURCES[id]!).sort((a, b) => Number(!a.url) - Number(!b.url));
+// The calendar cut by kind, by distance and by comarca: a page of its own for each cut with races in it.
+const doors = facetDoors();
 const notice = pending
   ? 'Versió de proves: una part de les curses ve de calendaris que encara no ens han donat permís per mostrar-les. Se’n citen fets, amb enllaç a la font, i no són a la versió de producció.'
   : sample
@@ -82,6 +85,22 @@ const notice = pending
     )
   }
   {races.length + calendar.length === 0 && <Text tone="muted">Encara no hi ha cap cursa publicada.</Text>}
+  {
+    doors.length > 0 && (
+      <Band tone="plain" title="El calendari per parts">
+        <nav class="coming" aria-label="El calendari per tipus, distància i comarca">
+          <Stack gap={5}>
+            {doors.map((group) => (
+              <Stack gap={2}>
+                <Heading level={3} size="sm">{group.title}</Heading>
+                <Cluster gap={4}>{group.links.map((facet) => <Link href={hrefOf(facet)}>{`${group.title === 'Per comarca' ? facet.label : facet.title} (${facet.races.length})`}</Link>)}</Cluster>
+              </Stack>
+            ))}
+          </Stack>
+        </nav>
+      </Band>
+    )
+  }
   {
     calendar.length > 0 && (
       <Band tone="tint" title="D'on surten les curses">

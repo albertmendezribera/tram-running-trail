@@ -1,0 +1,19 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { facets } from '../../../../content/facets';
+import CalendarFacet from '../../../../sections/CalendarFacet.astro';
+
+// The facets of the calendar two steps deep: a kind of race in a comarca (`trail/baix-emporda`), a
+// distance in a year (`marato/2027`). Only those with races are pages (CLAUDE.md 8.3).
+export const getStaticPaths = (() =>
+  facets()
+    .filter((facet) => facet.path.includes('/'))
+    .map((facet) => {
+      const [slug, sub] = facet.path.split('/');
+      return { params: { slug: slug!, sub: sub! }, props: { facet } };
+    })) satisfies GetStaticPaths;
+
+const { facet } = Astro.props;
+---
+
+<CalendarFacet facet={facet} />

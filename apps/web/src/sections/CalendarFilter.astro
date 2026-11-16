@@ -7,6 +7,7 @@ import Cluster from '@tram/design-system/primitives/Cluster.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import type { CalendarRace } from '../content/calendar';
+import { typeOf } from '../content/facet-keys';
 import { searchText } from '../content/search-text';
 
 export interface Props {
@@ -16,8 +17,6 @@ export interface Props {
 
 const { races } = Astro.props;
 const km = (value: number): string => formatMeasure(value, 'km', 'ca');
-/** A race is what its source calls it: a march, or a race on a ground the source names. */
-const typeOf = (race: CalendarRace): string => (race.kind === 'march' ? 'march' : (race.terrain ?? 'unknown'));
 const count = (is: (race: CalendarRace) => boolean): number => races.filter(is).length;
 const TYPES = [
   { value: 'road', label: 'Asfalt' },

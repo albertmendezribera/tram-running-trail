@@ -73,7 +73,7 @@ Els noms de bars, comerços i escultures de la vista «A peu» surten d'OpenStre
 
 ## 7 · ICGC
 
-Relleu, ortofoto, edificis, topònims, arbrat i cobertes del sòl són de l'ICGC, CC BY 4.0. Només demana citació, i hi és a cada vista i a cada fitxer. Res a fer.
+Relleu, ortofoto, edificis, topònims, arbrat, cobertes del sòl i límits de comarca (els del mapa del calendari) són de l'ICGC, CC BY 4.0. Només demana citació, i hi és a cada vista i a cada fitxer. Res a fer.
 
 ## 8 · Street View i Wikimedia
 

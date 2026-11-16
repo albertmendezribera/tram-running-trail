@@ -12,20 +12,27 @@ import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import { ICGC_CREDIT, type Race, RACES, routeOf, SAMPLE_NOTICE, visible } from '../../../content';
 import { buildDay, type CalendarRace, calendarRaces, isOpen, placeOf, sourcesOf } from '../../../content/calendar';
+import { type Facet, facets } from '../../../content/facets';
 import Site from '../../../layouts/Site.astro';
 import { ogOf } from '../../../og/cards';
+import CalendarFacet from '../../../sections/CalendarFacet.astro';
 import CalendarRaceBody from '../../../sections/CalendarRace.astro';
 import RouteExperience from '../../../sections/RouteExperience.astro';
 import RouteSheet from '../../../sections/RouteSheet.astro';
 
-// Two kinds of race share these addresses: the ones with a route to run, and the ones of the calendar,
-// which so far have only what their sources say of them.
+// Three things share these addresses: the races with a route to run, the races of the calendar, which so
+// far have only what their sources say of them, and the facets of the calendar one step deep (`trail`,
+// `baix-emporda`, `marato`). `facets()` sees to it that no race is called as a facet is.
+type Kinds = { race?: Race; entry?: CalendarRace; facet?: Facet };
 export const getStaticPaths = (() => [
-  ...visible(RACES).map((race) => ({ params: { slug: race.slug }, props: { race, entry: undefined as CalendarRace | undefined } })),
-  ...calendarRaces().map((entry) => ({ params: { slug: entry.slug }, props: { race: undefined as Race | undefined, entry } })),
+  ...visible(RACES).map((race) => ({ params: { slug: race.slug }, props: { race } as Kinds })),
+  ...calendarRaces().map((entry) => ({ params: { slug: entry.slug }, props: { entry } as Kinds })),
+  ...facets()
+    .filter((facet) => !facet.path.includes('/'))
+    .map((facet) => ({ params: { slug: facet.path }, props: { facet } as Kinds })),
 ]) satisfies GetStaticPaths;
 
-const { race, entry } = Astro.props;
+const { race, entry, facet } = Astro.props;
 const today = buildDay();
 const course = race?.courses[0];
 const route = course ? routeOf(course.route) : undefined;
@@ -98,5 +105,7 @@ const pending = entry && !isOpen(entry);
     >
       <CalendarRaceBody race={entry} today={today} />
     </Site>
+  ) : facet ? (
+    <CalendarFacet facet={facet} />
   ) : null
 }

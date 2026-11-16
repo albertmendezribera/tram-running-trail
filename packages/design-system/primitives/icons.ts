@@ -11,6 +11,8 @@ export const ICONS = {
   close: 'M3.4 2 8 6.6 12.6 2 14 3.4 9.4 8l4.6 4.6-1.4 1.4L8 9.4 3.4 14 2 12.6 6.6 8 2 3.4z',
   plus: 'M7 2h2v5h5v2H9v5H7V9H2V7h5z',
   minus: 'M2 7h12v2H2z',
+  // A lens and its handle.
+  search: 'M6.5 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zM6.5 4a2.5 2.5 0 0 0 0 5 2.5 2.5 0 0 0 0-5zM9.3 10.7l1.4-1.4 3.7 3.7-1.4 1.4z',
   // Course markers, the same shapes as on the elevation profile
   summit: 'M8 1.5 15 14H1z',
   'aid-station': 'M6 2h4v4h4v4h-4v4H6v-4H2V6h4z',

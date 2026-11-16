@@ -56,23 +56,29 @@ const notice = pending
   {calendar.length > 0 && <CalendarFilter races={calendar} />}
   {
     coming.length > 0 && (
-      <Band tone="plain" title="Properes">
-        <Stack gap={6}>
-          <nav aria-label="Mesos del calendari">
-            <Cluster>{months.map((month) => <Link href={month.href}>{month.label}</Link>)}</Cluster>
-          </nav>
-          <div data-calendar-list><CalendarList races={coming} level={3} /></div>
-        </Stack>
-      </Band>
+      <div data-calendar-list>
+        <Band tone="plain" title="Properes">
+          <div class="coming">
+            <Stack gap={6}>
+              <nav aria-label="Mesos del calendari">
+                <Cluster>{months.map((month) => <Link href={month.href}>{month.label}</Link>)}</Cluster>
+              </nav>
+              <CalendarList races={coming} level={3} />
+            </Stack>
+          </div>
+        </Band>
+      </div>
     )
   }
   {
     run.length > 0 && (
-      <Band tone="alt" title="Ja disputades">
-        <Panel>
-          <div data-calendar-list><CalendarList races={run} level={3} anchor="fet" /></div>
-        </Panel>
-      </Band>
+      <div data-calendar-list>
+        <Band tone="alt" title="Ja disputades">
+          <Panel>
+            <CalendarList races={run} level={3} anchor="fet" />
+          </Panel>
+        </Band>
+      </div>
     )
   }
   {races.length + calendar.length === 0 && <Text tone="muted">Encara no hi ha cap cursa publicada.</Text>}
@@ -91,3 +97,12 @@ const notice = pending
     )
   }
 </Site>
+
+<style>
+  /* A band runs edge to edge on a phone, for the panels it holds. This list is in no panel, and keeps the page's margin. */
+  @media (width < 48rem) {
+    .coming {
+      padding-inline: var(--tram-sys-grid-margin);
+    }
+  }
+</style>

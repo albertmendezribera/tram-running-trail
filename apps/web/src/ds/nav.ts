@@ -30,6 +30,7 @@ export const GROUPS = [
     title: 'Interactius',
     items: [
       { href: '/ds/interactive/segmented-control/', title: 'SegmentedControl' },
+      { href: '/ds/interactive/search-field/', title: 'SearchField' },
       { href: '/ds/interactive/select/', title: 'Select' },
       { href: '/ds/interactive/theme-toggle/', title: 'ThemeToggle' },
       { href: '/ds/interactive/viewer-3d-shell/', title: 'Viewer3DShell' },

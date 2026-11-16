@@ -1,0 +1,85 @@
+---
+import Icon from '../primitives/Icon.astro';
+
+export interface Props {
+  /** Name of the field in its form. */
+  name: string;
+  /** What is searched, written over the field: there is no placeholder to say it instead. */
+  label: string;
+  /** What is already written in it. */
+  value?: string;
+}
+
+// The browser's own search field: on a phone the keyboard has its «search» key, and where the
+// browser gives a way to empty the field (Chromium and Safari do) it is the browser's.
+const { name, label, value } = Astro.props;
+---
+
+<label class="field">
+  <span class="label" data-type="text-xs">{label}</span>
+  <span class="box">
+    <span class="mark"><Icon name="search" size="sm" /></span>
+    <input class="input" type="search" name={name} value={value} data-type="text-sm" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </span>
+</label>
+
+<style>
+  .field {
+    display: grid;
+    gap: var(--tram-sys-space-1);
+    min-inline-size: 0;
+  }
+
+  .label {
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .box {
+    position: relative;
+    display: grid;
+  }
+
+  .input {
+    min-block-size: var(--tram-sys-space-9);
+    min-inline-size: 0;
+    inline-size: 100%;
+    padding-inline: var(--tram-sys-space-8) var(--tram-sys-space-3);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    border-radius: var(--tram-sys-radius-soft);
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface);
+    appearance: none;
+  }
+
+  .input:hover {
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .input:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  /* The browser's cross to empty the field, where it has one, drawn as TRAM's own `close`: its button, our ink. */
+  .input::-webkit-search-cancel-button {
+    inline-size: var(--tram-sys-icon-sm);
+    block-size: var(--tram-sys-icon-sm);
+    margin-inline-start: var(--tram-sys-space-2);
+    background: currentcolor;
+    cursor: pointer;
+    appearance: none;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.4 2 8 6.6 12.6 2 14 3.4 9.4 8l4.6 4.6-1.4 1.4L8 9.4 3.4 14 2 12.6 6.6 8 2 3.4z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  /* The lens says what the field is for; it is not a button. */
+  .mark {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: var(--tram-sys-space-3);
+    display: grid;
+    align-items: center;
+    color: var(--tram-sys-text-muted);
+    pointer-events: none;
+  }
+</style>

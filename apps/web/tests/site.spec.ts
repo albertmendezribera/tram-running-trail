@@ -246,6 +246,49 @@ test.describe('Calendar (Phase 2)', () => {
     await expect(filter.locator('[data-status]')).toHaveText(/^\d+ de \d+ proves\.$/);
   });
 
+  test('searches the list by name or town as it is typed, whatever the accents and capitals, and keeps the search in the address', async ({ page }) => {
+    await open(page, PAGES.races);
+    const filter = page.locator('[data-calendar-filter][data-ready]');
+    const search = filter.getByRole('searchbox', { name: 'Nom o població' });
+    const status = filter.locator('[data-status]');
+    const shown = page.locator('main [data-race]:visible');
+    const all = await shown.count();
+    // A word of the name is enough, in capitals too: the march of Pals is the only one left, and its month the only month.
+    await search.pressSequentially('ARROSSARS');
+    await expect(shown).toHaveCount(1);
+    await expect(shown.locator('a')).toHaveAttribute('href', '/ca/curses/32a-marxa-dels-arrossars-2026/');
+    await expect(status).toHaveText(`1 de ${all} proves.`);
+    await expect(page.locator('main [data-month]:visible')).toHaveCount(1);
+    await expect(page).toHaveURL(/\?cerca=ARROSSARS$/);
+    // Words in any order, without their accents, and the town counts as much as the name.
+    await search.fill('sitges marato');
+    await expect(page.locator('main [data-race]:visible a[href="/ca/curses/42a-mitja-marato-de-sitges-i-quart-de-marato-2026/"]')).toBeVisible();
+    await search.fill('pals');
+    await expect(page.locator('main [data-race]:visible a[href="/ca/curses/32a-marxa-dels-arrossars-2026/"]')).toBeVisible();
+    // The search and the filters narrow each other.
+    const found = await shown.count();
+    await filter.locator('select[name="tipus"]').selectOption('road');
+    expect(await shown.count()).toBeLessThan(found);
+    await expect(page.locator('main [data-race]:visible a[href="/ca/curses/32a-marxa-dels-arrossars-2026/"]')).toHaveCount(0);
+    await filter.locator('select[name="tipus"]').selectOption('');
+    // What finds nothing says so, and taking the filters off empties the search as well.
+    await search.fill('xyzxyz');
+    await expect(status).toHaveText('Cap prova amb aquesta cerca.');
+    await expect(shown).toHaveCount(0);
+    await filter.getByRole('button', { name: 'Treu els filtres' }).click();
+    await expect(search).toHaveValue('');
+    await expect(status).toHaveText(`${all} proves.`);
+    await expect(page).toHaveURL(/\/ca\/curses\/$/);
+  });
+
+  test('a link to a search opens the calendar searched', async ({ page }) => {
+    await open(page, `${PAGES.races}?cerca=arrossars&tipus=march`);
+    const filter = page.locator('[data-calendar-filter][data-ready]');
+    await expect(filter.getByRole('searchbox')).toHaveValue('arrossars');
+    await expect(filter.locator('select[name="tipus"]')).toHaveValue('march');
+    await expect(page.locator('main [data-race]:visible')).toHaveCount(1);
+  });
+
   test('a race of the calendar gives its facts with their source, has no 3D to show, and is kept from search engines while its source has not agreed', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await open(page, '/ca/curses/42a-mitja-marato-de-sitges-i-quart-de-marato-2026/');

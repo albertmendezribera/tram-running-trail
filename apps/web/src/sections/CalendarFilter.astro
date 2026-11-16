@@ -1,11 +1,13 @@
 ---
 import { formatMeasure } from '@tram/formats';
+import SearchField from '@tram/design-system/interactive/SearchField.astro';
 import Select from '@tram/design-system/interactive/Select.astro';
 import Button from '@tram/design-system/primitives/Button.astro';
 import Cluster from '@tram/design-system/primitives/Cluster.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import type { CalendarRace } from '../content/calendar';
+import { searchText } from '../content/search-text';
 
 export interface Props {
   /** Every race the page lists: the filters are built from what they are. */
@@ -45,17 +47,20 @@ const places = [
   ...comarques.map((c) => ({ value: c, label: `${c} (${count((r) => r.comarca === c)})` })),
   ...(count((r) => !r.comarca) ? [{ value: 'sense', label: `Comarca sense dada (${count((r) => !r.comarca)})` }] : []),
 ];
-// What the filters match against, by the address of each race: its type, its bands of distance and its comarca.
-const index = Object.fromEntries(races.map((race) => [race.slug, [typeOf(race), bandsOf(race), race.comarca ?? 'sense']]));
+// What the filters match against, by the address of each race: its type, its bands of distance, its comarca,
+// and its name and town as the search compares them.
+const index = Object.fromEntries(races.map((race) => [race.slug, [typeOf(race), bandsOf(race), race.comarca ?? 'sense', searchText(`${race.name} ${race.town ?? ''}`)]]));
 ---
 
 <!--
-  The filters of the calendar (CLAUDE.md 8.3). The list is whole in the page; a small island hides what the
-  filters leave out, working over the index below. No source gives the climb, so there is no filter by it.
+  The search and the filters of the calendar (CLAUDE.md 8.3). The list is whole in the page; a small island
+  hides what they leave out, working over the index below. The search looks in the name of a race and in its
+  town, and nowhere else. No source gives the climb, so there is no filter by it.
 -->
 <form class="filter" data-calendar-filter data-total={races.length}>
   <script type="application/json" set:html={JSON.stringify(index)} />
   <Stack gap={3}>
+    <div class="search"><SearchField name="cerca" label="Nom o població" value="" /></div>
     <Cluster gap={4} align="end">
       <Select name="tipus" label="Tipus" options={types} value="" />
       <Select name="distancia" label="Distància" options={bands} value="" />
@@ -74,5 +79,10 @@ const index = Object.fromEntries(races.map((race) => [race.slug, [typeOf(race), 
   /* Until the island is ready, and without JavaScript, the filters would do nothing: they keep their place, so nothing moves, and are not shown. */
   .filter:not([data-ready]) {
     visibility: hidden;
+  }
+
+  /* The whole line on a phone; on a wide screen, no longer than a name asks for. */
+  .search {
+    max-inline-size: calc(var(--tram-sys-space-12) * 5);
   }
 </style>

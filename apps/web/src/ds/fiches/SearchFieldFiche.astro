@@ -1,0 +1,35 @@
+---
+import SearchField from '@tram/design-system/interactive/SearchField.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const code = `<SearchField name="cerca" label="Nom o població" value="" />`;
+---
+
+<Fiche
+  group="Interactiu"
+  title="SearchField"
+  use="Escriure unes lletres per trobar una cosa en una llista llarga que ja és a la pàgina: una cursa pel nom."
+  avoid="Triar entre opcions que es coneixen d'entrada (és un Select o un SegmentedControl), i tot el que no sigui cercar: no és un camp de formulari general."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Estats</h2>
+    <div class="fiche-row" data-testid="states">
+      <SearchField name="empty" label="Nom o població" />
+      <SearchField name="filled" label="Nom o població" value="arrossars" />
+    </div>
+    <p class="fiche-note">
+      És el camp de cerca del navegador: al mòbil el teclat porta la tecla de cercar. L'etiqueta va sempre a sobre, visible, i diu què s'hi cerca; no hi ha text de mostra dins del camp. Ocupa l'amplada que li deixa qui el conté. El component no cerca res: qui
+      l'usa hi escolta l'esdeveniment <code>input</code>.
+    </p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">
+      {MODES.map((m, i) => <Mode {...m}><SearchField name={`mode-${i}`} label="Nom o població" value="arrossars" /></Mode>)}
+    </div>
+  </section>
+</Fiche>

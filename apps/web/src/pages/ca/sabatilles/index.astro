@@ -4,11 +4,16 @@ import Button from '@tram/design-system/primitives/Button.astro';
 import Heading from '@tram/design-system/primitives/Heading.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import { catalogPath, catalogShoes, drawable } from '../../../content/shoe-catalog';
 import { pairSlug, SHOE_NOTICE, shoeName, shoePath, visiblePairs, visibleShoes } from '../../../content/shoes';
 import Site from '../../../layouts/Site.astro';
 
 const shoes = visibleShoes();
 const pairs = visiblePairs();
+// The catalogue, maker by maker: what each states on its own website.
+const catalog = catalogShoes();
+const makers = [...new Set(catalog.map((shoe) => shoe.brand.name))].sort((a, b) => a.localeCompare(b, 'ca')).map((name) => ({ name, shoes: catalog.filter((shoe) => shoe.brand.name === name) }));
 ---
 
 <Site title="Sabatilles" trail={[]} description="Sabatilles de running d'asfalt i de muntanya en radiografia: el perfil amb cotes, la fitxa tècnica i la comparació entre models." placeholder notice={SHOE_NOTICE}>
@@ -28,4 +33,38 @@ const pairs = visiblePairs();
     )
   }
   {pairs.map(([a, b]) => <div><Button variant="primary" href={`/ca/comparar/${pairSlug(a, b)}/`}>{`Compara ${shoeName(a)} i ${shoeName(b)}`}</Button></div>)}
+  {
+    catalog.length > 0 && (
+      <Band tone="plain" title="El catàleg, marca a marca">
+        <div class="catalog" data-catalog>
+          <Stack gap={7}>
+            <Text measure>
+              {`${catalog.length} models de ${makers.length} marques, cadascun amb el que la seva marca declara al seu web: pes, alçades, drop i tacs. No són mesures nostres ni de cap laboratori, i el que una marca no diu queda sense dada. La sola es dibuixa només quan la marca declara les dues alçades.`}
+            </Text>
+            {makers.map((maker) => (
+              <section data-maker={maker.name}>
+                <Stack gap={3}>
+                  <Heading level={3} size="sm">{`${maker.name} · ${maker.shoes.length}`}</Heading>
+                  <Stack gap={0} as="ul">
+                    {maker.shoes.map((shoe) => (
+                      <li><ShoeRow href={catalogPath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.weightG} specs={drawable(shoe)} dropMm={shoe.dropMm} /></li>
+                    ))}
+                  </Stack>
+                </Stack>
+              </section>
+            ))}
+          </Stack>
+        </div>
+      </Band>
+    )
+  }
 </Site>
+
+<style>
+  /* A band runs edge to edge on a phone, for the panels it holds. This list is in no panel, and keeps the page's margin. */
+  @media (width < 48rem) {
+    .catalog {
+      padding-inline: var(--tram-sys-grid-margin);
+    }
+  }
+</style>

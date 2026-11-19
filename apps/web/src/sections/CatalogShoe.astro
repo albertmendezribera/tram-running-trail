@@ -1,0 +1,105 @@
+---
+import { formatDate, formatMeasure } from '@tram/formats';
+import Facts from '@tram/design-system/patterns/Facts.astro';
+import ShoeXray from '@tram/design-system/patterns/ShoeXray.astro';
+import StatBlock from '@tram/design-system/patterns/StatBlock.astro';
+import TerrainTag from '@tram/design-system/patterns/TerrainTag.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { CATALOG_ACCESSED, CATALOG_NOTICE, type CatalogShoe, catalogName, catalogPath, catalogShoes, drawable } from '../content/shoe-catalog';
+import Site from '../layouts/Site.astro';
+
+export interface Props {
+  shoe: CatalogShoe;
+}
+
+const { shoe } = Astro.props;
+const name = catalogName(shoe);
+const specs = drawable(shoe);
+const PLATE = { none: 'Sense placa', carbon: 'Placa de carboni', nylon: 'Placa de niló', pebax: 'Placa de Pebax', rock_plate: 'Placa de protecció' } as const;
+const KIND = { road: 'Sabatilla d’asfalt', trail: 'Sabatilla de muntanya' } as const;
+const mm = (value: number | null): string | null => (value === null ? null : formatMeasure(value, 'mm', 'ca'));
+const stats = [
+  { label: shoe.weightRef ? `Pes · ${shoe.weightRef.split(';')[0]}` : 'Pes', value: shoe.weightG, unit: 'g' },
+  { label: 'Alçada al taló', value: shoe.stackHeelMm, unit: 'mm' },
+  { label: 'Alçada a l’avantpeu', value: shoe.stackForefootMm, unit: 'mm' },
+  { label: 'Drop', value: shoe.dropMm, unit: 'mm' },
+  ...(shoe.terrain === 'trail' ? [{ label: 'Tacs', value: shoe.lugDepthMm, unit: 'mm' } as const] : []),
+] as const;
+const facts = [
+  { label: 'Pes', value: shoe.weightG === null ? null : `${formatMeasure(shoe.weightG, 'g', 'ca')}${shoe.weightRef ? ` (${shoe.weightRef})` : ''}` },
+  { label: 'Alçada al taló', value: mm(shoe.stackHeelMm) },
+  { label: 'Alçada a l’avantpeu', value: mm(shoe.stackForefootMm) },
+  { label: 'Drop', value: mm(shoe.dropMm) },
+  ...(shoe.terrain === 'trail' ? [{ label: 'Profunditat dels tacs', value: mm(shoe.lugDepthMm) }] : []),
+  { label: 'Placa', value: shoe.plate === null ? null : PLATE[shoe.plate] },
+  { label: 'Mitjasola', value: shoe.midsole },
+  { label: 'Sola', value: shoe.outsole },
+];
+const known = facts.filter((fact) => fact.value !== null).length;
+// The others of the same maker, to go on from one to the next.
+const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.brand.slug && other !== shoe);
+---
+
+<!-- A shoe of the catalogue: what its maker states of it on its own page, and a profile drawn from that where the two heights are stated. -->
+<Site
+  title={name}
+  trail={[{ label: 'Sabatilles', href: '/ca/sabatilles/' }]}
+  description={`${name}: ${KIND[shoe.terrain].toLocaleLowerCase('ca')}. Pes, alçades, drop i materials tal com els declara ${shoe.brand.name}, amb enllaç a la font.`}
+  terrain={shoe.terrain}
+  placeholder
+  notice={CATALOG_NOTICE}
+  credits={[`Xifres: ${shoe.brand.name}, al seu web. Consultat el ${formatDate(CATALOG_ACCESSED, 'ca')}.`]}
+>
+  <Stack gap={5}>
+    <Heading level={1} size="lg" kicker={`Sabatilla · ${shoe.brand.name}`}>{shoe.model}</Heading>
+    <Cluster><TerrainTag terrain={shoe.terrain} /></Cluster>
+    <Text size="lg" measure>{`${KIND[shoe.terrain]}. Les xifres són les que ${shoe.brand.name} declara al seu web: no les hem mesurat, i el que la marca no diu queda sense dada.`}</Text>
+    <StatBlock stats={stats} lead />
+  </Stack>
+
+  {
+    specs ? (
+      <Band title="Radiografia">
+        <Panel>
+          <ShoeXray id="xray" shoes={[{ name, terrain: shoe.terrain, specs, midsole: shoe.midsole ?? undefined, outsole: shoe.outsole ?? undefined }]} />
+          <Text size="sm" tone="muted" measure>{`El perfil es dibuixa amb les dues alçades que declara ${shoe.brand.name}, sobre la llargada nominal d'una talla 9 d'home (27 cm). Cada marca mesura l'alçada a la seva manera: no es poden comparar al mil·límetre amb les d'una altra.`}</Text>
+        </Panel>
+      </Band>
+    ) : (
+      <Band title="Radiografia">
+        <Panel>
+          <Text measure>{`${shoe.brand.name} no declara les dues alçades d'aquest model, i sense elles el perfil no es pot dibuixar. No en dibuixem cap d'estimat.`}</Text>
+        </Panel>
+      </Band>
+    )
+  }
+
+  <Band tone="tint" title="Fitxa tècnica">
+    <Panel>
+      <Stack gap={4}>
+        <Facts facts={facts} />
+        <Text size="sm" tone="muted" measure>
+          {`${known} de ${facts.length} dades, totes de la pàgina del model al web de ${shoe.brand.name}, consultada el ${formatDate(CATALOG_ACCESSED, 'ca')}.`}
+        </Text>
+        <div data-source><Link href={shoe.url} variant="standalone">{`${name} al web de ${shoe.brand.name}`}</Link></div>
+      </Stack>
+    </Panel>
+  </Band>
+
+  {
+    siblings.length > 0 && (
+      <nav aria-label={`Més models de ${shoe.brand.name}`}>
+        <Cluster gap={4}>
+          <Text size="sm" tone="muted">{`Més de ${shoe.brand.name}:`}</Text>
+          {siblings.map((other) => <Link href={catalogPath(other)}>{other.model}</Link>)}
+        </Cluster>
+      </nav>
+    )
+  }
+</Site>

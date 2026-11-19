@@ -11,12 +11,16 @@ export interface Props {
   model: string;
   terrain: 'road' | 'trail' | 'mixed';
   weightG: number | null;
-  specs: ShoeSpecs;
+  /** What the sole is drawn from. Left out or null, the row has no drawing: a shoe whose heights are not known is not given a guessed one. */
+  specs?: ShoeSpecs | null | undefined;
+  /** The drop, when it is known apart from the heights: a maker that states it and not its stacks. Otherwise it is the difference of the heights. */
+  dropMm?: number | null | undefined;
   locale?: Locale;
 }
 
-const { href, brand, model, terrain, weightG, specs, locale = 'ca' } = Astro.props;
-const profile = buildShoeProfile(specs);
+const { href, brand, model, terrain, weightG, specs, dropMm, locale = 'ca' } = Astro.props;
+const profile = specs ? buildShoeProfile(specs) : null;
+const drop = dropMm ?? profile?.dropMm ?? null;
 // Every row at the same scale: a millimetre of foam is the same height in all of them.
 const BOX = { width: 300, height: 70 };
 ---
@@ -30,13 +34,19 @@ const BOX = { width: 300, height: 70 };
   <span class="tag"><TerrainTag terrain={terrain} locale={locale} /></span>
   <span class="figures">
     <Measure value={weightG} unit="g" locale={locale} type="data-lg" />
-    <span class="drop"><Measure value={profile.dropMm} unit="mm" locale={locale} type="data-lg" /><span class="word" data-type="text-xs">drop</span></span>
+    <span class="drop"><Measure value={drop} unit="mm" locale={locale} type="data-lg" /><span class="word" data-type="text-xs">drop</span></span>
   </span>
   <svg class="sole" viewBox={`-10 ${-(BOX.height - 8)} ${BOX.width} ${BOX.height}`} aria-hidden="true">
-    <path class="foam" d={toPath([...profile.midsole])} />
-    <path class="foam" d={toPath([...profile.insole])} />
-    <path class="rubber" d={toPath([...profile.outsole])} />
-    {profile.lugs.map((lug) => <path class="rubber" d={toPath(lug)} />)}
+    {
+      profile && (
+        <>
+          <path class="foam" d={toPath([...profile.midsole])} />
+          <path class="foam" d={toPath([...profile.insole])} />
+          <path class="rubber" d={toPath([...profile.outsole])} />
+          {profile.lugs.map((lug) => <path class="rubber" d={toPath(lug)} />)}
+        </>
+      )
+    }
   </svg>
   <span class="go"><Icon name="arrow-right" /></span>
 </a>

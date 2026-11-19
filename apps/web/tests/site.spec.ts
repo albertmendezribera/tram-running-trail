@@ -629,6 +629,56 @@ test.describe('Route as a story (M5)', () => {
   });
 });
 
+test.describe('Shoe catalogue (Phase 3)', () => {
+  test('lists the models maker by maker with what each maker states, and draws a sole only where both heights are stated', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.shoes);
+    const catalog = page.locator('main [data-catalog]');
+    await expect(catalog).toContainText('No són mesures nostres ni de cap laboratori');
+    const rows = catalog.locator('li a');
+    expect(await rows.count()).toBeGreaterThanOrEqual(18);
+    expect(await catalog.locator('[data-maker]').count()).toBeGreaterThanOrEqual(2);
+    // Every row leads to a page of its own that exists, and no two to the same one.
+    const hrefs = await rows.evaluateAll((links) => links.map((link) => link.getAttribute('href')!));
+    expect(new Set(hrefs).size).toBe(hrefs.length);
+    for (const href of hrefs) expect((await page.request.get(href)).status(), href).toBe(200);
+    // A model whose maker states its two heights has its sole drawn; one whose maker does not, has none.
+    expect(await catalog.locator('a[href="/ca/sabatilles/nnormal/kjerag-02/"] svg.sole path').count()).toBeGreaterThan(2);
+    await expect(catalog.locator('a[href="/ca/sabatilles/nnormal/kjerag-brut/"] svg.sole path')).toHaveCount(0);
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('a shoe of the catalogue gives its maker’s figures with a link to the maker’s page, and is told to no search engine', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/sabatilles/nnormal/kjerag-02/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Kjerag 02');
+    await expect(main(page)).toContainText('no les hem mesurat');
+    for (const figure of [/214\sg/, /26\smm/, /20\smm/, /6\smm/, /3,5\smm/, 'talla UK 7,5', 'Vibram Megagrip Litebase']) await expect(main(page)).toContainText(figure);
+    await expect(page.locator('main [data-source] a')).toHaveAttribute('href', /^https:\/\/www\.nnormal\.com\//);
+    // The profile is drawn from the two stated heights, and says what it is drawn without.
+    await expect(page.getByRole('img', { name: /Perfil lateral de NNormal Kjerag 02/ })).toBeVisible();
+    await expect(main(page)).toContainText('Dibuixat sense dada');
+    await expect(main(page)).toContainText('no es poden comparar al mil·límetre');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0);
+    await expect(page.locator('footer')).toContainText('pendent de revisió legal');
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('what a maker does not state is absent, and a shoe without its two heights is not drawn', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/sabatilles/nnormal/kjerag-brut/');
+    await expect(main(page)).toContainText(/6,5\smm/);
+    await expect(main(page)).toContainText('Sense dada');
+    await expect(main(page)).toContainText(/No en dibuixem cap d.estimat/);
+    await expect(page.getByRole('img', { name: /Perfil lateral/ })).toHaveCount(0);
+    // A weight stated in ounces is shown in grams, with the figure as the maker wrote it.
+    await open(page, '/ca/sabatilles/topo-athletic/cyclone-3/');
+    await expect(main(page)).toContainText(/196\sg/);
+    await expect(main(page)).toContainText('6,9 oz, talla M9');
+  });
+});
+
 test.describe('Robots and sitemaps', () => {
   test('the test environment names no sitemap and shuts no crawler out: what keeps it from search engines is said on every response', async ({ page }) => {
     const robots = await page.request.get('/robots.txt');

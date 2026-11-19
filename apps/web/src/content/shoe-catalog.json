@@ -1,0 +1,347 @@
+{
+  "accessed": "2026-11-19",
+  "shoes": [
+    {
+      "slug": "cad",
+      "brand": {
+        "slug": "nnormal",
+        "name": "NNormal"
+      },
+      "model": "Cadí",
+      "terrain": "trail",
+      "weightG": 275,
+      "weightRef": "talla UK 8,5; la mateixa pàgina també diu 270 g sense talla",
+      "stackHeelMm": 35,
+      "stackForefootMm": 29,
+      "dropMm": 6,
+      "lugDepthMm": 4,
+      "plate": null,
+      "midsole": null,
+      "outsole": "Vibram Megagrip",
+      "url": "https://www.nnormal.com/ca_ES/men/shoes/cadi/nnormal-cadi_men_black-NS4CD1M-001"
+    },
+    {
+      "slug": "kboix",
+      "brand": {
+        "slug": "nnormal",
+        "name": "NNormal"
+      },
+      "model": "Kboix",
+      "terrain": "trail",
+      "weightG": null,
+      "weightRef": null,
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": null,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": null,
+      "outsole": null,
+      "url": "https://www.nnormal.com/ca_ES/men/shoes/kboix/nnormal-kboix-N2ZKXM1-001"
+    },
+    {
+      "slug": "kjerag-02",
+      "brand": {
+        "slug": "nnormal",
+        "name": "NNormal"
+      },
+      "model": "Kjerag 02",
+      "terrain": "trail",
+      "weightG": 214,
+      "weightRef": "talla UK 7,5",
+      "stackHeelMm": 26,
+      "stackForefootMm": 20,
+      "dropMm": 6,
+      "lugDepthMm": 3.5,
+      "plate": null,
+      "midsole": "EExpure",
+      "outsole": "Vibram Megagrip Litebase",
+      "url": "https://www.nnormal.com/ca_ES/men/shoes/kjerag/nnormal-kjerag_02_shoe_black-N1ZKGM2-001"
+    },
+    {
+      "slug": "kjerag-brut",
+      "brand": {
+        "slug": "nnormal",
+        "name": "NNormal"
+      },
+      "model": "Kjerag Brut",
+      "terrain": "trail",
+      "weightG": null,
+      "weightRef": null,
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": null,
+      "lugDepthMm": 6.5,
+      "plate": null,
+      "midsole": "EExpure",
+      "outsole": "Vibram Megagrip Litebase",
+      "url": "https://www.nnormal.com/ca_ES/men/shoes/kjerag/nnormal-kjerag_brut-N1ZKSM1-001"
+    },
+    {
+      "slug": "tomir-02",
+      "brand": {
+        "slug": "nnormal",
+        "name": "NNormal"
+      },
+      "model": "Tomir 02",
+      "terrain": "trail",
+      "weightG": 264,
+      "weightRef": "talla UK 8,5",
+      "stackHeelMm": 33,
+      "stackForefootMm": 25,
+      "dropMm": 8,
+      "lugDepthMm": 5,
+      "plate": null,
+      "midsole": "EExpure",
+      "outsole": "Vibram Megagrip Litebase",
+      "url": "https://www.nnormal.com/ca_ES/men/shoes/tomir/nnormal-tomir_02_shoe_black-N2ZTR25-001"
+    },
+    {
+      "slug": "atmos-2",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Atmos 2",
+      "terrain": "road",
+      "weightG": 281,
+      "weightRef": "9,9 oz, talla M9 d’home",
+      "stackHeelMm": 40.0,
+      "stackForefootMm": 35.0,
+      "dropMm": 5.0,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": null,
+      "outsole": null,
+      "url": "https://www.topoathletic.com/mens-atmos-2"
+    },
+    {
+      "slug": "aura-2",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Aura 2",
+      "terrain": "road",
+      "weightG": 301,
+      "weightRef": "10,6 oz, talla M9 d’home",
+      "stackHeelMm": 38.0,
+      "stackForefootMm": 33.0,
+      "dropMm": 5.0,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": null,
+      "outsole": null,
+      "url": "https://www.topoathletic.com/mens-aura"
+    },
+    {
+      "slug": "cyclone-3",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Cyclone 3",
+      "terrain": "road",
+      "weightG": 196,
+      "weightRef": "6,9 oz, talla M9 d’home",
+      "stackHeelMm": 28.0,
+      "stackForefootMm": 23.0,
+      "dropMm": 5.0,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": null,
+      "outsole": null,
+      "url": "https://www.topoathletic.com/mens-cyclone-3"
+    },
+    {
+      "slug": "fli-lyte-6",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Fli-Lyte 6",
+      "terrain": "road",
+      "weightG": 221,
+      "weightRef": "7,8 oz, talla M9 d’home",
+      "stackHeelMm": 23.0,
+      "stackForefootMm": 20.0,
+      "dropMm": 3.0,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": null,
+      "outsole": null,
+      "url": "https://www.topoathletic.com/mens-fli-lyte-6"
+    },
+    {
+      "slug": "mtn-racer-4",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "MTN Racer 4",
+      "terrain": "trail",
+      "weightG": 295,
+      "weightRef": "10,4 oz, talla M9 d’home",
+      "stackHeelMm": 33.0,
+      "stackForefootMm": 28.0,
+      "dropMm": 5.0,
+      "lugDepthMm": null,
+      "plate": "none",
+      "midsole": null,
+      "outsole": "Vibram Megagrip",
+      "url": "https://www.topoathletic.com/mens-mtn-racer-4"
+    },
+    {
+      "slug": "phantom-4",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Phantom 4",
+      "terrain": "road",
+      "weightG": 264,
+      "weightRef": "9,3 oz, talla M9 d’home",
+      "stackHeelMm": 35.0,
+      "stackForefootMm": 30.0,
+      "dropMm": 5.0,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": null,
+      "outsole": null,
+      "url": "https://www.topoathletic.com/mens-phantom-4"
+    },
+    {
+      "slug": "pursuit-3",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Pursuit 3",
+      "terrain": "trail",
+      "weightG": 301,
+      "weightRef": "10,6 oz, talla M9 d’home",
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": 0.0,
+      "lugDepthMm": null,
+      "plate": "none",
+      "midsole": null,
+      "outsole": "Vibram Megagrip",
+      "url": "https://www.topoathletic.com/mens-pursuit"
+    },
+    {
+      "slug": "specter-2",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Specter 2",
+      "terrain": "road",
+      "weightG": 230,
+      "weightRef": "8,1 oz, talla M9 d’home",
+      "stackHeelMm": 37.0,
+      "stackForefootMm": 32.0,
+      "dropMm": 5.0,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": null,
+      "outsole": null,
+      "url": "https://www.topoathletic.com/mens-specter-2"
+    },
+    {
+      "slug": "specter-elite",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Specter Elite",
+      "terrain": "road",
+      "weightG": 201,
+      "weightRef": "7,1 oz, talla M9 d’home",
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": 5.0,
+      "lugDepthMm": null,
+      "plate": "carbon",
+      "midsole": null,
+      "outsole": null,
+      "url": "https://www.topoathletic.com/mens-specter-elite"
+    },
+    {
+      "slug": "terraventure-5",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Terraventure 5",
+      "terrain": "trail",
+      "weightG": 292,
+      "weightRef": "10,3 oz, talla M9 d’home",
+      "stackHeelMm": 25.0,
+      "stackForefootMm": 22.0,
+      "dropMm": 3.0,
+      "lugDepthMm": null,
+      "plate": "rock_plate",
+      "midsole": null,
+      "outsole": "Vibram Megagrip",
+      "url": "https://www.topoathletic.com/mens-terraventure-5"
+    },
+    {
+      "slug": "ultrafly-6",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Ultrafly 6",
+      "terrain": "road",
+      "weightG": 272,
+      "weightRef": "9,6 oz, talla M9 d’home",
+      "stackHeelMm": 32.0,
+      "stackForefootMm": 27.0,
+      "dropMm": 5.0,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": null,
+      "outsole": null,
+      "url": "https://www.topoathletic.com/mens-ultrafly-6"
+    },
+    {
+      "slug": "ultraventure-4",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Ultraventure 4",
+      "terrain": "trail",
+      "weightG": 295,
+      "weightRef": "10,4 oz, talla M9 d’home",
+      "stackHeelMm": 35.0,
+      "stackForefootMm": 30.0,
+      "dropMm": 5.0,
+      "lugDepthMm": null,
+      "plate": "none",
+      "midsole": null,
+      "outsole": "Vibram XS Trek EVO",
+      "url": "https://www.topoathletic.com/mens-ultraventure-4"
+    },
+    {
+      "slug": "vista",
+      "brand": {
+        "slug": "topo-athletic",
+        "name": "Topo Athletic"
+      },
+      "model": "Vista",
+      "terrain": "trail",
+      "weightG": 309,
+      "weightRef": "10,9 oz, talla M9 d’home",
+      "stackHeelMm": 38.0,
+      "stackForefootMm": 33.0,
+      "dropMm": 5.0,
+      "lugDepthMm": 4,
+      "plate": "none",
+      "midsole": null,
+      "outsole": "Vibram Megagrip",
+      "url": "https://www.topoathletic.com/mens-vista"
+    }
+  ]
+}

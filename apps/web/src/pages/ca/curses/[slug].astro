@@ -93,7 +93,7 @@ const pending = entry && !isOpen(entry);
         <Bib slot="aside" number={race.edition.bib} terrain={race.terrain} label={race.name} />
       </Split>
       <RouteExperience route={route} transition={`profile-race-${race.slug}`} />
-      <RouteSheet route={route} />
+      <RouteSheet route={route} time={false} />
       <RouteShare path={`curses/${race.slug}`} name={race.name} />
     </Site>
   ) : entry ? (

@@ -23,6 +23,11 @@ export interface Route {
   credit: string;
   /** What the outing was, when it is known: said on the page of the route. */
   origin?: string;
+  /**
+   * Seconds the watch was recording, pauses left out (`scripts/gpx-time.mjs`): what the time and the
+   * average pace of the page come from. Only where whoever ran it has said it may be told; absent otherwise.
+   */
+  timeS?: number;
   isPlaceholder: boolean;
 }
 
@@ -50,12 +55,12 @@ export interface Race {
   courses: Course[];
 }
 
-const GPX_CREDIT = 'Recorregut: GPX d’una sortida real. Només se’n publiquen la distància, l’altitud i el traçat.';
+const GPX_CREDIT = 'Recorregut: GPX d’una sortida real. Se’n publiquen el traçat, la distància, l’altitud i el temps total amb el ritme mitjà; ni el dia, ni l’hora, ni les pulsacions.';
 
 export const ROUTES: Route[] = [
-  { slug: 'calonge', name: 'Calonge', place: 'Calonge, Baix Empordà', profile: CALONGE, plate: calongePlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, origin: 'Gravada a la Marxa de les Tines.', isPlaceholder: false },
-  { slug: 'palamos', name: 'Palamós', place: 'Palamós, Baix Empordà', profile: PALAMOS, plate: palamosPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, isPlaceholder: false },
-  { slug: 'sils', name: 'Sils', place: 'Sils, la Selva', profile: SILS, plate: silsPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, origin: 'Gravada en un entrenament suau: «Easy Run Sils 10k».', isPlaceholder: false },
+  { slug: 'calonge', name: 'Calonge', place: 'Calonge, Baix Empordà', profile: CALONGE, plate: calongePlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, origin: 'Gravada a la Marxa de les Tines.', timeS: 4995, isPlaceholder: false },
+  { slug: 'palamos', name: 'Palamós', place: 'Palamós, Baix Empordà', profile: PALAMOS, plate: palamosPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, timeS: 3533, isPlaceholder: false },
+  { slug: 'sils', name: 'Sils', place: 'Sils, la Selva', profile: SILS, plate: silsPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, origin: 'Gravada en un entrenament suau: «Easy Run Sils 10k».', timeS: 3527, isPlaceholder: false },
 ];
 
 // The figures of a course come from its track, never typed by hand.

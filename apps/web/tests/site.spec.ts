@@ -522,7 +522,7 @@ test.describe('Route as a story (M5)', () => {
     for (const [i, file] of ['tram-rutes-calonge.png', 'tram-rutes-calonge-nit.png'].entries()) {
       const story = stories.nth(i);
       // What the picture shows is said in words, figures and all.
-      await expect(story.locator('img')).toHaveAttribute('alt', /^Imatge vertical de Calonge \((clara|fosca)\): .*distància 12,41\skm, desnivell positiu 340\sm\sD\+, punt més alt 313\sm/);
+      await expect(story.locator('img')).toHaveAttribute('alt', /^Imatge vertical de Calonge \((clara|fosca)\): .*distància 12,41\skm, temps 1:23:15, ritme mitjà 6:42\s\/km, desnivell positiu 340\sm\sD\+/);
       const save = story.getByRole('link', { name: 'Baixa-la' });
       await expect(save).toHaveAttribute('download', file);
       const response = await page.request.get((await save.getAttribute('href'))!);
@@ -583,6 +583,26 @@ test.describe('Route as a story (M5)', () => {
     await open(page, '/ca/curses/marxa-de-les-tines/');
     await expect(share(page).getByRole('link', { name: 'Baixa-la' }).first()).toHaveAttribute('download', 'tram-curses-marxa-de-les-tines.png');
     await expect(share(page).getByRole('button', { name: 'Comparteix' })).toHaveCount(0);
+  });
+
+  test('a route tells the time it was run in and its average pace, on its sheet and in its story; a race does not tell one runner’s', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/rutes/palamos/');
+    const sheet = page.locator('main section', { hasText: 'Full de resultats' }).first();
+    await expect(sheet).toContainText('Temps');
+    await expect(sheet).toContainText('00:58:53');
+    await expect(sheet).toContainText('Ritme mitjà');
+    await expect(sheet).toContainText(/5:45\s?\/km/);
+    await expect(share(page).locator('img').first()).toHaveAttribute('alt', /temps 58:53, ritme mitjà 5:45\s\/km/);
+    // What is told is the total and the average. The page says so, and says what it keeps to itself.
+    await expect(page.locator('footer')).toContainText('ni el dia, ni l’hora, ni les pulsacions');
+    // The same track on the page of a race is the race's route, not somebody's run.
+    await open(page, '/ca/curses/marxa-de-les-tines/');
+    const raceSheet = page.locator('main section', { hasText: 'Full de resultats' }).first();
+    await expect(raceSheet).toContainText('Km-esforç');
+    await expect(raceSheet).not.toContainText('Ritme mitjà');
+    await expect(share(page).locator('img').first()).toHaveAttribute('alt', /punt més alt 313\sm/);
+    await expect(share(page).locator('img').first()).not.toHaveAttribute('alt', /temps/);
   });
 
   test('a page without a track has no story to offer', async ({ page }) => {

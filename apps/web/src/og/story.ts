@@ -18,7 +18,7 @@ export interface StoryCard {
   kicker: string;
   title: string;
   place: string;
-  /** Two or three, the first the one the route is known by. */
+  /** Three or four, the first the one the route is known by. */
   figures: ReadonlyArray<{ value: string; label: string }>;
   profile: readonly ProfilePoint[];
   plate: Plate;
@@ -47,7 +47,7 @@ export function storyCard({ terrain, kicker, title, place, figures, profile, pla
 
   // The route on its contours. A plate taller than wide leaves the figures a column at its side; a wide one, a row under it.
   const upright = plate.height > plate.width;
-  const box = upright ? { x: EDGE, y: under + 52, width: 520, height: 700 } : { x: EDGE, y: under + 52, width: WIDTH - EDGE * 2, height: 460 };
+  const box = upright ? { x: EDGE, y: under + 52, width: 520, height: 700 } : { x: EDGE, y: under + 52, width: WIDTH - EDGE * 2, height: figures.length > 3 ? 400 : 460 };
   const fit = Math.min(box.width / plate.width, box.height / plate.height);
   const drawn = { width: plate.width * fit, height: plate.height * fit };
   const px = (n: number): string => (n / fit).toFixed(2);
@@ -65,24 +65,31 @@ export function storyCard({ terrain, kicker, title, place, figures, profile, pla
   );
   parts.push(write(credit, 'text', 22, box.x, box.y + drawn.height + 40, color['text-muted']).svg);
 
-  const tall = 230;
+  // Under four figures the profile is lower: they need the room, and it keeps its shape.
+  const tall = figures.length > 3 && !upright ? 170 : 230;
   const foot = HEIGHT - COVERED - 20;
   // The figures, as on a results sheet: the number large, its name small under it.
   const label = (text: string, x: number, y: number): string => write(text.toLocaleUpperCase('ca'), 'text', 24, x, y, color['text-muted'], { tracking: 0.06 }).svg;
   if (upright) {
     const x = box.x + drawn.width + 56;
     const room = WIDTH - EDGE - x;
+    // The column is as tall as the box: four figures stand closer, and a little smaller, than three.
+    const [most, pitch] = figures.length > 3 ? [118, 176] : [150, 230];
     figures.forEach((figure, i) => {
-      const y = box.y + 130 + i * 230;
-      parts.push(write(figure.value, 'display', fitted(figure.value, 'display', 150, room), x, y, color.text).svg, label(figure.label, x, y + 40));
+      const y = box.y + most * 0.86 + i * pitch;
+      parts.push(write(figure.value, 'display', fitted(figure.value, 'display', most, room), x, y, color.text).svg, label(figure.label, x, y + 40));
     });
   } else {
-    // Half way between the plate and the profile.
-    const y = (box.y + drawn.height + 40 + foot - tall) / 2 + 30;
-    const room = (WIDTH - EDGE * 2) / figures.length;
+    // Between the plate and the profile: three in a row, or four as two rows of two.
+    const [from, to] = [box.y + drawn.height + 40, foot - tall];
+    const across = figures.length > 3 ? 2 : figures.length;
+    const rows = Math.ceil(figures.length / across);
+    const [most, pitch] = rows > 1 ? [112, 158] : [130, 0];
+    const first = (from + to) / 2 + 30 - ((rows - 1) * pitch) / 2;
+    const room = (WIDTH - EDGE * 2) / across;
     figures.forEach((figure, i) => {
-      const x = EDGE + i * room;
-      parts.push(write(figure.value, 'display', fitted(figure.value, 'display', 130, room - 40), x, y, color.text).svg, label(figure.label, x, y + 40));
+      const [x, y] = [EDGE + (i % across) * room, first + Math.floor(i / across) * pitch];
+      parts.push(write(figure.value, 'display', fitted(figure.value, 'display', most, room - 40), x, y, color.text).svg, label(figure.label, x, y + 40));
     });
   }
 

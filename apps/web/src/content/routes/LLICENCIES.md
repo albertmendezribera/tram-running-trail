@@ -5,6 +5,7 @@ Cada carpeta és una ruta. El codi del repositori no està cobert per aquest fit
 | Fitxer | Què conté | D'on surt | Llicència |
 |---|---|---|---|
 | `route.json` | El traçat, en metres | GPX d'una sortida real, publicat amb permís de qui la va fer | Del titular del track |
+| `timeS`, a `../index.ts` | Segons que la sortida va durar amb el rellotge en marxa | El mateix GPX (`scripts/gpx-time.mjs`), publicat amb permís de qui la va fer. Del GPX no se'n treu cap altra dada de temps | Del titular del track |
 | `terrain.webp`, `terrain.json`, `plate.json` | Relleu i corbes de nivell | Model d'elevacions de l'ICGC | CC BY 4.0 · © Institut Cartogràfic i Geològic de Catalunya |
 | `ortho.webp` | Ortofoto | ICGC | CC BY 4.0 · © ICGC |
 | `land.png` | Tipus de terra | Mapa de cobertes del sòl 2024 i mapa base de l'ICGC | CC BY 4.0 · © ICGC |

@@ -14,10 +14,12 @@ import { DEM_CREDIT, type Route } from '../content';
 
 export interface Props {
   route: Route;
+  /** Whether the time the route was run in is told. A race shows the route, not the run of whoever recorded it. */
+  time?: boolean;
 }
 
-const { route } = Astro.props;
-// Every figure comes from the GPX: distance and elevation only.
+const { route, time = true } = Astro.props;
+// Every figure comes from the GPX: distance and elevation, and the time recorded where the route tells it.
 const summary = summarize(route.profile);
 const distance = Number(summary.distanceKm.toFixed(2));
 const gain = Math.round(summary.gainM);
@@ -26,6 +28,8 @@ const stats = [
   { label: 'Desnivell positiu', value: gain, unit: 'm-gain', tone: 'grade' },
   { label: 'Altitud màxima', value: Math.round(summary.highest[1]), unit: 'm' },
   { label: 'Km-esforç', value: Number((distance + gain / 100).toFixed(1)), unit: 'km-effort' },
+  // The time the watch was recording and the pace it makes over the distance: only for a route that tells its time.
+  ...(time && route.timeS ? ([{ label: 'Temps', value: route.timeS, unit: 'duration' }, { label: 'Ritme mitjà', value: route.timeS / summary.distanceKm, unit: 'pace' }] as const) : []),
 ] as const;
 const rows = kmStretches(route.profile).map((r) => ({ km: r.km, gain: Math.round(r.gainM), loss: Math.round(r.lossM), grade: Math.round(r.grade) }));
 ---

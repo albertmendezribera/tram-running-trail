@@ -1,5 +1,6 @@
 // Turns a GPX track into an elevation profile: [km, elevation] every `step` metres.
 // Keeps only distance and elevation: coordinates, times and sensor data are dropped.
+// (The one thing ever taken from the times, the total recorded, is `gpx-time.mjs`.)
 // Usage: node scripts/gpx-to-profile.mjs <track.gpx> <out.ts> <exportName> [stepMetres]
 import { readFileSync, writeFileSync } from 'node:fs';
 

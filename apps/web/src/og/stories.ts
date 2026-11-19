@@ -14,6 +14,13 @@ export interface Story {
   card: StoryCard;
 }
 
+/** A time as a runner writes it: `1:23:15`, or `58:53` under the hour. The page keeps the clock of a results sheet. */
+const clock = (seconds: number): string => {
+  const s = Math.round(seconds);
+  const tail = `${String(Math.floor(s / 60) % 60).padStart(s >= 3600 ? 2 : 1, '0')}:${String(s % 60).padStart(2, '0')}`;
+  return s >= 3600 ? `${Math.floor(s / 3600)}:${tail}` : tail;
+};
+
 /** The relief of every plate is the ICGC's; its licence asks to be named where the work is shown. */
 const RELIEF = 'Relleu: ICGC, CC BY 4.0';
 const THEMES: ReadonlyArray<{ theme: TramOgTheme; suffix: string; name: string }> = [
@@ -26,8 +33,15 @@ export function stories(): Story[] {
   return ogCards().flatMap((entry) => {
     const route = tracks.get(entry.path);
     if (entry.kind !== 'route' || !route) return [];
-    const highest = Math.round(summarize(route.profile).highest[1]);
-    const card: StoryCard = { ...entry.card, figures: [...entry.card.figures, { value: formatMeasure(highest, 'm', 'ca'), label: 'Punt més alt' }], plate: route.plate, credit: RELIEF };
+    const summary = summarize(route.profile);
+    const [distance, gain] = entry.card.figures;
+    // A route that tells its time is shared as a run is told: how far, how long, how fast, how much it climbs.
+    // The time is of whoever ran the route: the story of a race, which is nobody's run, does not carry it.
+    const timeS = entry.path.startsWith('rutes/') ? route.timeS : undefined;
+    const figures = timeS
+      ? [distance!, { value: clock(timeS), label: 'Temps' }, { value: formatMeasure(timeS / summary.distanceKm, 'pace', 'ca'), label: 'Ritme mitjà' }, gain!]
+      : [...entry.card.figures, { value: formatMeasure(Math.round(summary.highest[1]), 'm', 'ca'), label: 'Punt més alt' }];
+    const card: StoryCard = { ...entry.card, figures, plate: route.plate, credit: RELIEF };
     return THEMES.map(({ theme, suffix }) => ({ path: `${entry.path}${suffix}`, theme, card }));
   });
 }

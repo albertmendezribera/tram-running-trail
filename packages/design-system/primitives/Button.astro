@@ -5,19 +5,21 @@ export interface Props {
   size?: 'md' | 'sm';
   /** With `href` it is a link that looks like a button. */
   href?: string;
+  /** With `href`: the link saves what it leads to instead of opening it, under this file name. */
+  download?: string;
   type?: 'button' | 'submit';
   disabled?: boolean;
   /** Busy: it keeps its place and its width, and cannot be pressed twice. */
   loading?: boolean;
 }
 
-const { variant = 'secondary', size = 'md', href, type = 'button', disabled = false, loading = false } = Astro.props;
+const { variant = 'secondary', size = 'md', href, download, type = 'button', disabled = false, loading = false } = Astro.props;
 const off = disabled || loading;
 ---
 
 {
   href && !off ? (
-    <a class="button" data-variant={variant} data-size={size} data-type={size === 'sm' ? 'text-xs' : 'text-sm'} href={href}>
+    <a class="button" data-variant={variant} data-size={size} data-type={size === 'sm' ? 'text-xs' : 'text-sm'} href={href} download={download}>
       <slot />
     </a>
   ) : (

@@ -18,6 +18,7 @@ import { ogOf } from '../../../og/cards';
 import CalendarFacet from '../../../sections/CalendarFacet.astro';
 import CalendarRaceBody from '../../../sections/CalendarRace.astro';
 import RouteExperience from '../../../sections/RouteExperience.astro';
+import RouteShare from '../../../sections/RouteShare.astro';
 import RouteSheet from '../../../sections/RouteSheet.astro';
 
 // Three things share these addresses: the races with a route to run, the races of the calendar, which so
@@ -93,6 +94,7 @@ const pending = entry && !isOpen(entry);
       </Split>
       <RouteExperience route={route} transition={`profile-race-${race.slug}`} />
       <RouteSheet route={route} />
+      <RouteShare path={`curses/${race.slug}`} name={race.name} />
     </Site>
   ) : entry ? (
     <Site

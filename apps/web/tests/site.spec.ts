@@ -511,6 +511,87 @@ test.describe('Trail (breadcrumbs)', () => {
   });
 });
 
+test.describe('Route as a story (M5)', () => {
+  const share = (page: Page) => page.locator('main [data-route-share]');
+
+  test('a route is offered as a tall image in a light and a dark version, to save without any script', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/rutes/calonge/');
+    const stories = share(page).locator('[data-story]');
+    await expect(stories).toHaveCount(2);
+    for (const [i, file] of ['tram-rutes-calonge.png', 'tram-rutes-calonge-nit.png'].entries()) {
+      const story = stories.nth(i);
+      // What the picture shows is said in words, figures and all.
+      await expect(story.locator('img')).toHaveAttribute('alt', /^Imatge vertical de Calonge \((clara|fosca)\): .*distància 12,41\skm, desnivell positiu 340\sm\sD\+, punt més alt 313\sm/);
+      const save = story.getByRole('link', { name: 'Baixa-la' });
+      await expect(save).toHaveAttribute('download', file);
+      const response = await page.request.get((await save.getAttribute('href'))!);
+      expect(response.status()).toBe(200);
+      expect(response.headers()['content-type']).toBe('image/png');
+    }
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('the image is the size of a story, and keeps clear of what the apps lay over its top and its foot', async ({ page }) => {
+    await open(page, '/ca/rutes/sils/');
+    for (const href of ['/stories/rutes/sils.png', '/stories/rutes/calonge-nit.png', '/stories/curses/marxa-de-les-tines.png']) {
+      const read = await page.evaluate(async (src) => {
+        const image = new Image();
+        image.src = src;
+        await image.decode();
+        const canvas = Object.assign(document.createElement('canvas'), { width: image.naturalWidth, height: image.naturalHeight });
+        const context = canvas.getContext('2d')!;
+        context.drawImage(image, 0, 0);
+        // A band is clear when every one of its pixels is the same colour.
+        const flat = (from: number, to: number): boolean => {
+          const { data } = context.getImageData(0, from, canvas.width, to - from);
+          for (let i = 4; i < data.length; i += 4) if (data[i] !== data[0] || data[i + 1] !== data[1] || data[i + 2] !== data[2]) return false;
+          return true;
+        };
+        return { width: image.naturalWidth, height: image.naturalHeight, top: flat(0, 250), foot: flat(1920 - 250, 1920), middle: flat(250, 1920 - 250) };
+      }, href);
+      expect(read, href).toEqual({ width: 1080, height: 1920, top: true, foot: true, middle: false });
+    }
+  });
+
+  test('where the browser can hand a picture to another app, «Comparteix» gives it the image as a file', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(Navigator.prototype, 'canShare', { configurable: true, value: (data: ShareData) => Boolean(data.files?.length) });
+      Object.defineProperty(Navigator.prototype, 'share', {
+        configurable: true,
+        value: async (data: ShareData) => {
+          const [file] = data.files!;
+          (window as unknown as { shared: unknown }).shared = { name: file!.name, type: file!.type, size: file!.size, title: data.title };
+        },
+      });
+    });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/rutes/calonge/');
+    const buttons = share(page).getByRole('button', { name: 'Comparteix' });
+    await expect(buttons).toHaveCount(2);
+    await buttons.nth(1).click();
+    await expect.poll(() => page.evaluate(() => (window as unknown as { shared?: { name: string } }).shared?.name)).toBe('tram-rutes-calonge-nit.png');
+    const shared = await page.evaluate(() => (window as unknown as { shared: { type: string; size: number; title: string } }).shared);
+    expect(shared.type).toBe('image/png');
+    expect(shared.size).toBeGreaterThan(10_000);
+    expect(shared.title).toBe('Calonge');
+  });
+
+  test('where it cannot, there is no «Comparteix», and saving is still there', async ({ page }) => {
+    await page.addInitScript(() => Object.defineProperty(Navigator.prototype, 'canShare', { configurable: true, value: undefined }));
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/curses/marxa-de-les-tines/');
+    await expect(share(page).getByRole('link', { name: 'Baixa-la' }).first()).toHaveAttribute('download', 'tram-curses-marxa-de-les-tines.png');
+    await expect(share(page).getByRole('button', { name: 'Comparteix' })).toHaveCount(0);
+  });
+
+  test('a page without a track has no story to offer', async ({ page }) => {
+    await open(page, '/ca/curses/32a-marxa-dels-arrossars-2026/');
+    await expect(share(page)).toHaveCount(0);
+    expect((await page.request.get('/stories/curses/32a-marxa-dels-arrossars-2026.png')).status()).toBe(404);
+  });
+});
+
 test.describe('Robots and sitemaps', () => {
   test('the test environment names no sitemap and shuts no crawler out: what keeps it from search engines is said on every response', async ({ page }) => {
     const robots = await page.request.get('/robots.txt');

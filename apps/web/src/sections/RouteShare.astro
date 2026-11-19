@@ -1,0 +1,105 @@
+---
+import Band from '@tram/design-system/primitives/Band.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { storiesOf } from '../og/stories';
+
+export interface Props {
+  /** The page's own path, as its share image has it: `rutes/calonge`. */
+  path: string;
+  /** What the route or the race is called. */
+  name: string;
+}
+
+const { path, name } = Astro.props;
+const stories = storiesOf(path);
+---
+
+<!--
+  The route as a story (M5): a tall image made with the site, in a light and a dark version. Saving it
+  needs no script. Where the browser can hand a picture to another app, a small island adds «Comparteix»,
+  which opens the phone's own share sheet.
+-->
+{
+  stories.length > 0 && (
+    <Band tone="alt" title="Per a les stories">
+      <Panel>
+        <div data-route-share data-title={name}>
+          <Stack gap={5}>
+            <Text measure>
+              La ruta en una imatge vertical, a la mida de les stories d'Instagram i dels estats de WhatsApp: el recorregut sobre les corbes de nivell, les xifres i el perfil. A dalt i a baix hi queda lloc per al que hi posa cada aplicació.
+            </Text>
+            <ul class="stories">
+              {stories.map((story) => (
+                <li class="story" data-story={story.name}>
+                  <a class="preview" href={story.href}>
+                    <img src={story.href} alt={story.alt} width="1080" height="1920" loading="lazy" decoding="async" />
+                  </a>
+                  <Text size="sm" tone="muted">{story.name}</Text>
+                  <Cluster gap={2}>
+                    <span data-share hidden>
+                      <Button variant="primary" size="sm">
+                        <span data-share-story={story.href} data-file={story.file}>Comparteix</span>
+                      </Button>
+                    </span>
+                    <Button href={story.href} download={story.file} size="sm">Baixa-la</Button>
+                  </Cluster>
+                </li>
+              ))}
+            </ul>
+            <Text size="sm" tone="muted"><span data-share-status role="status" /></Text>
+          </Stack>
+        </div>
+      </Panel>
+    </Band>
+  )
+}
+
+<script>
+  import '../islands/share-story.ts';
+</script>
+
+<style>
+  .stories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tram-sys-space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .story {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+    justify-items: start;
+    inline-size: calc(var(--tram-sys-space-12) * 2.25);
+    max-inline-size: calc(50% - var(--tram-sys-space-3));
+  }
+
+  /* The light one is the colour of the page: a hairline says where it ends. */
+  .preview {
+    display: block;
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+  }
+
+  .preview:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .preview img {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  @media (width < 48rem) {
+    .stories {
+      gap: var(--tram-sys-space-4);
+    }
+  }
+</style>

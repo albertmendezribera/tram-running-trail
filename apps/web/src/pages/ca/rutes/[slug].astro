@@ -9,6 +9,7 @@ import { ICGC_CREDIT, ROUTES, visible } from '../../../content';
 import Site from '../../../layouts/Site.astro';
 import { ogOf } from '../../../og/cards';
 import RouteExperience from '../../../sections/RouteExperience.astro';
+import RouteShare from '../../../sections/RouteShare.astro';
 import RouteSheet from '../../../sections/RouteSheet.astro';
 
 export const getStaticPaths = (() => visible(ROUTES).map((route) => ({ params: { slug: route.slug }, props: { route } }))) satisfies GetStaticPaths;
@@ -27,4 +28,5 @@ const sentences = describeRoute(route.profile);
   </Stack>
   <RouteExperience route={route} transition={`profile-route-${route.slug}`} />
   <RouteSheet route={route} />
+  <RouteShare path={`rutes/${route.slug}`} name={route.name} />
 </Site>

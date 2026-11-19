@@ -30,6 +30,21 @@ L'SVG propi. La imatge és gairebé tota dibuix (perfil, traçat, siluetes), que
 
 ![Les imatges de la Marxa de les Tines, la ruta de Sils, la ruta de Palamós i la comparació](E14/og.png)
 
+## La ruta com a story (19-11-2026)
+
+Un segon format, vertical, per a les stories d'Instagram i els estats de WhatsApp. No és la imatge d'un enllaç: és una imatge que la persona desa o comparteix ella mateixa.
+
+- **1080 × 1920**, en dues versions: clara i fosca (`-nit`). A `/stories/rutes/<slug>.png` i `/stories/curses/<slug>.png`, només per a pàgines amb track. Pesen entre 30 i 105 KB.
+- **Què hi ha:** «TRAM» i què és la pàgina, el nom a mida de dorsal, el lloc, el recorregut sobre les corbes de nivell amb la sortida, l'arribada i els quilòmetres, tres xifres (distància, desnivell positiu i punt més alt) i el perfil de banda a banda. Un plànol més alt que ample deixa les xifres en columna al costat; un d'ample, en fila a sota.
+- **Franges lliures:** els 250 px de dalt i els 250 de baix no porten res més que el fons. És on Instagram posa el nom del compte i la barra de resposta. Una prova ho comprova píxel a píxel.
+- **Crèdit a la imatge mateixa:** «Relleu: ICGC, CC BY 4.0». Les corbes surten del model d'elevacions de l'ICGC, i la llicència demana citar-lo allà on es mostra l'obra; una imatge que circula sola no porta el peu de la pàgina.
+- **Cap adreça web:** el domini encara no està comprat. Quan n'hi hagi, hi ha lloc a la capçalera.
+- **Només el que ja és públic:** nom, lloc, traçat, distància i altituds. Ni temps, ni ritme, ni pulsacions.
+- **A la pàgina** (`sections/RouteShare.astro`): les dues versions en petit, cadascuna amb «Baixa-la», que és un enllaç amb `download` i no necessita JavaScript. On el navegador pot passar un fitxer a una altra aplicació (`navigator.canShare` amb fitxers; al mòbil, gairebé sempre), una illa hi afegeix «Comparteix», que obre el menú de compartir del sistema amb la imatge.
+- `apps/web/src/og/story.ts` la dibuixa, amb les mateixes funcions de text i els mateixos tokens que la imatge d'enllaç; `og/stories.ts` en treu les dades del mateix contingut que la pàgina.
+
+**No verificat:** no s'ha compartit cap imatge des d'un telèfon real. Que el menú del sistema ofereixi «Stories» d'Instagram depèn de l'aplicació i del sistema; el que la prova comprova és que el navegador rep el fitxer correcte. Les mides de les franges lliures són les que es recomanen habitualment per a stories, no una xifra oficial que hàgim mesurat.
+
 ## Què no s'ha verificat, i límits
 
 - **No s'han provat a cap xarxa**: no s'ha enganxat cap enllaç a WhatsApp, X ni Instagram per veure com la mostren. Les adreces de les imatges apunten a `tramrun.com`, que encara no existeix: a staging la imatge es genera, però l'enllaç compartit no l'ensenyarà.

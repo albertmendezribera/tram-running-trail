@@ -24,7 +24,7 @@ interface Written {
   width: number;
 }
 /** A line of text as outlines, its baseline at `y`. `tracking` is in ems. */
-function write(text: string, face: keyof typeof FACES, size: number, x: number, y: number, fill: string, { anchor = 'start', tracking = 0 }: { anchor?: 'start' | 'end'; tracking?: number } = {}): Written {
+export function write(text: string, face: keyof typeof FACES, size: number, x: number, y: number, fill: string, { anchor = 'start', tracking = 0 }: { anchor?: 'start' | 'end'; tracking?: number } = {}): Written {
   const font = FACES[face];
   const scale = size / font.unitsPerEm;
   const run = font.layout(text);
@@ -43,7 +43,7 @@ function write(text: string, face: keyof typeof FACES, size: number, x: number, 
   return { svg: `<g transform="translate(${left.toFixed(1)} ${y}) scale(${scale.toFixed(5)} ${(-scale).toFixed(5)})" fill="${fill}"${bold}>${paths.join('')}</g>`, width };
 }
 /** The largest size, up to `most`, at which a line fits a width. */
-const fitted = (text: string, face: keyof typeof FACES, most: number, room: number): number => Math.min(most, (most * room) / write(text, face, most, 0, 0, '#000').width);
+export const fitted = (text: string, face: keyof typeof FACES, most: number, room: number): number => Math.min(most, (most * room) / write(text, face, most, 0, 0, '#000').width);
 
 interface Frame {
   terrain: TramOgTerrain;

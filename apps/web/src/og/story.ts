@@ -5,7 +5,7 @@
 import { tramOg, type TramOgTerrain, type TramOgTheme } from '@tram/design-system/og';
 import { areaPath, createPlot, linePath, type ProfilePoint } from '@tram/design-system/patterns/elevation.ts';
 import type { Plate } from '@tram/design-system/patterns/route-plate.ts';
-import { fitted, write } from './render';
+import { fitted, write } from './render.ts';
 
 export const STORY = { width: 1080, height: 1920 };
 /** What the apps cover, at the top and at the bottom. */

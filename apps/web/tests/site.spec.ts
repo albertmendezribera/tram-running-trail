@@ -98,7 +98,7 @@ test.describe('Home and lists', () => {
     await open(page, PAGES.routes);
     // Every silhouette shares one vertical scale: a flat one uses a sliver of its box.
     const heights = await page.locator('main a svg.silhouette path:first-of-type').evaluateAll((paths) => paths.map((p) => (p as SVGPathElement).getBBox().height));
-    expect(heights).toHaveLength(3);
+    expect(heights).toHaveLength(4);
     expect(Math.min(...heights)).toBeLessThan(Math.max(...heights) / 8);
   });
 });
@@ -603,6 +603,23 @@ test.describe('Route as a story (M5)', () => {
     await expect(raceSheet).not.toContainText('Ritme mitjà');
     await expect(share(page).locator('img').first()).toHaveAttribute('alt', /punt més alt 313\sm/);
     await expect(share(page).locator('img').first()).not.toHaveAttribute('alt', /temps/);
+  });
+
+  test('a route added with the generator alone has its page, its sheet and its story, and is on the list', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.routes);
+    await expect(page.locator('main a[href="/ca/rutes/riera-de-santa-coloma/"]')).toHaveCount(1);
+    await open(page, '/ca/rutes/riera-de-santa-coloma/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Riera de Santa Coloma');
+    // What the outing was follows the first sentence, with a space between them.
+    await expect(main(page)).toContainText(/D\+\. Anada i tornada des de Sils/);
+    const sheet = page.locator('main section', { hasText: 'Full de resultats' }).first();
+    await expect(sheet).toContainText(/12,13\skm/);
+    await expect(sheet).toContainText('01:11:22');
+    await expect(sheet).toContainText(/5:53\s?\/km/);
+    await expect(share(page).getByRole('link', { name: 'Baixa-la' }).first()).toHaveAttribute('download', 'tram-rutes-riera-de-santa-coloma.png');
+    expect((await page.request.get('/stories/rutes/riera-de-santa-coloma-nit.png')).status()).toBe(200);
+    expect(await overflow(page)).toBe(0);
   });
 
   test('a page without a track has no story to offer', async ({ page }) => {

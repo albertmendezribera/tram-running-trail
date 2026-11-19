@@ -3,9 +3,10 @@
 // file and nothing else.
 import { type ProfilePoint, summarize } from '@tram/design-system/patterns/elevation.ts';
 import type { Plate } from '@tram/design-system/patterns/route-plate.ts';
-import { CALONGE, PALAMOS, SILS } from './profiles';
+import { CALONGE, PALAMOS, RIERA_DE_SANTA_COLOMA, SILS } from './profiles';
 import calongePlate from './routes/calonge/plate.json';
 import palamosPlate from './routes/palamos/plate.json';
+import rieraPlate from './routes/riera-de-santa-coloma/plate.json';
 import silsPlate from './routes/sils/plate.json';
 
 export type Terrain = 'road' | 'trail' | 'mixed';
@@ -60,6 +61,18 @@ const GPX_CREDIT = 'Recorregut: GPX d’una sortida real. Se’n publiquen el tr
 export const ROUTES: Route[] = [
   { slug: 'calonge', name: 'Calonge', place: 'Calonge, Baix Empordà', profile: CALONGE, plate: calongePlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, origin: 'Gravada a la Marxa de les Tines.', timeS: 4995, isPlaceholder: false },
   { slug: 'palamos', name: 'Palamós', place: 'Palamós, Baix Empordà', profile: PALAMOS, plate: palamosPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, timeS: 3533, isPlaceholder: false },
+  {
+    slug: 'riera-de-santa-coloma',
+    name: 'Riera de Santa Coloma',
+    place: 'Sils, la Selva',
+    profile: RIERA_DE_SANTA_COLOMA,
+    plate: rieraPlate as unknown as Plate,
+    source: 'gpx',
+    credit: GPX_CREDIT,
+    origin: 'Anada i tornada des de Sils: per l’estany de Sils fins a la riera de Santa Coloma.',
+    timeS: 4282,
+    isPlaceholder: false,
+  },
   { slug: 'sils', name: 'Sils', place: 'Sils, la Selva', profile: SILS, plate: silsPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, origin: 'Gravada en un entrenament suau: «Easy Run Sils 10k».', timeS: 3527, isPlaceholder: false },
 ];
 

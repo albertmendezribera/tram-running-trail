@@ -12,7 +12,9 @@ import Panel from '@tram/design-system/primitives/Panel.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import { CATALOG_NOTICE, type CatalogShoe, catalogId, catalogName, catalogPath, catalogShoes, drawable } from '../content/shoe-catalog';
+import { catalogPhoto } from '../content/shoe-photos';
 import Site from '../layouts/Site.astro';
+import CatalogShoeViewer from './CatalogShoeViewer.astro';
 
 export interface Props {
   shoe: CatalogShoe;
@@ -21,6 +23,7 @@ export interface Props {
 const { shoe } = Astro.props;
 const name = catalogName(shoe);
 const specs = drawable(shoe);
+const inThreeD = catalogPhoto(shoe) !== undefined;
 const PLATE = { none: 'Sense placa', carbon: 'Placa de carboni', nylon: 'Placa de niló', pebax: 'Placa de Pebax', rock_plate: 'Placa de protecció' } as const;
 const KIND = { road: 'Sabatilla d’asfalt', trail: 'Sabatilla de muntanya' } as const;
 const mm = (value: number | null): string | null => (value === null ? null : formatMeasure(value, 'mm', 'ca'));
@@ -62,6 +65,16 @@ const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.bran
     <Text size="lg" measure>{`${KIND[shoe.terrain]}. Les xifres són les que ${shoe.brand.name} declara al seu web: no les hem mesurat, i el que la marca no diu queda sense dada.`}</Text>
     <StatBlock stats={stats} lead />
   </Stack>
+
+  {
+    inThreeD && (
+      <Band tone="alt" title="En 3D">
+        <Panel>
+          <CatalogShoeViewer shoe={shoe} id="shoe-3d" />
+        </Panel>
+      </Band>
+    )
+  }
 
   {
     specs ? (

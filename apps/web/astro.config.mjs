@@ -51,6 +51,22 @@ export default defineConfig({
       },
     },
   ],
+  vite: {
+    plugins: [
+      {
+        // The makers' product photos, and the models made of them, are for the test environment alone
+        // (CLAUDE.md 7.6, docs/revisio-legal.md): a production build takes none of them in, even on a
+        // machine that has them. Every file of that folder is, to such a build, nothing.
+        name: 'tram-no-brand-photos-in-production',
+        enforce: 'pre',
+        load(id) {
+          if (process.env['TRAM_DS'] === '1' || process.env['NODE_ENV'] === 'development' || !id.includes('/content/shoes-local/')) return null;
+          // A JSON file is still read as JSON after this, so it is given as JSON; a photo, as the module of its address.
+          return /\.json(\?|$)/.test(id) ? 'null' : 'export default "";';
+        },
+      },
+    ],
+  },
   i18n: {
     locales: ['ca', 'es', 'en'],
     defaultLocale: 'ca',

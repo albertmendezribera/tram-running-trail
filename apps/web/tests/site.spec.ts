@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { expect, type Page, test } from '@playwright/test';
 
 // The pages of the site (Phase 1), on the staging build: sample races and the two shoes included.
@@ -805,6 +806,58 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     await page.locator('main [data-compare] a').click();
     await expect(page.getByLabel('Primer model')).toHaveValue('puma/deviate-nitro-4');
     await expect(page.locator('[data-status]')).toHaveText('Tria l’altre model.');
+  });
+
+  // The photo models of the catalogue are made of the makers' photos, which are kept out of the repository:
+  // they are there on the machine that made them and not where the tests run in CI. Both cases are told.
+  const PHOTO = (maker: string, model: string): boolean => existsSync(`src/content/shoes-local/catalog/${maker}/${model}/model.json`);
+
+  test('a shoe of the catalogue turns in 3D where its photo model is, and has no 3D view where it is not', async ({ page }) => {
+    // With motion as it comes: asked to reduce it, a 3D view waits for its button instead of starting by itself.
+    test.setTimeout(120_000);
+    await open(page, '/ca/sabatilles/puma/deviate-nitro-4/');
+    const viewer = page.locator('main [data-shoe-viewer]');
+    if (PHOTO('puma', 'deviate-nitro-4')) {
+      await expect(viewer).toHaveCount(1);
+      await viewer.scrollIntoViewIfNeeded();
+      await expect(page.locator('#shoe-3d')).toHaveAttribute('data-state', 'ready', { timeout: 90_000 });
+      await expect(main(page)).toContainText('No és un escaneig: són les fotos oficials de Puma');
+      await expect(main(page)).toContainText('La mida és nominal');
+    } else await expect(viewer).toHaveCount(0);
+    // A shoe with no photo model has no 3D view, whatever the machine.
+    await open(page, '/ca/sabatilles/puma/voyage-nitro-4/');
+    await expect(page.locator('main [data-shoe-viewer]')).toHaveCount(0);
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('the comparator sets two shoes face to face in 3D only when both have a photo model', async ({ page }) => {
+    // With motion as it comes: asked to reduce it, a 3D view waits for its button instead of starting by itself.
+    test.setTimeout(120_000);
+    const faces = page.locator('[data-faces]');
+    await open(page, '/ca/comparar/?a=puma/deviate-nitro-4&b=merrell/agility-peak-6');
+    await expect(page.locator('[data-compare-result]')).toBeVisible();
+    if (PHOTO('puma', 'deviate-nitro-4') && PHOTO('merrell', 'agility-peak-6')) {
+      await expect(faces).toBeVisible();
+      // Only the two of the pair: the first as it is, the second as its mirror image.
+      const shown = page.locator('[data-face]:visible');
+      await expect(shown).toHaveCount(2);
+      await expect(shown.first()).toHaveAttribute('data-face', 'puma/deviate-nitro-4');
+      await expect(shown.first().locator('[data-shoe-viewer]')).toHaveAttribute('data-shoe-mirror', 'false');
+      await expect(shown.last()).toHaveAttribute('data-face', 'merrell/agility-peak-6');
+      await expect(shown.last().locator('[data-shoe-viewer]')).toHaveAttribute('data-shoe-mirror', 'true');
+      await faces.scrollIntoViewIfNeeded();
+      const [first, second] = [page.locator('#face-a-puma-deviate-nitro-4'), page.locator('#face-b-merrell-agility-peak-6')];
+      for (const viewer of [first, second]) await expect(viewer).toHaveAttribute('data-state', 'ready', { timeout: 90_000 });
+      // Facing each other: one is the other turned round.
+      await expect(first.locator('canvas')).toHaveAttribute('data-moving', 'false', { timeout: 60_000 });
+      const yaw = async (viewer: typeof first): Promise<number> => Number(await viewer.locator('canvas').getAttribute('data-yaw'));
+      expect((await yaw(first)) + (await yaw(second))).toBeCloseTo(Math.PI, 2);
+      await expect(page.locator('[data-in-3d]')).toContainText('Puma Deviate Nitro 4');
+      // One of the two without a model: no face to face, and nothing said in its place.
+      await page.getByLabel('Segon model').selectOption('scarpa/spin-race');
+      await expect(faces).toBeHidden();
+      expect(await overflow(page)).toBe(0);
+    } else await expect(faces).toBeHidden();
   });
 
   test('a shoe of the catalogue gives its maker’s figures with a link to the maker’s page, and is told to no search engine', async ({ page }) => {

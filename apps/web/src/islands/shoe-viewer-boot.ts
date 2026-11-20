@@ -15,7 +15,7 @@ void customElements.whenDefined('tram-viewer-3d').then(() => {
     const viewer = host.querySelector<HTMLElement & { loader: SceneLoader }>('tram-viewer-3d');
     const data = host.querySelector('script[type="application/json"]')?.textContent;
     if (!viewer || !data) continue;
-    const { specs, turned, photo } = JSON.parse(data) as { specs: SolidSpecs; turned: string; photo?: PhotoShoe };
+    const { specs, turned, photo } = JSON.parse(data) as { specs?: SolidSpecs; turned: string; photo?: PhotoShoe };
     const name = host.dataset['shoeGroup'];
     const group = name ? (groups.get(name) ?? groups.set(name, { members: new Set() }).get(name)!) : undefined;
     const mirror = host.dataset['shoeMirror'] === undefined ? undefined : host.dataset['shoeMirror'] === 'true';

@@ -14,6 +14,8 @@ import Panel from '@tram/design-system/primitives/Panel.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import { type CatalogShoe, catalogId, catalogName, catalogPath, drawable } from '../content/shoe-catalog';
+import { catalogPhoto } from '../content/shoe-photos';
+import CatalogShoeViewer from './CatalogShoeViewer.astro';
 
 export interface Props {
   /** Every shoe of the catalogue: any two of them can be compared. */
@@ -28,6 +30,8 @@ const PLATE = { none: 'Sense placa', carbon: 'Placa de carboni', nylon: 'Placa d
 const index = Object.fromEntries(
   sorted.map((shoe) => [catalogId(shoe), { name: catalogName(shoe), maker: shoe.brand.name, weight: shoe.weightG, size: shoe.weightRef, heel: shoe.stackHeelMm, forefoot: shoe.stackForefootMm, drop: shoe.dropMm, lugs: shoe.lugDepthMm, drawn: drawable(shoe) !== null }]),
 );
+// The shoes that have a photo model: none, on a machine that has not their photos.
+const inThreeD = sorted.filter((shoe) => catalogPhoto(shoe) !== undefined);
 const soles = sorted.flatMap((shoe) => {
   const specs = drawable(shoe);
   return specs ? [{ id: catalogId(shoe), specs }] : [];
@@ -58,6 +62,7 @@ const rows = [
         <Button type="button" variant="quiet"><span data-swap>Canvia’n l’ordre</span></Button>
       </Cluster>
       <Text size="sm" tone="muted"><span data-status role="status">Tria dos models.</span></Text>
+      {inThreeD.length > 1 && <Text size="sm" tone="muted" measure><span data-in-3d>{`Amb vista 3D, per posar-los cara a cara: ${inThreeD.map((shoe) => catalogName(shoe)).join(', ')}.`}</span></Text>}
     </Stack>
   </form>
   <noscript><Text>El comparador munta la comparació al navegador i necessita JavaScript. Sense, cada model té la seva fitxa al catàleg.</Text></noscript>
@@ -67,6 +72,34 @@ const rows = [
   <div data-compare-result hidden>
     <Stack gap={6}>
       <Heading level={2} size="md"><span data-pair></span></Heading>
+      {
+        inThreeD.length > 1 && (
+          <div data-faces hidden>
+            <Panel title="Cara a cara en 3D">
+              <Stack gap={3}>
+                <!-- Side by side on a phone too: a comparison is read with both in sight. Each shoe is here twice, as the first of a pair and, mirrored, as the second: only the two of the pair are shown, and only they load. -->
+                <div class="face-to-face">
+                  {
+                    (['a', 'b'] as const).flatMap((side) =>
+                      inThreeD.map((shoe) => (
+                        <div data-face={catalogId(shoe)} data-face-side={side} hidden>
+                          <Stack gap={2}>
+                            <Heading level={3} size="sm">{catalogName(shoe)}</Heading>
+                            <CatalogShoeViewer shoe={shoe} id={`face-${side}-${shoe.brand.slug}-${shoe.slug}`} group="pair" mirror={side === 'b'} quiet />
+                          </Stack>
+                        </div>
+                      )),
+                    )
+                  }
+                </div>
+                <Text size="sm" tone="muted" measure>
+                  Les dues sabatilles giren alhora, encarades: en gires una i l'altra fa el mateix moviment en mirall. No són escanejos: són les fotos oficials de cada marca posades sobre la seva silueta, fidels de costat, de dalt i de darrere i aproximades de front. Cadascuna omple el seu marc: la mida no es compara aquí.
+                </Text>
+              </Stack>
+            </Panel>
+          </div>
+        )
+      }
       <Panel title="Soles superposades">
         <Stack gap={3}>
           <div data-soles><SoleStack soles={soles} label="Les soles dels dos models, superposades" /></div>
@@ -126,6 +159,12 @@ const rows = [
   /* Until the island is ready, and without JavaScript, there is nothing to choose with: the fields keep their place and are not shown. */
   .choice:not([data-ready]) {
     visibility: hidden;
+  }
+
+  .face-to-face {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--tram-sys-space-4);
   }
 
   /* The first model first, whatever the order the cards are in. */

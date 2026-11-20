@@ -7,7 +7,8 @@ import { watchPalette } from '../route-viewer/palette.ts';
 import { buildPhotoShoe, type PhotoShoe } from './photo.ts';
 
 export interface ShoeViewerOptions {
-  specs: SolidSpecs;
+  /** What the solid is drawn from. A shoe shown by its photos alone needs none. */
+  specs?: SolidSpecs | undefined;
   /** The brand's photos and the outline read off them: shown instead of the drawn solid when there. */
   photo?: PhotoShoe | undefined;
   /** Says where the view is after a turn with the keyboard. */
@@ -44,7 +45,8 @@ const geometryOf = (mesh: Mesh): THREE.BufferGeometry => {
  * It draws only while it turns.
  */
 export async function mountShoeViewer({ container, signal, reducedMotion }: SceneContext, o: ShoeViewerOptions): Promise<Scene & { setView(yaw: number, pitch: number): void }> {
-  const solid = buildShoeSolid(o.specs);
+  if (!o.photo && !o.specs) throw new Error('a shoe viewer needs the figures of the shoe or its photo model');
+  const solid = o.photo ? null : buildShoeSolid(o.specs!);
   const scene = new THREE.Scene();
   const background = new THREE.Color();
   scene.background = background;
@@ -75,9 +77,9 @@ export async function mountShoeViewer({ container, signal, reducedMotion }: Scen
     if (edges) shoe.add(new THREE.LineSegments(new THREE.EdgesGeometry(geometry, 28), edges));
   };
   const photo = o.photo ? await buildPhotoShoe(o.photo) : undefined;
-  const size = photo ? { lengthMm: o.photo!.model.lengthMm, heightMm: o.photo!.model.heightMm } : solid;
+  const size = photo ? { lengthMm: o.photo!.model.lengthMm, heightMm: o.photo!.model.heightMm } : solid!;
   if (photo) shoe.add(photo.mesh);
-  else {
+  else if (solid) {
     add(solid.plate, materials.plate, 0, null);
     add(solid.outsole, materials.outsole, 1);
     add(solid.lugs, materials.outsole, 1, null);

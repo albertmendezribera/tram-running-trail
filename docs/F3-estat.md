@@ -72,6 +72,26 @@ El tema d'ECharts que genera el sistema continua sense cap gràfic que el faci s
 
 **Què situa el mapa i què no:** un model hi surt només si la seva marca declara les dues mesures. El pes és el de la talla que pesa cada marca i l'alçada es mesura diferent a cada casa: el mapa situa, no compara al mil·límetre, i ho diu.
 
+## La vista 3D: sis models, de fotos de la marca
+
+Decisió del titular (2026-11-20): la vista 3D del catàleg es fa amb **fotos oficials de la marca**, per a uns quants models, i no amb un model genèric de mesures (que hauria demanat una amplada que cap marca declara). És el mateix mètode de les dues sabatilles de la Fase 1 (`apps/web/scripts/photo-model.py`): la silueta es llegeix de la foto lateral i de la de dalt, se li dona volum i s'hi posen les fotos a sobre.
+
+| Model | Fotos | Terreny |
+|---|---|---|
+| Nike Pegasus 42 | lateral, medial, dalt, taló | Asfalt |
+| Puma Deviate Nitro 4 | lateral, medial, dalt, sola | Asfalt |
+| On Cloudmonster 3 | lateral, medial, dalt, taló, sola | Asfalt |
+| Mizuno Wave Rider 30 | lateral, medial, dalt, taló, sola | Asfalt |
+| Asics Superblast 3 | lateral, medial, dalt, taló, sola | Asfalt |
+| Merrell Agility Peak 6 | lateral, medial, dalt, taló, sola | Muntanya |
+
+- **On surt:** a la fitxa de cada un («En 3D») i al comparador («Cara a cara en 3D»), només quan els dos models de la parella en tenen. El comparador diu quins en tenen.
+- **La mida és nominal.** Cap marca declara l'amplada, i el model es fa sobre una llargada de 300 mm: no se'n pot llegir cap mesura, i la fitxa ho diu. Al comparador cada sabatilla omple el seu marc.
+- **No són escanejos**, i cada vista ho diu: fidels de costat, de dalt i de darrere; aproximades de front.
+- **Les fotos són de les marques i no són al repositori** (`apps/web/src/content/shoes-local/`, exclòs). Només són a staging, publicades des de la màquina que les té. Una compilació sense elles, com la de CI, no té cap vista 3D del catàleg; les proves cobreixen els dos casos.
+- **Risc:** cada model nou posa més fotos de marca a un staging públic. La revisió legal ja ho assenyala com el punt més feble; són sis models més a sumar als dos que hi havia.
+- **El script** ha guanyat quatre opcions per a fotos que no són com les de Nike i Hoka: una sabatilla sola en lloc de la parella (`single`), una sabatilla estirada (`toes: left/right`), una mida nominal (`lengthMm`) i una regla d'ombra per a soles blanques, grises o negres (`shadow: faint`).
+
 ## El comparador: una pàgina per a totes les parelles
 
 CLAUDE.md 3 preveu `/ca/comparar/[a]-vs-[b]/`, amb les parelles populars generades i la resta sota demanda. **El lloc encara és estàtic** (l'adaptador de Cloudflare no hi és), i 161 models són 12.880 parelles: massa pàgines per generar-les totes, i sense dades per saber quines són les populars. Decisió presa en fer-lo (2026-11-20), a revisar quan hi hagi servidor:

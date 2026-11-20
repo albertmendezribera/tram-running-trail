@@ -58,6 +58,12 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-catalog-compare
       if (side) sole.setAttribute('data-shoe', side);
       else sole.removeAttribute('data-shoe');
     }
+    // The two in 3D, face to face, when both have a photo model: the first as it is, the second mirrored.
+    const faces = [...document.querySelectorAll<HTMLElement>('[data-face]')];
+    const has = (id: string | undefined, side: string): boolean => faces.some((face) => face.dataset['face'] === id && face.dataset['faceSide'] === side);
+    const both = has(a, 'a') && has(b, 'b');
+    for (const face of faces) face.hidden = !both || face.dataset['face'] !== (face.dataset['faceSide'] === 'a' ? a : b);
+    for (const panel of document.querySelectorAll<HTMLElement>('[data-faces]')) panel.hidden = !both;
     const undrawn = [first, second].filter((entry) => !entry.drawn).map((entry) => entry.name);
     one('[data-soles]').hidden = undrawn.length > 0;
     one('[data-soles-none]').hidden = undrawn.length === 0;

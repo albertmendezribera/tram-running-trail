@@ -4,11 +4,14 @@ makes of them stay out of the repository (apps/web/src/content/shoes-local/ is n
 
 Usage: python3 photo-model.py <config.json>, where the config says where the photos are and how
 each one is taken:
-  { "src": dir, "out": dir, "foot": "left"|"right", "forefootMm": measured width,
+  { "src": dir, "out": dir, "foot": "left"|"right", "forefootMm": measured width (or "lengthMm": a nominal length),
     "lateral": { "file", "toe": "left"|"right" }, "medial": { "file" },
-    "top":  { "file", "pick": "left"|"right", "toes": "up"|"down" },
-    "heel": { "file", "pick" } (optional), "sole": { "file", "pick", "toes" } (optional) }
-`pick` is which shoe of a pair to take: it has to be the same foot as the side photos."""
+    "top":  { "file", "pick": "left"|"right" (or "single": true), "toes": "up"|"down"|"left"|"right" },
+    "heel": { "file", "pick" (or "single") } (optional), "sole": { "file", "pick" (or "single"), "toes" } (optional),
+    "shadow": "faint" (optional: the sole is white, grey or black) }
+`pick` is which shoe of a pair to take: it has to be the same foot as the side photos. A photo of one
+shoe alone says `single` instead. A shoe whose width nobody measured is given a nominal length: its model
+is of no true size, and the page that shows it must not compare sizes with it."""
 import json, sys
 import numpy as np
 from PIL import Image
@@ -48,6 +51,9 @@ def body(mask, rgb):
     while it is colourless, by a twentieth of the photo at most (a black sole would
     otherwise go with it), and the lower edge is then smoothed."""
     spread = rgb.max(axis=2) - rgb.min(axis=2)
+    # What may be shadow: anything colourless. With `"shadow": "faint"`, for a shoe whose sole is white,
+    # grey or black, only a pure grey that is not dark: a white foam keeps a trace of colour, and rubber is dark.
+    shade = (spread <= 2) & (rgb.mean(axis=2) >= 60) if config.get('shadow') == 'faint' else spread < 14
     limit = mask.shape[0] // 20
     out = np.zeros_like(mask)
     lows = np.full(mask.shape[1], -1)
@@ -60,10 +66,10 @@ def body(mask, rgb):
         runs = edges.reshape(-1, 2)
         a, b = runs[np.argmax(runs[:, 1] - runs[:, 0])]
         floor = b
-        while b > a + 1 and floor - b < limit and spread[b - 1, c] < 14:
+        while b > a + 1 and floor - b < limit and shade[b - 1, c]:
             b -= 1
         # A column of nothing but grey is the shadow reaching past the toe or the heel: not shoe.
-        if (spread[a:b, c] < 14).mean() > 0.8:
+        if shade[a:b, c].mean() > 0.8:
             continue
         tops[c], lows[c] = a, b
     # The shoe is one stretch of columns: the longest.
@@ -106,8 +112,14 @@ def spans(mask, axis_len):
 def one_of_pair(view):
     """One shoe of a photo of the pair, cut out, with the heel at the top."""
     rgb = load(view['file'])
-    pair = sorted(biggest(*mask_of(rgb), count=2), key=lambda m: np.where(m)[1].mean())
-    rgb, mask = crop(rgb, pair[0] if view['pick'] == 'left' else pair[1])
+    # A shoe lying along the photo is stood up first, toes down.
+    if view.get('toes') in ('left', 'right'):
+        rgb = np.rot90(rgb, 1 if view['toes'] == 'left' else 3).copy()
+    if view.get('single'):
+        rgb, mask = crop(rgb, biggest(*mask_of(rgb))[0])
+    else:
+        pair = sorted(biggest(*mask_of(rgb), count=2), key=lambda m: np.where(m)[1].mean())
+        rgb, mask = crop(rgb, pair[0] if view['pick'] == 'left' else pair[1])
     if view.get('toes') == 'up':
         rgb, mask = rgb[::-1, ::-1], mask[::-1, ::-1]
     return rgb, mask
@@ -132,14 +144,21 @@ save(top_rgb, top_mask, 'top', 640)
 left_edge, right_edge = spans(top_mask.T, top_mask.shape[1])
 width_px, top_length_px = top_mask.shape[1], top_mask.shape[0]
 
-# Millimetres: the widest point of the photo from above is the measured forefoot width.
-forefoot_mm = float(config['forefootMm'])
-length_mm = forefoot_mm * top_length_px / width_px
+# Millimetres: the widest point of the photo from above is the measured forefoot width. Without one,
+# the length is a nominal one and the width follows from the photo.
+if 'forefootMm' in config:
+    forefoot_mm = float(config['forefootMm'])
+    length_mm = forefoot_mm * top_length_px / width_px
+else:
+    length_mm = float(config['lengthMm'])
+    forefoot_mm = round(length_mm * width_px / top_length_px, 1)
 model = {
     'foot': config['foot'],
     'lengthMm': round(length_mm, 1),
     'heightMm': round(length_mm * height_px / length_px, 1),
     'widthMm': forefoot_mm,
+    # True when no measure gives the size: the model is of a nominal length.
+    'nominal': 'forefootMm' not in config,
     # Shares of the height, from the top of the photo, at each station from heel to toe.
     'top': [None if v is None else round(v, 4) for v in top_edge],
     'bottom': [None if v is None else round(v, 4) for v in bottom_edge],
@@ -151,8 +170,11 @@ model = {
 }
 if config.get('heel'):
     rgb = load(config['heel']['file'])
-    pair = sorted(biggest(*mask_of(rgb), count=2), key=lambda m: np.where(m)[1].mean())
-    shoe = body(pair[0] if config['heel']['pick'] == 'left' else pair[1], rgb)
+    if config['heel'].get('single'):
+        shoe = body(biggest(*mask_of(rgb))[0], rgb)
+    else:
+        pair = sorted(biggest(*mask_of(rgb), count=2), key=lambda m: np.where(m)[1].mean())
+        shoe = body(pair[0] if config['heel']['pick'] == 'left' else pair[1], rgb)
     save(*crop(rgb, shoe), 'heel', 512)
     model['heel'] = True
 if config.get('sole'):

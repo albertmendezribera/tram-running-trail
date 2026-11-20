@@ -635,7 +635,7 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     await open(page, PAGES.shoes);
     const catalog = page.locator('main [data-catalog]');
     await expect(catalog).toContainText('No són mesures nostres ni de cap laboratori');
-    const rows = catalog.locator('li a');
+    const rows = catalog.locator('[data-catalog-list] li a');
     expect(await rows.count()).toBeGreaterThanOrEqual(100);
     expect(await catalog.locator('[data-maker]').count()).toBeGreaterThanOrEqual(10);
     // Every row leads to a page of its own that exists, and no two to the same one.
@@ -645,6 +645,71 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     // A model whose maker states its two heights has its sole drawn; one whose maker does not, has none.
     expect(await catalog.locator('a[href="/ca/sabatilles/nnormal/kjerag-02/"] svg.sole path').count()).toBeGreaterThan(2);
     await expect(catalog.locator('a[href="/ca/sabatilles/nnormal/kjerag-brut/"] svg.sole path')).toHaveCount(0);
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('places on a map the models whose maker states both measures, each point a way into its page', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.shoes);
+    const [stack, drop] = [page.locator('[data-map-view="stack"]'), page.locator('[data-map-view="drop"]')];
+    // One map at a time: by weight and height first, which fewer makers state than weight and drop.
+    await expect(stack).toBeVisible();
+    await expect(drop).toBeHidden();
+    const placed = await stack.locator('[data-point]').count();
+    expect(placed).toBeGreaterThanOrEqual(40);
+    await expect(stack.locator('[data-map-count]')).toHaveText(String(placed));
+    // A point says what it is and its two figures, and leads where the row of its model leads.
+    const point = stack.locator('[data-point="puma/deviate-nitro-4"] a');
+    await expect(point).toHaveAttribute('href', '/ca/sabatilles/puma/deviate-nitro-4/');
+    await expect(point).toHaveAccessibleName(/Puma Deviate Nitro 4 250\sg · 38\smm/);
+    // A model whose maker states no height is not on that map, and is on the other.
+    await expect(stack.locator('[data-point="nike/pegasus-42"]')).toHaveCount(0);
+    await expect(drop.locator('[data-point="nike/pegasus-42"]')).toHaveCount(1);
+    // The figures of the map are in a table too.
+    await expect(stack.locator('details table')).toHaveCount(1);
+    expect(await stack.locator('details tbody tr').count()).toBe(placed);
+    await page.getByRole('radio', { name: 'Pes i drop' }).check({ force: true });
+    await expect(drop).toBeVisible();
+    await expect(stack).toBeHidden();
+    expect(await drop.locator('[data-point]').count()).toBeGreaterThan(placed);
+    expect(new URL(page.url()).searchParams.get('mapa')).toBe('drop');
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('filters by maker and by ground hide rows and points alike, and are kept in the address', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.shoes);
+    const filter = page.locator('[data-catalog-filter]');
+    const rows = page.locator('[data-catalog-list] [data-shoe]:visible');
+    const total = await rows.count();
+    await expect(filter.locator('[data-status]')).toHaveText(`${total} models.`);
+    await filter.getByLabel('Marca').selectOption('puma');
+    await expect(filter.locator('[data-status]')).toHaveText(`12 de ${total} models.`);
+    await expect(rows).toHaveCount(12);
+    expect(new Set(await rows.evaluateAll((items) => items.map((item) => item.getAttribute('data-brand'))))).toEqual(new Set(['puma']));
+    await expect(page.locator('[data-catalog-list] [data-maker]:visible')).toHaveCount(1);
+    // The map keeps the points of what is left, and says how many they are.
+    // A point is a place with no size of its own, so it is told shown by its attribute, not by its box.
+    const points = page.locator('[data-map-view="stack"] [data-point]:not([hidden])');
+    expect(await points.count()).toBeGreaterThan(0);
+    expect(await points.evaluateAll((items) => items.every((item) => item.getAttribute('data-point')!.startsWith('puma/')))).toBe(true);
+    await expect(page.locator('[data-map-view="stack"] [data-map-count]')).toHaveText(String(await points.count()));
+    await filter.getByRole('radio', { name: /Muntanya/ }).check({ force: true });
+    await expect(rows).toHaveCount(4);
+    expect(new URL(page.url()).search).toBe('?marca=puma&terreny=trail');
+    // A link to a filtered catalogue opens filtered.
+    await page.reload();
+    await expect(rows).toHaveCount(4);
+    await expect(filter.getByLabel('Marca')).toHaveValue('puma');
+    await filter.getByRole('button', { name: 'Treu els filtres' }).click();
+    await expect(rows).toHaveCount(total);
+    expect(new URL(page.url()).search).toBe('');
+    // Filters that leave nothing say so.
+    await filter.getByLabel('Marca').selectOption('asics');
+    await filter.getByRole('radio', { name: /Muntanya/ }).check({ force: true });
+    await expect(rows).toHaveCount(0);
+    await expect(filter.locator('[data-status]')).toHaveText('Cap model amb aquests filtres.');
+    await expect(page.locator('[data-map-view="stack"] [data-map-count]')).toHaveText('0');
     expect(await overflow(page)).toBe(0);
   });
 

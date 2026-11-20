@@ -6,8 +6,10 @@
 
 | Peça | On | Estat |
 |---|---|---|
-| Catàleg | `/ca/sabatilles/`, «El catàleg, marca a marca» | **121 models de 13 marques**, a més de les dues sabatilles de la Fase 1 mesurades en laboratori |
+| Catàleg | `/ca/sabatilles/`, «El catàleg» | **121 models de 13 marques**, a més de les dues sabatilles de la Fase 1 mesurades en laboratori |
 | Fitxa d'un model del catàleg | `/ca/sabatilles/<marca>/<model>/` | Feta: les xifres que declara la marca, la radiografia quan declara les dues alçades, la nota quan la pàgina es contradiu, i l'enllaç a la pàgina del model |
+| Mapa del catàleg | `/ca/sabatilles/`, sobre la llista | Fet: dos mapes, «pes i alçada al taló» (47 models) i «pes i drop» (98), amb una forma per terreny. Cada punt és un enllaç a la fitxa; les xifres, també en una taula |
+| Filtres | `/ca/sabatilles/` | Fets: per marca i per terreny. Amaguen files de la llista i punts dels mapes alhora, i queden a l'adreça (`?marca=puma&terreny=trail`) |
 | Dades | `apps/web/src/content/shoe-catalog.json` | Un registre per model, amb l'adreça d'on s'ha llegit cada xifra i el dia de la consulta (`accessed`) |
 
 | Marca | Models | Què declara a la fitxa |
@@ -53,9 +55,21 @@ La que ja fixava `docs/revisio-legal.md` (punt 4): **el catàleg es fa només am
 - **Triar els models:** «top models» és un criteri del titular. S'ha agafat la gamma vigent de running de cada marca, sense versions impermeables, amples ni col·laboracions; no és una tria.
 - **Mitjasola de Topo:** les pàgines l'anomenen, però no de manera que es pugui llegir sense interpretar; s'ha deixat sense dada.
 
+## El mapa: per què no és ECharts
+
+CLAUDE.md 9 i l'exploració E15 fixen ECharts per a tots els gràfics tret del perfil altimètric. **El mapa del catàleg se'n surt, per decisió del titular (2026-11-20).** És un dibuix propi (`CatalogMap` al sistema de disseny), com el perfil i «l'any com a perfil», per les mateixes raons que E15 va mesurar:
+
+- **Un sol dibuix** serveix per a clar i nit i per a mòbil i escriptori, perquè pren els colors de les variables CSS i els punts no s'estiren. ECharts vol colors literals i una mida fixa: en caldrien vuit (dos temes, dues mides, dos mapes).
+- **Cada punt és un enllaç** a la fitxa sense JavaScript, s'hi arriba amb el teclat i diu el nom i les dues xifres. Amb ECharts generat al servidor, el punt només porta a la fitxa amb script.
+- **Els filtres** amaguen punts amb el mateix atribut que amaguen files.
+
+El tema d'ECharts que genera el sistema continua sense cap gràfic que el faci servir. La resta de gràfics de 9.3 (parcials i ritmes, comparativa) segueixen sent d'ECharts mentre no es decideixi una altra cosa.
+
+**Què situa el mapa i què no:** un model hi surt només si la seva marca declara les dues mesures. El pes és el de la talla que pesa cada marca i l'alçada es mesura diferent a cada casa: el mapa situa, no compara al mil·límetre, i ho diu.
+
 ## Què no s'ha fet
 
-- **Mapa del catàleg** (dispersió pes × alçada, CLAUDE.md 3) i filtres per marca i terreny. Amb 121 models ja calen: la llista és llarga.
+- **Triar dos punts del mapa i comparar-los** (CLAUDE.md 9.3): el mapa porta a la fitxa, però no compara. Depèn del comparador, que és el punt següent.
 - **Comparador:** només compara les dues sabatilles de laboratori. Comparar models del catàleg entre marques demana decidir què es fa amb alçades que no es mesuren igual.
 - **Producció:** el catàleg només és a staging. Els noms de marca continuen pendents de revisió legal, com a la Fase 1.
 - **Cap xifra s'ha contrastat** amb una segona font ni amb una segona lectura: és el que deia la pàgina de la marca el dia de la consulta, llegit una vegada.

@@ -5,9 +5,11 @@ import Heading from '@tram/design-system/primitives/Heading.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import Band from '@tram/design-system/primitives/Band.astro';
-import { catalogPath, catalogShoes, drawable } from '../../../content/shoe-catalog';
+import { catalogId, catalogPath, catalogShoes, drawable } from '../../../content/shoe-catalog';
 import { pairSlug, SHOE_NOTICE, shoeName, shoePath, visiblePairs, visibleShoes } from '../../../content/shoes';
 import Site from '../../../layouts/Site.astro';
+import CatalogFilter from '../../../sections/CatalogFilter.astro';
+import CatalogMaps from '../../../sections/CatalogMaps.astro';
 
 const shoes = visibleShoes();
 const pairs = visiblePairs();
@@ -35,24 +37,32 @@ const makers = [...new Set(catalog.map((shoe) => shoe.brand.name))].sort((a, b) 
   {pairs.map(([a, b]) => <div><Button variant="primary" href={`/ca/comparar/${pairSlug(a, b)}/`}>{`Compara ${shoeName(a)} i ${shoeName(b)}`}</Button></div>)}
   {
     catalog.length > 0 && (
-      <Band tone="plain" title="El catàleg, marca a marca">
+      <Band tone="plain" title="El catàleg">
         <div class="catalog" data-catalog>
           <Stack gap={7}>
             <Text measure>
-              {`${catalog.length} models de ${makers.length} marques, cadascun amb el que la seva marca declara al seu web: pes, alçades, drop i tacs. No són mesures nostres ni de cap laboratori, i el que una marca no diu queda sense dada. La sola es dibuixa només quan la marca declara les dues alçades.`}
+              {`${catalog.length} models de ${makers.length} marques, cadascun amb el que la seva marca declara al seu web: pes, alçades, drop i tacs. No són mesures nostres ni de cap laboratori, i el que una marca no diu queda sense dada. Primer el mapa; a sota, la llista marca a marca, on la sola es dibuixa només quan la marca declara les dues alçades.`}
             </Text>
-            {makers.map((maker) => (
-              <section data-maker={maker.name}>
-                <Stack gap={3}>
-                  <Heading level={3} size="sm">{`${maker.name} · ${maker.shoes.length}`}</Heading>
-                  <Stack gap={0} as="ul">
-                    {maker.shoes.map((shoe) => (
-                      <li><ShoeRow href={catalogPath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.weightG} specs={drawable(shoe)} dropMm={shoe.dropMm} /></li>
-                    ))}
-                  </Stack>
-                </Stack>
-              </section>
-            ))}
+            <CatalogFilter shoes={catalog} />
+            <CatalogMaps shoes={catalog} />
+            <div data-catalog-list>
+              <Stack gap={7}>
+                {makers.map((maker) => (
+                  <section data-maker={maker.name}>
+                    <Stack gap={3}>
+                      <Heading level={3} size="sm">{`${maker.name} · ${maker.shoes.length}`}</Heading>
+                      <Stack gap={0} as="ul">
+                        {maker.shoes.map((shoe) => (
+                          <li data-shoe={catalogId(shoe)} data-brand={shoe.brand.slug} data-terrain={shoe.terrain}>
+                            <ShoeRow href={catalogPath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.weightG} specs={drawable(shoe)} dropMm={shoe.dropMm} />
+                          </li>
+                        ))}
+                      </Stack>
+                    </Stack>
+                  </section>
+                ))}
+              </Stack>
+            </div>
           </Stack>
         </div>
       </Band>

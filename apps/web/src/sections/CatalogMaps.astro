@@ -1,0 +1,68 @@
+---
+import SegmentedControl from '@tram/design-system/interactive/SegmentedControl.astro';
+import CatalogMap from '@tram/design-system/patterns/CatalogMap.astro';
+import type { MapPoint } from '@tram/design-system/patterns/catalog-map.ts';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { type CatalogShoe, catalogId, catalogName, catalogPath } from '../content/shoe-catalog';
+
+export interface Props {
+  /** Every shoe of the catalogue: each map places those whose maker states its two measures. */
+  shoes: readonly CatalogShoe[];
+}
+
+const { shoes } = Astro.props;
+// A shoe is on a map when its maker states both of its measures: none is placed by a guess.
+const placed = (measure: (shoe: CatalogShoe) => number | null): MapPoint[] =>
+  shoes.flatMap((shoe) => {
+    const y = measure(shoe);
+    return shoe.weightG === null || y === null ? [] : [{ id: catalogId(shoe), x: shoe.weightG, y, kind: shoe.terrain, label: catalogName(shoe), href: catalogPath(shoe) }];
+  });
+const views = [
+  { key: 'stack', choice: 'Pes i alçada', title: 'Pes i alçada al taló', y: 'Alçada al taló', points: placed((shoe) => shoe.stackHeelMm), which: 'el pes i l’alçada al taló' },
+  { key: 'drop', choice: 'Pes i drop', title: 'Pes i drop', y: 'Drop', points: placed((shoe) => shoe.dropMm), which: 'el pes i el drop' },
+];
+---
+
+<!--
+  The map of the catalogue (CLAUDE.md 9.3): the shoes placed by weight and by height, and by weight and by
+  drop, which many more makers state. Both maps are in the page; an island shows one at a time, and without
+  it they follow one another. The filters of the catalogue hide points on them as they hide rows in the list.
+-->
+<div class="maps" data-catalog-maps>
+  <Stack gap={5}>
+    <div class="choice"><SegmentedControl name="mapa" legend="Què es posa al mapa" options={views.map((view) => ({ value: view.key, label: view.choice }))} value="stack" /></div>
+    {
+      views.map((view) => (
+        <section data-map-view={view.key}>
+          <Stack gap={3}>
+            <Heading level={3} size="sm">{view.title}</Heading>
+            <Text size="sm" tone="muted" measure>
+              Models al mapa: <span data-map-count>{view.points.length}</span>. {`Només hi surten els que declaren ${view.which}, de ${shoes.length} que n’hi ha al catàleg.`}
+            </Text>
+            <CatalogMap
+              points={view.points}
+              x={{ label: 'Pes', unit: 'g' }}
+              y={{ label: view.y, unit: 'mm' }}
+              label={`${view.title} dels models del catàleg`}
+              kinds={{ road: 'Asfalt', trail: 'Muntanya' }}
+              headings={{ name: 'Model', kind: 'Terreny' }}
+              data="Les dades del mapa, en una taula"
+            />
+          </Stack>
+        </section>
+      ))
+    }
+    <Text size="sm" tone="muted" measure>
+      Cada punt porta a la fitxa del model. El pes és el de la talla que pesa cada marca, i cada marca mesura l'alçada a la seva manera: el mapa situa els models, no els compara al mil·límetre. Els que coincideixen en les dues xifres es dibuixen de costat.
+    </Text>
+  </Stack>
+</div>
+
+<style>
+  /* Choosing a map takes the island. Without it there is nothing to choose: both maps are shown. */
+  .maps:not([data-ready]) .choice {
+    display: none;
+  }
+</style>

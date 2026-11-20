@@ -1,0 +1,49 @@
+---
+import CatalogMap from '@tram/design-system/patterns/CatalogMap.astro';
+import type { MapPoint } from '@tram/design-system/patterns/catalog-map.ts';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+// Made-up things, the same at every build: two clouds that cross, with a few that share a place.
+const points: MapPoint[] = Array.from({ length: 36 }, (_, i): MapPoint => {
+  const trail = i % 3 === 0;
+  const x = 150 + ((i * 37) % 23) * 9 + (trail ? 40 : 0);
+  const y = 22 + ((i * 11) % 10) * 2 + (trail ? -2 : 4);
+  return { id: `mostra-${i}`, x, y, kind: trail ? 'trail' : 'road', label: `Model ${i + 1}`, href: '#' };
+}).concat([
+  { id: 'doble-a', x: 250, y: 32, kind: 'road', label: 'Doble A', href: '#' },
+  { id: 'doble-b', x: 250, y: 32, kind: 'trail', label: 'Doble B', href: '#' },
+  { id: 'doble-c', x: 250, y: 32, kind: 'road', label: 'Doble C', href: '#' },
+]);
+const props = { x: { label: 'Pes', unit: 'g' }, y: { label: 'Alçada al taló', unit: 'mm' }, kinds: { road: 'Asfalt', trail: 'Muntanya' }, headings: { name: 'Model', kind: 'Terreny' }, data: 'Les dades del mapa, en una taula' } as const;
+const code = `<CatalogMap
+  points={[{ id: 'marca/model', x: 250, y: 38, kind: 'road', label: 'Marca Model', href: '/ca/sabatilles/marca/model/' }]}
+  x={{ label: 'Pes', unit: 'g' }} y={{ label: 'Alçada al taló', unit: 'mm' }}
+  label="Pes i alçada al taló dels models del catàleg"
+  kinds={{ road: 'Asfalt', trail: 'Muntanya' }} headings={{ name: 'Model', kind: 'Terreny' }}
+  data="Les dades del mapa, en una taula"
+/>`;
+---
+
+<Fiche
+  group="Patró"
+  title="CatalogMap"
+  use="Situar moltes coses per dues de les seves mesures (9.3, «mapa del catàleg»): cada punt és un enllaç, amb una forma per terreny. Un dibuix sense script, amb la taula de les seves xifres a sota."
+  avoid="Comparar dues coses al detall (per a això hi ha SpecDiff) o posar-hi res sense les dues mesures: el que no en té una no surt al mapa, i la pàgina ho ha de dir. Tampoc va sol: sempre amb una llista."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Un catàleg</h2>
+    <p class="fiche-note">
+      Dades inventades. Els eixos comencen i acaben en xifres rodones. Cada punt diu el nom i les dues xifres quan s'hi passa per sobre o s'hi arriba amb el teclat; a prop d'una vora, la nota s'obre cap al mig. Els tres punts que comparteixen lloc es dibuixen de costat. Un punt
+      amb l'atribut <code>hidden</code> no es dibuixa: així l'amaga un filtre de fora.
+    </p>
+    <div data-testid="map"><CatalogMap points={points} label="Pes i alçada de 39 models inventats" {...props} /></div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">{MODES.map((m) => <Mode {...m}><CatalogMap points={points.slice(0, 18)} label={`Pes i alçada, ${m.theme} i ${m.terrain}`} {...props} /></Mode>)}</div>
+  </section>
+</Fiche>

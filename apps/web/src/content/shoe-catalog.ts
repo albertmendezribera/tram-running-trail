@@ -40,6 +40,8 @@ const ALL = data.shoes as CatalogShoe[];
  */
 export const catalogShoes = (): CatalogShoe[] => (SHOWS_PLACEHOLDERS ? ALL : []);
 export const catalogName = (shoe: CatalogShoe): string => `${shoe.brand.name} ${shoe.model}`;
+/** What tells a shoe from every other in the catalogue: its maker and its model, as its address has them. */
+export const catalogId = (shoe: CatalogShoe): string => `${shoe.brand.slug}/${shoe.slug}`;
 export const catalogPath = (shoe: CatalogShoe): string => `/ca/sabatilles/${shoe.brand.slug}/${shoe.slug}/`;
 
 /** The nominal inside length of the size the profiles are drawn at (US 9 for men, 27 cm): no maker states the inside length. */

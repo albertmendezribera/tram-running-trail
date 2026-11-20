@@ -1,0 +1,319 @@
+---
+import { formatMeasure, formatNumber, type Locale, type Unit } from '@tram/formats';
+import DataTable from '../primitives/DataTable.astro';
+import { layoutMap, type MapAxis, type MapPoint } from './catalog-map.ts';
+
+export interface Props {
+  /** What the map places: each with its two measures, the ground it is for, its name and where it leads. */
+  points: readonly MapPoint[];
+  /** What each axis measures, as it is written at its end, and the unit of its figures. */
+  x: { label: string; unit: Unit };
+  y: { label: string; unit: Unit };
+  /** Names the map and its table. */
+  label: string;
+  /** The name of each shape, for the key and the table. */
+  kinds: { road: string; trail: string };
+  /** The heading of the names in the table, and of their kinds. */
+  headings: { name: string; kind: string };
+  /** What opens the table. */
+  data: string;
+  locale?: Locale;
+}
+
+const { points, x, y, label, kinds, headings, data, locale = 'ca' } = Astro.props;
+const map = layoutMap(points);
+const pct = (share: number): string => `${Number((share * 100).toFixed(2))}%`;
+const share = (value: number, axis: MapAxis): number => (value - axis.min) / (axis.max - axis.min);
+const figure = (value: number, axis: MapAxis): string => formatNumber(value, locale, axis.ticks.some((tick) => !Number.isInteger(tick)) ? 1 : 0);
+// Near an edge the note of a point opens towards the middle, so it stays on the map.
+const edgeOf = (along: number, up: number): string => [along < 0.25 ? 'start' : along > 0.75 ? 'end' : '', up > 0.7 ? 'top' : ''].filter(Boolean).join(' ');
+const rows = [...points].sort((a, b) => a.label.localeCompare(b.label, locale)).map((point) => ({ name: point.label, kind: kinds[point.kind], x: point.x, y: point.y }));
+---
+
+<!--
+  The map of a catalogue (CLAUDE.md 9.3): each thing placed by two of its measures, with a shape for the
+  ground it is for. It is a drawing with no script: every point is a link, and says its name and its two
+  figures when it is pointed at or reached with the keyboard. A point is as large on a phone as on a wide
+  screen, so the drawing holds nothing that stretching would spoil. Its figures are in a table under it.
+-->
+<figure class="map" data-catalog-map>
+  <div class="chart">
+    <span class="title" data-type="text-xs">{y.label}</span>
+    <div class="y" aria-hidden="true">
+      {map.y.ticks.map((tick) => <span class="tick" data-type="data-sm" style={`inset-block-end: ${pct(share(tick, map.y))}`}>{figure(tick, map.y)}</span>)}
+    </div>
+    <div class="plot">
+      <svg class="lines" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true">
+        {map.x.ticks.slice(1).map((tick) => <line x1={share(tick, map.x).toFixed(4)} x2={share(tick, map.x).toFixed(4)} y1="0" y2="1" />)}
+        {map.y.ticks.slice(1).map((tick) => <line x1="0" x2="1" y1={(1 - share(tick, map.y)).toFixed(4)} y2={(1 - share(tick, map.y)).toFixed(4)} />)}
+        <path class="axes" d="M0 0V1H1"></path>
+      </svg>
+      <ol class="points" aria-label={label}>
+        {
+          map.points.map((point) => (
+            <li class="point" data-point={point.id} data-edge={edgeOf(point.along, point.up) || undefined} style={`inset-inline-start: ${pct(point.along)}; inset-block-end: ${pct(point.up)}; --shift: ${point.place - (point.of - 1) / 2}`}>
+              <a class="mark" href={point.href} data-kind={point.kind}>
+                <svg class="shape" viewBox="0 0 12 12" aria-hidden="true">{point.kind === 'trail' ? <path d="M6 1.2 11.2 10.4H0.8Z" /> : <circle cx="6" cy="6" r="4.4" />}</svg>
+                <span class="note">
+                  <span class="who" data-type="text-sm">{point.label}</span>
+                  <span class="figures" data-type="data-sm" data-numeric="tabular">{`${formatMeasure(point.x, x.unit, locale)} · ${formatMeasure(point.y, y.unit, locale)}`}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+    <div class="x" aria-hidden="true">
+      {map.x.ticks.map((tick) => <span class="tick" data-type="data-sm" style={`inset-inline-start: ${pct(share(tick, map.x))}`}>{figure(tick, map.x)}</span>)}
+    </div>
+    <span class="title" data-end data-type="text-xs">{x.label}</span>
+  </div>
+
+  <figcaption class="key" data-type="text-xs">
+    {
+      (['road', 'trail'] as const).map((kind) => (
+        <span class="entry">
+          <svg class="shape" data-kind={kind} viewBox="0 0 12 12" aria-hidden="true">{kind === 'trail' ? <path d="M6 1.2 11.2 10.4H0.8Z" /> : <circle cx="6" cy="6" r="4.4" />}</svg>
+          {kinds[kind]}
+        </span>
+      ))
+    }
+  </figcaption>
+
+  <details class="data">
+    <summary data-type="text-sm">{data}</summary>
+    <DataTable
+      caption={label}
+      density="compact"
+      sticky
+      locale={locale}
+      columns={[
+        { key: 'name', label: headings.name },
+        { key: 'kind', label: headings.kind },
+        { key: 'x', label: x.label, unit: x.unit },
+        { key: 'y', label: y.label, unit: y.unit },
+      ]}
+      rows={rows}
+    />
+  </details>
+</figure>
+
+<style>
+  .map {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    min-inline-size: 0;
+    margin: 0;
+    /* How large a point is drawn, and how far apart two that share a place are set. */
+    --mark: var(--tram-sys-space-4);
+  }
+
+  /* The figures of the vertical axis, then the drawing; under the drawing, those of the horizontal one. */
+  .chart {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--tram-sys-space-2);
+  }
+
+  .title {
+    grid-column: 1 / -1;
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .title[data-end] {
+    text-align: end;
+  }
+
+  .y {
+    position: relative;
+    inline-size: var(--tram-sys-space-7);
+  }
+
+  .x {
+    position: relative;
+    grid-column: 2;
+    block-size: var(--tram-sys-space-5);
+  }
+
+  .tick {
+    position: absolute;
+    color: var(--tram-sys-text-muted);
+    white-space: nowrap;
+  }
+
+  .y .tick {
+    inset-inline-end: 0;
+    transform: translateY(50%);
+  }
+
+  .x .tick {
+    transform: translateX(-50%);
+  }
+
+  .plot {
+    position: relative;
+    aspect-ratio: 16 / 9;
+  }
+
+  .lines {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+  }
+
+  /* A grid as that of a map: hairlines, with the two axes drawn over it. */
+  .lines line {
+    stroke: var(--tram-sys-rule);
+    stroke-width: var(--tram-sys-line-hairline);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .axes {
+    fill: none;
+    stroke: var(--tram-sys-text);
+    stroke-width: var(--tram-sys-line-strong);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .points {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A point is a place, with no size of its own: its mark is centred on it. */
+  .point {
+    position: absolute;
+  }
+
+  .point:hover,
+  .point:focus-within {
+    z-index: var(--tram-sys-layer-raised);
+  }
+
+  /* Those that share a place are set side by side, each half a mark from the next. */
+  .mark {
+    position: absolute;
+    display: block;
+    inline-size: var(--mark);
+    block-size: var(--mark);
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    transform: translate(calc(-50% + var(--mark) * 0.5 * var(--shift, 0)), 50%);
+    color: var(--tram-sys-text);
+    text-decoration: none;
+  }
+
+  .mark:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  /* Each shape with a rim of paper, so two that touch are still two. */
+  .shape {
+    display: block;
+    inline-size: var(--mark);
+    block-size: var(--mark);
+    overflow: visible;
+    fill: var(--tram-sys-data-road);
+    stroke: var(--tram-sys-surface);
+    stroke-width: var(--tram-sys-line-hairline);
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  [data-kind='trail'] .shape,
+  .shape[data-kind='trail'] {
+    fill: var(--tram-sys-data-trail);
+  }
+
+  .mark:hover .shape,
+  .mark:focus-visible .shape {
+    fill: var(--tram-sys-data-active);
+    stroke: var(--tram-sys-data-active-outline);
+  }
+
+  /* The note of a point: read out always, shown when the point is pointed at or reached. */
+  .note {
+    position: absolute;
+    inset-block-end: calc(100% + var(--tram-sys-space-1));
+    inset-inline-start: 50%;
+    display: grid;
+    gap: var(--tram-sys-space-1);
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-line-hairline);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+
+  .mark:hover .note,
+  .mark:focus-visible .note {
+    inline-size: auto;
+    block-size: auto;
+    padding: var(--tram-sys-space-2) var(--tram-sys-space-3);
+    overflow: visible;
+    clip-path: none;
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-text);
+    background: var(--tram-sys-surface);
+    pointer-events: none;
+  }
+
+  [data-edge~='start'] .note {
+    inset-inline-start: 0;
+    transform: none;
+  }
+
+  [data-edge~='end'] .note {
+    inset-inline: auto 0;
+    transform: none;
+  }
+
+  [data-edge~='top'] .note {
+    inset-block: calc(100% + var(--tram-sys-space-1)) auto;
+  }
+
+  .who {
+    color: var(--tram-sys-text);
+  }
+
+  .figures {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .key {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--tram-sys-space-1) var(--tram-sys-space-4);
+    color: var(--tram-sys-text-muted);
+  }
+
+  .entry {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tram-sys-space-2);
+  }
+
+  .data summary {
+    cursor: pointer;
+  }
+
+  .data[open] summary {
+    margin-block-end: var(--tram-sys-space-3);
+  }
+
+  /* On a phone the drawing is as tall as it is wide: the points have less room along it, and need it up. */
+  @media (width < 48rem) {
+    .plot {
+      aspect-ratio: 1;
+    }
+  }
+</style>

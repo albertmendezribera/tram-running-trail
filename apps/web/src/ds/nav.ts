@@ -22,6 +22,7 @@ export const GROUPS = [
       { href: '/ds/patterns/route-plate/', title: 'RoutePlate' },
       { href: '/ds/patterns/locator-map/', title: 'LocatorMap' },
       { href: '/ds/patterns/calendar-strip/', title: 'CalendarStrip' },
+      { href: '/ds/patterns/catalog-map/', title: 'CatalogMap' },
       { href: '/ds/patterns/race-row/', title: 'RaceRow, TerrainTag i Facts' },
       { href: '/ds/patterns/site-chrome/', title: 'Capçalera i peu' },
       { href: '/ds/patterns/shoe-xray/', title: 'ShoeXray' },

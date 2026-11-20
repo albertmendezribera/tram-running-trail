@@ -1,0 +1,51 @@
+---
+import SegmentedControl from '@tram/design-system/interactive/SegmentedControl.astro';
+import Select from '@tram/design-system/interactive/Select.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import type { CatalogShoe } from '../content/shoe-catalog';
+
+export interface Props {
+  /** Every shoe the page lists: the filters are built from what they are. */
+  shoes: readonly CatalogShoe[];
+}
+
+const { shoes } = Astro.props;
+const count = (is: (shoe: CatalogShoe) => boolean): number => shoes.filter(is).length;
+const makers = [...new Map(shoes.map((shoe) => [shoe.brand.slug, shoe.brand.name]))].sort((a, b) => a[1].localeCompare(b[1], 'ca'));
+const brands = [{ value: '', label: 'Totes les marques' }, ...makers.map(([slug, name]) => ({ value: slug, label: `${name} (${count((shoe) => shoe.brand.slug === slug)})` }))];
+const grounds = [
+  { value: '', label: 'Tots' },
+  { value: 'road', label: `Asfalt (${count((shoe) => shoe.terrain === 'road')})` },
+  { value: 'trail', label: `Muntanya (${count((shoe) => shoe.terrain === 'trail')})` },
+];
+---
+
+<!--
+  The filters of the catalogue of shoes: by maker and by ground. The list and the maps are whole in the
+  page; a small island hides what the choices leave out, in the list and on the maps at once, and keeps
+  the choices in the address.
+-->
+<form class="filter" data-catalog-filter data-total={shoes.length}>
+  <Stack gap={3}>
+    <Cluster gap={4} align="end">
+      <Select name="marca" label="Marca" options={brands} value="" />
+      <SegmentedControl name="terreny" legend="Terreny" options={grounds} value="" />
+      <Button type="button" variant="quiet"><span data-reset>Treu els filtres</span></Button>
+    </Cluster>
+    <Text size="sm" tone="muted"><span data-status role="status">{`${shoes.length} models.`}</span></Text>
+  </Stack>
+</form>
+
+<script>
+  import '../islands/catalog-filter.ts';
+</script>
+
+<style>
+  /* Until the island is ready, and without JavaScript, the filters would do nothing: they keep their place, so nothing moves, and are not shown. */
+  .filter:not([data-ready]) {
+    visibility: hidden;
+  }
+</style>

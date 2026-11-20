@@ -16,6 +16,10 @@ Calendari (Fase 2).
 - `SearchField` (interactiu nou, amb fitxa): el camp de cerca del navegador, amb l'etiqueta a sobre i sense text de mostra. Icona nova `search`.
 - `base.css`: el que porta `hidden` no es dibuixa, sigui quin sigui el `display` del component.
 
+Catàleg de sabatilles (Fase 3).
+
+- `CatalogMap` (patró nou, amb fitxa; el «mapa del catàleg» de 9.3): moltes coses situades per dues mesures, amb una forma per terreny. Cada punt és un enllaç que diu el nom i les dues xifres; les xifres són també en una taula. Sense script, i dibuix propi en lloc d'ECharts per decisió del titular (`docs/F3-estat.md`).
+
 Moments firma M1 i M6.
 
 - `base.css`: transicions natives entre pàgines (`@view-transition`), sense fosa de la pàgina sencera i només sense moviment reduït (E11).

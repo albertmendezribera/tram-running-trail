@@ -636,8 +636,8 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     const catalog = page.locator('main [data-catalog]');
     await expect(catalog).toContainText('No són mesures nostres ni de cap laboratori');
     const rows = catalog.locator('li a');
-    expect(await rows.count()).toBeGreaterThanOrEqual(18);
-    expect(await catalog.locator('[data-maker]').count()).toBeGreaterThanOrEqual(2);
+    expect(await rows.count()).toBeGreaterThanOrEqual(100);
+    expect(await catalog.locator('[data-maker]').count()).toBeGreaterThanOrEqual(10);
     // Every row leads to a page of its own that exists, and no two to the same one.
     const hrefs = await rows.evaluateAll((links) => links.map((link) => link.getAttribute('href')!));
     expect(new Set(hrefs).size).toBe(hrefs.length);
@@ -662,6 +662,15 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
     await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0);
     await expect(page.locator('footer')).toContainText('pendent de revisió legal');
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('what a maker’s page says against itself is told in its own words, and is not settled for it', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/sabatilles/puma/fast-trac-nitro-4/');
+    await expect(page.locator('main [data-note]')).toContainText('dos drops, 12 mm i 6 mm');
+    for (const figure of [/286\sg/, /32\smm/, /26\smm/, 'talla 42']) await expect(main(page)).toContainText(figure);
+    await expect(page.locator('main [data-source] a')).toHaveAttribute('href', /^https:\/\/eu\.puma\.com\//);
     expect(await overflow(page)).toBe(0);
   });
 

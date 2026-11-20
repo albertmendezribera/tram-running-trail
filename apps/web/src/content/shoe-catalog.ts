@@ -25,6 +25,10 @@ export interface CatalogShoe {
   outsole: string | null;
   /** The maker's own page for the model: where every figure of the entry was read. */
   url: string;
+  /** What the page says that fits no field, or says against itself, in its own words: a height with no place named, two figures that do not agree. */
+  note: string | null;
+  /** The day the page was read. */
+  accessed: string;
 }
 
 export const CATALOG_ACCESSED = data.accessed;

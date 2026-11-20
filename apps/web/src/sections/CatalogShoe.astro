@@ -11,7 +11,7 @@ import Link from '@tram/design-system/primitives/Link.astro';
 import Panel from '@tram/design-system/primitives/Panel.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
-import { CATALOG_ACCESSED, CATALOG_NOTICE, type CatalogShoe, catalogName, catalogPath, catalogShoes, drawable } from '../content/shoe-catalog';
+import { CATALOG_NOTICE, type CatalogShoe, catalogName, catalogPath, catalogShoes, drawable } from '../content/shoe-catalog';
 import Site from '../layouts/Site.astro';
 
 export interface Props {
@@ -54,7 +54,7 @@ const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.bran
   terrain={shoe.terrain}
   placeholder
   notice={CATALOG_NOTICE}
-  credits={[`Xifres: ${shoe.brand.name}, al seu web. Consultat el ${formatDate(CATALOG_ACCESSED, 'ca')}.`]}
+  credits={[`Xifres: ${shoe.brand.name}, al seu web. Consultat el ${formatDate(shoe.accessed, 'ca')}.`]}
 >
   <Stack gap={5}>
     <Heading level={1} size="lg" kicker={`Sabatilla · ${shoe.brand.name}`}>{shoe.model}</Heading>
@@ -84,8 +84,9 @@ const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.bran
     <Panel>
       <Stack gap={4}>
         <Facts facts={facts} />
+        {shoe.note && <div data-note><Text size="sm" measure>{shoe.note}</Text></div>}
         <Text size="sm" tone="muted" measure>
-          {`${known} de ${facts.length} dades, totes de la pàgina del model al web de ${shoe.brand.name}, consultada el ${formatDate(CATALOG_ACCESSED, 'ca')}.`}
+          {`${known} de ${facts.length} dades, totes de la pàgina del model al web de ${shoe.brand.name}, consultada el ${formatDate(shoe.accessed, 'ca')}.`}
         </Text>
         <div data-source><Link href={shoe.url} variant="standalone">{`${name} al web de ${shoe.brand.name}`}</Link></div>
       </Stack>

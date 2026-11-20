@@ -1,0 +1,111 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>E20 prototype</title>
+<style>html,body{margin:0;height:100%;background:#cfd8de;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./three/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+// One window of the ICGC surface model (1 m) with the ortho photo (25 cm) over it, seen from above along the route.
+const q = new URLSearchParams(location.search);
+const tile = q.get('tile') ?? 'passeig', view = q.get('view') ?? 'along';
+const meta = await (await fetch(`../data/${tile}.json`)).json();
+const heights = new Float32Array(await (await fetch(`../data/${tile}.f32`)).arrayBuffer());
+const route = await (await fetch('../data/route.json')).json();
+const N = meta.side;
+// The sea has no height in the model: it lies at nought.
+for (let i = 0; i < heights.length; i++) if (heights[i] < -100) heights[i] = 0;
+// Unless asked for raw, the model is tidied with what the map knows: a building is the outline the cadastre and the
+// ICGC give it, with one height, that of its roof in the model; the ground is what is lowest around; a tree is a soft crown.
+if (q.get('raw') === null) {
+  const world = await (await fetch('../data/world.json')).json();
+  const id = new Int32Array(N * N);
+  world.buildings.forEach((building, index) => {
+    const rings = building.rings.map((ring) => { const out = []; for (let i = 0; i < ring.length; i += 2) out.push([ring[i] / 10 - meta.x0, meta.yTop - ring[i + 1] / 10]); return out; });
+    const xs = rings.flat().map((p) => p[0]), zs = rings.flat().map((p) => p[1]);
+    const [c0, c1, r0, r1] = [Math.max(0, Math.floor(Math.min(...xs))), Math.min(N - 1, Math.ceil(Math.max(...xs))), Math.max(0, Math.floor(Math.min(...zs))), Math.min(N - 1, Math.ceil(Math.max(...zs)))];
+    for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) {
+      let inside = false;
+      for (const ring of rings) for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const [xi, zi] = ring[i], [xj, zj] = ring[j];
+        if (zi > r !== zj > r && c < ((xj - xi) * (r - zi)) / (zj - zi) + xi) inside = !inside;
+      }
+      if (inside) id[r * N + c] = index + 1;
+    }
+  });
+  const pass = (src, radius, fold) => { const out = new Float32Array(src.length), tmp = new Float32Array(src.length);
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) { let v = src[r * N + c]; for (let d = -radius; d <= radius; d++) { const k = c + d; if (k >= 0 && k < N) v = fold(v, src[r * N + k]); } tmp[r * N + c] = v; }
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) { let v = tmp[r * N + c]; for (let d = -radius; d <= radius; d++) { const k = r + d; if (k >= 0 && k < N) v = fold(v, tmp[k * N + c]); } out[r * N + c] = v; }
+    return out; };
+  const blur = (src, radius) => { const sum = pass(src, radius, (a, b) => a + b); const side = radius * 2 + 1; return sum; };
+  const mean = (src, radius) => { const out = new Float32Array(src.length), tmp = new Float32Array(src.length);
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) { let v = 0, n = 0; for (let d = -radius; d <= radius; d++) { const k = c + d; if (k >= 0 && k < N) { v += src[r * N + k]; n++; } } tmp[r * N + c] = v / n; }
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) { let v = 0, n = 0; for (let d = -radius; d <= radius; d++) { const k = r + d; if (k >= 0 && k < N) { v += tmp[k * N + c]; n++; } } out[r * N + c] = v / n; }
+    return out; };
+  const ground = mean(pass(heights, 6, Math.min), 4);
+  const soft = mean(heights, 2);
+  const roofs = new Map();
+  for (let i = 0; i < id.length; i++) if (id[i]) (roofs.get(id[i]) ?? roofs.set(id[i], []).get(id[i])).push(heights[i]);
+  const roofOf = new Map([...roofs].map(([key, values]) => { values.sort((a, b) => a - b); return [key, values[Math.floor(values.length * 0.6)]]; }));
+  for (let i = 0; i < heights.length; i++) {
+    if (id[i]) heights[i] = Math.max(roofOf.get(id[i]), ground[i] + 2.5);
+    else heights[i] = heights[i] - ground[i] > 2.5 ? ground[i] + (soft[i] - ground[i]) * 0.9 : Math.min(heights[i], ground[i] + 0.6);
+  }
+}
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(innerWidth, innerHeight); document.body.append(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xcfd8de); scene.fog = new THREE.Fog(0xcfd8de, 500, 1500);
+// The ground: a vertex to a cell of the model. x east, z south, y up; the window's corner of the north-west at the origin.
+const geometry = new THREE.PlaneGeometry(N - 1, N - 1, N - 1, N - 1); geometry.rotateX(-Math.PI / 2); geometry.translate((N - 1) / 2, 0, (N - 1) / 2);
+const pos = geometry.attributes.position;
+for (let i = 0; i < pos.count; i++) pos.setY(i, heights[i]);
+geometry.computeVertexNormals();
+const ortho = await new THREE.TextureLoader().loadAsync(`../data/${tile}-ortho.jpg`);
+ortho.colorSpace = THREE.SRGBColorSpace; ortho.anisotropy = renderer.capabilities.getMaxAnisotropy(); ortho.generateMipmaps = true; ortho.minFilter = THREE.LinearMipmapLinearFilter;
+const material = new THREE.ShaderMaterial({
+  uniforms: { map: { value: ortho }, sun: { value: new THREE.Vector3(-0.45, 0.75, 0.5).normalize() }, fogColor: { value: scene.background }, mode: { value: q.get('walls') === 'smear' ? 0 : 1 } },
+  vertexShader: `varying vec2 vUv; varying vec3 vNormal; varying float vDepth; varying float vUp; void main(){ vUv = uv; vNormal = normal; vUp = position.y; vec4 mv = modelViewMatrix * vec4(position,1.0); vDepth = -mv.z; gl_Position = projectionMatrix * mv; }`,
+  fragmentShader: `uniform sampler2D map; uniform vec3 sun; uniform vec3 fogColor; uniform float mode; varying vec2 vUv; varying vec3 vNormal; varying float vDepth; varying float vUp;
+    void main(){ vec3 n = normalize(vNormal); vec3 photo = texture2D(map, vUv).rgb;
+      // A wall is what stands nearly upright. The photo knows nothing of it: it is given the blurred colour of what is over it, in shade or in sun by where it faces.
+      float wall = mode * smoothstep(0.75, 0.35, n.y);
+      vec3 around = texture2D(map, vUv, 4.0).rgb;
+      float lit = 0.62 + 0.38 * max(0.0, dot(normalize(vec3(n.x, 0.0, n.z) + 1e-4), normalize(vec3(sun.x, 0.0, sun.z))));
+      // A faint line every three metres up: a storey, to give the height a measure. No window is drawn: none is known.
+      float storey = 1.0 - 0.10 * smoothstep(0.35, 0.5, abs(fract(vUp / 3.0) - 0.5));
+      vec3 face = mix(around, vec3(0.86, 0.82, 0.74), 0.45) * lit * storey;
+      vec3 colour = mix(photo, face, wall);
+      float fog = smoothstep(500.0, 1500.0, vDepth);
+      gl_FragColor = vec4(mix(colour, fogColor, fog), 1.0); }`,
+});
+scene.add(new THREE.Mesh(geometry, material));
+// The route, laid over what it crosses, and where the runner is.
+const local = route.map(([x, y]) => [x - meta.x0, meta.yTop - y]);
+const heightAt = (x, z) => { const c = Math.round(x), r = Math.round(z); return c < 0 || r < 0 || c >= N || r >= N ? 0 : heights[r * N + c]; };
+const inside = ([x, z]) => x > 2 && z > 2 && x < N - 3 && z < N - 3;
+let run = [];
+const runs = [];
+for (const p of local) { if (inside(p)) run.push(p); else if (run.length) { runs.push(run); run = []; } }
+if (run.length) runs.push(run);
+for (const part of runs) {
+  if (part.length < 2) continue;
+  // The lowest of what is around: the path runs on the ground, not over the roofs and crowns beside it.
+  const ground = (x, z) => { let low = Infinity; for (let dx = -3; dx <= 3; dx++) for (let dz = -3; dz <= 3; dz++) low = Math.min(low, heightAt(x + dx, z + dz)); return low; };
+  const points = part.map(([x, z]) => new THREE.Vector3(x, ground(x, z) + 1.2, z));
+  const curve = new THREE.CatmullRomCurve3(points);
+  scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, points.length * 3, 2.2, 6), new THREE.MeshBasicMaterial({ color: 0xffffff })));
+  scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, points.length * 3, 1.3, 6), new THREE.MeshBasicMaterial({ color: 0xf0652f })));
+}
+// The camera: over the route, behind the runner and looking on; or from the sea, as on a postcard.
+const centre = [N / 2, N / 2];
+const nearest = local.reduce((best, p, i) => (Math.hypot(p[0] - centre[0], p[1] - centre[1]) < Math.hypot(local[best][0] - centre[0], local[best][1] - centre[1]) ? i : best), 0);
+const at = local[nearest], ahead = local[Math.min(local.length - 1, nearest + 12)];
+let dir = new THREE.Vector2(ahead[0] - at[0], ahead[1] - at[1]).normalize();
+if (q.get('back')) dir.negate();
+const camera = new THREE.PerspectiveCamera(Number(q.get('fov') ?? 42), innerWidth / innerHeight, 2, 4000);
+const up = Number(q.get('up') ?? 55), back = Number(q.get('behind') ?? 110);
+if (view === 'along') { camera.position.set(at[0] - dir.x * back, heightAt(at[0], at[1]) + up, at[1] - dir.y * back); camera.lookAt(at[0] + dir.x * 70, heightAt(at[0], at[1]), at[1] + dir.y * 70); }
+else { const bearing = THREE.MathUtils.degToRad(Number(q.get('from') ?? 180)); const d = Number(q.get('dist') ?? 260);
+  camera.position.set(at[0] + Math.sin(bearing) * d, up, at[1] - Math.cos(bearing) * d); camera.lookAt(at[0], 6, at[1]); }
+const dot = new THREE.Mesh(new THREE.SphereGeometry(3.2, 16, 12), new THREE.MeshBasicMaterial({ color: 0x141518 })); dot.position.set(at[0], heightAt(at[0], at[1]) + 3, at[1]); scene.add(dot);
+renderer.render(scene, camera); document.title = 'ready';
+</script>

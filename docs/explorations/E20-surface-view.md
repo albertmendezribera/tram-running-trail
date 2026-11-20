@@ -66,7 +66,19 @@ La ruta de Palamós fa 5,1 km d'anada: cobrir-la demana unes nou finestres, uns 
 2. **Provar les tessel·les 3D de Google** dins la seva quota gratuïta (1.000 sessions al mes), que sí que porten façanes fotografiades. Demana un compte del titular amb targeta, i canviar la regla del projecte sobre Google. No s'ha confirmat que cobreixin Palamós.
 3. **Deixar-ho aquí.** Amb dades obertes no hi ha més sostre per als edificis: tornar-hi amb una altra ronda de retocs seria repetir el que es va aparcar el 15 de novembre.
 
+## Què se n'ha fet (2026-11-20, mateix dia)
+
+El titular va triar la primera opció i es va muntar al visor de debò, amb el relleu de superfícies en peces prop de la ruta. En veure-ho va dir: **«això no es pot considerar realista»**, i va donar la referència que faltava: **l'app Relive**, que és un vol sobre fotografia de satèl·lit posada damunt del relleu llis, sense edificis aixecats.
+
+- **Els edificis aixecats s'han retirat** abans de publicar-los. No n'ha quedat res al visor ni al repositori, tret d'aquest document i del prototip.
+- **La vista «Realista» torna a ser la foto sobre el relleu nu**, amb tres coses noves:
+  - **Un vol**: el botó «Fes el vol» recorre la ruta sola en uns 55 segons (`RouteScroller`).
+  - **Una càmera que es mou**: es gronxa d'un costat a l'altre del recorregut i s'acosta i s'allunya, en lloc d'anar fixa darrere del corredor. Depèn del quilòmetre, no del rellotge: el mateix lloc es veu sempre igual.
+  - **El mar**: on la fotografia és gairebé negra perquè l'aigua és fonda, es tenyeix del color de la seva vora. És una decisió de presentació, no una dada.
+- **Lliçó:** un relleu amb edificis que la foto no pot vestir fa pitjor el conjunt que no tenir-ne. Per tenir edificis de debò calen façanes fotografiades, i cap font oberta en té (l'ICGC té imatges de carrer i un bessó digital urbà, però només per consultar-los).
+
 ## Què no s'ha provat
+
 
 - Cap telèfon, ni el rendiment en cap dispositiu que no sigui l'ordinador de proves.
 - La ruta sencera: només tres finestres.

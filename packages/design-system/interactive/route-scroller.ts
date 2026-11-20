@@ -30,6 +30,11 @@ const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
  * Each change emits `tram:progress` with `{ share, km }`, for a 3D view to follow.
  * Pointing at a place, on the profile or on another view, emits `tram:preview`
  * with `{ share }` (null when it ends): every view marks the same point.
+ *
+ * The route can also be flown: `fly()` runs it from where it is to its end at a steady pace, as a
+ * film of it would, by moving the scroll itself, so every view follows as it does a hand. Any scroll
+ * by hand lands the flight. A button marked `data-fly` inside the element starts and lands it; `tram:flight`
+ * tells `{ flying }`.
  */
 export class TramRouteScroller extends HTMLElement {
   #data!: RouteData;
@@ -40,6 +45,9 @@ export class TramRouteScroller extends HTMLElement {
   #goal: { km: number; until: number } | undefined;
   /** Share another view or the pointer is on: the profile cursor stays there while it lasts. */
   #pointed: number | null = null;
+  /** The flight under way: where it took off, when, and how long the whole route takes. */
+  #flight: { from: number; at: number; seconds: number } | undefined;
+  #flightFrame = 0;
 
   connectedCallback(): void {
     const json = this.querySelector<HTMLScriptElement>('script[data-route]');
@@ -51,8 +59,10 @@ export class TramRouteScroller extends HTMLElement {
     window.addEventListener('resize', this.#schedule);
     window.addEventListener('wheel', this.#release, { passive: true });
     window.addEventListener('touchstart', this.#release, { passive: true });
+    window.addEventListener('keydown', this.#onKey);
     this.addEventListener('tram:km', this.#onProfileKm);
     this.addEventListener('tram:km-leave', this.#onProfileLeave);
+    this.querySelector<HTMLButtonElement>('[data-fly]')?.addEventListener('click', this.#onFly);
     this.#update();
   }
 
@@ -61,9 +71,12 @@ export class TramRouteScroller extends HTMLElement {
     window.removeEventListener('resize', this.#schedule);
     window.removeEventListener('wheel', this.#release);
     window.removeEventListener('touchstart', this.#release);
+    window.removeEventListener('keydown', this.#onKey);
     this.removeEventListener('tram:km', this.#onProfileKm);
     this.removeEventListener('tram:km-leave', this.#onProfileLeave);
+    this.querySelector<HTMLButtonElement>('[data-fly]')?.removeEventListener('click', this.#onFly);
     cancelAnimationFrame(this.#frame);
+    this.land();
   }
 
   get #track(): HTMLElement {
@@ -74,10 +87,59 @@ export class TramRouteScroller extends HTMLElement {
     return this.querySelector<HTMLElement>(`[data-out="${name}"]`)!;
   }
 
-  /** The reader scrolls by hand: the next key step starts from where they are. */
+  /** The reader scrolls by hand: the next key step starts from where they are, and a flight lands. */
   #release = (): void => {
     this.#goal = undefined;
+    this.land();
   };
+
+  /** A key that scrolls the page is a scroll by hand too. The key that presses the button of the flight is not. */
+  #onKey = (event: KeyboardEvent): void => {
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key) && !(event.target as Element | null)?.closest?.('[data-fly]')) this.#release();
+  };
+
+  /** Whether the route is being flown. */
+  get flying(): boolean {
+    return this.#flight !== undefined;
+  }
+
+  /**
+   * Flies the route from where it is to its end; from its end, from the start again. `seconds` is how
+   * long the whole route takes: what is left takes its share of it. Not with reduced motion.
+   */
+  fly(seconds = 55): void {
+    if (this.#flight || matchMedia(REDUCED_MOTION).matches) return;
+    const from = this.#progress() > 0.995 ? 0 : this.#progress();
+    this.#goal = undefined;
+    this.#flight = { from, at: performance.now(), seconds };
+    this.#tellFlight();
+    const frame = (now: number): void => {
+      const flight = this.#flight;
+      if (!flight) return;
+      const share = Math.min(1, flight.from + (now - flight.at) / 1000 / flight.seconds);
+      const box = this.#track.getBoundingClientRect();
+      window.scrollTo({ top: window.scrollY + box.top + share * (box.height - window.innerHeight), behavior: 'instant' });
+      if (share >= 1) this.land();
+      else this.#flightFrame = requestAnimationFrame(frame);
+    };
+    this.#flightFrame = requestAnimationFrame(frame);
+  }
+
+  /** Ends the flight where it is. */
+  land(): void {
+    if (!this.#flight) return;
+    this.#flight = undefined;
+    cancelAnimationFrame(this.#flightFrame);
+    this.#tellFlight();
+  }
+
+  #onFly = (): void => (this.flying ? this.land() : this.fly());
+
+  #tellFlight(): void {
+    this.toggleAttribute('data-flying', this.flying);
+    this.querySelector('[data-fly]')?.setAttribute('aria-pressed', String(this.flying));
+    this.dispatchEvent(new CustomEvent('tram:flight', { detail: { flying: this.flying } }));
+  }
 
   #schedule = (): void => {
     cancelAnimationFrame(this.#frame);
@@ -106,6 +168,7 @@ export class TramRouteScroller extends HTMLElement {
   /** Scrolls to a share of the route. */
   goTo(share: number): void {
     this.#goal = undefined;
+    this.land();
     this.#scrollToKm(this.#kmOf(share));
   }
 
@@ -135,6 +198,7 @@ export class TramRouteScroller extends HTMLElement {
     const first = points[0]![0];
     const last = points.at(-1)![0];
     const now = performance.now();
+    this.land();
     const from = this.#goal && this.#goal.until > now ? this.#goal.km : first + this.#progress() * (last - first);
     const km = Math.min(last, Math.max(first, direction > 0 ? Math.floor(from + 0.05) + 1 : Math.ceil(from - 0.05) - 1));
     // Kept until the scroll gets there, however long a slow machine takes.
@@ -197,6 +261,7 @@ export class TramRouteScroller extends HTMLElement {
     const { km, commit } = (event as CustomEvent<{ km: number; commit: boolean }>).detail;
     if (commit) {
       this.#goal = undefined;
+      this.land();
       this.#scrollToKm(km);
       return;
     }

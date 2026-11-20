@@ -26,9 +26,9 @@ export interface Props {
 }
 
 const COPY = {
-  ca: { km: 'Quilòmetre', elevation: 'Altitud', gain: 'Desnivell positiu', grade: 'Pendent', climb: 'Pujada', start: 'Sortida', finish: 'Arribada', hint: 'Fes scroll per recórrer el tram.', jump: 'Clica el perfil per saltar a un punt.', skip: 'Salta el recorregut', profile: 'Perfil de' },
-  es: { km: 'Kilómetro', elevation: 'Altitud', gain: 'Desnivel positivo', grade: 'Pendiente', climb: 'Subida', start: 'Salida', finish: 'Llegada', hint: 'Haz scroll para recorrer el tramo.', jump: 'Pulsa el perfil para saltar a un punto.', skip: 'Saltar el recorrido', profile: 'Perfil de' },
-  en: { km: 'Kilometre', elevation: 'Elevation', gain: 'Elevation gain', grade: 'Grade', climb: 'Climb', start: 'Start', finish: 'Finish', hint: 'Scroll to run the route.', jump: 'Click the profile to jump to a point.', skip: 'Skip the route', profile: 'Profile of' },
+  ca: { fly: 'Fes el vol', land: 'Atura el vol', km: 'Quilòmetre', elevation: 'Altitud', gain: 'Desnivell positiu', grade: 'Pendent', climb: 'Pujada', start: 'Sortida', finish: 'Arribada', hint: 'Fes scroll per recórrer el tram.', jump: 'Clica el perfil per saltar a un punt.', skip: 'Salta el recorregut', profile: 'Perfil de' },
+  es: { fly: 'Ver el vuelo', land: 'Parar el vuelo', km: 'Kilómetro', elevation: 'Altitud', gain: 'Desnivel positivo', grade: 'Pendiente', climb: 'Subida', start: 'Salida', finish: 'Llegada', hint: 'Haz scroll para recorrer el tramo.', jump: 'Pulsa el perfil para saltar a un punto.', skip: 'Saltar el recorrido', profile: 'Perfil de' },
+  en: { fly: 'Fly the route', land: 'Stop the flight', km: 'Kilometre', elevation: 'Elevation', gain: 'Elevation gain', grade: 'Grade', climb: 'Climb', start: 'Start', finish: 'Finish', hint: 'Scroll to run the route.', jump: 'Click the profile to jump to a point.', skip: 'Skip the route', profile: 'Profile of' },
 };
 
 const { points, name, locale = 'ca', viewer, id = 'route', transition } = Astro.props;
@@ -80,6 +80,11 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
                 {viewer.credit && <p class="credit">{viewer.credit}</p>}
               </div>
             </Viewer3DShell>
+            {/* The flight: the route run by itself, as a film of it. A button that stays pressed while it lasts. */}
+            <button class="fly" type="button" data-fly aria-pressed="false" data-type="text-sm">
+              <span data-when="idle">{copy.fly}</span>
+              <span data-when="flying">{copy.land}</span>
+            </button>
             {viewer.modes && (
               <div class="modes">
                 <SegmentedControl name={viewer.modes.name} legend={viewer.modes.legend} options={viewer.modes.options} value={viewer.modes.value} compact />
@@ -176,8 +181,47 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
     background: var(--tram-sys-surface);
   }
 
-  .scroller:not([data-live]) .modes {
+  .scroller:not([data-live]) .modes,
+  .scroller:not([data-live]) .fly {
     display: none;
+  }
+
+  /* Over the other corner of the view. Pressed, it says how to stop. */
+  .fly {
+    position: absolute;
+    inset-block-start: var(--tram-sys-space-2);
+    inset-inline-start: var(--tram-sys-space-2);
+    min-block-size: var(--tram-sys-space-8);
+    padding: var(--tram-sys-space-1) var(--tram-sys-space-3);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    border-radius: var(--tram-sys-radius-soft);
+    background: var(--tram-sys-surface);
+    color: var(--tram-sys-text);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .fly[aria-pressed='true'] {
+    border-color: var(--tram-sys-text);
+    background: var(--tram-sys-text);
+    color: var(--tram-sys-surface);
+  }
+
+  .fly:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .fly[aria-pressed='false'] [data-when='flying'],
+  .fly[aria-pressed='true'] [data-when='idle'] {
+    display: none;
+  }
+
+  /* A flight is movement: with reduced motion it is not offered, and the scroll runs the route as ever. */
+  @media (prefers-reduced-motion: reduce) {
+    .fly {
+      display: none;
+    }
   }
 
   .notes {

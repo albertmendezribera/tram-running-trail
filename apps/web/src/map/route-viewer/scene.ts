@@ -60,8 +60,17 @@ function levelTheSea(): void {
   });
 }
 
-/** Follow camera, in metres: the same flight as the cartographic viewer. */
+/** Follow camera, in metres: behind and above the runner, looking down the route. */
 const FOLLOW = { back: 420, up: 260, ahead: 0.04 };
+/**
+ * The camera does not sit still behind the runner: it swings from one side of the route to the other and
+ * comes closer and draws back, as a film of the route would (the reference is the flight of Relive). How
+ * far to each side, in radians; how much nearer and further, as a share; and how many kilometres one
+ * whole swing takes. It depends on the place alone, so the same place is always seen the same way.
+ */
+const SWING = { side: 0.7, breath: 0.2, everyKm: 3.2 };
+/** The sea in the photograph is nearly black where it is deep. Where the terrain says sea, it is given the colour of its own shallows. */
+const SEA_TINT = 'rgba(24, 78, 104, 0.6)';
 const EASE_MS = 110;
 const KM_MARK_RANGE = 1800;
 const POINT_RADIUS = 28;
@@ -138,12 +147,15 @@ export async function mountRealRouteViewer({ container, signal, reducedMotion }:
       sources: {
         orthophoto: { type: 'raster', tiles: [ORTHOPHOTO], tileSize: 256, maxzoom: 20 },
         terrain: { type: 'raster-dem', tiles: [TERRAIN.replace('https://', `${SEA_LEVEL_PROTOCOL}://`)], tileSize: 512, minzoom: 7, maxzoom: 14 },
+        // The same relief again, for what is painted from it: the map wants the one it stands the ground on kept for that alone.
+        relief: { type: 'raster-dem', tiles: [TERRAIN.replace('https://', `${SEA_LEVEL_PROTOCOL}://`)], tileSize: 512, minzoom: 7, maxzoom: 14 },
         route: { type: 'geojson', lineMetrics: true, data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: o.path.map(([lng, lat]) => [lng, lat]) } } },
         runner: { type: 'geojson', data: point(at(o.share ?? 0)) },
         pointer: { type: 'geojson', data: point(at(0)) },
       },
       layers: [
         { id: 'orthophoto', type: 'raster', source: 'orthophoto' },
+        { id: 'sea', type: 'color-relief', source: 'relief', paint: { 'color-relief-color': ['interpolate', ['linear'], ['elevation'], -1, SEA_TINT, 0.05, SEA_TINT, 0.4, 'rgba(24, 78, 104, 0)'] } },
         { id: 'route-casing', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': color('surface'), 'line-opacity': 0.6, 'line-width': 8 } },
         { id: 'route', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-width': 4.5, 'line-color': color('data-primary') } },
         { id: 'pointer', type: 'circle', source: 'pointer', layout: { visibility: 'none' }, paint: { 'circle-radius': 5, 'circle-color': color('surface'), 'circle-stroke-color': color('data-active-outline'), 'circle-stroke-width': 2.5 } },
@@ -242,7 +254,11 @@ export async function mountRealRouteViewer({ container, signal, reducedMotion }:
     const settled = heading[0] * hx + heading[1] * hy > 0.99995;
     if (settled) [heading[0], heading[1]] = [hx, hy];
 
-    const follow: Vec = [here[0] - heading[0] * FOLLOW.back, here[1] - heading[1] * FOLLOW.back, here[2] + FOLLOW.up];
+    // Where along its swing the camera is: a matter of the kilometre, not of the clock.
+    const swing = (share * total) / 1000 / SWING.everyKm * Math.PI * 2;
+    const [side, reach] = [Math.sin(swing) * SWING.side, 1 + Math.sin(swing * 0.5 + 1) * SWING.breath];
+    const from: [number, number] = [heading[0] * Math.cos(side) - heading[1] * Math.sin(side), heading[0] * Math.sin(side) + heading[1] * Math.cos(side)];
+    const follow: Vec = [here[0] - from[0] * FOLLOW.back * reach, here[1] - from[1] * FOLLOW.back * reach, here[2] + FOLLOW.up * reach];
     // Start and finish show the whole route; in between the camera runs with the runner.
     const near = ease(0, 0.03, share) * (1 - ease(0.97, 1, share));
     camera = lerp(overview, follow, near);

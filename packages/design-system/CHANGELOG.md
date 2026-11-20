@@ -16,6 +16,10 @@ Calendari (Fase 2).
 - `SearchField` (interactiu nou, amb fitxa): el camp de cerca del navegador, amb l'etiqueta a sobre i sense text de mostra. Icona nova `search`.
 - `base.css`: el que porta `hidden` no es dibuixa, sigui quin sigui el `display` del component.
 
+Vol d'una ruta.
+
+- `RouteScroller`: un botó, «Fes el vol», que recorre la ruta sola a pas constant (uns 55 segons la ruta sencera) movent el mateix scroll, de manera que totes les vistes la segueixen. Un scroll a mà, una tecla de desplaçament o el mateix botó l'aturen. Amb moviment reduït no s'ofereix. API nova a `tram-route-scroller`: `fly()`, `land()`, `flying` i l'esdeveniment `tram:flight`.
+
 Catàleg de sabatilles (Fase 3).
 
 - `CatalogMap` (patró nou, amb fitxa; el «mapa del catàleg» de 9.3): moltes coses situades per dues mesures, amb una forma per terreny. Cada punt és un enllaç que diu el nom i les dues xifres; les xifres són també en una taula. Sense script, i dibuix propi en lloc d'ECharts per decisió del titular (`docs/F3-estat.md`). Un punt es pot marcar com a triat des de fora (`data-picked`).

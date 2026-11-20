@@ -1093,6 +1093,42 @@ test.describe('Comparator in 3D', () => {
   });
 });
 
+test.describe('Flight over a route', () => {
+  const km = async (page: Page): Promise<number> => Number((await page.locator('tram-route-scroller [data-out="km"]').textContent())!.replace(',', '.'));
+
+  test('a button flies the route by itself, and a scroll by hand or the button again lands it', async ({ page }) => {
+    // The 3D view loads while the flight starts: on a slow machine it holds the page for a while, and the flight catches up after.
+    test.setTimeout(120_000);
+    await open(page, ROUTE_PAGES['route-flat']);
+    const scroller = page.locator('tram-route-scroller');
+    const fly = scroller.getByRole('button', { name: 'Fes el vol' });
+    await fly.scrollIntoViewIfNeeded();
+    await expect(fly).toHaveAttribute('aria-pressed', 'false');
+    const before = await km(page);
+    await fly.click();
+    // Pressed, the button says how to stop, and the route runs with no hand on it.
+    const land = scroller.getByRole('button', { name: 'Atura el vol' });
+    await expect(land).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => km(page), { timeout: 60_000 }).toBeGreaterThan(before + 0.15);
+    await land.click();
+    await expect(fly).toHaveAttribute('aria-pressed', 'false');
+    const landed = await km(page);
+    await page.waitForTimeout(600);
+    expect(await km(page)).toBeCloseTo(landed, 1);
+    // A flight that is scrolled by hand lands where the hand takes it.
+    await fly.click();
+    await expect(land).toHaveAttribute('aria-pressed', 'true');
+    await page.mouse.wheel(0, 40);
+    await expect(fly).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('is not offered to who asked for less motion: the scroll runs the route as ever', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, ROUTE_PAGES['route-flat']);
+    await expect(page.locator('tram-route-scroller [data-fly]')).toBeHidden();
+  });
+});
+
 test.describe('Route on foot', () => {
   test.describe.configure({ timeout: 180_000 });
 

@@ -6,9 +6,9 @@
 
 | Peça | On | Estat |
 |---|---|---|
-| Catàleg | `/ca/sabatilles/`, «El catàleg» | **121 models de 13 marques**, a més de les dues sabatilles de la Fase 1 mesurades en laboratori |
+| Catàleg | `/ca/sabatilles/`, «El catàleg» | **161 models de 17 marques**, a més de les dues sabatilles de la Fase 1 mesurades en laboratori |
 | Fitxa d'un model del catàleg | `/ca/sabatilles/<marca>/<model>/` | Feta: les xifres que declara la marca, la radiografia quan declara les dues alçades, la nota quan la pàgina es contradiu, i l'enllaç a la pàgina del model |
-| Mapa del catàleg | `/ca/sabatilles/`, sobre la llista | Fet: dos mapes, «pes i alçada al taló» (47 models) i «pes i drop» (98), amb una forma per terreny. Cada punt és un enllaç a la fitxa; les xifres, també en una taula |
+| Mapa del catàleg | `/ca/sabatilles/`, sobre la llista | Fet: dos mapes, «pes i alçada al taló» (67 models) i «pes i drop» (132), amb una forma per terreny. Cada punt és un enllaç a la fitxa; les xifres, també en una taula |
 | Filtres | `/ca/sabatilles/` | Fets: per marca i per terreny. Amaguen files de la llista i punts dels mapes alhora, i queden a l'adreça (`?marca=puma&terreny=trail`) |
 | Dades | `apps/web/src/content/shoe-catalog.json` | Un registre per model, amb l'adreça d'on s'ha llegit cada xifra i el dia de la consulta (`accessed`) |
 
@@ -16,13 +16,17 @@
 |---|---|---|
 | On | 18 | Pes i drop. Cap alçada, ni la talla pesada |
 | Nike | 14 | Pes aproximat (talla UK 9) i drop. Cap alçada |
+| Hoka | 15 | Lectura a mitges (vegeu més avall): pes i drop als d'asfalt; als de muntanya, drop i tacs, sense pes |
 | Topo Athletic | 13 | Pes (en unces), alçades i drop |
 | Puma | 12 | Pes (talla 42), alçades i drop a gairebé totes |
 | Mizuno | 11 | Pes sense talla; drop i alçada només en alguns, i sovint sense dir on es mesura |
+| Saucony | 11 | Pes (unces i grams), alçades i drop a totes |
 | Merrell | 10 | Pes de mitja parella, alçades, drop i tacs |
 | Altra | 8 | Pes (unces i grams), alçada i drop |
 | Adidas | 8 | Pes amb talla, alçades i drop a la majoria; dos models sense cap xifra han quedat fora |
+| Scarpa | 8 | Pes (talla 42), alçades i drop a totes |
 | La Sportiva | 6 | Alçades, drop i tacs; el pes, només en un |
+| Salomon | 6 | Pes per unitat, drop i tacs. Cap alçada |
 | Asics | 6 | Pes i drop. Cap alçada |
 | Brooks | 5 | Pes (unces i grams) i drop. Cap alçada |
 | Decathlon (Kiprun) | 5 | Pes, alçades i drop als d'asfalt; als de muntanya, només els tacs |
@@ -33,7 +37,7 @@
 La que ja fixava `docs/revisio-legal.md` (punt 4): **el catàleg es fa només amb el que declara cada fabricant al seu web.** Cap mesura de laboratori de tercers, cap xifra d'un comparador, cap xifra de memòria.
 
 - El que una marca no diu queda sense dada.
-- La radiografia es dibuixa només si la marca declara l'alçada al taló i a l'avantpeu (52 dels 121). Sense elles, la fitxa diu que no es pot dibuixar.
+- La radiografia es dibuixa només si la marca declara l'alçada al taló i a l'avantpeu (72 dels 161). Sense elles, la fitxa diu que no es pot dibuixar.
 - Un pes declarat en unces es mostra en grams, amb la xifra original al costat.
 - Cada marca mesura l'alçada a la seva manera: la fitxa diu que no es poden comparar al mil·límetre entre marques.
 - **Quan la pàgina es contradiu, no es tria.** Si les dues alçades i el drop no quadren (Puma Deviate Nitro Elite 4, Merrell Agility Trail, La Sportiva Mutant), es posen com hi són i la fitxa ho diu. Si hi ha dos drops (Puma Fast-Trac Nitro 4), no se'n posa cap.
@@ -43,15 +47,15 @@ La que ja fixava `docs/revisio-legal.md` (punt 4): **el catàleg es fa només am
 ## Com s'han llegit
 
 - **Amb peticions simples**, sense disfressar-les de navegador i amb cinc segons entre pàgines: NNormal, Topo Athletic, On, Merrell, Mizuno, Puma i Nike. La llista de models surt del mapa del web (sitemap) de cada marca.
-- **Amb el navegador, pàgina a pàgina:** Altra, Adidas, La Sportiva, Asics, Brooks i Decathlon, que rebutgen o limiten les peticions simples (403, 406 o 429). Cap ha mostrat una comprovació antirobots.
+- **Amb el navegador, pàgina a pàgina:** Altra, Adidas, La Sportiva, Asics, Brooks, Decathlon, Saucony, Scarpa, Salomon i Hoka, que rebutgen o limiten les peticions simples (403, 406 o 429) o no porten les xifres a la pàgina que hi responen. Cap ha mostrat una comprovació antirobots.
+- **Hoka va deixar de respondre** (pàgines buides) després d'una quinzena de fitxes, i s'hi va parar. El que hi ha és una lectura a mitges, i cada fitxa ho diu: als models d'asfalt, el pes surt del quadre comparatiu de la mateixa pàgina i falten les alçades (tret de la Clifton 11, llegida sencera); als de muntanya falta el pes. Dos models no es van arribar a llegir (Mafate X i Rocket X Trail).
 - Cap de les marques mirades prohibeix els agents al seu `robots.txt`.
 
 ## Què no hi és, i per què
 
 - **New Balance:** la fitxa que s'ha mirat (FuelCell Rebel v5, web d'Espanya) no declara ni pes, ni drop, ni alçades. No s'hi ha posat cap model.
-- **Saucony:** les xifres no són a la pàgina que respon a una petició simple; cal llegir-la amb navegador. Pendent.
-- **Scarpa:** va respondre 429 a la primera fitxa. Pendent, amb navegador.
-- **Hoka, Salomon, Inov8:** rebutgen les peticions simples. Pendents, amb navegador.
+- **Hoka:** acabar-ne la lectura un altre dia, a poc a poc (alçades dels d'asfalt, pes dels de muntanya, i els dos models que falten).
+- **Salomon d'asfalt** i **Inov8:** no s'han mirat.
 - **Triar els models:** «top models» és un criteri del titular. S'ha agafat la gamma vigent de running de cada marca, sense versions impermeables, amples ni col·laboracions; no és una tria.
 - **Mitjasola de Topo:** les pàgines l'anomenen, però no de manera que es pugui llegir sense interpretar; s'ha deixat sense dada.
 

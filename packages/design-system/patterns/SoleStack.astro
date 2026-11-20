@@ -1,0 +1,75 @@
+---
+import { buildShoeProfile, type ShoeSpecs, toPath } from '@tram/shoe-geometry';
+
+export interface StackedSole {
+  /** What the sole is found by: whatever chooses the two to show does it by this. */
+  id: string;
+  specs: ShoeSpecs;
+}
+
+export interface Props {
+  /** Every sole that may be shown. All are drawn, at the same scale and from the same heel and ground. */
+  soles: readonly StackedSole[];
+  /** The two shown as the page opens, by their `id`: the first with a full line, the second dashed. Left out, none is. */
+  shown?: readonly [string, string] | undefined;
+  /** Names the drawing. */
+  label: string;
+}
+
+const { soles, shown, label } = Astro.props;
+const profiles = soles.map((sole) => ({ id: sole.id, profile: buildShoeProfile(sole.specs) }));
+// One box for all: as long as the longest and as tall as the tallest, so a millimetre is the same in every sole.
+const length = Math.max(1, ...soles.map((sole) => sole.specs.lengthMm));
+const tall = Math.max(1, ...soles.map((sole) => Math.max(sole.specs.stackHeelMm, sole.specs.stackForefootMm) + (sole.specs.lugDepthMm ?? 0)));
+// Room around the soles: at the ends, over the tallest and, under the ground, for what a line as thick as it is takes.
+const [MARGIN, OVER, UNDER] = [10, 12, 10];
+const [width, height] = [Math.ceil(length) + MARGIN * 2, Math.ceil(tall) + OVER + UNDER];
+const sideOf = (id: string): 'a' | 'b' | undefined => (shown?.[0] === id ? 'a' : shown?.[1] === id ? 'b' : undefined);
+---
+
+<!--
+  Two soles over one another (M3, for any two of a catalogue): every sole of the catalogue is drawn here,
+  in the same box, from the same heel and the same ground, and all but two are hidden. Whatever chooses
+  shows a sole by taking its `hidden` away and telling it which of the two it is, `data-shoe="a"` or `"b"`:
+  the first is the full line, the second the dashed one, as in SpecDiff. Outlines only, so both are read.
+-->
+<svg class="stack" data-sole-stack viewBox={`${-MARGIN} ${-(height - UNDER)} ${width} ${height}`} role="img" aria-label={label}>
+  <line class="ground" x1={-MARGIN} x2={width - MARGIN} y1="0" y2="0"></line>
+  {
+    profiles.map(({ id, profile }) => (
+      <g class="sole" data-sole={id} data-shoe={sideOf(id)} hidden={!sideOf(id)}>
+        <path d={toPath([...profile.midsole])} />
+        <path d={toPath([...profile.insole])} />
+        <path d={toPath([...profile.outsole])} />
+        {profile.lugs.map((lug) => <path d={toPath(lug)} />)}
+      </g>
+    ))
+  }
+</svg>
+
+<style>
+  .stack {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    overflow: visible;
+  }
+
+  .ground {
+    stroke: var(--tram-sys-rule-strong);
+    stroke-width: var(--tram-sys-line-hairline);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .sole path {
+    fill: none;
+    stroke: var(--tram-sys-text);
+    stroke-width: var(--tram-sys-line-contour);
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .sole[data-shoe='b'] path {
+    stroke-dasharray: var(--tram-sys-space-2) var(--tram-sys-space-1);
+  }
+</style>

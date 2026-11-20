@@ -713,6 +713,100 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     expect(await overflow(page)).toBe(0);
   });
 
+  test('compares any two models of the catalogue: figure by figure, with the soles over one another and a warning where figures were not taken alike', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/comparar/');
+    const result = page.locator('[data-compare-result]');
+    // Nothing is compared until two are chosen.
+    await expect(result).toBeHidden();
+    await expect(page.locator('[data-status]')).toHaveText('Tria dos models.');
+    await page.getByLabel('Primer model').selectOption('puma/deviate-nitro-4');
+    await expect(page.locator('[data-status]')).toHaveText('Tria l’altre model.');
+    await page.getByLabel('Segon model').selectOption('scarpa/spin-race');
+    await expect(result).toBeVisible();
+    await expect(result.getByRole('heading', { level: 2 })).toHaveText('Puma Deviate Nitro 4 vs Scarpa Spin Race');
+    await expect(page).toHaveTitle(/^Puma Deviate Nitro 4 vs Scarpa Spin Race/);
+    // The pair is in the address as it reads.
+    expect(new URL(page.url()).search).toBe('?a=puma/deviate-nitro-4&b=scarpa/spin-race');
+    // The table: each figure of each model and the second less the first.
+    const row = (name: string) => result.getByRole('row', { name });
+    await expect(row('Pes')).toContainText(/250\sg.*215\sg.*−35\sg/);
+    await expect(row('Alçada al taló')).toContainText(/38\smm.*18\smm.*−20\smm/);
+    await expect(row('Drop')).toContainText(/8\smm.*4\smm.*−4\smm/);
+    // No difference is taken against a figure a maker does not state.
+    await expect(row('Profunditat dels tacs')).toContainText('no es pot comparar');
+    // Both makers state the two heights: the two soles are drawn, and no other.
+    await expect(page.locator('[data-sole]:not([hidden])')).toHaveCount(2);
+    await expect(page.locator('[data-sole="puma/deviate-nitro-4"]')).toHaveAttribute('data-shoe', 'a');
+    await expect(page.locator('[data-sole="scarpa/spin-race"]')).toHaveAttribute('data-shoe', 'b');
+    // Two makers: their heights are not measured alike, and the page says so. Both weights are of a size 42: no warning there.
+    await expect(page.locator('[data-caveat="height"]')).toBeVisible();
+    await expect(page.locator('[data-caveat="weight"]')).toBeHidden();
+    // A card to each of the two, the first first, with the way to its page and to its maker's.
+    const cards = page.locator('[data-card]:visible');
+    await expect(cards).toHaveCount(2);
+    await expect(cards.first()).toContainText('Deviate Nitro 4');
+    await expect(cards.first().getByRole('link', { name: 'La fitxa sencera' })).toHaveAttribute('href', '/ca/sabatilles/puma/deviate-nitro-4/');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    expect(await overflow(page)).toBe(0);
+    // The other way round, every difference changes its sign.
+    await page.getByRole('button', { name: 'Canvia’n l’ordre' }).click();
+    await expect(row('Pes')).toContainText(/215\sg.*250\sg.*\+35\sg/);
+    await expect(result.getByRole('heading', { level: 2 })).toHaveText('Scarpa Spin Race vs Puma Deviate Nitro 4');
+  });
+
+  test('a comparison opens from its address, and says what cannot be drawn or was not weighed alike', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    // A maker that states no height: its sole is not drawn, and none is guessed.
+    await open(page, '/ca/comparar/?a=nike/vaporfly-4&b=puma/deviate-nitro-4');
+    await expect(page.locator('[data-compare-result]')).toBeVisible();
+    await expect(page.getByLabel('Primer model')).toHaveValue('nike/vaporfly-4');
+    await expect(page.locator('[data-soles]')).toBeHidden();
+    await expect(page.locator('[data-soles-none]')).toContainText('La marca de Nike Vaporfly 4 no en declara les dues alçades.');
+    await expect(page.locator('[data-compare-result]').getByRole('row', { name: 'Alçada al taló' })).toContainText('no es pot comparar');
+    // One weighed at a men's 9, the other at a 42: the difference is given, with the warning.
+    await expect(page.locator('[data-compare-result]').getByRole('row', { name: 'Pes' })).toContainText(/190\sg.*250\sg.*\+60\sg/);
+    await expect(page.locator('[data-caveat="weight"]')).toContainText('Els dos pesos no es van prendre igual. Nike Vaporfly 4: aproximat, talla 9 d’home. Puma Deviate Nitro 4: talla 42.');
+    // A model that is not in the catalogue is not chosen, and the same model twice is not a pair.
+    await open(page, '/ca/comparar/?a=cap/model&b=puma/deviate-nitro-4');
+    await expect(page.locator('[data-compare-result]')).toBeHidden();
+    await expect(page.locator('[data-status]')).toHaveText('Tria l’altre model.');
+    await page.getByLabel('Primer model').selectOption('puma/deviate-nitro-4');
+    await expect(page.locator('[data-status]')).toHaveText('Tria dos models diferents.');
+    await expect(page.locator('[data-compare-result]')).toBeHidden();
+  });
+
+  test('two points picked on the map lead to their comparison, and a shoe’s page to the comparator with it chosen', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.shoes);
+    const maps = page.locator('[data-catalog-maps]');
+    const point = (id: string) => maps.locator(`[data-map-view="stack"] [data-point="${id}"]`);
+    // As the page opens, a point is a link and nothing is asked.
+    await expect(maps.locator('[data-pick]')).toBeHidden();
+    await expect(point('puma/deviate-nitro-4').locator('a')).not.toHaveAttribute('role', 'button');
+    await page.getByRole('radio', { name: 'Tria’n dos i compara' }).check({ force: true });
+    await expect(maps.locator('[data-pick-status]')).toHaveText('Toca dos punts del mapa.');
+    // Picking does not leave the page: the point is a button that is pressed.
+    await point('puma/deviate-nitro-4').locator('a').click({ force: true });
+    await expect(page).toHaveURL(/\/ca\/sabatilles\//);
+    await expect(point('puma/deviate-nitro-4').getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+    await expect(maps.locator('[data-pick-status]')).toHaveText('Puma Deviate Nitro 4. Toca’n un altre.');
+    await expect(maps.locator('[data-pick-go]')).toBeHidden();
+    await point('scarpa/spin-race').locator('a').click({ force: true });
+    await expect(maps.locator('[data-pick-status]')).toHaveText('Puma Deviate Nitro 4 i Scarpa Spin Race.');
+    // A third pick takes the place of the first.
+    await point('altra/timp-6').locator('a').click({ force: true });
+    await expect(maps.locator('[data-pick-status]')).toHaveText('Scarpa Spin Race i Altra Timp 6.');
+    await expect(point('puma/deviate-nitro-4')).not.toHaveAttribute('data-picked', '');
+    await maps.getByRole('link', { name: 'Compara’ls' }).click();
+    await expect(page.locator('[data-compare-result]').getByRole('heading', { level: 2 })).toHaveText('Scarpa Spin Race vs Altra Timp 6');
+    // From the page of a shoe, the comparator opens with it chosen.
+    await open(page, '/ca/sabatilles/puma/deviate-nitro-4/');
+    await page.locator('main [data-compare] a').click();
+    await expect(page.getByLabel('Primer model')).toHaveValue('puma/deviate-nitro-4');
+    await expect(page.locator('[data-status]')).toHaveText('Tria l’altre model.');
+  });
+
   test('a shoe of the catalogue gives its maker’s figures with a link to the maker’s page, and is told to no search engine', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await open(page, '/ca/sabatilles/nnormal/kjerag-02/');

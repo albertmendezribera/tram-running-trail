@@ -35,6 +35,7 @@ const rows = [...points].sort((a, b) => a.label.localeCompare(b.label, locale)).
   ground it is for. It is a drawing with no script: every point is a link, and says its name and its two
   figures when it is pointed at or reached with the keyboard. A point is as large on a phone as on a wide
   screen, so the drawing holds nothing that stretching would spoil. Its figures are in a table under it.
+  What is outside may hide a point (`hidden`) or mark it as picked (`data-picked`), on its `li`.
 -->
 <figure class="map" data-catalog-map>
   <div class="chart">
@@ -51,7 +52,7 @@ const rows = [...points].sort((a, b) => a.label.localeCompare(b.label, locale)).
       <ol class="points" aria-label={label}>
         {
           map.points.map((point) => (
-            <li class="point" data-point={point.id} data-edge={edgeOf(point.along, point.up) || undefined} style={`inset-inline-start: ${pct(point.along)}; inset-block-end: ${pct(point.up)}; --shift: ${point.place - (point.of - 1) / 2}`}>
+            <li class="point" data-point={point.id} data-label={point.label} data-edge={edgeOf(point.along, point.up) || undefined} style={`inset-inline-start: ${pct(point.along)}; inset-block-end: ${pct(point.up)}; --shift: ${point.place - (point.of - 1) / 2}`}>
               <a class="mark" href={point.href} data-kind={point.kind}>
                 <svg class="shape" viewBox="0 0 12 12" aria-hidden="true">{point.kind === 'trail' ? <path d="M6 1.2 11.2 10.4H0.8Z" /> : <circle cx="6" cy="6" r="4.4" />}</svg>
                 <span class="note">
@@ -193,7 +194,8 @@ const rows = [...points].sort((a, b) => a.label.localeCompare(b.label, locale)).
   }
 
   .point:hover,
-  .point:focus-within {
+  .point:focus-within,
+  .point[data-picked] {
     z-index: var(--tram-sys-layer-raised);
   }
 
@@ -234,9 +236,17 @@ const rows = [...points].sort((a, b) => a.label.localeCompare(b.label, locale)).
   }
 
   .mark:hover .shape,
-  .mark:focus-visible .shape {
+  .mark:focus-visible .shape,
+  [data-picked] .shape {
     fill: var(--tram-sys-data-active);
     stroke: var(--tram-sys-data-active-outline);
+  }
+
+  /* A picked point is larger too: it is told from the rest without its colour. */
+  [data-picked] .shape {
+    transform: scale(1.5);
+    transform-origin: center;
+    transform-box: fill-box;
   }
 
   /* The note of a point: read out always, shown when the point is pointed at or reached. */

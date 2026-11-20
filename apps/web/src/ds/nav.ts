@@ -26,6 +26,7 @@ export const GROUPS = [
       { href: '/ds/patterns/race-row/', title: 'RaceRow, TerrainTag i Facts' },
       { href: '/ds/patterns/site-chrome/', title: 'Capçalera i peu' },
       { href: '/ds/patterns/shoe-xray/', title: 'ShoeXray' },
+      { href: '/ds/patterns/sole-stack/', title: 'SoleStack' },
       { href: '/ds/patterns/shoe-sheet/', title: 'Fitxa de sabatilla' },
     ],
   },

@@ -18,7 +18,9 @@ Calendari (Fase 2).
 
 Catàleg de sabatilles (Fase 3).
 
-- `CatalogMap` (patró nou, amb fitxa; el «mapa del catàleg» de 9.3): moltes coses situades per dues mesures, amb una forma per terreny. Cada punt és un enllaç que diu el nom i les dues xifres; les xifres són també en una taula. Sense script, i dibuix propi en lloc d'ECharts per decisió del titular (`docs/F3-estat.md`).
+- `CatalogMap` (patró nou, amb fitxa; el «mapa del catàleg» de 9.3): moltes coses situades per dues mesures, amb una forma per terreny. Cada punt és un enllaç que diu el nom i les dues xifres; les xifres són també en una taula. Sense script, i dibuix propi en lloc d'ECharts per decisió del titular (`docs/F3-estat.md`). Un punt es pot marcar com a triat des de fora (`data-picked`).
+- `SoleStack` (patró nou, amb fitxa): les soles de tot un catàleg dibuixades a la mateixa escala i des del mateix taló, de les quals se'n mostren dues, superposades. Per comparar dos models qualssevol sense una pàgina per parella.
+- `SpecDiff`: propietat `fillable` i `key` a cada fila. Amb `fillable` la taula es dibuixa de manera que un script la pot omplir amb una altra parella (`fillSpecDiff`, a `spec-diff.ts`), sense dibuixar res. El càlcul de la diferència passa a `spec-diff.ts`, amb proves, i és el mateix al servidor i al navegador.
 
 Moments firma M1 i M6.
 

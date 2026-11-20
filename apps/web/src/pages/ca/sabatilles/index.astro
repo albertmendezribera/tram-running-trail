@@ -43,6 +43,7 @@ const makers = [...new Set(catalog.map((shoe) => shoe.brand.name))].sort((a, b) 
             <Text measure>
               {`${catalog.length} models de ${makers.length} marques, cadascun amb el que la seva marca declara al seu web: pes, alçades, drop i tacs. No són mesures nostres ni de cap laboratori, i el que una marca no diu queda sense dada. Primer el mapa; a sota, la llista marca a marca, on la sola es dibuixa només quan la marca declara les dues alçades.`}
             </Text>
+            <div><Button variant="secondary" href="/ca/comparar/">Compara dos models</Button></div>
             <CatalogFilter shoes={catalog} />
             <CatalogMaps shoes={catalog} />
             <div data-catalog-list>

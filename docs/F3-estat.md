@@ -10,6 +10,7 @@
 | Fitxa d'un model del catàleg | `/ca/sabatilles/<marca>/<model>/` | Feta: les xifres que declara la marca, la radiografia quan declara les dues alçades, la nota quan la pàgina es contradiu, i l'enllaç a la pàgina del model |
 | Mapa del catàleg | `/ca/sabatilles/`, sobre la llista | Fet: dos mapes, «pes i alçada al taló» (67 models) i «pes i drop» (132), amb una forma per terreny. Cada punt és un enllaç a la fitxa; les xifres, també en una taula |
 | Filtres | `/ca/sabatilles/` | Fets: per marca i per terreny. Amaguen files de la llista i punts dels mapes alhora, i queden a l'adreça (`?marca=puma&terreny=trail`) |
+| Comparador del catàleg | `/ca/comparar/?a=<marca>/<model>&b=<marca>/<model>` | Fet: dos models qualssevol, xifra a xifra amb la diferència, les soles superposades quan les dues marques declaren les alçades, i una targeta per model. S'hi arriba triant dos punts al mapa, des de cada fitxa o amb els dos desplegables |
 | Dades | `apps/web/src/content/shoe-catalog.json` | Un registre per model, amb l'adreça d'on s'ha llegit cada xifra i el dia de la consulta (`accessed`) |
 
 | Marca | Models | Què declara a la fitxa |
@@ -71,9 +72,26 @@ El tema d'ECharts que genera el sistema continua sense cap gràfic que el faci s
 
 **Què situa el mapa i què no:** un model hi surt només si la seva marca declara les dues mesures. El pes és el de la talla que pesa cada marca i l'alçada es mesura diferent a cada casa: el mapa situa, no compara al mil·límetre, i ho diu.
 
+## El comparador: una pàgina per a totes les parelles
+
+CLAUDE.md 3 preveu `/ca/comparar/[a]-vs-[b]/`, amb les parelles populars generades i la resta sota demanda. **El lloc encara és estàtic** (l'adaptador de Cloudflare no hi és), i 161 models són 12.880 parelles: massa pàgines per generar-les totes, i sense dades per saber quines són les populars. Decisió presa en fer-lo (2026-11-20), a revisar quan hi hagi servidor:
+
+- **Una sola pàgina, `/ca/comparar/`**, amb la parella a l'adreça (`?a=puma/deviate-nitro-4&b=scarpa/spin-race`). Porta la taula dibuixada una vegada, totes les soles i una targeta per model; una illa mostra els dos triats i omple la taula. No es demana res a cap servidor.
+- **Què s'hi perd:** sense JavaScript no hi ha comparació (la pàgina ho diu), i la taula d'una parella no és a l'HTML de cap adreça, cosa que CLAUDE.md 8.2 demana per al SEO. El catàleg és només a staging i fora dels cercadors, de manera que avui no costa res; **abans de producció, les comparacions han de passar a `a-vs-b` sota demanda.**
+- **Les dues sabatilles de laboratori** conserven la seva pàgina pròpia, amb el 3D i la radiografia amb cotes. No entren en aquest comparador: les seves mesures són d'una altra mena.
+
+**Què compara i com ho diu:**
+
+- Només el que declara cada marca. On una no diu una xifra, no es pren cap diferència («no es pot comparar»).
+- **Pesos de talles diferents:** la diferència es dona, amb un avís que diu de quina talla és cada pes.
+- **Alçades de marques diferents:** la diferència es dona, amb l'avís que cada marca mesura l'alçada a la seva manera.
+- **Soles superposades** només si les dues marques declaren les dues alçades; si no, la pàgina diu quina no ho fa i no en dibuixa cap d'estimada. Són contorns (contínua la primera, de traços la segona), a la mateixa escala i alineades al taló i a terra.
+
+Peces noves al sistema de disseny: `SoleStack` i `SpecDiff` amb `fillable` (vegeu el CHANGELOG).
+
 ## Què no s'ha fet
 
-- **Triar dos punts del mapa i comparar-los** (CLAUDE.md 9.3): el mapa porta a la fitxa, però no compara. Depèn del comparador, que és el punt següent.
-- **Comparador:** només compara les dues sabatilles de laboratori. Comparar models del catàleg entre marques demana decidir què es fa amb alçades que no es mesuren igual.
+- **Triar models des de la llista** per comparar-los: es pot des del mapa, des de cada fitxa i al comparador mateix, però les files de la llista no tenen cap casella.
+- **Tres models alhora** (CLAUDE.md 8.2 en preveu «dues o tres»): el comparador en compara dos.
 - **Producció:** el catàleg només és a staging. Els noms de marca continuen pendents de revisió legal, com a la Fase 1.
 - **Cap xifra s'ha contrastat** amb una segona font ni amb una segona lectura: és el que deia la pàgina de la marca el dia de la consulta, llegit una vegada.

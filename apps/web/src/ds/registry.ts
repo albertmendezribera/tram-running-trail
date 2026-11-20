@@ -21,6 +21,7 @@ import SearchFieldFiche from './fiches/SearchFieldFiche.astro';
 import SelectFiche from './fiches/SelectFiche.astro';
 import ShoeSheetFiche from './fiches/ShoeSheetFiche.astro';
 import ShoeXrayFiche from './fiches/ShoeXrayFiche.astro';
+import SoleStackFiche from './fiches/SoleStackFiche.astro';
 import SiteChromeFiche from './fiches/SiteChromeFiche.astro';
 import StatBlockFiche from './fiches/StatBlockFiche.astro';
 import TextFiche from './fiches/TextFiche.astro';
@@ -48,6 +49,7 @@ export const FICHES = [
   { slug: 'patterns/race-row', title: 'RaceRow, TerrainTag i Facts', Page: RaceRowFiche },
   { slug: 'patterns/site-chrome', title: 'Capçalera i peu', Page: SiteChromeFiche },
   { slug: 'patterns/shoe-xray', title: 'ShoeXray', Page: ShoeXrayFiche },
+  { slug: 'patterns/sole-stack', title: 'SoleStack', Page: SoleStackFiche },
   { slug: 'patterns/shoe-sheet', title: 'Fitxa de sabatilla', Page: ShoeSheetFiche },
   { slug: 'interactive/segmented-control', title: 'SegmentedControl', Page: SegmentedFiche },
   { slug: 'interactive/search-field', title: 'SearchField', Page: SearchFieldFiche },

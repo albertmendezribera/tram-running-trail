@@ -1,0 +1,135 @@
+---
+import Select from '@tram/design-system/interactive/Select.astro';
+import Facts from '@tram/design-system/patterns/Facts.astro';
+import SoleStack from '@tram/design-system/patterns/SoleStack.astro';
+import SpecDiff from '@tram/design-system/patterns/SpecDiff.astro';
+import TerrainTag from '@tram/design-system/patterns/TerrainTag.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Grid from '@tram/design-system/primitives/Grid.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { type CatalogShoe, catalogId, catalogName, catalogPath, drawable } from '../content/shoe-catalog';
+
+export interface Props {
+  /** Every shoe of the catalogue: any two of them can be compared. */
+  shoes: readonly CatalogShoe[];
+}
+
+const { shoes } = Astro.props;
+const sorted = [...shoes].sort((a, b) => catalogName(a).localeCompare(catalogName(b), 'ca'));
+const options = [{ value: '', label: 'Tria un model' }, ...sorted.map((shoe) => ({ value: catalogId(shoe), label: catalogName(shoe) }))];
+const PLATE = { none: 'Sense placa', carbon: 'Placa de carboni', nylon: 'Placa de niló', pebax: 'Placa de Pebax', rock_plate: 'Placa de protecció' } as const;
+// What the island compares, by the address of each shoe: its name, its maker, the figures of the table, the size its weight is of, and whether its sole is drawn.
+const index = Object.fromEntries(
+  sorted.map((shoe) => [catalogId(shoe), { name: catalogName(shoe), maker: shoe.brand.name, weight: shoe.weightG, size: shoe.weightRef, heel: shoe.stackHeelMm, forefoot: shoe.stackForefootMm, drop: shoe.dropMm, lugs: shoe.lugDepthMm, drawn: drawable(shoe) !== null }]),
+);
+const soles = sorted.flatMap((shoe) => {
+  const specs = drawable(shoe);
+  return specs ? [{ id: catalogId(shoe), specs }] : [];
+});
+const rows = [
+  { key: 'weight', label: 'Pes', unit: 'g', a: null, b: null },
+  { key: 'heel', label: 'Alçada al taló', unit: 'mm', a: null, b: null },
+  { key: 'forefoot', label: 'Alçada a l’avantpeu', unit: 'mm', a: null, b: null },
+  { key: 'drop', label: 'Drop', unit: 'mm', a: null, b: null },
+  { key: 'lugs', label: 'Profunditat dels tacs', unit: 'mm', a: null, b: null },
+] as const;
+---
+
+<!--
+  Any two shoes of the catalogue, compared. The site is static and the pairs are thousands, so there is
+  no page to a pair: this one holds every shoe (the table drawn once, every sole, a card to each shoe)
+  and an island shows the two that are chosen and fills the table with their figures. The pair is in
+  the address, so a comparison can be linked to. Only what the makers state is compared, and where two
+  figures were not taken alike the page says so.
+-->
+<div data-catalog-compare>
+  <script type="application/json" set:html={JSON.stringify(index)} />
+  <form class="choice" data-compare-choice>
+    <Stack gap={3}>
+      <Cluster gap={4} align="end">
+        <Select name="a" label="Primer model" options={options} value="" />
+        <Select name="b" label="Segon model" options={options} value="" />
+        <Button type="button" variant="quiet"><span data-swap>Canvia’n l’ordre</span></Button>
+      </Cluster>
+      <Text size="sm" tone="muted"><span data-status role="status">Tria dos models.</span></Text>
+    </Stack>
+  </form>
+  <noscript><Text>El comparador munta la comparació al navegador i necessita JavaScript. Sense, cada model té la seva fitxa al catàleg.</Text></noscript>
+</div>
+
+<Band tone="tint" title="La comparació">
+  <div data-compare-result hidden>
+    <Stack gap={6}>
+      <Heading level={2} size="md"><span data-pair></span></Heading>
+      <Panel title="Soles superposades">
+        <Stack gap={3}>
+          <div data-soles><SoleStack soles={soles} label="Les soles dels dos models, superposades" /></div>
+          <div data-soles-none hidden><Text measure><span data-soles-why></span> Sense les dues alçades el perfil no es pot dibuixar, i no en dibuixem cap d'estimat.</Text></div>
+          <Text size="sm" tone="muted" measure>
+            Cada sola es dibuixa amb les dues alçades que declara la seva marca, sobre la llargada nominal d'una talla 9 d'home (27 cm), i s'alineen al taló i a terra. La resta del perfil és neutra, igual per a totes dues. La primera és la línia contínua; la segona, la de traços.
+          </Text>
+        </Stack>
+      </Panel>
+      <Panel title="Diferències">
+        <Stack gap={4}>
+          <SpecDiff fillable caption="El que declara cada marca" a="Primer model" b="Segon model" rows={rows} />
+          <div data-caveat="weight" hidden><Text size="sm" measure><span data-caveat-text></span></Text></div>
+          <div data-caveat="height" hidden><Text size="sm" measure>Són de marques diferents, i cada marca mesura l'alçada a la seva manera: la diferència d'alçades situa, no és de mil·límetre.</Text></div>
+          <Text size="sm" tone="muted" measure>Les xifres són les que cada marca declara al seu web. On una no en diu cap, no hi ha diferència a prendre.</Text>
+        </Stack>
+      </Panel>
+      <Grid min="lg" gap={6}>
+        {
+          sorted.map((shoe) => (
+            <div data-card={catalogId(shoe)} hidden>
+              <Panel>
+                <Stack gap={4}>
+                  <Heading level={3} size="sm" kicker={shoe.brand.name}>{shoe.model}</Heading>
+                  <Cluster><TerrainTag terrain={shoe.terrain} /></Cluster>
+                  <Facts
+                    facts={[
+                      { label: 'El pes és de', value: shoe.weightG === null ? null : shoe.weightRef },
+                      { label: 'Placa', value: shoe.plate === null ? null : PLATE[shoe.plate] },
+                      { label: 'Mitjasola', value: shoe.midsole },
+                      { label: 'Sola', value: shoe.outsole },
+                    ]}
+                  />
+                  {shoe.note && <Text size="sm" measure>{shoe.note}</Text>}
+                  <Stack gap={2}>
+                    <Link href={catalogPath(shoe)} variant="standalone">La fitxa sencera</Link>
+                    <Link href={shoe.url} variant="standalone">{`Al web de ${shoe.brand.name}`}</Link>
+                  </Stack>
+                </Stack>
+              </Panel>
+            </div>
+          ))
+        }
+      </Grid>
+    </Stack>
+  </div>
+  <div data-compare-prompt>
+    <Panel><Text measure>Tria dos models a dalt, o tria'ls al mapa del catàleg. La comparació queda a l'adreça, i es pot enllaçar.</Text></Panel>
+  </div>
+</Band>
+
+<script>
+  import '../islands/catalog-compare.ts';
+</script>
+
+<style>
+  /* Until the island is ready, and without JavaScript, there is nothing to choose with: the fields keep their place and are not shown. */
+  .choice:not([data-ready]) {
+    visibility: hidden;
+  }
+
+  /* The first model first, whatever the order the cards are in. */
+  [data-card][data-side='b'] {
+    order: 1;
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { CATALOG_NOTICE, catalogShoes } from '../../../content/shoe-catalog';
+import Site from '../../../layouts/Site.astro';
+import CatalogCompare from '../../../sections/CatalogCompare.astro';
+
+const catalog = catalogShoes();
+---
+
+<!-- The comparator of the catalogue: one page for every pair, since the site is static (docs/F3-estat.md). The two shoes of Phase 1, measured in a lab, have a page of their own. -->
+<Site
+  title="Comparador de sabatilles"
+  trail={[{ label: 'Sabatilles', href: '/ca/sabatilles/' }]}
+  description="Dos models del catàleg, cara a cara: el que declara cada marca, la diferència xifra a xifra i les soles superposades."
+  placeholder
+  notice={CATALOG_NOTICE}
+>
+  <Stack gap={4}>
+    <Heading level={1} size="lg" kicker="Comparador">Dos models, cara a cara</Heading>
+    <Text size="lg" measure>Tria dos models del catàleg i els veuràs xifra a xifra, amb la diferència, i amb les soles superposades quan les dues marques declaren les alçades. Només es compara el que les marques diuen; on dues xifres no es van prendre igual, s'avisa.</Text>
+  </Stack>
+  {catalog.length > 0 ? <CatalogCompare shoes={catalog} /> : <Text tone="muted">Encara no hi ha cap sabatilla publicada per comparar.</Text>}
+</Site>

@@ -11,7 +11,7 @@ import Link from '@tram/design-system/primitives/Link.astro';
 import Panel from '@tram/design-system/primitives/Panel.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
-import { CATALOG_NOTICE, type CatalogShoe, catalogName, catalogPath, catalogShoes, drawable } from '../content/shoe-catalog';
+import { CATALOG_NOTICE, type CatalogShoe, catalogId, catalogName, catalogPath, catalogShoes, drawable } from '../content/shoe-catalog';
 import Site from '../layouts/Site.astro';
 
 export interface Props {
@@ -89,6 +89,7 @@ const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.bran
           {`${known} de ${facts.length} dades, totes de la pàgina del model al web de ${shoe.brand.name}, consultada el ${formatDate(shoe.accessed, 'ca')}.`}
         </Text>
         <div data-source><Link href={shoe.url} variant="standalone">{`${name} al web de ${shoe.brand.name}`}</Link></div>
+        <div data-compare><Link href={`/ca/comparar/?a=${catalogId(shoe)}`} variant="standalone">Compara-la amb un altre model</Link></div>
       </Stack>
     </Panel>
   </Band>

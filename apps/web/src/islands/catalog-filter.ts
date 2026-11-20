@@ -1,4 +1,4 @@
-// The filters of the catalogue of shoes and the choice of its map. The list and both maps are already in
+// The filters of the catalogue of shoes, the choice of its map and the picking of two points to compare. The list and both maps are already in
 // the page: the filters hide the rows and the points the choices leave out, and the choice of map shows
 // one map at a time. Nothing is fetched. What is chosen is kept in the address, so it can be linked to.
 const CHOICES = ['marca', 'terreny'] as const;
@@ -77,5 +77,54 @@ for (const maps of document.querySelectorAll<HTMLElement>('[data-catalog-maps]')
       show(radio.value);
       remember(MAP, radio.value === first ? '' : radio.value);
     });
+
+  // What a point does when it is touched: it leads to its shoe, or it is picked, one of the two to compare.
+  // Picked, a point is a button that is pressed, on both maps at once; a third pick takes the place of the first.
+  const picks: string[] = [];
+  const panel = maps.querySelector<HTMLElement>('[data-pick]');
+  const note = maps.querySelector<HTMLElement>('[data-pick-status]');
+  const go = maps.querySelector<HTMLElement>('[data-pick-go]');
+  const modes = [...maps.querySelectorAll<HTMLInputElement>('input[name="punt"]')];
+  const picking = (): boolean => modes.some((mode) => mode.checked && mode.value === 'pick');
+  const nameOf = (id: string): string => maps.querySelector<HTMLElement>(`[data-point="${CSS.escape(id)}"]`)?.dataset['label'] ?? id;
+  const tell = (): void => {
+    for (const point of maps.querySelectorAll<HTMLElement>('[data-point]')) {
+      const picked = picks.includes(point.dataset['point']!);
+      point.toggleAttribute('data-picked', picked);
+      const mark = point.querySelector('a');
+      if (!mark) continue;
+      if (picking()) {
+        mark.setAttribute('role', 'button');
+        mark.setAttribute('aria-pressed', String(picked));
+      } else {
+        mark.removeAttribute('role');
+        mark.removeAttribute('aria-pressed');
+      }
+    }
+    if (panel) panel.hidden = !picking();
+    if (note) note.textContent = picks.length === 2 ? `${nameOf(picks[0]!)} i ${nameOf(picks[1]!)}.` : picks.length === 1 ? `${nameOf(picks[0]!)}. Toca’n un altre.` : 'Toca dos punts del mapa.';
+    if (go) {
+      go.hidden = picks.length < 2;
+      go.querySelector('a')?.setAttribute('href', `/ca/comparar/?a=${picks[0] ?? ''}&b=${picks[1] ?? ''}`);
+    }
+  };
+  for (const mode of modes)
+    mode.addEventListener('change', () => {
+      if (!picking()) picks.length = 0;
+      tell();
+    });
+  maps.addEventListener('click', (event) => {
+    const point = (event.target as Element).closest<HTMLElement>('[data-point]');
+    if (!point || !picking() || !(event.target as Element).closest('a')) return;
+    event.preventDefault();
+    const id = point.dataset['point']!;
+    if (picks.includes(id)) picks.splice(picks.indexOf(id), 1);
+    else {
+      if (picks.length === 2) picks.shift();
+      picks.push(id);
+    }
+    tell();
+  });
+  tell();
   maps.dataset['ready'] = '';
 }

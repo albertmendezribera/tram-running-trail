@@ -21,6 +21,7 @@ const PAGES = {
   'race-row': '/ds/patterns/race-row/',
   'site-chrome': '/ds/patterns/site-chrome/',
   'shoe-xray': '/ds/patterns/shoe-xray/',
+  'sole-stack': '/ds/patterns/sole-stack/',
   'shoe-sheet': '/ds/patterns/shoe-sheet/',
   'segmented-control': '/ds/interactive/segmented-control/',
   'search-field': '/ds/interactive/search-field/',

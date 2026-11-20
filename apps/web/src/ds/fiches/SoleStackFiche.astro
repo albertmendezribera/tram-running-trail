@@ -1,0 +1,50 @@
+---
+import SoleStack from '@tram/design-system/patterns/SoleStack.astro';
+import type { ShoeSpecs } from '@tram/shoe-geometry';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+// Made-up soles: only the two heights and the lugs change, as in a catalogue of what makers state.
+const sole = (stackHeelMm: number, stackForefootMm: number, lugDepthMm: number | null = null): ShoeSpecs => ({
+  lengthMm: 270,
+  stackHeelMm,
+  stackForefootMm,
+  outsoleThicknessMm: null,
+  insoleThicknessMm: null,
+  plate: 'none',
+  lugDepthMm,
+  rockerApexPct: null,
+  toeSpringDeg: null,
+  heelBevelDeg: null,
+  toeboxHeightMm: null,
+});
+const soles = [
+  { id: 'alta', specs: sole(42, 34) },
+  { id: 'baixa', specs: sole(24, 20, 5) },
+  { id: 'plana', specs: sole(28, 28) },
+];
+const code = `<SoleStack soles={[{ id: 'marca/model', specs }, …]} shown={['marca/model', 'marca/altre']} label="Les soles dels dos models, superposades" />
+
+// Qui tria les mostra: treu \`hidden\` a dues i els diu quina és cadascuna.
+sole.removeAttribute('hidden'); sole.setAttribute('data-shoe', 'a');`;
+---
+
+<Fiche
+  group="Patró"
+  title="SoleStack"
+  use="Superposar les soles de dos models qualssevol d'un catàleg (M3), quan no hi ha una pàgina per parella: s'hi dibuixen totes, a la mateixa escala i des del mateix taló i el mateix terra, i se'n mostren dues. La primera és la línia contínua; la segona, la de traços, com a SpecDiff."
+  avoid="Una parella fixa, que té ShoeXray amb les seves cotes. Tampoc porta noms ni xifres: va sempre amb la taula de diferències que els diu."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Dues de tres</h2>
+    <p class="fiche-note">Soles inventades. N'hi ha tres de dibuixades i se'n mostren dues: la més alta, contínua, i la més baixa, amb tacs, de traços. Només contorns, perquè es llegeixin totes dues on se solapen.</p>
+    <div data-testid="stack"><SoleStack soles={soles} shown={['alta', 'baixa']} label="Dues soles inventades, superposades" /></div>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">{MODES.map((m) => <Mode {...m}><SoleStack soles={soles} shown={['plana', 'alta']} label={`Dues soles, ${m.theme} i ${m.terrain}`} /></Mode>)}</div>
+  </section>
+</Fiche>

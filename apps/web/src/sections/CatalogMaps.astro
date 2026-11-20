@@ -2,6 +2,8 @@
 import SegmentedControl from '@tram/design-system/interactive/SegmentedControl.astro';
 import CatalogMap from '@tram/design-system/patterns/CatalogMap.astro';
 import type { MapPoint } from '@tram/design-system/patterns/catalog-map.ts';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
 import Heading from '@tram/design-system/primitives/Heading.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
@@ -29,10 +31,32 @@ const views = [
   The map of the catalogue (CLAUDE.md 9.3): the shoes placed by weight and by height, and by weight and by
   drop, which many more makers state. Both maps are in the page; an island shows one at a time, and without
   it they follow one another. The filters of the catalogue hide points on them as they hide rows in the list.
+  A point is a link to its shoe; the island can make it a choice instead, and two chosen lead to the comparator.
 -->
 <div class="maps" data-catalog-maps>
   <Stack gap={5}>
-    <div class="choice"><SegmentedControl name="mapa" legend="Què es posa al mapa" options={views.map((view) => ({ value: view.key, label: view.choice }))} value="stack" /></div>
+    <div class="choice">
+      <Stack gap={3}>
+        <Cluster gap={4} align="center">
+          <SegmentedControl name="mapa" legend="Què es posa al mapa" options={views.map((view) => ({ value: view.key, label: view.choice }))} value="stack" />
+          <SegmentedControl
+            name="punt"
+            legend="Què fa un punt en tocar-lo"
+            options={[
+              { value: 'open', label: 'Obre la fitxa' },
+              { value: 'pick', label: 'Tria’n dos i compara' },
+            ]}
+            value="open"
+          />
+        </Cluster>
+        <div data-pick hidden>
+          <Cluster gap={4} align="center">
+            <Text size="sm"><span data-pick-status role="status">Toca dos punts del mapa.</span></Text>
+            <div data-pick-go hidden><Button variant="primary" size="sm" href="/ca/comparar/">Compara’ls</Button></div>
+          </Cluster>
+        </div>
+      </Stack>
+    </div>
     {
       views.map((view) => (
         <section data-map-view={view.key}>

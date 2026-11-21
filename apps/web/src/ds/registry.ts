@@ -6,6 +6,7 @@ import ClimbFiche from './fiches/ClimbFiche.astro';
 import DataTableFiche from './fiches/DataTableFiche.astro';
 import ElevationFiche from './fiches/ElevationFiche.astro';
 import Foundations from './fiches/Foundations.astro';
+import GameStageFiche from './fiches/GameStageFiche.astro';
 import Index from './fiches/Index.astro';
 import LayoutFiche from './fiches/LayoutFiche.astro';
 import MediaFiche from './fiches/MediaFiche.astro';
@@ -56,6 +57,7 @@ export const FICHES = [
   { slug: 'interactive/select', title: 'Select', Page: SelectFiche },
   { slug: 'interactive/theme-toggle', title: 'ThemeToggle', Page: ThemeToggleFiche },
   { slug: 'interactive/viewer-3d-shell', title: 'Viewer3DShell', Page: ViewerFiche },
+  { slug: 'interactive/game-stage', title: 'GameStage', Page: GameStageFiche },
   { slug: 'moments/de-la-quadricula-a-la-corba', title: 'M1 · De la quadrícula a la corba de nivell', Page: MomentM1 },
   { slug: 'moments/recorrer-el-tram', title: 'M2 · Recórrer el tram', Page: MomentM2 },
 ];

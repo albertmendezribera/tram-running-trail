@@ -8,6 +8,7 @@
     "build": "astro build",
     "build:ds": "TRAM_DS=1 astro build",
     "deploy:staging": "sh scripts/deploy-staging.sh",
+    "sync-world": "sh scripts/sync-palamos-world.sh",
     "preview": "astro preview",
     "typecheck": "astro check",
     "test": "node --test \"scripts/*.test.mjs\"",

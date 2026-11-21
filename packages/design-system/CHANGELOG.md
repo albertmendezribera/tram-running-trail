@@ -4,6 +4,11 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Palamós a peu.
+
+- `GameStage` (interactiu nou, amb fitxa): un programa sencer que viu en una adreça de la web i pesa molt (un joc, un simulador). Mostra un pòster i un botó per manera de començar, amb el pes dit al costat; no en demana res fins que es prem un botó. Llavors l'obre en un marc sobre el pòster, amb «Pantalla completa», on el navegador en té, i «Tanca», que retira el marc. Abans d'obrir-lo demana un fitxer petit (`probe`) i, si la web no porta el programa, ho diu. Element `tram-game-stage`; el programa pot dir `ready` o `error` amb `postMessage`. Dins del programa, Esc torna el focus a la barra. No hi ha «abans»: és nou.
+- `SiteHeader`: quan un enllaç del menú porta a una pàgina de dins de la secció d'un altre, només es marca el més proper (l'adreça més llarga que conté la pàgina). Cap pàgina d'abans canvia.
+
 Calendari (Fase 2).
 
 - `RaceRow`: propietat `compact`, per a llistes llargues, i `gainM` opcional (sense, la fila no reserva lloc per al desnivell).

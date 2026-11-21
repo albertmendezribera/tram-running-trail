@@ -15,7 +15,7 @@ exec docker run --rm --platform linux/amd64 \
     set -e
     mkdir /work
     cd /source
-    tar --exclude=node_modules --exclude=.astro --exclude=apps/web/dist --exclude=.git -cf - . | tar -xf - -C /work
+    tar --exclude=node_modules --exclude=.astro --exclude=apps/web/dist --exclude=apps/web/public/mon --exclude=.git -cf - . | tar -xf - -C /work
     cd /work
     corepack enable
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0

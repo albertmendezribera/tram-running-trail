@@ -9,6 +9,7 @@ import { ICGC_CREDIT, ROUTES, visible } from '../../../content';
 import Site from '../../../layouts/Site.astro';
 import { ogOf } from '../../../og/cards';
 import RouteExperience from '../../../sections/RouteExperience.astro';
+import RouteOnFoot from '../../../sections/RouteOnFoot.astro';
 import RouteShare from '../../../sections/RouteShare.astro';
 import RouteSheet from '../../../sections/RouteSheet.astro';
 
@@ -27,6 +28,7 @@ const sentences = describeRoute(route.profile);
     <Text size="lg" measure>{[sentences[0], route.origin, 'Fes scroll per recórrer-la, o salta directament al full de resultats.'].filter(Boolean).join(' ')}</Text>
   </Stack>
   <RouteExperience route={route} transition={`profile-route-${route.slug}`} />
+  <RouteOnFoot route={route} />
   <RouteSheet route={route} />
   <RouteShare path={`rutes/${route.slug}`} name={route.name} />
 </Site>

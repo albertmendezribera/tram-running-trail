@@ -11,6 +11,39 @@ import silsPlate from './routes/sils/plate.json';
 
 export type Terrain = 'road' | 'trail' | 'mixed';
 
+/**
+ * A route that can be run on foot inside a 3D model of its town: «Palamós a peu». The model is a program
+ * of its own (a Godot web export built in another repository, `palamos-open-world`), not kept in this
+ * one: `scripts/sync-palamos-world.sh` copies it into the site where it is at hand, and a build without
+ * it says so on the page. What is said of it here is what its own pipeline counts (its README).
+ */
+export interface OnFoot {
+  /** The page it is played on. */
+  href: string;
+  /** Where the site serves the program, with the slash at the end. */
+  program: string;
+  /** The `source` of the messages the program posts to the page that frames it. */
+  channel: string;
+  /** What a visitor downloads to play, in MB: the total the sync script prints. Told before anything is asked for. */
+  weightMb: number;
+  /** Kilometres of the route, the figure the game's own screen gives: the length of the recorded track. */
+  routeKm: number;
+  /** Houses raised from their plan to the height the LiDAR gives each. */
+  houses: number;
+  /** Tree crowns the LiDAR finds outside the houses. */
+  trees: number;
+  /** The years of the LiDAR flight. */
+  lidarYears: string;
+  /** Mesh of the elevation model the ground is made of, in metres. */
+  demM: number;
+  /** Seconds per kilometre the runner of the game runs the route at: a setting of the game, not the pace of the outing. */
+  paceS: number;
+  /** Where a visitor who walks freely starts. */
+  start: string;
+  /** What its poster shows (a capture taken inside the game), in words. */
+  posterAlt: string;
+}
+
 export interface Route {
   slug: string;
   name: string;
@@ -29,6 +62,8 @@ export interface Route {
    * average pace of the page come from. Only where whoever ran it has said it may be told; absent otherwise.
    */
   timeS?: number;
+  /** Present when the route can be run on foot inside its town in 3D. */
+  onFoot?: OnFoot;
   isPlaceholder: boolean;
 }
 
@@ -58,9 +93,39 @@ export interface Race {
 
 const GPX_CREDIT = 'Recorregut: GPX d’una sortida real. Se’n publiquen el traçat, la distància, l’altitud i el temps total amb el ritme mitjà; ni el dia, ni l’hora, ni les pulsacions.';
 
+/** «A peu» is on trial: shown in development and in the test environment, like the sample data, and left out of a production build. */
+const ON_FOOT_SHOWN = import.meta.env.DEV || process.env['TRAM_DS'] === '1';
+
 export const ROUTES: Route[] = [
   { slug: 'calonge', name: 'Calonge', place: 'Calonge, Baix Empordà', profile: CALONGE, plate: calongePlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, origin: 'Gravada a la Marxa de les Tines.', timeS: 4995, isPlaceholder: false },
-  { slug: 'palamos', name: 'Palamós', place: 'Palamós, Baix Empordà', profile: PALAMOS, plate: palamosPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, timeS: 3533, isPlaceholder: false },
+  {
+    slug: 'palamos',
+    name: 'Palamós',
+    place: 'Palamós, Baix Empordà',
+    profile: PALAMOS,
+    plate: palamosPlate as unknown as Plate,
+    source: 'gpx',
+    credit: GPX_CREDIT,
+    timeS: 3533,
+    // Only where the site is tried out (the test environment and a developer's machine), until it is decided that it goes to production.
+    ...(ON_FOOT_SHOWN && {
+      onFoot: {
+        href: '/ca/rutes/palamos/a-peu/',
+        program: '/mon/palamos/',
+        channel: 'tram-palamos',
+        weightMb: 52,
+        routeKm: 10.2,
+        houses: 5441,
+        trees: 11917,
+        lidarYears: '2021-2023',
+        demM: 5,
+        paceS: 300,
+        start: 'Passeig del Mar',
+        posterAlt: 'Vista aèria del Palamós en 3D: la platja Gran, el passeig amb les seves fileres d’arbres i les cases del poble',
+      },
+    }),
+    isPlaceholder: false,
+  },
   {
     slug: 'riera-de-santa-coloma',
     name: 'Riera de Santa Coloma',
@@ -116,5 +181,8 @@ export const ICGC_CREDIT = 'Ortofoto i model d’elevacions: © Institut Cartogr
 /** What the view from the ground adds, and how much of it is data. */
 export const WORLD_NOTE =
   'A peu: edificis, vials pavimentats i topònims del mapa de l’ICGC; cada casa amb les seves plantes i el seu ús, del Cadastre (© Dirección General del Catastro, consultat el novembre de 2026), amb l’alçada comptada a tres metres per planta; bars, comerços i escultures, d’OpenStreetMap (© col·laboradors d’OpenStreetMap, ODbL); arbres segons el LiDAR de l’ICGC i el mapa de cobertes del sòl i, als carrers, on l’ortofoto mostra copes, però cap és un arbre concret; el color del terra, del ferm, de la vegetació, de les teulades i del mar és el de l’ortofoto; les terrasses dels blocs, segons l’any del Cadastre; textures, façanes, color de les parets, matolls, herba i pedres, de decoració.';
+/** What a town to walk in 3D is made of: the two sources of «Palamós a peu», as each asks to be named. */
+export const ON_FOOT_ICGC_CREDIT = 'Relleu, LiDAR i ortofoto: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
+export const OSM_CREDIT = 'Carrers, plantes dels edificis i noms: © col·laboradors d’OpenStreetMap, ODbL';
 export const DEM_CREDIT = 'Model d’elevacions: © Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0';
 export const SAMPLE_NOTICE = 'Cursa de mostra: el recorregut és real, però el nom, la data i el dorsal són inventats per provar la pàgina.';

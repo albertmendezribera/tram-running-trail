@@ -16,7 +16,14 @@ const walk = (dir) => readdirSync(dir).flatMap((name) => (statSync(join(dir, nam
 const gzip = (buffer) => gzipSync(buffer, { level: 9 }).length;
 const kb = (bytes) => `${(bytes / KB).toFixed(1)} KB`;
 
-const files = walk(dist);
+// «Palamós a peu» (dist/mon/, when the build carries it) is not part of any page: it is a separate
+// program, a Godot web export, that loads only when the visitor presses a button, inside a frame of its
+// own, and its weight is told next to that button. The budgets below are those of the site's pages and
+// islands, so its files are left out of them, and its weight is printed apart.
+const WORLDS = join(dist, 'mon');
+const isWorld = (file) => file.startsWith(`${WORLDS}/`);
+const everything = walk(dist);
+const files = everything.filter((f) => !isWorld(f));
 const pages = files.filter((f) => f.endsWith('.html'));
 const failures = [];
 const referenced = new Set();
@@ -62,6 +69,12 @@ for (const file of files.filter((f) => /terrain[^/]*\.(webp|png)$/.test(f))) {
   const size = statSync(file).size;
   console.log(`  ${size > BUDGET.terrain ? '✖' : '✔'} ${kb(size).padStart(9)}  /${relative(dist, file)}`);
   if (size > BUDGET.terrain) failures.push(`/${relative(dist, file)} is ${kb(size)}`);
+}
+
+const world = everything.filter(isWorld);
+if (world.length > 0) {
+  console.log('\nA separate program, loaded on request in its own frame (no budget; its weight is told to the visitor)');
+  console.log(`  · ${kb(world.reduce((sum, f) => sum + statSync(f).size, 0)).padStart(9)}  /mon/ (${world.length} files)`);
 }
 
 if (failures.length > 0) {

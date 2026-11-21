@@ -1,0 +1,271 @@
+---
+import type { Locale } from '@tram/formats';
+import Button from '../primitives/Button.astro';
+
+export interface Mode {
+  /** What the program is told: it goes in its address, `?mode=<value>`. */
+  value: string;
+  /** The text of its button, which says what pressing it does. */
+  label: string;
+}
+
+export interface Picture {
+  /** The file every browser can read. */
+  src: string;
+  width: number;
+  height: number;
+  /** The same picture in lighter formats, the lightest first: `{ src, type: 'image/avif' }`. */
+  formats?: ReadonlyArray<{ src: string; type: string }>;
+}
+
+export interface Poster {
+  /** What the picture shows. It stands for the program until it runs. */
+  alt: string;
+  /** For the wide frame (16:9). */
+  wide: Picture;
+  /** For the tall frame of a phone (3:4). Without it, the wide one is cut by its sides. */
+  tall?: Picture;
+  /** When the poster is the first big thing the page paints: it is asked for at once instead of when it comes near. */
+  eager?: boolean;
+}
+
+export interface Props {
+  /** Names the stage and the frame of the program for screen readers. */
+  label: string;
+  poster: Poster;
+  /** The ways of starting the program, one button each. The first is the main one, unless the address of the page names another. */
+  modes: readonly Mode[];
+  /** The page of the program, on this same site. The mode is added to it. */
+  src: string;
+  /** Name of the mode in the address, both of the program and of the page that carries the stage (`?mode=ruta`). */
+  param?: string;
+  /** A small file of the program. If the site does not have it, the stage says the program is not there instead of opening an empty frame. */
+  probe?: string;
+  /** Said next to the buttons, before anything is downloaded: what it weighs. */
+  note?: string;
+  /** The `source` of the messages the program posts to say it is ready or has failed. Without it, ready is when its page has loaded. */
+  channel?: string;
+  /** What to say when the site does not carry the program. */
+  absent?: string;
+  locale?: Locale;
+  id?: string;
+}
+
+const COPY = {
+  ca: {
+    loading: 'Carregant…',
+    ready: 'A punt.',
+    readyKeys: 'A punt. Amb Esc tornes a aquests botons.',
+    error: 'No s’ha pogut obrir.',
+    absent: 'Aquesta versió de la web no porta el joc.',
+    offline: 'No s’ha pogut comprovar si el joc hi és. Torna-ho a provar.',
+    fullscreen: 'Pantalla completa',
+    exit: 'Surt de la pantalla completa',
+    close: 'Tanca',
+    script: 'El joc necessita JavaScript.',
+  },
+  es: {
+    loading: 'Cargando…',
+    ready: 'Listo.',
+    readyKeys: 'Listo. Con Esc vuelves a estos botones.',
+    error: 'No se ha podido abrir.',
+    absent: 'Esta versión de la web no lleva el juego.',
+    offline: 'No se ha podido comprobar si el juego está. Vuelve a intentarlo.',
+    fullscreen: 'Pantalla completa',
+    exit: 'Salir de la pantalla completa',
+    close: 'Cerrar',
+    script: 'El juego necesita JavaScript.',
+  },
+  en: {
+    loading: 'Loading…',
+    ready: 'Ready.',
+    readyKeys: 'Ready. Esc brings you back to these buttons.',
+    error: 'It could not be opened.',
+    absent: 'This version of the site does not carry the game.',
+    offline: 'Could not check whether the game is here. Try again.',
+    fullscreen: 'Full screen',
+    exit: 'Leave full screen',
+    close: 'Close',
+    script: 'The game needs JavaScript.',
+  },
+};
+
+const { label, poster, modes, src, param = 'mode', probe, note, channel, absent, locale = 'ca', id } = Astro.props;
+const copy = COPY[locale];
+// Below this width the frame is tall: the same breakpoint as in the styles.
+const PHONE = '(width < 48rem)';
+const { wide, tall } = poster;
+---
+
+<tram-game-stage
+  class="game"
+  id={id}
+  role="group"
+  aria-label={label}
+  data-state="poster"
+  data-src={src}
+  data-param={param}
+  data-probe={probe}
+  data-channel={channel}
+  data-text-loading={copy.loading}
+  data-text-ready={copy.ready}
+  data-text-ready-keys={copy.readyKeys}
+  data-text-error={copy.error}
+  data-text-absent={absent ?? copy.absent}
+  data-text-offline={copy.offline}
+  data-text-fullscreen={copy.fullscreen}
+  data-text-exit={copy.exit}
+>
+  <!-- An inked bar, as over every part of a page: what can be done is said before the picture. It wears the night theme in both themes. -->
+  <div class="bar" data-part="bar" data-theme="night">
+    <ul class="modes">
+      {
+        modes.map((mode, i) => (
+          <li data-mode={mode.value}>
+            <Button variant={i === 0 ? 'primary' : 'secondary'}>{mode.label}</Button>
+          </li>
+        ))
+      }
+    </ul>
+    {note && <p class="note" data-type="text-xs">{note}</p>}
+    <noscript><p class="note" data-part="script" data-type="text-xs">{copy.script}</p></noscript>
+    <p class="status" data-part="status" data-type="text-xs" role="status" tabindex="-1"></p>
+    <div class="controls">
+      <span data-part="fullscreen"><Button><span data-label>{copy.fullscreen}</span></Button></span>
+      <span data-part="close"><Button>{copy.close}</Button></span>
+    </div>
+  </div>
+  <div class="frame">
+    <picture class="poster">
+      {tall?.formats?.map((format) => <source media={PHONE} srcset={format.src} type={format.type} width={tall.width} height={tall.height} />)}
+      {tall && <source media={PHONE} srcset={tall.src} width={tall.width} height={tall.height} />}
+      {wide.formats?.map((format) => <source srcset={format.src} type={format.type} width={wide.width} height={wide.height} />)}
+      <img src={wide.src} alt={poster.alt} width={wide.width} height={wide.height} loading={poster.eager ? 'eager' : 'lazy'} fetchpriority={poster.eager ? 'high' : undefined} decoding="async" />
+    </picture>
+    <div class="screen" data-part="screen"></div>
+  </div>
+</tram-game-stage>
+
+<script>
+  import './game-stage.ts';
+</script>
+
+<style>
+  .game {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-inline-size: 0;
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    border-radius: var(--tram-sys-radius-soft);
+    overflow: hidden;
+  }
+
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--tram-sys-space-2) var(--tram-sys-space-4);
+    /* While the program runs, the bar keeps the height it had with its starting buttons (`--held`, set by the script). */
+    box-sizing: border-box;
+    min-block-size: var(--held, auto);
+    padding: var(--tram-sys-space-3) var(--tram-sys-space-4);
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .modes,
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tram-sys-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .controls {
+    margin-inline-start: auto;
+  }
+
+  .note,
+  .status {
+    margin: 0;
+  }
+
+  .note {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .status:empty {
+    display: none;
+  }
+
+  /* It takes the focus when it has to say the program is not there: the words are the mark. */
+  .status:focus {
+    outline: none;
+  }
+
+  /* The frame reserves the space from the start: neither the poster nor the program moves the page. Taller on a phone, where the thumbs need room. */
+  .frame {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    max-block-size: 100svh;
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .poster,
+  .screen {
+    position: absolute;
+    inset: 0;
+  }
+
+  .poster img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  /* The frame is made by the script, so it is not in the template. */
+  .screen :global(iframe) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    border: 0;
+  }
+
+  /* What each moment offers: the ways in before it starts, the ways out while it runs, and only words when it is not there. */
+  .game:not([data-state='poster'], [data-state='loading']) :is(.modes, .note),
+  .game:is([data-state='poster'], [data-state='loading'], [data-state='absent']) .controls,
+  .game:is([data-state='running'], [data-state='ready'], [data-state='error']) .poster {
+    display: none;
+  }
+
+  /* Without JavaScript nothing can start: the bar says so, and offers no button that would do nothing. */
+  .game:has(noscript > [data-part='script']) :is(.modes, .note:not([data-part='script'])) {
+    display: none;
+  }
+
+  /* Filling the screen: the bar on top, the program in all the rest. */
+  .game:fullscreen {
+    grid-template-rows: auto minmax(0, 1fr);
+    border: 0;
+    border-radius: 0;
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .game:fullscreen .bar {
+    min-block-size: 0;
+  }
+
+  .game:fullscreen .frame {
+    aspect-ratio: auto;
+    max-block-size: none;
+  }
+
+  @media (width >= 48rem) {
+    .frame {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>

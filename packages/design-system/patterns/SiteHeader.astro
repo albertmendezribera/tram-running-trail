@@ -13,7 +13,10 @@ export interface Props {
 
 const NAV: Record<Locale, string> = { ca: 'Principal', es: 'Principal', en: 'Main' };
 const { home, links, current, locale = 'ca' } = Astro.props;
-const active = (href: string): boolean => current === href || (href !== home && current.startsWith(href));
+const within = (href: string): boolean => current === href || (href !== home && current.startsWith(href));
+// When a link leads to a page inside another link's section, only the closest one is marked: the longest address that holds the page.
+const closest = links.filter((l) => within(l.href)).reduce((best, l) => Math.max(best, l.href.length), 0);
+const active = (href: string): boolean => within(href) && href.length === closest;
 ---
 
 <!-- The top of every page: an inked bar, edge to edge. It wears the night theme in both themes. -->

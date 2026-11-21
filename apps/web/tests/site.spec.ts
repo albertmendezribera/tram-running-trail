@@ -11,6 +11,7 @@ const PAGES = {
   'shoe-road': '/ca/sabatilles/nike/vaporfly-4/',
   'shoe-trail': '/ca/sabatilles/hoka/speedgoat-6/',
   compare: COMPARE,
+  'on-foot': '/ca/rutes/palamos/a-peu/',
 };
 // These carry a route to run: their long scroll and their 3D are covered by the M2 tests.
 const ROUTE_PAGES = { 'race-trail': '/ca/curses/marxa-de-les-tines/', 'route-flat': '/ca/rutes/sils/' };
@@ -472,6 +473,7 @@ test.describe('Trail (breadcrumbs)', () => {
       [PAGES.routes, [['Inici', '/ca/']]],
       ['/ca/sabatilles/', [['Inici', '/ca/']]],
       ['/ca/rutes/calonge/', [['Inici', '/ca/'], ['Rutes', '/ca/rutes/']]],
+      [PAGES['on-foot'], [['Inici', '/ca/'], ['Rutes', '/ca/rutes/'], ['Palamós', '/ca/rutes/palamos/']]],
       ['/ca/curses/32a-marxa-dels-arrossars-2026/', [['Inici', '/ca/'], ['Curses', '/ca/curses/']]],
       ['/ca/curses/trail/', [['Inici', '/ca/'], ['Curses', '/ca/curses/']]],
       ['/ca/curses/trail/baix-emporda/', [['Inici', '/ca/'], ['Curses', '/ca/curses/'], ['Curses de muntanya', '/ca/curses/trail/']]],
@@ -897,6 +899,124 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     await open(page, '/ca/sabatilles/topo-athletic/cyclone-3/');
     await expect(main(page)).toContainText(/196\sg/);
     await expect(main(page)).toContainText('6,9 oz, talla M9');
+  });
+});
+
+// «Palamós a peu»: the town in 3D, a program of its own (a Godot export of some 52 MB) that is not kept in
+// the repository. The build under test may carry it or not, so these tests answer for it themselves.
+test.describe('Palamós on foot', () => {
+  const PATH = PAGES['on-foot'];
+  const stage = (page: Page) => page.getByRole('group', { name: 'Palamós a peu' });
+  const STAND_IN = `<!doctype html><title>Joc</title><p>Joc de mostra</p><script>addEventListener('load', () => parent.postMessage({ source: 'tram-palamos', state: 'ready', detail: new URLSearchParams(location.search).get('mode') }, location.origin))</script>`;
+  /** The site with the game (a stand-in for it) or without it, whatever the build has. */
+  const serve = async (page: Page, present: boolean): Promise<string[]> => {
+    const asked: string[] = [];
+    await page.route('**/mon/palamos/**', (route) => {
+      const url = new URL(route.request().url());
+      asked.push(`${route.request().method()} ${url.pathname}${url.search}`);
+      if (!present) return route.fulfill({ status: 404, body: 'Not found' });
+      return url.pathname.endsWith('manifest.json') ? route.fulfill({ status: 200, contentType: 'application/json', body: '{}' }) : route.fulfill({ status: 200, contentType: 'text/html', body: STAND_IN });
+    });
+    return asked;
+  };
+
+  test('says what it is and what it weighs, and asks for nothing of the game until a button is pressed', async ({ page }) => {
+    const asked = await serve(page, true);
+    await open(page, PATH);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Palamós a peu');
+    // The length is the one the game shows on its own screen.
+    await expect(main(page)).toContainText(/la ruta sencera, de 10,2\skm/);
+    await expect(stage(page).getByRole('img', { name: /Vista aèria del Palamós en 3D: la platja Gran/ })).toBeVisible();
+    await expect(stage(page).getByRole('button', { name: 'Corre la ruta' })).toHaveAttribute('data-variant', 'primary');
+    await expect(stage(page).getByRole('button', { name: 'Passeja pel teu compte' })).toBeVisible();
+    await expect(stage(page)).toContainText('Baixa uns 52 MB. Millor amb wifi.');
+    await expect(page.locator('iframe')).toHaveCount(0);
+    expect(asked).toEqual([]);
+    await expect(page.locator('footer')).toContainText('© Institut Cartogràfic i Geològic de Catalunya (ICGC), CC BY 4.0');
+    await expect(page.locator('footer')).toContainText('© col·laboradors d’OpenStreetMap, ODbL');
+  });
+
+  test('the poster is light, and a phone gets a cut of its own', async ({ page, request }) => {
+    await open(page, PATH);
+    const picture = stage(page).locator('picture');
+    const addresses = [...(await picture.locator('source').evaluateAll((all) => all.map((source) => source.getAttribute('srcset')!))), (await picture.locator('img').getAttribute('src'))!];
+    expect(addresses).toHaveLength(4);
+    for (const address of addresses) expect(Number((await request.get(address)).headers()['content-length']), address).toBeLessThan(200_000);
+    await expect(picture.locator('source[media]')).toHaveCount(2);
+    await expect(picture.locator('img')).toHaveAttribute('fetchpriority', 'high');
+  });
+
+  test('pressing a button opens the game in its mode, in a frame; «Tanca» takes it away', async ({ page }) => {
+    const asked = await serve(page, true);
+    await open(page, PATH);
+    await stage(page).getByRole('button', { name: 'Passeja pel teu compte' }).click();
+    await expect(stage(page)).toHaveAttribute('data-state', 'ready');
+    expect(asked.slice(0, 2)).toEqual(['HEAD /mon/palamos/manifest.json', 'GET /mon/palamos/index.html?mode=explora']);
+    await expect(stage(page).locator('iframe')).toHaveAttribute('allow', 'fullscreen');
+    await expect(page.frameLocator('iframe').getByText('Joc de mostra')).toBeVisible();
+    await expect(stage(page).getByRole('img')).toBeHidden();
+    expect(await overflow(page)).toBe(0);
+    await stage(page).getByRole('button', { name: 'Tanca' }).click();
+    await expect(page.locator('iframe')).toHaveCount(0);
+    await expect(stage(page).getByRole('img')).toBeVisible();
+    await expect(stage(page).getByRole('button', { name: 'Passeja pel teu compte' })).toBeFocused();
+  });
+
+  test('a build that does not carry the game says so instead of opening it', async ({ page }) => {
+    await serve(page, false);
+    await open(page, PATH);
+    await stage(page).getByRole('button', { name: 'Corre la ruta' }).click();
+    await expect(stage(page).getByRole('status')).toHaveText('Aquesta versió de la web no porta el joc.');
+    await expect(page.locator('iframe')).toHaveCount(0);
+    await expect(stage(page).getByRole('img')).toBeVisible();
+  });
+
+  test('a link that asks for a mode starts nothing by itself: its button is the main one and has the focus', async ({ page }) => {
+    const asked = await serve(page, true);
+    await open(page, `${PATH}?mode=explora`);
+    await expect(stage(page).getByRole('button', { name: 'Passeja pel teu compte' })).toBeFocused();
+    await expect(stage(page).getByRole('button', { name: 'Passeja pel teu compte' })).toHaveAttribute('data-variant', 'primary');
+    await expect(stage(page).getByRole('button', { name: 'Corre la ruta' })).toHaveAttribute('data-variant', 'secondary');
+    await expect(stage(page).getByRole('button', { name: 'Passeja pel teu compte' })).toBeInViewport();
+    await expect(page.locator('iframe')).toHaveCount(0);
+    expect(asked).toEqual([]);
+  });
+
+  test('what the game shows is also in the page, in words: how it is played, and what of it is data and what is not', async ({ page }) => {
+    await open(page, PATH);
+    const keys = page.getByRole('table', { name: 'Amb teclat i ratolí' });
+    await expect(keys.getByRole('row', { name: /W A S D/ })).toContainText('Mou el corredor');
+    await expect(keys.getByRole('row', { name: /1 2 3 4/ })).toContainText('×1, ×2, ×4 i ×8');
+    await expect(keys.getByRole('row', { name: /Tab/ })).toContainText('Canvia entre seguir la ruta i portar-lo tu');
+    await expect(main(page)).toContainText('El polze esquerre mou el corredor i el dret gira la càmera.');
+    const real = page.getByRole('table', { name: 'De debò: surt de dades' });
+    await expect(real.getByRole('row', { name: /El relleu/ })).toContainText(/ICGC, amb un punt cada 5\sm/);
+    await expect(real.getByRole('row', { name: /L’alçada de cada casa i els arbres/ })).toContainText('LiDAR de l’ICGC (2021-2023): 5.441 cases i 11.917 arbres');
+    await expect(real.getByRole('row', { name: /Els carrers/ })).toContainText('OpenStreetMap');
+    const decoration = page.locator('main section', { hasText: 'Què és de debò i què no' });
+    await expect(decoration).toContainText('Les façanes: finestres, balcons, portes i el color de la paret.');
+    await expect(decoration).toContainText('El corredor, que és un maniquí.');
+    // The pace is the game's, and is said to be.
+    await expect(decoration).toContainText(/a 5:00\s\/km, que és un ritme fix del joc, no el de la sortida/);
+  });
+
+  test('the menu leads to it and marks it alone; the page of the route leads to it with the runner on the route', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PATH);
+    await expect(page.locator('header nav a[aria-current="page"]')).toHaveText(['Palamós a peu']);
+    await open(page, '/ca/rutes/palamos/');
+    await expect(page.locator('header nav a[aria-current="page"]')).toHaveText(['Rutes']);
+    await expect(page.locator('header nav').getByRole('link', { name: 'Palamós a peu' })).toHaveAttribute('href', PATH);
+    const block = page.locator('main section', { hasText: 'Corre-la dins de Palamós' });
+    await expect(block).toContainText('La mateixa ruta, vista des de terra: un corredor la fa pel Palamós en 3D.');
+    await expect(block.getByRole('link', { name: 'Obre Palamós a peu' })).toHaveAttribute('href', `${PATH}?mode=ruta`);
+    // The three ways of seeing the route are as they were.
+    await expect(page.getByRole('radio', { name: 'A peu' })).toBeAttached();
+    expect(await overflow(page)).toBe(0);
+    // A route without a town to be run in offers none.
+    await open(page, '/ca/rutes/sils/');
+    await expect(page.locator('main a[href*="/a-peu/"]')).toHaveCount(0);
+    expect((await page.request.get('/ca/rutes/sils/a-peu/')).status()).toBe(404);
   });
 });
 

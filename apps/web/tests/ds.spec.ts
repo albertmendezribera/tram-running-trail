@@ -28,6 +28,7 @@ const PAGES = {
   select: '/ds/interactive/select/',
   'theme-toggle': '/ds/interactive/theme-toggle/',
   viewer: '/ds/interactive/viewer-3d-shell/',
+  'game-stage': '/ds/interactive/game-stage/',
 };
 
 const open = async (page: Page, path: string): Promise<void> => {
@@ -225,6 +226,137 @@ test.describe('Viewer3DShell', () => {
     await expect(viewer).toHaveAttribute('data-state', 'ready');
     await viewer.evaluate((el) => el.remove());
     expect(await page.evaluate(() => (window as Window & { tramDemoDisposed?: number }).tramDemoDisposed)).toBe(1);
+  });
+});
+
+test.describe('GameStage', () => {
+  const stage = (page: Page, id = 'demo-stage') => page.locator(`#${id}`);
+  const program = (page: Page, id = 'demo-stage') => page.frameLocator(`#${id} iframe`);
+
+  test('asks for nothing of the program until a button is pressed, then runs it in a frame and says when it is ready', async ({ page }) => {
+    const asked: string[] = [];
+    page.on('request', (request) => void (new URL(request.url()).pathname.startsWith('/ds/programa-de-mostra/') && asked.push(request.method())));
+    await open(page, PAGES['game-stage']);
+    await expect(stage(page).getByRole('img', { name: /Vista aèria del Palamós en 3D/ })).toBeVisible();
+    await expect(stage(page).getByText('aquí s\'hi diu el pes')).toBeVisible();
+    await expect(stage(page).locator('iframe')).toHaveCount(0);
+    expect(asked).toEqual([]);
+    await stage(page).getByRole('button', { name: 'Corre la ruta' }).click();
+    await expect(stage(page)).toHaveAttribute('data-state', 'ready');
+    // First a request that brings nothing back, to know the program is there; then its page, with the mode.
+    expect(asked[0]).toBe('HEAD');
+    await expect(stage(page).locator('iframe')).toHaveAttribute('src', /\/ds\/programa-de-mostra\/\?mode=ruta$/);
+    await expect(stage(page).locator('iframe')).toHaveAttribute('allow', 'fullscreen');
+    await expect(stage(page).locator('iframe')).toHaveAttribute('title', 'Programa de mostra');
+    await expect(program(page).getByText('Mode: ruta')).toBeVisible();
+    await expect(stage(page).getByRole('status')).toHaveText('A punt. Amb Esc tornes a aquests botons.');
+    // The ways in give way to the ways out, and the poster to the program.
+    await expect(stage(page).getByRole('button', { name: 'Corre la ruta' })).toBeHidden();
+    await expect(stage(page).getByRole('img')).toBeHidden();
+    await expect(stage(page).getByRole('button', { name: 'Tanca' })).toBeVisible();
+    await expect(stage(page)).toHaveScreenshot('game-stage-running.png');
+  });
+
+  test('does not move what is under its bar when it starts', async ({ page }) => {
+    await open(page, PAGES['game-stage']);
+    const top = () => stage(page).locator('.frame').evaluate((frame) => Math.round(frame.getBoundingClientRect().top + window.scrollY));
+    const before = await top();
+    await stage(page).getByRole('button', { name: 'Passeja pel teu compte' }).click();
+    await expect(stage(page)).toHaveAttribute('data-state', 'ready');
+    expect(await top()).toBe(before);
+  });
+
+  test('«Tanca» takes the frame away, brings the poster back and gives the focus back to the button that started it', async ({ page }) => {
+    await open(page, PAGES['game-stage']);
+    await stage(page).getByRole('button', { name: 'Passeja pel teu compte' }).click();
+    await expect(program(page).getByText('Mode: explora')).toBeVisible();
+    await expect(stage(page).getByRole('button', { name: 'Tanca' })).toBeFocused();
+    await stage(page).getByRole('button', { name: 'Tanca' }).click();
+    await expect(stage(page)).toHaveAttribute('data-state', 'poster');
+    await expect(stage(page).locator('iframe')).toHaveCount(0);
+    await expect(stage(page).getByRole('img')).toBeVisible();
+    await expect(stage(page).getByRole('button', { name: 'Passeja pel teu compte' })).toBeFocused();
+    await expect(stage(page).locator('[role="status"]')).toBeHidden();
+  });
+
+  test('Escape, pressed inside the program, brings the focus back to the bar of the page', async ({ page }) => {
+    await open(page, PAGES['game-stage']);
+    await stage(page).getByRole('button', { name: 'Corre la ruta' }).click();
+    await expect(stage(page)).toHaveAttribute('data-state', 'ready');
+    await program(page).getByRole('button', { name: 'Un botó de dins' }).focus();
+    await page.keyboard.press('Escape');
+    await expect(stage(page).getByRole('button', { name: 'Tanca' })).toBeFocused();
+  });
+
+  test('a link that names a mode starts nothing: it makes that button the main one and gives it the focus', async ({ page }) => {
+    await open(page, `${PAGES['game-stage']}?mode=explora`);
+    const chosen = stage(page).getByRole('button', { name: 'Passeja pel teu compte' });
+    await expect(chosen).toBeFocused();
+    await expect(chosen).toHaveAttribute('data-variant', 'primary');
+    await expect(stage(page).getByRole('button', { name: 'Corre la ruta' })).toHaveAttribute('data-variant', 'secondary');
+    await expect(stage(page)).toHaveAttribute('data-state', 'poster');
+    await expect(page.locator('iframe')).toHaveCount(0);
+    // A mode the stage does not have changes nothing.
+    await open(page, `${PAGES['game-stage']}?mode=vola`);
+    await expect(stage(page).getByRole('button', { name: 'Corre la ruta' })).toHaveAttribute('data-variant', 'primary');
+    await expect(stage(page).getByRole('button', { name: 'Corre la ruta' })).not.toBeFocused();
+  });
+
+  test('says so when the site does not carry the program, and opens no frame', async ({ page }) => {
+    await open(page, PAGES['game-stage']);
+    const absent = stage(page, 'demo-absent');
+    await absent.getByRole('button', { name: 'Corre la ruta' }).click();
+    await expect(absent).toHaveAttribute('data-state', 'absent');
+    await expect(absent.getByRole('status')).toHaveText('Aquesta versió de la web no porta el joc.');
+    await expect(absent.locator('iframe')).toHaveCount(0);
+    await expect(absent.getByRole('button')).toHaveCount(0);
+    await expect(absent.getByRole('img')).toBeVisible();
+    await expect(absent).toHaveScreenshot('game-stage-absent.png');
+  });
+
+  test('stays as it was, and says so, when it cannot find out whether the program is there', async ({ page }) => {
+    await open(page, PAGES['game-stage']);
+    await page.route('**/ds/programa-de-mostra/', (route) => (route.request().method() === 'HEAD' ? route.abort() : route.continue()));
+    await stage(page).getByRole('button', { name: 'Corre la ruta' }).click();
+    await expect(stage(page).getByRole('status')).toHaveText('No s’ha pogut comprovar si el joc hi és. Torna-ho a provar.');
+    await expect(stage(page)).toHaveAttribute('data-state', 'poster');
+    await expect(stage(page).getByRole('button', { name: 'Corre la ruta' })).toBeEnabled();
+  });
+
+  test('repeats on the page what a program that fails says of itself', async ({ page }) => {
+    await open(page, PAGES['game-stage']);
+    const failing = stage(page, 'demo-error');
+    await failing.getByRole('button', { name: 'Obre el que falla' }).click();
+    await expect(failing).toHaveAttribute('data-state', 'error');
+    await expect(failing.getByRole('status')).toHaveText('El programa de mostra ha fallat, com se li ha demanat.');
+    await expect(failing.getByRole('button', { name: 'Tanca' })).toBeVisible();
+  });
+
+  test('fills the screen on request, where the browser can, and says how to leave it', async ({ page }) => {
+    await open(page, PAGES['game-stage']);
+    await stage(page).getByRole('button', { name: 'Corre la ruta' }).click();
+    await expect(stage(page)).toHaveAttribute('data-state', 'ready');
+    const full = stage(page).getByRole('button', { name: 'Pantalla completa', exact: true });
+    if (!(await page.evaluate(() => document.fullscreenEnabled))) {
+      await expect(full).toBeHidden();
+      return;
+    }
+    await full.click();
+    await expect.poll(() => page.evaluate(() => document.fullscreenElement?.id)).toBe('demo-stage');
+    await stage(page).getByRole('button', { name: 'Surt de la pantalla completa' }).click();
+    await expect.poll(() => page.evaluate(() => document.fullscreenElement)).toBeNull();
+    await expect(full).toBeVisible();
+  });
+
+  test('cleans up when it leaves the page', async ({ page }) => {
+    await open(page, PAGES['game-stage']);
+    await stage(page).getByRole('button', { name: 'Corre la ruta' }).click();
+    await expect(stage(page)).toHaveAttribute('data-state', 'ready');
+    const frames = await stage(page).evaluate((el) => {
+      el.remove();
+      return [el.querySelectorAll('iframe').length, el.getAttribute('data-state')];
+    });
+    expect(frames).toEqual([0, 'poster']);
   });
 });
 

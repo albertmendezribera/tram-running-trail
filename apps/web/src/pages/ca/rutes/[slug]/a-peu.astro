@@ -1,0 +1,29 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { formatMeasure } from '@tram/formats';
+import { ON_FOOT_ICGC_CREDIT, OSM_CREDIT, ROUTES, visible } from '../../../../content';
+import Site from '../../../../layouts/Site.astro';
+import OnFootGuide from '../../../../sections/OnFootGuide.astro';
+import OnFootStage from '../../../../sections/OnFootStage.astro';
+
+// Only a route that has a town to be run in: today, Palamós.
+export const getStaticPaths = (() => visible(ROUTES).flatMap((route) => (route.onFoot ? [{ params: { slug: route.slug }, props: { route, onFoot: route.onFoot } }] : []))) satisfies GetStaticPaths;
+
+const { route, onFoot } = Astro.props;
+// The length is the one the game itself shows while the route is run.
+const distance = formatMeasure(onFoot.routeKm, 'km', 'ca');
+const title = `${route.name} a peu`;
+const intro = `${route.name} en 3D, fet amb dades obertes: el relleu, les alçades de les cases, els arbres i la fotografia aèria són de l’ICGC, i els carrers i les plantes dels edificis, d’OpenStreetMap. Pots córrer-hi la ruta sencera, de ${distance}, o passejar-hi pel teu compte.`;
+---
+
+<Site title={title} trail={[{ label: 'Rutes', href: '/ca/rutes/' }, { label: route.name, href: `/ca/rutes/${route.slug}/` }]} description={intro} credits={[route.credit, ON_FOOT_ICGC_CREDIT, OSM_CREDIT]}>
+  <Stack gap={4}>
+    <Heading level={1} size="lg" kicker={`Ruta · ${route.name}`}>{title}</Heading>
+    <Text size="lg" measure>{intro}</Text>
+  </Stack>
+  <OnFootStage route={route} onFoot={onFoot} />
+  <OnFootGuide route={route} onFoot={onFoot} />
+</Site>

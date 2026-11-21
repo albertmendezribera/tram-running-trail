@@ -1,0 +1,81 @@
+---
+import GameStage from '@tram/design-system/interactive/GameStage.astro';
+import { routeOf } from '../../content';
+import { onFootPoster, stagePoster } from '../../content/on-foot';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const code = `<GameStage
+  label="Palamós a peu"
+  poster={{ alt: 'Vista aèria del Palamós en 3D…', wide: { src, width, height, formats: [{ src: avif, type: 'image/avif' }] }, tall }}
+  modes={[{ value: 'ruta', label: 'Corre la ruta' }, { value: 'explora', label: 'Passeja pel teu compte' }]}
+  src="/mon/palamos/index.html"
+  probe="/mon/palamos/manifest.json"
+  channel="tram-palamos"
+  note="Baixa uns 52 MB. Millor amb wifi."
+/>
+
+<!-- El programa, des de dins del seu marc: -->
+parent.postMessage({ source: 'tram-palamos', state: 'ready' }, location.origin);`;
+
+// The poster is the real one of «Palamós a peu»: a capture taken inside the game. The program is a stand-in that weighs nothing.
+const route = routeOf('palamos');
+const files = onFootPoster(route.slug);
+if (!files || !route.onFoot) throw new Error('the fiche of GameStage needs the poster of Palamós a peu');
+const poster = stagePoster(files, route.onFoot.posterAlt);
+const PROGRAM = '/ds/programa-de-mostra/';
+const WAYS = [
+  { value: 'ruta', label: 'Corre la ruta' },
+  { value: 'explora', label: 'Passeja pel teu compte' },
+];
+---
+
+<Fiche
+  group="Interactiu"
+  js="1,4 KB de JavaScript"
+  title="GameStage"
+  use="Un programa sencer que viu en una adreça de la web i pesa molt: un joc, un simulador. No se'n demana res fins que es prem un botó, i «Tanca» en retira el marc i en torna la memòria."
+  avoid="Una escena 3D feta amb la web mateixa: això és Viewer3DShell. Tampoc sense dir-ne el pes abans, ni sense el mateix contingut en HTML a la pàgina: el que passa dins del marc no ho llegeix cap cercador."
+  code={code}
+>
+  <section class="fiche-block" data-testid="stage">
+    <h2 data-type="display-sm">Abans de començar, i en marxa</h2>
+    <GameStage id="demo-stage" label="Programa de mostra" poster={poster} modes={WAYS} src={PROGRAM} probe={PROGRAM} channel="tram-demo" note="El programa de mostra no baixa res: aquí s'hi diu el pes." />
+    <p class="fiche-note">
+      Un botó per manera de començar; el primer és el principal. Si l'adreça de la pàgina en diu una (<code>?mode=explora</code>), el seu botó passa a ser el principal i pren el focus, però res no comença sol. En marxa, la barra
+      ofereix la pantalla completa, on el navegador en té, i «Tanca». Dins del programa, <code>Esc</code> torna el focus a la barra.
+    </p>
+  </section>
+
+  <section class="fiche-block" data-testid="error">
+    <h2 data-type="display-sm">Quan el programa falla</h2>
+    <GameStage id="demo-error" label="Programa de mostra que falla" poster={poster} modes={[{ value: 'falla', label: 'Obre el que falla' }]} src={PROGRAM} probe={PROGRAM} channel="tram-demo" />
+    <p class="fiche-note">El programa diu què li ha passat dins del seu marc, i la barra ho repeteix a la pàgina, on un lector de pantalla ho sent.</p>
+  </section>
+
+  <section class="fiche-block" data-testid="absent">
+    <h2 data-type="display-sm">Quan la web no porta el programa</h2>
+    <GameStage id="demo-absent" label="Programa que no hi és" poster={poster} modes={WAYS} src="/ds/no-hi-es/" probe="/ds/no-hi-es/manifest.json" />
+    <p class="fiche-note">
+      El programa no es desa amb el codi: una versió de la web pot venir sense. Abans d'obrir el marc es demana un fitxer petit (<code>probe</code>) i, si no hi és, es diu en lloc d'obrir un marc buit. Amb més d'un escenari en una pàgina,
+      el focus el pren el primer.
+    </p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">
+      {
+        MODES.map((m) => (
+          <Mode {...m}>
+            <div style="inline-size: 100%">
+              <GameStage label={`Programa de mostra, ${m.theme} ${m.terrain}`} poster={poster} modes={WAYS} src={PROGRAM} probe={PROGRAM} channel="tram-demo" note="Baixa uns 52 MB." />
+            </div>
+          </Mode>
+        ))
+      }
+    </div>
+    <p class="fiche-note">La barra és de tinta en tots dos temes, com la capçalera i els títols de banda.</p>
+  </section>
+</Fiche>

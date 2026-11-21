@@ -1,0 +1,32 @@
+---
+import Band from '@tram/design-system/primitives/Band.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import type { Route } from '../content';
+
+export interface Props {
+  route: Route;
+}
+
+const { route } = Astro.props;
+const { onFoot } = route;
+---
+
+<!-- Only a route with a town to be run in has this way into it; the link asks for the mode in which the runner runs the route. -->
+{
+  onFoot && (
+    <Band tone="alt" title={`Corre-la dins de ${route.name}`}>
+      <Panel>
+        <Stack gap={4}>
+          <Text measure>{`La mateixa ruta, vista des de terra: un corredor la fa pel ${route.name} en 3D.`}</Text>
+          <Cluster>
+            <Button href={`${onFoot.href}?mode=ruta`}>{`Obre ${route.name} a peu`}</Button>
+          </Cluster>
+        </Stack>
+      </Panel>
+    </Band>
+  )
+}

@@ -16,7 +16,8 @@ const noRefTokens = [
 ];
 
 export default [
-  { ignores: ['**/dist/**', '**/.astro/**', '**/node_modules/**', '**/playwright-report/**', '**/test-results/**'] },
+  // public/mon/ is a program built elsewhere and copied in (apps/web/scripts/sync-palamos-world.sh): not this repository's code.
+  { ignores: ['**/dist/**', '**/.astro/**', '**/node_modules/**', '**/playwright-report/**', '**/test-results/**', '**/public/mon/**'] },
   ...astro.configs['flat/base'],
   {
     files: ['**/*.astro'],

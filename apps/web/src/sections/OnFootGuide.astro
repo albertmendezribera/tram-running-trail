@@ -1,0 +1,89 @@
+---
+import Band from '@tram/design-system/primitives/Band.astro';
+import DataTable from '@tram/design-system/primitives/DataTable.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Split from '@tram/design-system/primitives/Split.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { formatMeasure, formatNumber } from '@tram/formats';
+import type { OnFoot, Route } from '../content';
+
+export interface Props {
+  route: Route;
+  onFoot: OnFoot;
+}
+
+const { route, onFoot } = Astro.props;
+const count = (value: number): string => formatNumber(value, 'ca', 0);
+
+// The keys of the game, as its own notes give them. `Esc` is the page's: it brings the focus back out of the game.
+const KEYS = [
+  { key: 'W A S D', does: 'Mou el corredor: endavant és cap on mira la càmera' },
+  { key: 'Majúscules', does: 'Esprint' },
+  { key: 'Espai', does: 'Salta' },
+  { key: 'Arrossegar amb el ratolí', does: 'Mira al voltant' },
+  { key: 'Roda del ratolí', does: 'Acosta o allunya la càmera' },
+  { key: 'Tab', does: 'Canvia entre seguir la ruta i portar-lo tu' },
+  { key: '1 2 3 4', does: 'Velocitat de la ruta: ×1, ×2, ×4 i ×8' },
+  { key: 'R', does: 'Torna a l’inici' },
+  { key: 'Esc', does: 'Surt del joc i torna als botons de la pàgina' },
+];
+
+// What comes from data, and from which. The figures are the ones the pipeline of the game counts.
+const REAL = [
+  { what: 'El relleu', source: `Model d’elevacions de l’ICGC, amb un punt cada ${formatMeasure(onFoot.demM, 'm', 'ca')}` },
+  { what: 'L’alçada de cada casa i els arbres', source: `LiDAR de l’ICGC (${onFoot.lidarYears}): ${count(onFoot.houses)} cases i ${count(onFoot.trees)} arbres` },
+  { what: 'El color de cada teulada, del terra i del mar', source: 'Ortofoto de l’ICGC' },
+  { what: 'Els carrers, les plantes dels edificis i els noms', source: 'OpenStreetMap' },
+  { what: 'El traçat de la ruta', source: 'El GPS d’una sortida real' },
+];
+const DECORATION = ['Les façanes: finestres, balcons, portes i el color de la paret.', 'L’amplada de les voreres.', 'La forma de les copes dels arbres.', 'El corredor, que és un maniquí.'];
+---
+
+<!--
+  What the game shows, in words (CLAUDE.md 12): how it is played, and what of it is data and what is not
+  (CLAUDE.md 0). A canvas tells none of this to a search engine or to a screen reader.
+-->
+<Band tone="alt" title="Com es porta">
+  <Split ratio="3:2">
+    <Panel>
+      <DataTable
+        caption="Amb teclat i ratolí"
+        columns={[
+          { key: 'key', label: 'Tecla o gest' },
+          { key: 'does', label: 'Què fa' },
+        ]}
+        rows={KEYS}
+      />
+    </Panel>
+    <Panel slot="aside" title="Al mòbil">
+      <Stack gap={3}>
+        <Text>El polze esquerre mou el corredor i el dret gira la càmera. Dos dits acosten o allunyen.</Text>
+        <Text>Els botons de la dreta canvien de mode i de velocitat.</Text>
+      </Stack>
+    </Panel>
+  </Split>
+</Band>
+
+<Band tone="tint" title="Què és de debò i què no">
+  <Split ratio="3:2">
+    <Panel>
+      <DataTable
+        caption="De debò: surt de dades"
+        columns={[
+          { key: 'what', label: 'Què' },
+          { key: 'source', label: 'D’on surt' },
+        ]}
+        rows={REAL}
+      />
+    </Panel>
+    <Stack gap={6} slot="aside">
+      <Panel title="Decoració: cap dada ho diu">
+        <Stack as="ul" gap={2}>{DECORATION.map((item) => <Text as="li">{item}</Text>)}</Stack>
+      </Panel>
+      <Panel title="El ritme">
+        <Text>{`El corredor fa la ruta de ${route.name} a ${formatMeasure(onFoot.paceS, 'pace', 'ca')}, que és un ritme fix del joc, no el de la sortida. Qui passeja pel seu compte comença al ${onFoot.start}.`}</Text>
+      </Panel>
+    </Stack>
+  </Split>
+</Band>

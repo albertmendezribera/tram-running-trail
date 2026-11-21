@@ -38,6 +38,7 @@ export const GROUPS = [
       { href: '/ds/interactive/select/', title: 'Select' },
       { href: '/ds/interactive/theme-toggle/', title: 'ThemeToggle' },
       { href: '/ds/interactive/viewer-3d-shell/', title: 'Viewer3DShell' },
+      { href: '/ds/interactive/game-stage/', title: 'GameStage' },
     ],
   },
   {

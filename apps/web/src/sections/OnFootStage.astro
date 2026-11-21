@@ -1,0 +1,32 @@
+---
+import GameStage from '@tram/design-system/interactive/GameStage.astro';
+import type { OnFoot, Route } from '../content';
+import { onFootPoster, stagePoster } from '../content/on-foot';
+
+export interface Props {
+  route: Route;
+  onFoot: OnFoot;
+}
+
+const { route, onFoot } = Astro.props;
+const poster = onFootPoster(route.slug);
+if (!poster) throw new Error(`no poster for "${route.slug}" a peu: make it with scripts/world-poster.mjs`);
+---
+
+<!--
+  The town in 3D: a program of its own, some 52 MB of it, of which nothing is asked for until one of the
+  two buttons is pressed. A build of the site that was made without it says so then, instead of opening it.
+-->
+<GameStage
+  id="on-foot"
+  label={`${route.name} a peu`}
+  poster={stagePoster(poster, onFoot.posterAlt, true)}
+  modes={[
+    { value: 'ruta', label: 'Corre la ruta' },
+    { value: 'explora', label: 'Passeja pel teu compte' },
+  ]}
+  src={`${onFoot.program}index.html`}
+  probe={`${onFoot.program}manifest.json`}
+  channel={onFoot.channel}
+  note={`Baixa uns ${onFoot.weightMb} MB. Millor amb wifi.`}
+/>

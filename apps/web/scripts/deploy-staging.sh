@@ -5,6 +5,9 @@ set -eu
 
 cd "$(dirname "$0")/.."
 
+# «Palamós a peu» is not in the repository: it is copied in from where it is built, when it is there.
+sh scripts/sync-palamos-world.sh
+
 TRAM_DS=1 pnpm exec astro build
 
 # The site now has a home: the root leads to it. The catalogue stays at /ds/.

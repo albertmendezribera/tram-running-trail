@@ -1,0 +1,80 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Font } from 'astro:assets';
+import '@tram/design-system/tokens.css';
+import '@tram/design-system/base.css';
+import '@tram/design-system/fonts/fallbacks.css';
+
+// A stand-in for a program of its own, for the fiche of GameStage: it weighs nothing, says which mode it
+// was opened in and tells its page it is ready, or that it has failed when asked to (`?mode=falla`).
+// Like the rest of the catalogue, it is left out of the production build (CLAUDE.md 6.7).
+export const getStaticPaths = (() => (import.meta.env.PROD && process.env['TRAM_DS'] !== '1' ? [] : [{ params: { program: 'programa-de-mostra' } }])) satisfies GetStaticPaths;
+---
+
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Programa de mostra · TRAM DS</title>
+    <Font cssVariable="--tram-ref-font-display" />
+    <Font cssVariable="--tram-ref-font-text" />
+    <script is:inline>
+      try {
+        if (localStorage.getItem('tram-theme') === 'night') document.documentElement.dataset.theme = 'night';
+      } catch {}
+    </script>
+  </head>
+  <body data-type="text-md">
+    <main class="program">
+      <p class="name" data-type="display-sm">Programa de mostra</p>
+      <p class="mode" data-mode></p>
+      <button class="inside" data-type="text-sm" type="button">Un botó de dins</button>
+    </main>
+    <script is:inline>
+      {
+        const mode = new URLSearchParams(location.search).get('mode') ?? '';
+        document.querySelector('[data-mode]').textContent = `Mode: ${mode}`;
+        const tell = (state, detail) => parent.postMessage({ source: 'tram-demo', state, detail }, location.origin);
+        // After the page has loaded, as a real program does: it has a lot to bring first.
+        addEventListener('load', () => (mode === 'falla' ? tell('error', 'El programa de mostra ha fallat, com se li ha demanat.') : tell('ready', mode)));
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  .program {
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: var(--tram-sys-space-3);
+    min-block-size: 100dvh;
+    padding: var(--tram-sys-space-6);
+    box-sizing: border-box;
+  }
+
+  .name,
+  .mode {
+    margin: 0;
+  }
+
+  .mode {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .inside {
+    min-block-size: var(--tram-sys-space-9);
+    padding-inline: var(--tram-sys-space-5);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-text);
+    border-radius: var(--tram-sys-radius-soft);
+    color: var(--tram-sys-text);
+    background: transparent;
+  }
+
+  .inside:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+</style>

@@ -1010,8 +1010,9 @@ test.describe('Palamós on foot', () => {
     const block = page.locator('main section', { hasText: 'Corre-la dins de Palamós' });
     await expect(block).toContainText('La mateixa ruta, vista des de terra: un corredor la fa pel Palamós en 3D.');
     await expect(block.getByRole('link', { name: 'Obre Palamós a peu' })).toHaveAttribute('href', `${PATH}?mode=ruta`);
-    // The three ways of seeing the route are as they were.
-    await expect(page.getByRole('radio', { name: 'A peu' })).toBeAttached();
+    // The view of the route has its two ways of seeing the terrain; the old view from the ground is not one of them.
+    await expect(page.locator('tram-route-scroller').getByRole('radio')).toHaveCount(2);
+    await expect(page.getByRole('radio', { name: 'A peu' })).toHaveCount(0);
     expect(await overflow(page)).toBe(0);
     // A route without a town to be run in offers none.
     await open(page, '/ca/rutes/sils/');
@@ -1213,7 +1214,34 @@ test.describe('Comparator in 3D', () => {
   });
 });
 
-test.describe('Flight over a route', () => {
+// The flight and the view from the ground of the route viewer are parked (`FLIGHT_OFFERED` and `OFFERED_MODES`
+// in `islands/viewer-mode.ts`): neither is offered, and their code stays. The two groups after this one are
+// their tests, skipped until they are offered again.
+test.describe('Parked views of the route viewer', () => {
+  for (const path of [ROUTE_PAGES['route-flat'], ROUTE_PAGES['race-trail'], '/ca/rutes/palamos/']) {
+    test(`${path} offers two ways of seeing the terrain and no flight`, async ({ page }) => {
+      await open(page, path);
+      const scroller = page.locator('tram-route-scroller');
+      await expect(scroller.getByRole('radio')).toHaveCount(2);
+      for (const name of ['Realista', 'Cartogràfic']) await expect(scroller.getByRole('radio', { name })).toBeAttached();
+      await expect(scroller.getByRole('radio', { name: 'A peu' })).toHaveCount(0);
+      await expect(scroller.locator('[data-fly]')).toHaveCount(0);
+      await expect(scroller.getByRole('button', { name: /vol/i })).toHaveCount(0);
+      // What was said about the view from the ground is not said without it.
+      await expect(scroller).not.toContainText('A peu:');
+      await expect(scroller).not.toContainText('Modelat a mà');
+      await expect(scroller).toContainText('Institut Cartogràfic i Geològic de Catalunya');
+    });
+  }
+
+  test('a reader who had chosen the view from the ground gets the realistic one', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('tram-viewer-mode', 'walk'));
+    await open(page, ROUTE_PAGES['route-flat']);
+    await expect(page.locator('tram-route-scroller').getByRole('radio', { name: 'Realista' })).toBeChecked();
+  });
+});
+
+test.describe.skip('Flight over a route', () => {
   const km = async (page: Page): Promise<number> => Number((await page.locator('tram-route-scroller [data-out="km"]').textContent())!.replace(',', '.'));
 
   test('a button flies the route by itself, and a scroll by hand or the button again lands it', async ({ page }) => {
@@ -1249,7 +1277,7 @@ test.describe('Flight over a route', () => {
   });
 });
 
-test.describe('Route on foot', () => {
+test.describe.skip('Route on foot', () => {
   test.describe.configure({ timeout: 180_000 });
 
   test('offers three ways of seeing a route, and on foot stands trees and buildings along it', async ({ page }) => {

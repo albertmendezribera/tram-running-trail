@@ -2,7 +2,7 @@
 import RouteScroller from '@tram/design-system/interactive/RouteScroller.astro';
 import { ICGC_CREDIT, type Route, WORLD_NOTE } from '../content';
 import { LANDMARKS } from '../content/landmarks';
-import { MODE_FIELD } from '../islands/viewer-mode';
+import { FLIGHT_OFFERED, MODE_FIELD, MODE_LABELS, OFFERED_MODES } from '../islands/viewer-mode';
 
 export interface Props {
   route: Route;
@@ -16,9 +16,11 @@ const { route, id = 'route-viewer', transition } = Astro.props;
 // What was modelled by hand along this route is said with the rest of what the view is made of.
 const handmade = (LANDMARKS[route.slug] ?? []).map((landmark) => landmark.name);
 const handNote = handmade.length ? ` Modelat a mà a partir de fotografies: ${handmade.join(', ')}.` : '';
+// Both notes are about the view from the ground: they are said only while it is offered.
+const groundNote = OFFERED_MODES.includes('walk') ? ` ${WORLD_NOTE}${handNote}` : '';
 ---
 
-<!-- M2, "Recórrer el tram": the route run with the scroll, with its 3D view in three modes. -->
+<!-- M2, "Recórrer el tram": the route run with the scroll, with its 3D view and a switch between the ways of seeing the terrain. -->
 <div data-route-viewer={route.slug}>
   <RouteScroller
     points={route.profile}
@@ -27,9 +29,10 @@ const handNote = handmade.length ? ` Modelat a mà a partir de fotografies: ${ha
     viewer={{
       id,
       label: `Vol en 3D pel recorregut de ${route.name}`,
-      credit: `${ICGC_CREDIT}. ${WORLD_NOTE}${handNote}`,
+      credit: `${ICGC_CREDIT}.${groundNote}`,
+      flight: FLIGHT_OFFERED,
       grades: true,
-      modes: { name: MODE_FIELD, legend: 'Com es veu el terreny', value: 'real', options: [{ value: 'walk', label: 'A peu' }, { value: 'real', label: 'Realista' }, { value: 'map', label: 'Cartogràfic' }] },
+      modes: { name: MODE_FIELD, legend: 'Com es veu el terreny', value: 'real', options: OFFERED_MODES.map((value) => ({ value, label: MODE_LABELS[value] })) },
     }}
   />
 </div>

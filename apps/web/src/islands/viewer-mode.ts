@@ -1,6 +1,15 @@
 /** Ways of seeing the terrain. Each loads its own engine, and only when chosen. */
 export type ViewerMode = 'walk' | 'real' | 'map';
-export const isMode = (value: unknown): value is ViewerMode => value === 'walk' || value === 'real' || value === 'map';
+/**
+ * The ways offered today, in the order of the switch. The view from the ground ('walk') is parked: «Palamós
+ * a peu» does what it tried to. Its engine and its data stay where they were, and naming it here brings it back.
+ */
+export const OFFERED_MODES: readonly ViewerMode[] = ['real', 'map'];
+export const MODE_LABELS: Record<ViewerMode, string> = { walk: 'A peu', real: 'Realista', map: 'Cartogràfic' };
+/** The flight («Fes el vol») is parked with it: the button is not drawn while this is false. */
+export const FLIGHT_OFFERED = false;
+/** A way that is offered. One that was remembered and is no longer offered is not: the default takes its place. */
+export const isMode = (value: unknown): value is ViewerMode => OFFERED_MODES.includes(value as ViewerMode);
 /** Name of the switch's radio group. One route viewer per page. */
 export const MODE_FIELD = 'route-view';
 const MODE_KEY = 'tram-viewer-mode';

@@ -17,10 +17,11 @@ export interface Props {
   /**
    * Adds a 3D view over the silhouette, which stays as its poster. The page gives
    * the scene to the viewer with this `id`; `credit` names the source of the terrain,
-   * `grades` adds the legend of a route coloured by grade, and `modes` a switch
-   * between ways of seeing the terrain: the page listens to its `change` event.
+   * `grades` adds the legend of a route coloured by grade, `modes` a switch
+   * between ways of seeing the terrain (the page listens to its `change` event),
+   * and `flight` the button that runs the route by itself.
    */
-  viewer?: { id: string; label: string; credit?: string; grades?: boolean; modes?: { name: string; legend: string; value: string; options: readonly Option[] } };
+  viewer?: { id: string; label: string; credit?: string; grades?: boolean; flight?: boolean; modes?: { name: string; legend: string; value: string; options: readonly Option[] } };
   /** Names the silhouette for the passage from the row of a list that led to this page (M6): the row carries the same name. */
   transition?: string | undefined;
 }
@@ -81,10 +82,12 @@ const data = { points, climbs: chapters, start: copy.start, finish: copy.finish,
               </div>
             </Viewer3DShell>
             {/* The flight: the route run by itself, as a film of it. A button that stays pressed while it lasts. */}
-            <button class="fly" type="button" data-fly aria-pressed="false" data-type="text-sm">
-              <span data-when="idle">{copy.fly}</span>
-              <span data-when="flying">{copy.land}</span>
-            </button>
+            {viewer.flight && (
+              <button class="fly" type="button" data-fly aria-pressed="false" data-type="text-sm">
+                <span data-when="idle">{copy.fly}</span>
+                <span data-when="flying">{copy.land}</span>
+              </button>
+            )}
             {viewer.modes && (
               <div class="modes">
                 <SegmentedControl name={viewer.modes.name} legend={viewer.modes.legend} options={viewer.modes.options} value={viewer.modes.value} compact />

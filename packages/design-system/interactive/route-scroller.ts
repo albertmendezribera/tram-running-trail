@@ -33,7 +33,7 @@ const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
  *
  * The route can also be flown: `fly()` runs it from where it is to its end at a steady pace, as a
  * film of it would, by moving the scroll itself, so every view follows as it does a hand. Any scroll
- * by hand lands the flight. A button marked `data-fly` inside the element starts and lands it; `tram:flight`
+ * by hand lands the flight. A button marked `data-fly` inside the element, when there is one, starts and lands it; `tram:flight`
  * tells `{ flying }`.
  */
 export class TramRouteScroller extends HTMLElement {

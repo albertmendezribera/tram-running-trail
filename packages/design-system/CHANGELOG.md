@@ -4,6 +4,10 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Vistes aparcades del visor de rutes.
+
+- `RouteScroller`: el botó «Fes el vol» només es dibuixa si `viewer.flight` ho demana; sense, no hi és. `fly()`, `land()`, `flying` i `tram:flight` segueixen com eren. La web no el demana (el vol és aparcat), i tampoc ofereix la vista «A peu» del visor: «Palamós a peu» n'ocupa el lloc. El codi de totes dues es conserva.
+
 Palamós a peu.
 
 - `GameStage` (interactiu nou, amb fitxa): un programa sencer que viu en una adreça de la web i pesa molt (un joc, un simulador). Mostra un pòster i un botó per manera de començar, amb el pes dit al costat; no en demana res fins que es prem un botó. Llavors l'obre en un marc sobre el pòster, amb «Pantalla completa», on el navegador en té, i «Tanca», que retira el marc. Abans d'obrir-lo demana un fitxer petit (`probe`) i, si la web no porta el programa, ho diu. Element `tram-game-stage`; el programa pot dir `ready` o `error` amb `postMessage`. Dins del programa, Esc torna el focus a la barra. No hi ha «abans»: és nou.

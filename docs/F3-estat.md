@@ -130,8 +130,8 @@ Per a Hoka, Altra i Scarpa, les fotos mateixes es poden demanar amb peticions si
 
 ### Què s'ha mirat i què no
 
-- **Mirat:** cada un dels 90 models nous, dibuixat fora del navegador amb la mateixa geometria i la mateixa barreja de fotos que el visor (de costat per les dues bandes, de dalt, de sota, de darrere, de front i en dos tres quarts), al costat de les fotos d'origen. Al visor de debò: la Nike Vomero 18 en local i, a staging, la Saucony Peregrine 16 i el cara a cara On Cloudsurfer Max / Asics Megablast.
-- **No mirat:** els altres models un per un al visor de debò, ni cap en un mòbil. De la bateria de proves de navegador només s'han passat les dues del catàleg en 3D, en un sol format (escriptori, clar).
+- **Mirat:** cada un dels 90 models nous, dibuixat fora del navegador amb la mateixa geometria i la mateixa barreja de fotos que el visor (de costat per les dues bandes, de dalt, de sota, de darrere, de front i en dos tres quarts), al costat de les fotos d'origen. Al visor de debò: la Nike Vomero 18 en local i, a staging, la Saucony Peregrine 16, la Topo Athletic MTN Racer 4, l'Altra Lone Peak 9 i el cara a cara On Cloudsurfer Max / Asics Megablast.
+- **No mirat:** els altres models un per un al visor de debò, ni cap en un mòbil. De la bateria de proves de navegador només s'han passat les dues del catàleg en 3D, en un sol format (escriptori, clar). A GitHub, el CI d'aquests canvis surt vermell en dues feines que no toquen les sabatilles: `visual` (captures de «a peu», del moment M2 i de la capçalera, amb les línies base pendents de regenerar) i `engines` (el visor de rutes a Firefox i WebKit, que ja fallava abans); `web`, `design-system` i `database` passen.
 
 ## El comparador: una pàgina per a totes les parelles
 

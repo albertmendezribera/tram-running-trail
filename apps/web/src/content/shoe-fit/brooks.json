@@ -1,0 +1,45 @@
+{
+ "maker": "brooks",
+ "accessed": "2026-11-22",
+ "method": "browser",
+ "shoes": {
+  "ghost-18": {
+   "widths": [
+    "Ancho (2E)",
+    "Extra ancho (4E)"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "El dia de la consulta, a la coloració de la pàgina, les dues amplades amples hi sortien com a «Agotado». La pàgina també ofereix «Estrecho (1B)»."
+  },
+  "glycerin-23": {
+   "widths": [
+    "Ancho (2E)",
+    "Extra ancho (4E)"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "El dia de la consulta, a la coloració de la pàgina, les dues amplades amples hi sortien com a «Agotado»."
+  },
+  "adrenaline-gts-26": {
+   "widths": null,
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La pàgina l’anuncia com a «Próximamente» (27 de novembre de 2026) i encara no ensenya talles ni amplades."
+  },
+  "glycerin-max-3": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "cascadia-20": {
+   "widths": [
+    "Ancho (2E)"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "maker": "scarpa",
+ "accessed": "2026-11-22",
+ "method": "browser",
+ "shoes": {
+  "spin-ultra-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "spin-st": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "spin-race": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "spin-planet": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "ribelle-run-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "ribelle-run-kalibra-ht": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "golden-gate-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "golden-gate-lt": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  }
+ }
+}

@@ -1,0 +1,77 @@
+---
+import { formatDate } from '@tram/formats';
+import ShoeRow from '@tram/design-system/patterns/ShoeRow.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { CATALOG_ACCESSED, CATALOG_NOTICE, catalogId, catalogPath, drawable } from '../content/shoe-catalog';
+import type { Need } from '../content/shoe-needs';
+import Site from '../layouts/Site.astro';
+import CatalogFilter from './CatalogFilter.astro';
+import CatalogNeeds from './CatalogNeeds.astro';
+
+export interface Props {
+  need: Need;
+}
+
+const { need } = Astro.props;
+const makers = new Set(need.shoes.map((shoe) => shoe.brand.slug)).size;
+const lead = `${need.shoes.length} models de ${makers} ${makers === 1 ? 'marca' : 'marques'}.`;
+---
+
+<!--
+  The catalogue by a need: the shoes that answer it, the rule that put them here and what the rule
+  cannot say. The filters of the catalogue work on this list too.
+-->
+<Site
+  title={need.title}
+  trail={[{ label: 'Sabatilles', href: '/ca/sabatilles/' }]}
+  description={`${need.title}: ${lead} ${need.rule}`}
+  placeholder
+  notice={CATALOG_NOTICE}
+  credits={[`Xifres: cada marca, al seu web. Consultat a partir del ${formatDate(CATALOG_ACCESSED, 'ca')}.`]}
+>
+  <Stack gap={5}>
+    <Heading level={1} size="lg" kicker="Sabatilles · Què busques">{need.title}</Heading>
+    <Text size="lg" measure><span data-lead>{lead}</span> {need.rule}</Text>
+    {need.blind && <Text size="sm" tone="muted" measure><span data-blind>{need.blind}</span></Text>}
+  </Stack>
+
+  <Band tone="plain" title="Els models">
+    <div class="list" data-catalog>
+      <Stack gap={7}>
+        <CatalogFilter shoes={need.shoes} />
+        <div data-catalog-list>
+          <Stack gap={7}>
+            {need.groups.map((group) => (
+              <section data-maker={group.title}>
+                <Stack gap={3}>
+                  <Heading level={3} size="sm">{`${group.title} · ${group.entries.length}`}</Heading>
+                  <Stack gap={0} as="ul">
+                    {group.entries.map(({ shoe, reason }) => (
+                      <li data-shoe={catalogId(shoe)} data-brand={shoe.brand.slug} data-terrain={shoe.terrain}>
+                        <ShoeRow href={catalogPath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.weightG} specs={drawable(shoe)} dropMm={shoe.dropMm} note={reason ?? undefined} />
+                      </li>
+                    ))}
+                  </Stack>
+                </Stack>
+              </section>
+            ))}
+          </Stack>
+        </div>
+      </Stack>
+    </div>
+  </Band>
+
+  <CatalogNeeds current={need} level={2} />
+</Site>
+
+<style>
+  /* A band runs edge to edge on a phone, for the panels it holds. This list is in no panel, and keeps the page's margin. */
+  @media (width < 48rem) {
+    .list {
+      padding-inline: var(--tram-sys-grid-margin);
+    }
+  }
+</style>

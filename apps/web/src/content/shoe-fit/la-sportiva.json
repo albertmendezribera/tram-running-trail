@@ -1,0 +1,43 @@
+{
+ "maker": "la-sportiva",
+ "accessed": "2026-11-22",
+ "method": "browser",
+ "shoes": {
+  "prodigio-pro": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa tècnica de la pàgina diu «Wide Fit: No»."
+  },
+  "prodigio-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa tècnica de la pàgina diu «Wide Fit: No»."
+  },
+  "prodigio-max": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa tècnica de la pàgina diu «Wide Fit: No»."
+  },
+  "bushido-iii": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa tècnica de la pàgina diu «Wide Fit: No»."
+  },
+  "mutant": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "akasha-ii": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  }
+ }
+}

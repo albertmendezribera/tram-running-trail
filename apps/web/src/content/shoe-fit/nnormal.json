@@ -1,0 +1,37 @@
+{
+ "maker": "nnormal",
+ "accessed": "2026-11-22",
+ "method": "plain",
+ "shoes": {
+  "cadi": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": "una punta més ampla",
+   "note": "La pàgina diu que la punta és més ampla que la de la Kjerag."
+  },
+  "kboix": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "kjerag-02": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "kjerag-brut": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "tomir-02": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  }
+ }
+}

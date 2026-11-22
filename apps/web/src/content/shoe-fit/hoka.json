@@ -1,0 +1,117 @@
+{
+ "maker": "hoka",
+ "accessed": "2026-11-22",
+ "method": "browser",
+ "shoes": {
+  "clifton-11": {
+   "widths": [
+    "Ancho",
+    "X-Ancho"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "A la coloració de la pàgina del catàleg, «X-Ancho» surt al selector d’amplada però no es pot triar."
+  },
+  "mach-7": {
+   "widths": [
+    "Ancho"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "bondi-9": {
+   "widths": [
+    "Ancho",
+    "X-Ancho"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "A la coloració de la pàgina del catàleg, «X-Ancho» surt al selector d’amplada però no es pot triar."
+  },
+  "mach-x-3": {
+   "widths": [
+    "Ancho"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "A la coloració de la pàgina del catàleg, «Ancho» surt al selector d’amplada però no es pot triar."
+  },
+  "rocket-x-3": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "arahi-9": {
+   "widths": [
+    "Ancho",
+    "X-Ancho"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "A la coloració de la pàgina del catàleg, «Ancho» i «X-Ancho» surten al selector d’amplada però no es poden triar."
+  },
+  "rincon-5": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "skyward-x-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "gaviota-6": {
+   "widths": [
+    "Ancho",
+    "X-Ancho"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "A la coloració de la pàgina del catàleg només es pot triar «Ancho»: «Normal» i «X-Ancho» surten al selector però no es poden triar."
+  },
+  "speedgoat-7": {
+   "widths": [
+    "Ancho"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "A la coloració de la pàgina del catàleg, «Ancho» surt al selector d’amplada però no es pot triar."
+  },
+  "tecton-x-4": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "challenger-8": {
+   "widths": [
+    "Ancho"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "mafate-5": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "torrent-5": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "zinal-3": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  }
+ }
+}

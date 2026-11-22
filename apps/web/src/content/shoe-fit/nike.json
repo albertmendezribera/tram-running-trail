@@ -1,0 +1,97 @@
+{
+ "maker": "nike",
+ "accessed": "2026-11-22",
+ "method": "plain",
+ "shoes": {
+  "pegasus-42": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": "https://www.nike.com/gb/t/pegasus-42-mens-road-running-shoes-wide-M9ckDyR3",
+   "toeBox": "Wide Toe Box",
+   "note": null
+  },
+  "pegasus-plus-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "pegasus-premium": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "vomero-18": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": "https://www.nike.com/gb/t/vomero-18-mens-road-running-shoes-wide-SMtmxlKz",
+   "toeBox": null,
+   "note": null
+  },
+  "vomero-plus": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": "https://www.nike.com/gb/t/vomero-plus-mens-road-running-shoes-wide-ZaR7ZyEh",
+   "toeBox": null,
+   "note": null
+  },
+  "structure-plus": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "winflo-12": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": "We widened the toe box",
+   "note": null
+  },
+  "zoom-fly-6": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "vaporfly-4": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "alphafly-4": {
+   "widths": null,
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "L’adreça del catàleg ja no porta al model (404): no s’ha pogut llegir."
+  },
+  "streakfly-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "acg-pegasus-trail": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": "extra room in the toe box and forefoot",
+   "note": null
+  },
+  "acg-ultrafly": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "acg-zegama-trail": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": "roomier forefoot and toe box",
+   "note": null
+  }
+ }
+}

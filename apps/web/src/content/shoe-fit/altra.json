@@ -1,0 +1,59 @@
+{
+  "maker": "altra",
+  "accessed": "2026-11-22",
+  "method": "browser",
+  "shoes": {
+    "lone-peak-9": {
+      "widths": [
+        "Wide"
+      ],
+      "widthsUrl": null,
+      "toeBox": "Original FootShape™ Fit",
+      "note": "La pàgina diu que l’Original és la puntera més ampla de la marca («our roomiest toe box»). La pàgina del catàleg ara es titula «Lone Peak 9+»."
+    },
+    "timp-6": {
+      "widths": [],
+      "widthsUrl": null,
+      "toeBox": null,
+      "note": "La pàgina en diu «Standard FootShape™ Fit», una de les formes de la marca, sense dir que sigui ampla."
+    },
+    "olympus-7": {
+      "widths": [],
+      "widthsUrl": null,
+      "toeBox": "Original FootShape™ Fit",
+      "note": "La pàgina diu que l’Original és la puntera més ampla de la marca («our roomiest toe box»)."
+    },
+    "torin-9": {
+      "widths": [
+        "Wide"
+      ],
+      "widthsUrl": null,
+      "toeBox": null,
+      "note": "La pàgina en diu «Standard FootShape™ Fit», una de les formes de la marca, sense dir que sigui ampla."
+    },
+    "escalante-5": {
+      "widths": [],
+      "widthsUrl": null,
+      "toeBox": "Original FootShape™ Fit",
+      "note": "La pàgina diu que l’Original és la puntera més ampla de la marca («our roomiest toe box»)."
+    },
+    "vanish-carbon-3": {
+      "widths": [],
+      "widthsUrl": null,
+      "toeBox": null,
+      "note": "La pàgina en diu «Racing FootShape™ Fit»: diu que deixa lloc als dits i ajusta el mig del peu, no que sigui ampla."
+    },
+    "experience-flow-3": {
+      "widths": [],
+      "widthsUrl": null,
+      "toeBox": null,
+      "note": "La pàgina en diu «Standard FootShape™ Fit», una de les formes de la marca, sense dir que sigui ampla."
+    },
+    "experience-wild-3": {
+      "widths": [],
+      "widthsUrl": null,
+      "toeBox": null,
+      "note": "La pàgina en diu «Standard FootShape™ Fit», una de les formes de la marca, sense dir que sigui ampla."
+    }
+  }
+}

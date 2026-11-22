@@ -15,10 +15,12 @@ export interface Props {
   specs?: ShoeSpecs | null | undefined;
   /** The drop, when it is known apart from the heights: a maker that states it and not its stacks. Otherwise it is the difference of the heights. */
   dropMm?: number | null | undefined;
+  /** A few words under its name: why it is in this list, where a list is made by a rule. */
+  note?: string | undefined;
   locale?: Locale;
 }
 
-const { href, brand, model, terrain, weightG, specs, dropMm, locale = 'ca' } = Astro.props;
+const { href, brand, model, terrain, weightG, specs, dropMm, note, locale = 'ca' } = Astro.props;
 const profile = specs ? buildShoeProfile(specs) : null;
 const drop = dropMm ?? profile?.dropMm ?? null;
 // Every row at the same scale: a millimetre of foam is the same height in all of them.
@@ -30,6 +32,7 @@ const BOX = { width: 300, height: 70 };
   <span class="what">
     <span class="brand" data-type="text-sm">{brand}</span>
     <span class="model" data-type="display-sm">{model}</span>
+    {note && <span class="note" data-type="text-sm">{note}</span>}
   </span>
   <span class="tag"><TerrainTag terrain={terrain} locale={locale} /></span>
   <span class="figures">
@@ -84,6 +87,10 @@ const BOX = { width: 300, height: 70 };
   .brand,
   .word {
     color: var(--tram-sys-text-muted);
+  }
+
+  .note {
+    margin-block-start: var(--tram-sys-space-1);
   }
 
   .tag {

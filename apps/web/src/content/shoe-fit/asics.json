@@ -1,0 +1,48 @@
+{
+ "maker": "asics",
+ "accessed": "2026-11-22",
+ "method": "browser",
+ "shoes": {
+  "novablast-6": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "metaspeed-sky-tokyo": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "gel-kayano-33": {
+   "widths": [
+    "Wide",
+    "Extra Wide"
+   ],
+   "widthsUrl": "https://www.asics.com/es/es-es/gel-kayano-33-wide/p/1011C227-001.html",
+   "toeBox": null,
+   "note": "Cada amplada és un producte amb pàgina pròpia; la «Extra Wide» és a https://www.asics.com/es/es-es/gel-kayano-33-extra-wide/p/1011C229-001.html. A la pàgina del catàleg el selector d’amplada només diu «Standard»."
+  },
+  "superblast-3": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "megablast": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "gel-nimbus-28": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": "https://www.asics.com/es/es-es/gel-nimbus-28-wide/p/1011C144-002.html",
+   "toeBox": null,
+   "note": "La versió ampla és un producte amb pàgina pròpia. A la pàgina del catàleg el selector d’amplada només diu «Standard»."
+  }
+ }
+}

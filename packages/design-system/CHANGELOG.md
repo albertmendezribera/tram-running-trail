@@ -4,6 +4,10 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Catàleg per necessitat («Què busques?»).
+
+- `ShoeRow`: propietat nova `note`, unes paraules sota el nom del model: per què és en una llista feta amb una regla («També en Wide», «40 mm al taló»). Sense `note`, la fila és com era.
+
 Palamós a peu: triar on comença el passeig.
 
 - `GameStage`: propietat nova `choosing`, una llista al costat dels botons (amb `Select`) per triar una cosa abans de començar; el que s'hi tria es diu al programa a la seva adreça, només en els modes que ho fan servir. L'adreça de la pàgina en pot dir una (`?lloc=far`). Sense `choosing`, l'escenari és com era: no hi ha «abans».

@@ -1,0 +1,79 @@
+{
+ "maker": "puma",
+ "accessed": "2026-11-22",
+ "method": "plain",
+ "shoes": {
+  "deviate-nitro-4": {
+   "widths": null,
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La descripció de la pàgina l’anomena «Deviate NITRO™ 4 Wide», però ni el títol ni cap selector parlen d’amplada: no es tria."
+  },
+  "deviate-nitro-elite-4": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "deviate-pure-nitro": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "fast-fwd-nitro-elite-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "fast-r-nitro-elite-3": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "foreverrun-nitro-3": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "magmax-nitro-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "velocity-nitro-5": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "deviate-nitro-elite-trail": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "fast-trac-nitro-4": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "velocity-nitro-trail": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "voyage-nitro-4": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  }
+ }
+}

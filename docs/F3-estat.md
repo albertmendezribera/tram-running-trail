@@ -133,6 +133,38 @@ La regla, fixada pel titular: les fotos surten **només del web o del servidor d
 - **Mirat:** cada un dels 125 models nous, dibuixat fora del navegador amb la mateixa geometria i la mateixa barreja de fotos que el visor (de costat per les dues bandes, de dalt, de sota, de darrere, de front i en dos tres quarts), al costat de les fotos d'origen. Al visor de debò: la Nike Vomero 18 en local i, a staging, la Saucony Peregrine 16, la Topo Athletic MTN Racer 4, l'Altra Lone Peak 9, la Hoka Mafate 5, la Scarpa Spin ST, la Salomon Genesis 2 i dos cara a cara (On Cloudsurfer Max / Asics Megablast, Hoka Speedgoat 7 / Salomon Speedcross 6).
 - **No mirat:** els altres models un per un al visor de debò, ni cap en un mòbil. De la bateria de proves de navegador només s'han passat, al matí, les dues del catàleg en 3D, en un sol format (escriptori, clar); a la tarda, cap. A GitHub, el CI dels canvis del matí sortia vermell en dues feines que no toquen les sabatilles (`visual` i `engines`, per captures i proves del visor de rutes); amb les línies base regenerades, el CI del commit següent (`d111f2b`) passa sencer.
 
+## «Què busques?»: el catàleg per necessitat (22 de novembre de 2026)
+
+Pregunta del titular: un company busca sabatilles amples; ho tindria fàcil? No ho tenia: el catàleg només es podia filtrar per marca i per terreny, i no hi havia cap dada d'amplada. Ara s'hi pot entrar pel que es necessita.
+
+- **On:** `/ca/sabatilles/`, bloc «Què busques?», i una pàgina per necessitat: `/ca/sabatilles/amples/`, `lleugeres/`, `molt-amortiment/`, `drop-baix/`, `amb-placa/` i `tacs-profunds/`. Són pàgines fetes, amb adreça pròpia i sense script; els filtres de marca i terreny hi funcionen a sobre («amples i de muntanya»).
+- **Cada pàgina diu** quants models hi ha, la regla que els hi fa entrar, què no pot dir (els models que la regla no ha pogut jutjar) i, a cada fila, per què hi és. Una necessitat amb menys de dos models no té pàgina. Cada fitxa de sabatilla enllaça a les llistes on surt.
+- **Les regles** són a `apps/web/src/content/need-keys.ts`, amb proves (`scripts/need-keys.test.mjs`). **Els llindars són nostres**, i cada pàgina ho diu: lleugera, 230 g o menys d'asfalt i 270 g o menys de muntanya; molt amortiment, 40 mm o més al taló d'asfalt i 35 mm de muntanya; drop baix, 4 mm o menys; tacs profunds, 5 mm o més. Amb placa: la que la marca declara (un «sense placa» declarat no hi entra).
+
+### L'amplada: què s'ha llegit
+
+Cap marca declara l'amplada en mil·límetres. El que sí que diuen, i s'ha llegit model per model al web de cada marca el 22 de novembre (`apps/web/src/content/shoe-fit/<marca>.json`):
+
+- **Si el model es ven també en una versió més ampla**, amb el nom que li dona la marca («Wide», «Ancho (2E)», «X-Ancho»): 38 models. Compta un selector o una pestanya d'amplada a la pàgina del model, una versió ampla amb pàgina pròpia al mateix web (Nike, On, Asics, Salomon: la fitxa hi enllaça) o la llista de models amples de la marca.
+- **Si la marca descriu la puntera com a ampla o eixamplada**, amb les seves paraules, citades curtes: 15 models (11 dels quals sense versió ampla). «Peu ample» en llista 49 de 10 marques.
+- **Sense resposta, 3 models:** Nike Alphafly 4 (l'adreça ja no hi és), Brooks Adrenaline GTS 26 (anunciada, sense talles) i Puma Deviate Nitro 4 (la descripció en diu «Wide» i la resta de la pàgina no: no es tria). No compten com a estretes: la pàgina ho diu.
+- **Com s'han llegit:** amb peticions simples, Nike, NNormal, Puma, Merrell i Mizuno; amb el navegador, la resta. Cap comprovació antirobots aquesta vegada, tampoc a La Sportiva.
+
+**Decisions meves, a revisar:**
+
+- **Altra:** la pàgina dona a cada model una forma («Original», «Standard» o «Racing FootShape™ Fit»). Només l'«Original», que la pàgina anomena la puntera més ampla de la marca, compta com a puntera ampla; les altres dues surten com a nota a la fitxa.
+- **Afirmacions relatives** («We widened the toe box», «una punta més ampla»): hi entren, citades tal com són, sota «La marca en destaca l'espai a la puntera».
+- **Els noms de les amplades** es deixen com els escriu la pàgina consultada, en la seva llengua («Ancho», «Wide»).
+- **Una amplada que surt al selector però no es pot triar** en la coloració de la pàgina (Hoka), o que hi surt esgotada (Brooks), compta com a oferta; la fitxa ho diu.
+
+**Què no s'ha comprovat:**
+
+- A Mizuno, NNormal, Scarpa i Adidas no s'ha buscat si venen versions amples com a producte a part: «una de sola» vol dir «a la pàgina consultada». A La Sportiva la cerca del web no va respondre.
+- L'oferta d'amplades canvia per país: és la del web de cada marca que ja feia servir el catàleg (Espanya, Regne Unit o Europa, segons la marca).
+- Cap dada s'ha llegit dues vegades ni l'ha repassada una persona.
+- No hi ha cap necessitat que el catàleg no pugui respondre amb dades: estabilitat o pronació, impermeable, o «per a principiants» no hi són.
+- El comparador no diu res de l'amplada.
+
 ## El comparador: una pàgina per a totes les parelles
 
 CLAUDE.md 3 preveu `/ca/comparar/[a]-vs-[b]/`, amb les parelles populars generades i la resta sota demanda. **El lloc encara és estàtic** (l'adaptador de Cloudflare no hi és), i 161 models són 12.880 parelles: massa pàgines per generar-les totes, i sense dades per saber quines són les populars. Decisió presa en fer-lo (2026-11-20), a revisar quan hi hagi servidor:

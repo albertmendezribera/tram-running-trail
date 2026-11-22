@@ -1,0 +1,37 @@
+{
+ "maker": "decathlon",
+ "accessed": "2026-11-22",
+ "method": "browser",
+ "shoes": {
+  "kiprun-kipstorm-elite": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Ancho de pie: Medio»."
+  },
+  "kiprun-kipride-max": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Ancho de pie: Medio»."
+  },
+  "kiprun-kipride": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Ancho de pie: Medio»."
+  },
+  "kiprun-kipsummit-race": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Ancho de pie: Medio»."
+  },
+  "kiprun-kipsummit-max": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Ancho de pie: Medio»."
+  }
+ }
+}

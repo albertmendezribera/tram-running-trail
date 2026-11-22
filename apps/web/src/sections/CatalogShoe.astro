@@ -12,6 +12,8 @@ import Panel from '@tram/design-system/primitives/Panel.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import { CATALOG_NOTICE, type CatalogShoe, catalogId, catalogName, catalogPath, catalogShoes, drawable } from '../content/shoe-catalog';
+import { fitAccessed, fitOf } from '../content/shoe-fit';
+import { needPath, needsOf } from '../content/shoe-needs';
 import { catalogPhoto } from '../content/shoe-photos';
 import Site from '../layouts/Site.astro';
 import CatalogShoeViewer from './CatalogShoeViewer.astro';
@@ -45,6 +47,18 @@ const facts = [
   { label: 'Sola', value: shoe.outsole },
 ];
 const known = facts.filter((fact) => fact.value !== null).length;
+// The width, read apart and on another day: what the maker offers besides the regular width, and its own words for the toe box.
+const fit = fitOf(shoe);
+const fitDay = fitAccessed(shoe);
+const several = new Intl.ListFormat('ca', { type: 'conjunction' });
+const fitFacts = fit
+  ? [
+      { label: 'Amplades', value: fit.widths === null ? null : fit.widths.length ? several.format(['La normal', ...fit.widths]) : 'Una de sola, a la pàgina consultada', ...(fit.widthsUrl && { href: fit.widthsUrl }) },
+      { label: 'La puntera, segons la marca', value: fit.toeBox ? `«${fit.toeBox}»` : null },
+    ]
+  : [];
+// The lists by need it is on: from a shoe to the others that answer the same.
+const answers = needsOf(shoe);
 // The others of the same maker, to go on from one to the next.
 const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.brand.slug && other !== shoe);
 ---
@@ -61,7 +75,10 @@ const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.bran
 >
   <Stack gap={5}>
     <Heading level={1} size="lg" kicker={`Sabatilla · ${shoe.brand.name}`}>{shoe.model}</Heading>
-    <Cluster><TerrainTag terrain={shoe.terrain} /></Cluster>
+    <Cluster gap={4}>
+      <TerrainTag terrain={shoe.terrain} />
+      {answers.map((need) => <span data-answers={need.slug}><Link href={needPath(need)}>{need.label}</Link></span>)}
+    </Cluster>
     <Text size="lg" measure>{`${KIND[shoe.terrain]}. Les xifres són les que ${shoe.brand.name} declara al seu web: no les hem mesurat, i el que la marca no diu queda sense dada.`}</Text>
     <StatBlock stats={stats} lead />
   </Stack>
@@ -98,6 +115,19 @@ const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.bran
       <Stack gap={4}>
         <Facts facts={facts} />
         {shoe.note && <div data-note><Text size="sm" measure>{shoe.note}</Text></div>}
+        {
+          fit && fitDay && (
+            <div data-fit>
+              <Stack gap={3}>
+                <Facts facts={fitFacts} />
+                {fit.note && <Text size="sm" measure>{fit.note}</Text>}
+                <Text size="sm" tone="muted" measure>
+                  {`L’amplada és el que en diu ${shoe.brand.name} al seu web, consultat el ${formatDate(fitDay, 'ca')}. Cap marca declara l’amplada en mil·límetres.`}
+                </Text>
+              </Stack>
+            </div>
+          )
+        }
         <Text size="sm" tone="muted" measure>
           {`${known} de ${facts.length} dades, totes de la pàgina del model al web de ${shoe.brand.name}, consultada el ${formatDate(shoe.accessed, 'ca')}.`}
         </Text>

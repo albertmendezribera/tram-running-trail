@@ -1,0 +1,86 @@
+{
+ "maker": "saucony",
+ "accessed": "2026-11-22",
+ "method": "browser",
+ "shoes": {
+  "ride-19": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "guide-19": {
+   "widths": [
+    "Wide",
+    "Extra Wide"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "triumph-24": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "hurricane-26": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "kinvara-16": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "endorphin-speed-6": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "endorphin-pro-5": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "endorphin-elite-3": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "endorphin-azura": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "peregrine-16": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "xodus-ultra-4": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  }
+ }
+}

@@ -1,0 +1,49 @@
+{
+ "maker": "salomon",
+ "accessed": "2026-11-22",
+ "method": "browser",
+ "shoes": {
+  "genesis-2": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": "https://www.salomon.com/es-es/product/genesis-2-wide-li9186",
+   "toeBox": null,
+   "note": "La versió ampla és un producte amb pàgina pròpia; la pàgina del catàleg no en diu res. La marca la ven com a unisex."
+  },
+  "s-lab-genesis-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "ultra-glide-4": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": "https://www.salomon.com/es-es/product/ultra-glide-4-wide-li9131",
+   "toeBox": null,
+   "note": "La versió ampla és un producte amb pàgina pròpia; la pàgina del catàleg no en diu res. La marca la ven com a unisex."
+  },
+  "pulsar": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  },
+  "speedcross-6": {
+   "widths": [
+    "Wide"
+   ],
+   "widthsUrl": "https://www.salomon.com/es-es/product/speedcross-6-wide-lg9372",
+   "toeBox": null,
+   "note": "La versió ampla és un producte amb pàgina pròpia; la pàgina del catàleg no en diu res."
+  },
+  "s-lab-ultra-v2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": null
+  }
+ }
+}

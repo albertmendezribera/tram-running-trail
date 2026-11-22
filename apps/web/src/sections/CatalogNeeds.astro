@@ -1,0 +1,43 @@
+---
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { type Need, needPath, needs } from '../content/shoe-needs';
+
+export interface Props {
+  /** The need of the page it is on: the others are offered. */
+  current?: Need;
+  /** The level of its title. */
+  level?: 2 | 3;
+}
+
+const { current, level = 3 } = Astro.props;
+const all = needs();
+---
+
+<!--
+  The way into the catalogue for whoever comes with a need and not with a maker in mind: «I want a wide
+  shoe». Each need is a page of its own, so it is a link and works without a script.
+-->
+{
+  all.length > 0 && (
+    <nav class="needs" aria-label="Què busques?" data-needs>
+      <Stack gap={3}>
+        <Heading level={level} size="sm">{current ? 'Busques una altra cosa?' : 'Què busques?'}</Heading>
+        {!current && <Text measure>Si no véns amb una marca al cap, comença pel que necessites. Cada llista diu amb quina regla s’ha fet, i què no pot dir.</Text>}
+        <Cluster gap={2}>
+          {all
+            .filter((need) => need !== current)
+            .map((need) => (
+              <span data-need={need.slug}>
+                <Button variant="secondary" size={current ? 'sm' : 'md'} href={needPath(need)}>{`${need.label} · ${need.shoes.length}`}</Button>
+              </span>
+            ))}
+          {current && <Button variant="quiet" size="sm" href="/ca/sabatilles/">Tot el catàleg</Button>}
+        </Cluster>
+      </Stack>
+    </nav>
+  )
+}

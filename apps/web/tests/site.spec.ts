@@ -12,6 +12,7 @@ const PAGES = {
   'shoe-trail': '/ca/sabatilles/hoka/speedgoat-6/',
   compare: COMPARE,
   'on-foot': '/ca/rutes/palamos/a-peu/',
+  'shoe-need': '/ca/sabatilles/amples/',
 };
 // These carry a route to run: their long scroll and their 3D are covered by the M2 tests.
 const ROUTE_PAGES = { 'race-trail': '/ca/curses/marxa-de-les-tines/', 'route-flat': '/ca/rutes/sils/' };
@@ -714,6 +715,101 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     await expect(filter.locator('[data-status]')).toHaveText('Cap model amb aquests filtres.');
     await expect(page.locator('[data-map-view="stack"] [data-map-count]')).toHaveText('0');
     expect(await overflow(page)).toBe(0);
+  });
+
+  test('offers a way in by need: each is a page with its rule, its shoes in order and what the rule cannot say', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.shoes);
+    const ways = page.getByRole('navigation', { name: 'Què busques?' });
+    await expect(ways.getByRole('heading', { name: 'Què busques?' })).toBeVisible();
+    expect(await ways.getByRole('link').count()).toBeGreaterThanOrEqual(5);
+    await ways.getByRole('link', { name: /^Lleugera · \d+$/ }).click();
+    await expect(page).toHaveURL(/\/ca\/sabatilles\/lleugeres\/$/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Sabatilles lleugeres');
+    // The rule, with its thresholds, and what it cannot judge.
+    await expect(main(page)).toContainText(/pesen 230\sg o menys si són d’asfalt i 270\sg o menys si són de muntanya/);
+    await expect(main(page)).toContainText('El llindar l’hem posat nosaltres.');
+    await expect(page.locator('[data-blind]')).toContainText(/\d+ models no hi poden sortir: la seva marca no en declara el pes\./);
+    // As many rows as the page says, the lightest first, each saying which size was weighed where the maker says it.
+    const rows = page.locator('[data-catalog-list] [data-shoe]');
+    const total = await rows.count();
+    await expect(page.locator('[data-lead]')).toHaveText(new RegExp(`^${total} models de \\d+ marques\\.$`));
+    await expect(rows.first()).toContainText('Hyperwarp Pure 2');
+    await expect(rows.first()).toContainText(/135\sg/);
+    await expect(rows.nth(2)).toContainText('Pes: aproximat, talla 9 d’home');
+    // The filters of the catalogue work on this list too.
+    const filter = page.locator('[data-catalog-filter]');
+    await filter.getByRole('radio', { name: /Muntanya/ }).check({ force: true });
+    const shown = page.locator('[data-catalog-list] [data-shoe]:visible');
+    expect(await shown.count()).toBeGreaterThan(0);
+    expect(await shown.count()).toBeLessThan(total);
+    expect(new Set(await shown.evaluateAll((items) => items.map((item) => item.getAttribute('data-terrain'))))).toEqual(new Set(['trail']));
+    await expect(filter.locator('[data-status]')).toHaveText(`${await shown.count()} de ${total} models.`);
+    // From a need to the others, and back to the whole catalogue; never to itself.
+    const others = page.getByRole('navigation', { name: 'Què busques?' });
+    await expect(others.getByRole('link', { name: /^Lleugera/ })).toHaveCount(0);
+    await expect(others.getByRole('link', { name: /^Drop baix · \d+$/ })).toHaveAttribute('href', '/ca/sabatilles/drop-baix/');
+    await expect(others.getByRole('link', { name: 'Tot el catàleg' })).toHaveAttribute('href', '/ca/sabatilles/');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('a wide shoe is found by what its maker says: a wider version on sale, or a toe box it calls wide', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.shoes);
+    await page.getByRole('navigation', { name: 'Què busques?' }).getByRole('link', { name: /^Peu ample · \d+$/ }).click();
+    await expect(page).toHaveURL(/\/ca\/sabatilles\/amples\/$/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Sabatilles per a peu ample');
+    // No maker states a width in millimetres, and the page says what it cannot say.
+    await expect(main(page)).toContainText('Cap marca declara l’amplada en mil·límetres');
+    await expect(page.locator('[data-blind]')).toContainText('no vol dir que siguin estrets');
+    const groups = page.locator('[data-catalog-list] section h3');
+    await expect(groups).toHaveText([/^Amb una versió més ampla · \d+$/, /^La marca en destaca l’espai a la puntera · \d+$/]);
+    // Each row says why, with the maker's own names and words.
+    const row = (id: string) => page.locator(`[data-catalog-list] [data-shoe="${id}"]`);
+    await expect(row('topo-athletic/atmos-2')).toContainText('També en Wide · «Roomy Toe Box»');
+    await expect(row('hoka/clifton-11')).toContainText('També en Ancho i X-Ancho');
+    await expect(row('nike/winflo-12')).toContainText('«We widened the toe box»');
+    // A model with one width only is not here, and neither is one whose page could not be read.
+    await expect(row('merrell/agility-peak-6')).toHaveCount(0);
+    await expect(row('puma/deviate-nitro-4')).toHaveCount(0);
+    // Wide and for the mountain: the filters of the catalogue, on this list.
+    await page.locator('[data-catalog-filter]').getByRole('radio', { name: /Muntanya/ }).check({ force: true });
+    const shown = page.locator('[data-catalog-list] [data-shoe]:visible');
+    expect(await shown.count()).toBeGreaterThan(5);
+    expect(new Set(await shown.evaluateAll((items) => items.map((item) => item.getAttribute('data-terrain'))))).toEqual(new Set(['trail']));
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('a shoe says what its maker says of its width, where to find the wider version, and nothing when the page could not be read', async ({ page }) => {
+    await open(page, '/ca/sabatilles/asics/gel-kayano-33/');
+    const fit = page.locator('[data-fit]');
+    await expect(fit.getByRole('link', { name: 'La normal, Wide i Extra Wide' })).toHaveAttribute('href', /asics\.com\/.*gel-kayano-33-wide/);
+    await expect(fit).toContainText('Cap marca declara l’amplada en mil·límetres.');
+    await expect(page.locator('[data-answers="amples"]').getByRole('link', { name: 'Peu ample' })).toHaveAttribute('href', '/ca/sabatilles/amples/');
+    // One width, read on the page: said as such, and the shoe is on no list of wide ones.
+    await open(page, '/ca/sabatilles/decathlon/kiprun-kipride/');
+    await expect(page.locator('[data-fit]')).toContainText('Una de sola, a la pàgina consultada');
+    await expect(page.locator('[data-fit]')).toContainText('«Ancho de pie: Medio»');
+    await expect(page.locator('[data-answers="amples"]')).toHaveCount(0);
+    // A page that could not be settled: no width is given, and the reason is.
+    await open(page, '/ca/sabatilles/puma/deviate-nitro-4/');
+    await expect(page.locator('[data-fit] dl > div').first()).toContainText('Sense dada');
+    await expect(page.locator('[data-fit]')).toContainText('no es tria');
+  });
+
+  test('every page by need lists only shoes its rule lets in, and a shoe says which lists it is on', async ({ page }) => {
+    await open(page, '/ca/sabatilles/tacs-profunds/');
+    const rows = page.locator('[data-catalog-list] [data-shoe]');
+    expect(new Set(await rows.evaluateAll((items) => items.map((item) => item.getAttribute('data-terrain'))))).toEqual(new Set(['trail']));
+    await expect(rows.first()).toContainText(/Tacs de \d(,\d)?\smm/);
+    await open(page, '/ca/sabatilles/amb-placa/');
+    await expect(page.locator('[data-catalog-list] section h3').first()).toHaveText(/^Placa de carboni · \d+$/);
+    await expect(page.locator('[data-blind]')).toContainText('la pàgina de la marca no diu si en porten');
+    // A shoe leads to the lists it is on, next to its ground.
+    await open(page, '/ca/sabatilles/nike/streakfly-2/');
+    await expect(page.locator('[data-answers="lleugeres"]').getByRole('link', { name: 'Lleugera' })).toHaveAttribute('href', '/ca/sabatilles/lleugeres/');
+    await expect(page.locator('[data-answers="tacs-profunds"]')).toHaveCount(0);
   });
 
   test('compares any two models of the catalogue: figure by figure, with the soles over one another and a warning where figures were not taken alike', async ({ page }) => {

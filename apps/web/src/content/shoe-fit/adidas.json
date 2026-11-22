@@ -1,0 +1,55 @@
+{
+ "maker": "adidas",
+ "accessed": "2026-11-22",
+ "method": "browser",
+ "shoes": {
+  "adizero-adios-pro-evo-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Horma clásica»."
+  },
+  "adizero-evo-sl": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Horma clásica»."
+  },
+  "adizero-boston-13": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Horma clásica»."
+  },
+  "adizero-adios-pro-5": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Horma clásica»."
+  },
+  "adizero-prime-x3-strung": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Horma clásica»."
+  },
+  "adizero-sl-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Horma clásica»."
+  },
+  "terrex-agravic-speed-2": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Corte clásico»."
+  },
+  "terrex-agravic-tt": {
+   "widths": [],
+   "widthsUrl": null,
+   "toeBox": null,
+   "note": "La fitxa de la pàgina diu «Horma clásica»."
+  }
+ }
+}

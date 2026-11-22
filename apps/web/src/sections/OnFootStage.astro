@@ -10,12 +10,15 @@ export interface Props {
 
 const { route, onFoot } = Astro.props;
 const poster = onFootPoster(route.slug);
+// A start says where and, if it has one, towards what: the game takes both as «X,Z».
+const told = ({ at, look }: OnFoot['starts'][number]) => (at ? { params: { at: at.join(','), ...(look && { look: look.join(',') }) } } : {});
 if (!poster) throw new Error(`no poster for "${route.slug}" a peu: make it with scripts/world-poster.mjs`);
 ---
 
 <!--
   The town in 3D: a program of its own, some 52 MB of it, of which nothing is asked for until one of the
   two buttons is pressed. A build of the site that was made without it says so then, instead of opening it.
+  Whoever walks freely chooses where to start; the route always starts where it was recorded.
 -->
 <GameStage
   id="on-foot"
@@ -25,6 +28,7 @@ if (!poster) throw new Error(`no poster for "${route.slug}" a peu: make it with 
     { value: 'ruta', label: 'Corre la ruta' },
     { value: 'explora', label: 'Passeja pel teu compte' },
   ]}
+  choosing={{ label: 'On comença el passeig', param: 'lloc', modes: ['explora'], choices: onFoot.starts.map((start) => ({ value: start.slug, label: start.name, ...told(start) })) }}
   src={`${onFoot.program}index.html`}
   probe={`${onFoot.program}manifest.json`}
   channel={onFoot.channel}

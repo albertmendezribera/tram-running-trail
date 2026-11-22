@@ -4,6 +4,10 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Palamós a peu: triar on comença el passeig.
+
+- `GameStage`: propietat nova `choosing`, una llista al costat dels botons (amb `Select`) per triar una cosa abans de començar; el que s'hi tria es diu al programa a la seva adreça, només en els modes que ho fan servir. L'adreça de la pàgina en pot dir una (`?lloc=far`). Sense `choosing`, l'escenari és com era: no hi ha «abans».
+
 Vistes aparcades del visor de rutes.
 
 - `RouteScroller`: el botó «Fes el vol» només es dibuixa si `viewer.flight` ho demana; sense, no hi és. `fly()`, `land()`, `flying` i `tram:flight` segueixen com eren. La web no el demana (el vol és aparcat), i tampoc ofereix la vista «A peu» del visor: «Palamós a peu» n'ocupa el lloc. El codi de totes dues es conserva.

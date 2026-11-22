@@ -6,7 +6,7 @@ import '@tram/design-system/base.css';
 import '@tram/design-system/fonts/fallbacks.css';
 
 // A stand-in for a program of its own, for the fiche of GameStage: it weighs nothing, says which mode it
-// was opened in and tells its page it is ready, or that it has failed when asked to (`?mode=falla`).
+// was opened in (and whatever else its address says) and tells its page it is ready, or that it has failed when asked to (`?mode=falla`).
 // Like the rest of the catalogue, it is left out of the production build (CLAUDE.md 6.7).
 export const getStaticPaths = (() => (import.meta.env.PROD && process.env['TRAM_DS'] !== '1' ? [] : [{ params: { program: 'programa-de-mostra' } }])) satisfies GetStaticPaths;
 ---
@@ -30,12 +30,16 @@ export const getStaticPaths = (() => (import.meta.env.PROD && process.env['TRAM_
     <main class="program">
       <p class="name" data-type="display-sm">Programa de mostra</p>
       <p class="mode" data-mode></p>
+      <p class="mode" data-told></p>
       <button class="inside" data-type="text-sm" type="button">Un botó de dins</button>
     </main>
     <script is:inline>
       {
         const mode = new URLSearchParams(location.search).get('mode') ?? '';
         document.querySelector('[data-mode]').textContent = `Mode: ${mode}`;
+        // Whatever else its address says, as the stage tells it what was chosen in its list.
+        const told = [...new URLSearchParams(location.search)].filter(([name]) => name !== 'mode').map(([name, value]) => `${name} = ${value}`);
+        document.querySelector('[data-told]').textContent = told.length ? `També: ${told.join(' · ')}` : '';
         const tell = (state, detail) => parent.postMessage({ source: 'tram-demo', state, detail }, location.origin);
         // After the page has loaded, as a real program does: it has a lot to bring first.
         addEventListener('load', () => (mode === 'falla' ? tell('error', 'El programa de mostra ha fallat, com se li ha demanat.') : tell('ready', mode)));

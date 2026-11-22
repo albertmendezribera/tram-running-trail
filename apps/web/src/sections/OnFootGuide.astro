@@ -90,7 +90,7 @@ const DECORATION = [
         <Stack as="ul" gap={2}>{DECORATION.map((item) => <Text as="li">{item}</Text>)}</Stack>
       </Panel>
       <Panel title="El ritme">
-        <Text>{`El corredor fa la ruta de ${route.name} a ${formatMeasure(onFoot.paceS, 'pace', 'ca')}, que és un ritme fix del joc, no el de la sortida. Qui passeja pel seu compte comença al ${onFoot.start}.`}</Text>
+        <Text>{`El corredor fa la ruta de ${route.name} a ${formatMeasure(onFoot.paceS, 'pace', 'ca')}, que és un ritme fix del joc, no el de la sortida. Qui passeja pel seu compte tria on comença: ${new Intl.ListFormat('ca', { type: 'disjunction' }).format(onFoot.starts.map((start) => start.name))}.`}</Text>
       </Panel>
     </Stack>
   </Split>

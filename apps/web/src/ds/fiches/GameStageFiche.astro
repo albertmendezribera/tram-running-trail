@@ -10,6 +10,7 @@ const code = `<GameStage
   label="Palamós a peu"
   poster={{ alt: 'Vista aèria del Palamós en 3D…', wide: { src, width, height, formats: [{ src: avif, type: 'image/avif' }] }, tall }}
   modes={[{ value: 'ruta', label: 'Corre la ruta' }, { value: 'explora', label: 'Passeja pel teu compte' }]}
+  choosing={{ label: 'On comença el passeig', param: 'lloc', modes: ['explora'], choices: [{ value: 'passeig', label: 'Passeig del Mar' }, { value: 'far', label: 'Far de Palamós', params: { at: '541.5,758' } }] }}
   src="/mon/palamos/index.html"
   probe="/mon/palamos/manifest.json"
   channel="tram-palamos"
@@ -45,6 +46,33 @@ const WAYS = [
     <p class="fiche-note">
       Un botó per manera de començar; el primer és el principal. Si l'adreça de la pàgina en diu una (<code>?mode=explora</code>), el seu botó passa a ser el principal i pren el focus, però res no comença sol. En marxa, la barra
       ofereix la pantalla completa, on el navegador en té, i «Tanca». Dins del programa, <code>Esc</code> torna el focus a la barra.
+    </p>
+  </section>
+
+  <section class="fiche-block" data-testid="choice">
+    <h2 data-type="display-sm">Amb una cosa per triar abans</h2>
+    <GameStage
+      id="demo-choice"
+      label="Programa de mostra amb una tria"
+      poster={poster}
+      modes={WAYS}
+      choosing={{
+        label: 'On comença el passeig',
+        param: 'lloc',
+        modes: ['explora'],
+        choices: [
+          { value: 'passeig', label: 'Passeig del Mar' },
+          { value: 'nucli-antic', label: 'Carrer Major, al nucli antic', params: { at: '581.6,208.3', look: '582.9,176.1' } },
+          { value: 'far', label: 'Far de Palamós', params: { at: '541.5,758', look: '558,778' } },
+        ],
+      }}
+      src={PROGRAM}
+      probe={PROGRAM}
+      channel="tram-demo"
+    />
+    <p class="fiche-note">
+      Una llista (<code>choosing</code>) al costat dels botons, amb el selector del navegador. El que s'hi tria es diu al programa a la seva adreça, només en els modes que ho fan servir: aquí, qui corre la ruta comença sempre on
+      comença la ruta. La primera opció és la triada, si l'adreça de la pàgina no en diu una altra (<code>?lloc=far</code>).
     </p>
   </section>
 

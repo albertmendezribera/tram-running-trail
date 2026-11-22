@@ -257,6 +257,28 @@ test.describe('GameStage', () => {
     await expect(stage(page)).toHaveScreenshot('game-stage-running.png');
   });
 
+  test('what is chosen in its list is told to the program, only in the modes that take it', async ({ page }) => {
+    await open(page, PAGES['game-stage']);
+    const place = stage(page, 'demo-choice').getByRole('combobox', { name: 'On comença el passeig' });
+    await expect(place).toHaveValue('passeig');
+    // The first choice has nothing to say: the program starts where it starts by itself.
+    await stage(page, 'demo-choice').getByRole('button', { name: 'Passeja pel teu compte' }).click();
+    await expect(program(page, 'demo-choice').getByText('Mode: explora')).toBeVisible();
+    await expect(stage(page, 'demo-choice').locator('iframe')).toHaveAttribute('src', /\?mode=explora$/);
+    await expect(place).toBeHidden();
+    await stage(page, 'demo-choice').getByRole('button', { name: 'Tanca' }).click();
+    await place.selectOption('far');
+    await stage(page, 'demo-choice').getByRole('button', { name: 'Passeja pel teu compte' }).click();
+    await expect(program(page, 'demo-choice').getByText('També: at = 541.5,758 · look = 558,778')).toBeVisible();
+    await stage(page, 'demo-choice').getByRole('button', { name: 'Tanca' }).click();
+    await stage(page, 'demo-choice').getByRole('button', { name: 'Corre la ruta' }).click();
+    await expect(program(page, 'demo-choice').getByText('Mode: ruta')).toBeVisible();
+    await expect(stage(page, 'demo-choice').locator('iframe')).toHaveAttribute('src', /\?mode=ruta$/);
+    // The address of the page may name one of the choices.
+    await open(page, `${PAGES['game-stage']}?lloc=nucli-antic`);
+    await expect(place).toHaveValue('nucli-antic');
+  });
+
   test('does not move what is under its bar when it starts', async ({ page }) => {
     await open(page, PAGES['game-stage']);
     const top = () => stage(page).locator('.frame').evaluate((frame) => Math.round(frame.getBoundingClientRect().top + window.scrollY));

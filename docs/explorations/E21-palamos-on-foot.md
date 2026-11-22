@@ -66,3 +66,12 @@ Les façanes de debò no són a cap dada oberta (E20). El que sí que hi és i e
 ## Recomanació
 
 Deixar-ho a l'entorn de proves fins que el titular ho hagi vist en el seu telèfon. Abans de producció: la revisió legal de les atribucions (ICGC, OpenStreetMap) i decidir si 52 MB són acceptables en mòbil o cal una versió més lleugera.
+
+## On comença el passeig (22 de novembre de 2026)
+
+Qui passeja pel seu compte tria on comença, en una llista al costat dels botons: el Passeig del Mar (on el joc comença tot sol), el carrer Major al nucli antic, que és on hi ha més rètols, o el far. Qui corre la ruta comença sempre on comença la ruta.
+
+- La llista és una propietat nova de `GameStage` (`choosing`), feta amb `Select`. El que s'hi tria es diu al joc a la seva adreça (`?at=X,Z&look=X,Z`, en metres a l'est i al sud de l'origen del joc) i només en el mode «explora».
+- L'adreça de la pàgina en pot dir una: `/ca/rutes/palamos/a-peu/?mode=explora&lloc=far`. No comença res tot sol.
+- Els tres punts són a `apps/web/src/content/index.ts` (`starts`). S'han triat sobre l'eix del carrer d'OpenStreetMap i mirant captures fetes dins del joc: en un carreró, un punt massa a prop d'una paret deixa la càmera enganxada al corredor.
+- Comprovat: les proves de la pàgina i de la fitxa, i amb els ulls al navegador (Chromium al Mac), d'escriptori i en mida de mòbil. No s'ha provat en cap mòbil de debò.

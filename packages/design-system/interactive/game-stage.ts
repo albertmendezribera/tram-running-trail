@@ -52,6 +52,11 @@ export class TramGameStage extends HTMLElement {
     return [...this.querySelectorAll<HTMLElement>('[data-mode]')];
   }
 
+  /** The list of what is chosen before starting, where the stage has one. */
+  #choice(): HTMLSelectElement | null {
+    return this.querySelector<HTMLSelectElement>('[data-part="choice"] select');
+  }
+
   #show(state: State, message: string): void {
     this.dataset['state'] = state;
     this.#part('status').textContent = message;
@@ -61,10 +66,15 @@ export class TramGameStage extends HTMLElement {
    * A link may name a mode (`?mode=ruta`). Nothing starts by itself: a browser gives sound and the
    * pointer only to a page that has been pressed, and the download is heavy. The button of that mode
    * becomes the main one and takes the focus, which also brings it into view. Where a page has several
-   * stages, the first one takes it.
+   * stages, the first one takes it. The link may also name one of the choices of the list (`?lloc=far`),
+   * which is then the one selected.
    */
   #prefer(): void {
-    const wanted = new URLSearchParams(location.search).get(this.dataset['param'] ?? 'mode');
+    const asked = new URLSearchParams(location.search);
+    const choice = this.#choice();
+    const named = asked.get(this.dataset['choiceParam'] ?? '');
+    if (choice && named !== null && [...choice.options].some((option) => option.value === named)) choice.value = named;
+    const wanted = asked.get(this.dataset['param'] ?? 'mode');
     const modes = this.#modes();
     const chosen = modes.find((mode) => mode.dataset['mode'] === wanted);
     if (!chosen) return;
@@ -115,6 +125,12 @@ export class TramGameStage extends HTMLElement {
 
     const address = new URL(this.dataset['src'] ?? '', location.href);
     address.searchParams.set(this.dataset['param'] ?? 'mode', mode.dataset['mode'] ?? '');
+    // What was chosen in the list is told to the program too, in the modes it means something in.
+    const choice = this.#choice();
+    if (choice && (this.dataset['choiceModes'] ?? '').split(' ').includes(mode.dataset['mode'] ?? '')) {
+      const told = (JSON.parse(this.dataset['choices'] ?? '{}') as Record<string, Record<string, string>>)[choice.value] ?? {};
+      for (const [name, value] of Object.entries(told)) address.searchParams.set(name, value);
+    }
     const frame = document.createElement('iframe');
     frame.title = this.getAttribute('aria-label') ?? '';
     frame.allow = 'fullscreen';

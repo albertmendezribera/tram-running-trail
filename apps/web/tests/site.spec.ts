@@ -965,6 +965,38 @@ test.describe('Palamós on foot', () => {
     await expect(stage(page).getByRole('button', { name: 'Passeja pel teu compte' })).toBeFocused();
   });
 
+  test('whoever walks freely chooses where to start, and the game is told; the route starts where it starts', async ({ page }) => {
+    const asked = await serve(page, true);
+    await open(page, PATH);
+    const place = stage(page).getByRole('combobox', { name: 'On comença el passeig' });
+    await expect(place.getByRole('option')).toHaveText(['Passeig del Mar', 'Carrer Major, al nucli antic', 'Far de Palamós']);
+    await expect(place).toHaveValue('passeig');
+    await place.selectOption({ label: 'Far de Palamós' });
+    await stage(page).getByRole('button', { name: 'Passeja pel teu compte' }).click();
+    await expect(stage(page)).toHaveAttribute('data-state', 'ready');
+    // Where, and towards what: metres east and south of the origin of the game.
+    expect(asked[1]).toBe('GET /mon/palamos/index.html?mode=explora&at=541.5%2C758&look=558%2C778');
+    await expect(place).toBeHidden();
+    await stage(page).getByRole('button', { name: 'Tanca' }).click();
+    // The choice is still the one made, and it says nothing to the route.
+    await expect(place).toHaveValue('far');
+    await stage(page).getByRole('button', { name: 'Corre la ruta' }).click();
+    await expect(stage(page)).toHaveAttribute('data-state', 'ready');
+    expect(asked.at(-1)).toBe('GET /mon/palamos/index.html?mode=ruta');
+    await expect(main(page)).toContainText('Qui passeja pel seu compte tria on comença: Passeig del Mar, Carrer Major, al nucli antic o Far de Palamós.');
+  });
+
+  test('a link may name the place the walk starts at, and nothing starts by itself', async ({ page }) => {
+    const asked = await serve(page, true);
+    await open(page, `${PATH}?mode=explora&lloc=nucli-antic`);
+    await expect(stage(page).getByRole('combobox', { name: 'On comença el passeig' })).toHaveValue('nucli-antic');
+    await expect(stage(page).getByRole('button', { name: 'Passeja pel teu compte' })).toBeFocused();
+    expect(asked).toEqual([]);
+    // A place the stage does not have changes nothing.
+    await open(page, `${PATH}?lloc=la-lluna`);
+    await expect(stage(page).getByRole('combobox', { name: 'On comença el passeig' })).toHaveValue('passeig');
+  });
+
   test('a build that does not carry the game says so instead of opening it', async ({ page }) => {
     await serve(page, false);
     await open(page, PATH);

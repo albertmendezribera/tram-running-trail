@@ -1,12 +1,33 @@
 ---
 import type { Locale } from '@tram/formats';
 import Button from '../primitives/Button.astro';
+import Select from './Select.astro';
 
 export interface Mode {
   /** What the program is told: it goes in its address, `?mode=<value>`. */
   value: string;
   /** The text of its button, which says what pressing it does. */
   label: string;
+}
+
+export interface Choice {
+  /** Its name in the address of the page that carries the stage (`?lloc=far`). */
+  value: string;
+  /** Its name in the list. */
+  label: string;
+  /** What the program is told when this is the one chosen: added to its address. Without it nothing is added, and the program does what it does by itself. */
+  params?: Readonly<Record<string, string>>;
+}
+
+export interface Choosing {
+  /** What is being chosen, said next to the list. */
+  label: string;
+  /** Its name in the address of the page that carries the stage, which may name one of the choices. */
+  param: string;
+  /** The modes it means something in. Started in another, the program is told nothing of it. */
+  modes: readonly string[];
+  /** The first is the one chosen, unless the address of the page names another. */
+  choices: readonly Choice[];
 }
 
 export interface Picture {
@@ -35,6 +56,8 @@ export interface Props {
   poster: Poster;
   /** The ways of starting the program, one button each. The first is the main one, unless the address of the page names another. */
   modes: readonly Mode[];
+  /** Something to choose before starting, from a list: where it starts, for one. Only some of the modes may take it. */
+  choosing?: Choosing;
   /** The page of the program, on this same site. The mode is added to it. */
   src: string;
   /** Name of the mode in the address, both of the program and of the page that carries the stage (`?mode=ruta`). */
@@ -90,7 +113,7 @@ const COPY = {
   },
 };
 
-const { label, poster, modes, src, param = 'mode', probe, note, channel, absent, locale = 'ca', id } = Astro.props;
+const { label, poster, modes, choosing, src, param = 'mode', probe, note, channel, absent, locale = 'ca', id } = Astro.props;
 const copy = COPY[locale];
 // Below this width the frame is tall: the same breakpoint as in the styles.
 const PHONE = '(width < 48rem)';
@@ -106,6 +129,9 @@ const { wide, tall } = poster;
   data-src={src}
   data-param={param}
   data-probe={probe}
+  data-choice-param={choosing?.param}
+  data-choice-modes={choosing?.modes.join(' ')}
+  data-choices={choosing && JSON.stringify(Object.fromEntries(choosing.choices.map((choice) => [choice.value, choice.params ?? {}])))}
   data-channel={channel}
   data-text-loading={copy.loading}
   data-text-ready={copy.ready}
@@ -127,6 +153,13 @@ const { wide, tall } = poster;
         ))
       }
     </ul>
+    {
+      choosing && (
+        <div class="choice" data-part="choice">
+          <Select name={choosing.param} label={choosing.label} options={choosing.choices.map(({ value, label }) => ({ value, label }))} value={choosing.choices[0]?.value} />
+        </div>
+      )
+    }
     {note && <p class="note" data-type="text-xs">{note}</p>}
     <noscript><p class="note" data-part="script" data-type="text-xs">{copy.script}</p></noscript>
     <p class="status" data-part="status" data-type="text-xs" role="status" tabindex="-1"></p>
@@ -196,6 +229,12 @@ const { wide, tall } = poster;
     color: var(--tram-sys-text-muted);
   }
 
+  /* On a phone the list takes the width of the bar, so the longest of its names is read whole. */
+  .choice {
+    flex: 1 1 100%;
+    min-inline-size: 0;
+  }
+
   .status:empty {
     display: none;
   }
@@ -235,14 +274,14 @@ const { wide, tall } = poster;
   }
 
   /* What each moment offers: the ways in before it starts, the ways out while it runs, and only words when it is not there. */
-  .game:not([data-state='poster'], [data-state='loading']) :is(.modes, .note),
+  .game:not([data-state='poster'], [data-state='loading']) :is(.modes, .choice, .note),
   .game:is([data-state='poster'], [data-state='loading'], [data-state='absent']) .controls,
   .game:is([data-state='running'], [data-state='ready'], [data-state='error']) .poster {
     display: none;
   }
 
   /* Without JavaScript nothing can start: the bar says so, and offers no button that would do nothing. */
-  .game:has(noscript > [data-part='script']) :is(.modes, .note:not([data-part='script'])) {
+  .game:has(noscript > [data-part='script']) :is(.modes, .choice, .note:not([data-part='script'])) {
     display: none;
   }
 
@@ -266,6 +305,17 @@ const { wide, tall } = poster;
   @media (width >= 48rem) {
     .frame {
       aspect-ratio: 16 / 9;
+    }
+
+    /* With room, what is chosen is said before its list, on the line of the buttons. */
+    .choice {
+      flex: 0 1 auto;
+    }
+
+    .choice :global(.field) {
+      grid-auto-flow: column;
+      align-items: center;
+      gap: var(--tram-sys-space-2);
     }
   }
 </style>

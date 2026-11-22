@@ -17,6 +17,21 @@ export type Terrain = 'road' | 'trail' | 'mixed';
  * one: `scripts/sync-palamos-world.sh` copies it into the site where it is at hand, and a build without
  * it says so on the page. What is said of it here is what its own pipeline counts (its README).
  */
+/** A place a visitor who walks freely may start at. */
+export interface OnFootStart {
+  /** Its name in the address of the page: `?lloc=far`. */
+  slug: string;
+  /** As the list names it. */
+  name: string;
+  /**
+   * Where the walk starts, in the game's own metres (east and south of its origin): the nearest street
+   * is taken. Without it, the place the game starts at by itself.
+   */
+  at?: readonly [number, number];
+  /** The point the runner looks at when it starts, in the same metres. */
+  look?: readonly [number, number];
+}
+
 export interface OnFoot {
   /** The page it is played on. */
   href: string;
@@ -42,8 +57,8 @@ export interface OnFoot {
   signs: number;
   /** Places whose name floats over them and is seen from afar: churches, the lighthouse, museums, sculptures, viewpoints. */
   landmarks: number;
-  /** Where a visitor who walks freely starts. */
-  start: string;
+  /** Where a visitor who walks freely may start: the first is where the game starts by itself. */
+  starts: readonly OnFootStart[];
   /** What its poster shows (a capture taken inside the game), in words. */
   posterAlt: string;
 }
@@ -126,7 +141,12 @@ export const ROUTES: Route[] = [
         paceS: 300,
         signs: 329,
         landmarks: 41,
-        start: 'Passeig del Mar',
+        // The same numbers as STARTS in the game's tools/capture.gd, which takes a picture of each.
+        starts: [
+          { slug: 'passeig', name: 'Passeig del Mar' },
+          { slug: 'nucli-antic', name: 'Carrer Major, al nucli antic', at: [581.6, 208.3], look: [582.9, 176.1] },
+          { slug: 'far', name: 'Far de Palamós', at: [541.5, 758], look: [558, 778] },
+        ],
         posterAlt: 'Vista aèria del Palamós en 3D: la platja Gran, el passeig amb les seves fileres d’arbres i les cases del poble',
       },
     }),

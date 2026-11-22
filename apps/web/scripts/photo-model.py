@@ -8,7 +8,9 @@ each one is taken:
     "lateral": { "file", "toe": "left"|"right" }, "medial": { "file" },
     "top":  { "file", "pick": "left"|"right" (or "single": true), "toes": "up"|"down"|"left"|"right" },
     "heel": { "file", "pick" (or "single") } (optional), "sole": { "file", "pick" (or "single"), "toes" } (optional),
-    "shadow": "faint" (optional: the sole is white, grey or black) }
+    "shadow": "faint" (optional: the sole is white, grey or black) or "none" (the photo has no shadow: it was cut out by its
+    transparency); a side or heel view may carry its own "shadow",
+    "scale": 0.8, "quality": 82 (optional: smaller and lighter textures; 1 and 86 when left out) }
 `pick` is which shoe of a pair to take: it has to be the same foot as the side photos. A photo of one
 shoe alone says `single` instead. A shoe whose width nobody measured is given a nominal length: its model
 is of no true size, and the page that shows it must not compare sizes with it."""
@@ -20,6 +22,8 @@ from scipy import ndimage
 config = json.load(open(sys.argv[1]))
 src, out = config['src'], config['out']
 STATIONS = 120
+# The outline is kept in shares, so the textures can be made smaller without changing the model.
+SCALE, QUALITY = float(config.get('scale', 1)), int(config.get('quality', 86))
 
 def load(name):
     return np.asarray(Image.open(f'{src}/{name}').convert('RGB')).astype(np.int16)
@@ -45,7 +49,7 @@ def biggest(labels, n, count=1):
     order = np.argsort(sizes)[::-1][:count]
     return [ndimage.binary_fill_holes(ndimage.binary_closing(labels == (i + 1), iterations=6)) for i in order]
 
-def body(mask, rgb):
+def body(mask, rgb, rule=None):
     """A side silhouette is one run of shoe in every column: the longest one. Under the
     sole lies its shadow on the floor, neutral and dark: the run is trimmed from below
     while it is colourless, by a twentieth of the photo at most (a black sole would
@@ -53,7 +57,12 @@ def body(mask, rgb):
     spread = rgb.max(axis=2) - rgb.min(axis=2)
     # What may be shadow: anything colourless. With `"shadow": "faint"`, for a shoe whose sole is white,
     # grey or black, only a pure grey that is not dark: a white foam keeps a trace of colour, and rubber is dark.
-    shade = (spread <= 2) & (rgb.mean(axis=2) >= 60) if config.get('shadow') == 'faint' else spread < 14
+    # The rule is the shoe's, unless the photo has its own (`"shadow"` in its view): a set may mix cut-out and studio photos.
+    rule = rule or config.get('shadow')
+    shade = (spread <= 2) & (rgb.mean(axis=2) >= 60) if rule == 'faint' else spread < 14
+    # A photo cut out by its own transparency has no floor under it: nothing is trimmed.
+    if rule == 'none':
+        shade = np.zeros(spread.shape, bool)
     limit = mask.shape[0] // 20
     out = np.zeros_like(mask)
     lows = np.full(mask.shape[1], -1)
@@ -95,8 +104,9 @@ def bleed(rgb, mask):
 
 def save(rgb, mask, name, width):
     image = Image.fromarray(bleed(rgb, mask).astype(np.uint8))
+    width = 2 * round(width * SCALE / 2)
     height = round(image.height * width / image.width)
-    image.resize((width, height), Image.LANCZOS).save(f'{out}/{name}.webp', quality=86)
+    image.resize((width, height), Image.LANCZOS).save(f'{out}/{name}.webp', quality=QUALITY)
     Image.fromarray((mask * 255).astype(np.uint8)).resize((width // 2, height // 2)).save(f'{out}/{name}-mask.png')
 
 def spans(mask, axis_len):
@@ -128,7 +138,7 @@ def one_of_pair(view):
 side = {}
 for key in ('lateral', 'medial'):
     rgb = load(config[key]['file'])
-    mask = body(biggest(*mask_of(rgb))[0], rgb)
+    mask = body(biggest(*mask_of(rgb))[0], rgb, config[key].get('shadow'))
     rgb, mask = crop(rgb, mask)
     side[key] = (rgb, mask)
     save(rgb, mask, key, 1280)
@@ -171,10 +181,10 @@ model = {
 if config.get('heel'):
     rgb = load(config['heel']['file'])
     if config['heel'].get('single'):
-        shoe = body(biggest(*mask_of(rgb))[0], rgb)
+        shoe = body(biggest(*mask_of(rgb))[0], rgb, config['heel'].get('shadow'))
     else:
         pair = sorted(biggest(*mask_of(rgb), count=2), key=lambda m: np.where(m)[1].mean())
-        shoe = body(pair[0] if config['heel']['pick'] == 'left' else pair[1], rgb)
+        shoe = body(pair[0] if config['heel']['pick'] == 'left' else pair[1], rgb, config['heel'].get('shadow'))
     save(*crop(rgb, shoe), 'heel', 512)
     model['heel'] = True
 if config.get('sole'):

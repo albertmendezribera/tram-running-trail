@@ -61,8 +61,9 @@ export default defineConfig({
         enforce: 'pre',
         load(id) {
           if (process.env['TRAM_DS'] === '1' || process.env['NODE_ENV'] === 'development' || !id.includes('/content/shoes-local/')) return null;
-          // A JSON file is still read as JSON after this, so it is given as JSON; a photo, as the module of its address.
-          return /\.json(\?|$)/.test(id) ? 'null' : 'export default "";';
+          // A JSON file is still read as JSON after this, so it is given as JSON; a photo, or a file asked for by
+          // its address (`?url`), as the module of an address that is none.
+          return /\.json(\?|$)/.test(id) && !/[?&]url\b/.test(id) ? 'null' : 'export default "";';
         },
       },
     ],

@@ -826,9 +826,9 @@ test.describe('Shoe catalogue (Phase 3)', () => {
       await expect(main(page)).toContainText('No és un escaneig: són les fotos oficials de Puma');
       await expect(main(page)).toContainText('La mida és nominal');
     } else await expect(viewer).toHaveCount(0);
-    // A shoe with no photo model has no 3D view, whatever the machine.
+    // A shoe whose photo model is not there has no 3D view: on a machine without the makers' photos, none has.
     await open(page, '/ca/sabatilles/puma/voyage-nitro-4/');
-    await expect(page.locator('main [data-shoe-viewer]')).toHaveCount(0);
+    await expect(page.locator('main [data-shoe-viewer]')).toHaveCount(PHOTO('puma', 'voyage-nitro-4') ? 1 : 0);
     expect(await overflow(page)).toBe(0);
   });
 
@@ -854,10 +854,13 @@ test.describe('Shoe catalogue (Phase 3)', () => {
       await expect(first.locator('canvas')).toHaveAttribute('data-moving', 'false', { timeout: 60_000 });
       const yaw = async (viewer: typeof first): Promise<number> => Number(await viewer.locator('canvas').getAttribute('data-yaw'));
       expect((await yaw(first)) + (await yaw(second))).toBeCloseTo(Math.PI, 2);
-      await expect(page.locator('[data-in-3d]')).toContainText('Puma Deviate Nitro 4');
+      // Which shoes have a 3D view is said by the shorter list: theirs, or that of the ones without.
+      await expect(page.locator('[data-in-3d]')).toContainText(/vista 3D/);
       // One of the two without a model: no face to face, and nothing said in its place.
-      await page.getByLabel('Segon model').selectOption('scarpa/spin-race');
-      await expect(faces).toBeHidden();
+      if (!PHOTO('scarpa', 'spin-race')) {
+        await page.getByLabel('Segon model').selectOption('scarpa/spin-race');
+        await expect(faces).toBeHidden();
+      }
       expect(await overflow(page)).toBe(0);
     } else await expect(faces).toBeHidden();
   });

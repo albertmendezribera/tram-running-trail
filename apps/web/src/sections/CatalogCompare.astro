@@ -32,6 +32,15 @@ const index = Object.fromEntries(
 );
 // The shoes that have a photo model: none, on a machine that has not their photos.
 const inThreeD = sorted.filter((shoe) => catalogPhoto(shoe) !== undefined);
+// Which they are is said by the shorter list: the ones that have it, or the ones that have not.
+const flat = sorted.filter((shoe) => !inThreeD.includes(shoe));
+const names = (list: readonly CatalogShoe[]): string => list.map((shoe) => catalogName(shoe)).join(', ');
+const inThreeDText =
+  flat.length === 0
+    ? 'Tots els models tenen vista 3D, per posar-los cara a cara.'
+    : inThreeD.length <= flat.length
+      ? `Amb vista 3D, per posar-los cara a cara: ${names(inThreeD)}.`
+      : `Amb vista 3D, per posar-los cara a cara: ${inThreeD.length} dels ${sorted.length} models. Sense: ${names(flat)}.`;
 const soles = sorted.flatMap((shoe) => {
   const specs = drawable(shoe);
   return specs ? [{ id: catalogId(shoe), specs }] : [];
@@ -62,7 +71,7 @@ const rows = [
         <Button type="button" variant="quiet"><span data-swap>Canvia’n l’ordre</span></Button>
       </Cluster>
       <Text size="sm" tone="muted"><span data-status role="status">Tria dos models.</span></Text>
-      {inThreeD.length > 1 && <Text size="sm" tone="muted" measure><span data-in-3d>{`Amb vista 3D, per posar-los cara a cara: ${inThreeD.map((shoe) => catalogName(shoe)).join(', ')}.`}</span></Text>}
+      {inThreeD.length > 1 && <Text size="sm" tone="muted" measure><span data-in-3d>{inThreeDText}</span></Text>}
     </Stack>
   </form>
   <noscript><Text>El comparador munta la comparació al navegador i necessita JavaScript. Sense, cada model té la seva fitxa al catàleg.</Text></noscript>

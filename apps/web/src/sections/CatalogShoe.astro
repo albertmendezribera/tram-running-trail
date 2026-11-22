@@ -54,7 +54,7 @@ const several = new Intl.ListFormat('ca', { type: 'conjunction' });
 const fitFacts = fit
   ? [
       { label: 'Amplades', value: fit.widths === null ? null : fit.widths.length ? several.format(['La normal', ...fit.widths]) : 'Una de sola, a la pàgina consultada', ...(fit.widthsUrl && { href: fit.widthsUrl }) },
-      { label: 'La puntera, segons la marca', value: fit.toeBox ? `«${fit.toeBox}»` : null },
+      { label: 'La puntera, segons la marca', value: fit.toeBox ? `«${fit.toeBox}»` : fit.widths === null ? null : 'No en destaca l’amplada' },
     ]
   : [];
 // The lists by need it is on: from a shoe to the others that answer the same.

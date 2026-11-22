@@ -791,6 +791,7 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     await open(page, '/ca/sabatilles/decathlon/kiprun-kipride/');
     await expect(page.locator('[data-fit]')).toContainText('Una de sola, a la pàgina consultada');
     await expect(page.locator('[data-fit]')).toContainText('«Ancho de pie: Medio»');
+    await expect(page.locator('[data-fit]')).toContainText('No en destaca l’amplada');
     await expect(page.locator('[data-answers="amples"]')).toHaveCount(0);
     // A page that could not be settled: no width is given, and the reason is.
     await open(page, '/ca/sabatilles/puma/deviate-nitro-4/');

@@ -46,9 +46,22 @@ Cloudflare no accepta fitxers de més de 25 MiB: el motor es desa comprimit i el
 - Cap telèfon de debò, ni Safari, ni Firefox, ni la memòria que gasta en un mòbil. Els controls tàctils s'han provat amb dits simulats.
 - La pantalla completa, només en Chromium sense finestra.
 
+## Rètols i llocs singulars (22 de novembre de 2026)
+
+El titular ho va demanar: «Afegeix botigues, rètols i edificis emblemàtics d'OpenStreetMap».
+
+- **Què s'ha baixat:** 362 llocs amb nom (148 bars i restaurants, 109 botigues, 18 hotels i càmpings, 11 farmàcies, 6 bancs, serveis, esglésies, fars, museus, escultures i miradors). Els despatxos i les consultes no hi entren: sovint porten el nom d'una persona. Per la mateixa raó, el rètol d'una farmàcia diu només «Farmàcia».
+- **Rètols:** 329, dels quals 318 pengen d'una façana i 11 van de peu (guinguetes, càmpings, mercats a l'aire lliure). 19 són plaques d'edificis amb nom propi. El nom i el punt són d'OpenStreetMap; la paret es dedueix (la més propera al punt que doni a fora i a un carrer); la mida, el color i la lletra són decoració. 13 no hi han cabut i 9 eren repetits.
+- **Llocs singulars:** 41 amb el nom surant a sobre, que es veu de lluny (el far, des de 1.400 m; una escultura, des de 300 m) i no es trepitgen entre ells. A prop, el text de dalt de la pantalla diu «A prop: …».
+- **Esglésies, capelles i far:** sis edificis que ja no es pinten com una casa de pisos: paret de carreus o blanca, finestres altes i un portal. Decoració també, però sense balcons ni tendals.
+- **Pes:** el mateix, 52 MB (el fitxer dels rètols fa 21 KB). **Ritme:** entre 147 i 187 fotogrames per segon al Mac M2 a 1600 × 900, amb el motor de pintar del navegador.
+- **Comprovat:** la ruta sencera torna a passar igual (10,5 km, cap encallament); una prova nova (`tools/check_places.gd`) compta els rètols, mira que les lletres es fan en acostar-s'hi i es desfan en allunyar-se'n, i que el text de dalt diu el lloc proper; al navegador (Chromium, Mac) les lletres dels rètols i el «A prop» es veuen.
+- **No comprovat:** cap mòbil; ningú ha passejat carrer per carrer mirant si cada rètol és a la casa que toca.
+- **Què no hi és:** la Torre Valentina i altres elements que a OpenStreetMap no són un edifici tenen nom però no volum. Cap logotip: només el nom, en lletra de pal.
+
 ## Què li falta per assemblar-se més a Palamós
 
-Les façanes de debò no són a cap dada oberta (E20). El que sí que hi és i encara no s'ha fet servir: els comerços i llocs amb nom d'OpenStreetMap, les plantes i l'any de cada casa del Cadastre (E18), i el tipus d'arbre del mapa de cobertes. No s'ha fet una altra ronda sense que el titular digui, mirant-ho, què hi troba a faltar.
+Les façanes de debò no són a cap dada oberta (E20). El que sí que hi és i encara no s'ha fet servir: les plantes i l'any de cada casa del Cadastre (E18), i el tipus d'arbre del mapa de cobertes. No s'ha fet una altra ronda sense que el titular digui, mirant-ho, què hi troba a faltar.
 
 ## Recomanació
 

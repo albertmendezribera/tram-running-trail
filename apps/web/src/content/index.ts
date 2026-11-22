@@ -38,6 +38,10 @@ export interface OnFoot {
   demM: number;
   /** Seconds per kilometre the runner of the game runs the route at: a setting of the game, not the pace of the outing. */
   paceS: number;
+  /** Signs hung on the houses with the name OpenStreetMap gives each shop, bar, hotel or named building. */
+  signs: number;
+  /** Places whose name floats over them and is seen from afar: churches, the lighthouse, museums, sculptures, viewpoints. */
+  landmarks: number;
   /** Where a visitor who walks freely starts. */
   start: string;
   /** What its poster shows (a capture taken inside the game), in words. */
@@ -120,6 +124,8 @@ export const ROUTES: Route[] = [
         lidarYears: '2021-2023',
         demM: 5,
         paceS: 300,
+        signs: 329,
+        landmarks: 41,
         start: 'Passeig del Mar',
         posterAlt: 'Vista aèria del Palamós en 3D: la platja Gran, el passeig amb les seves fileres d’arbres i les cases del poble',
       },

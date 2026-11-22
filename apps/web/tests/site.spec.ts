@@ -993,8 +993,10 @@ test.describe('Palamós on foot', () => {
     await expect(real.getByRole('row', { name: /El relleu/ })).toContainText(/ICGC, amb un punt cada 5\sm/);
     await expect(real.getByRole('row', { name: /L’alçada de cada casa i els arbres/ })).toContainText('LiDAR de l’ICGC (2021-2023): 5.441 cases i 11.917 arbres');
     await expect(real.getByRole('row', { name: /Els carrers/ })).toContainText('OpenStreetMap');
+    await expect(real.getByRole('row', { name: /El nom i el lloc de comerços/ })).toContainText('OpenStreetMap: 329 rètols i 41 llocs amb el nom a sobre');
     const decoration = page.locator('main section', { hasText: 'Què és de debò i què no' });
     await expect(decoration).toContainText('Les façanes: finestres, balcons, portes i el color de la paret.');
+    await expect(decoration).toContainText('Els rètols: la mida, el color, la lletra i a quina paret de la casa pengen.');
     await expect(decoration).toContainText('El corredor, que és un maniquí.');
     // The pace is the game's, and is said to be.
     await expect(decoration).toContainText(/a 5:00\s\/km, que és un ritme fix del joc, no el de la sortida/);

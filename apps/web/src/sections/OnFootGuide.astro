@@ -35,9 +35,17 @@ const REAL = [
   { what: 'L’alçada de cada casa i els arbres', source: `LiDAR de l’ICGC (${onFoot.lidarYears}): ${count(onFoot.houses)} cases i ${count(onFoot.trees)} arbres` },
   { what: 'El color de cada teulada, del terra i del mar', source: 'Ortofoto de l’ICGC' },
   { what: 'Els carrers, les plantes dels edificis i els noms', source: 'OpenStreetMap' },
+  { what: 'El nom i el lloc de comerços, bars, hotels i llocs singulars', source: `OpenStreetMap: ${count(onFoot.signs)} rètols i ${count(onFoot.landmarks)} llocs amb el nom a sobre (esglésies, el far, museus, escultures, miradors)` },
   { what: 'El traçat de la ruta', source: 'El GPS d’una sortida real' },
 ];
-const DECORATION = ['Les façanes: finestres, balcons, portes i el color de la paret.', 'L’amplada de les voreres.', 'La forma de les copes dels arbres.', 'El corredor, que és un maniquí.'];
+const DECORATION = [
+  'Les façanes: finestres, balcons, portes i el color de la paret.',
+  'Els rètols: la mida, el color, la lletra i a quina paret de la casa pengen.',
+  'La pedra de les esglésies i el blanc del far.',
+  'L’amplada de les voreres.',
+  'La forma de les copes dels arbres.',
+  'El corredor, que és un maniquí.',
+];
 ---
 
 <!--

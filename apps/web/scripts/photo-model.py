@@ -10,7 +10,10 @@ each one is taken:
     "heel": { "file", "pick" (or "single") } (optional), "sole": { "file", "pick" (or "single"), "toes" } (optional),
     "shadow": "faint" (optional: the sole is white, grey or black) or "none" (the photo has no shadow: it was cut out by its
     transparency); a side or heel view may carry its own "shadow",
-    "scale": 0.8, "quality": 82 (optional: smaller and lighter textures; 1 and 86 when left out) }
+    "scale": 0.8, "quality": 82 (optional: smaller and lighter textures; 1 and 86 when left out),
+    "halo": 8, "rim": 2 (optional, against a halo of backdrop round the shoe: with "halo", what the outline took in of the
+    backdrop, a hollow it closed over, gives no colour, the backdrop being whatever is within that distance of its colour and
+    reaches the outside; with "rim", the outermost pixels take their colour from further in. A view may carry its own "halo") }
 `pick` is which shoe of a pair to take: it has to be the same foot as the side photos. A photo of one
 shoe alone says `single` instead. A shoe whose width nobody measured is given a nominal length: its model
 is of no true size, and the page that shows it must not compare sizes with it."""
@@ -23,7 +26,7 @@ config = json.load(open(sys.argv[1]))
 src, out = config['src'], config['out']
 STATIONS = 120
 # The outline is kept in shares, so the textures can be made smaller without changing the model.
-SCALE, QUALITY = float(config.get('scale', 1)), int(config.get('quality', 86))
+SCALE, QUALITY, RIM = float(config.get('scale', 1)), int(config.get('quality', 86)), int(config.get('rim', 0))
 
 def load(name):
     return np.asarray(Image.open(f'{src}/{name}').convert('RGB')).astype(np.int16)
@@ -102,8 +105,18 @@ def bleed(rgb, mask):
     idx = ndimage.distance_transform_edt(~mask, return_distances=False, return_indices=True)
     return rgb[idx[0], idx[1]]
 
+def painted(rgb, mask, halo):
+    """The part of the outline that is shoe for certain: not the backdrop it closed over, not its blurred edge."""
+    if halo and not mask.all():
+        like = np.abs(rgb - np.median(rgb[~mask], axis=0)).max(axis=2) <= halo
+        regions, _ = ndimage.label(like)
+        outside = np.unique(regions[like & ~mask])
+        mask = mask & ~np.isin(regions, outside[outside > 0])
+    return ndimage.binary_erosion(mask, iterations=RIM) if RIM else mask
+
 def save(rgb, mask, name, width):
-    image = Image.fromarray(bleed(rgb, mask).astype(np.uint8))
+    halo = int(config.get(name, {}).get('halo', config.get('halo', 0)))
+    image = Image.fromarray(bleed(rgb, painted(rgb, mask, halo)).astype(np.uint8))
     width = 2 * round(width * SCALE / 2)
     height = round(image.height * width / image.width)
     image.resize((width, height), Image.LANCZOS).save(f'{out}/{name}.webp', quality=QUALITY)

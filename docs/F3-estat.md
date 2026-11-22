@@ -72,66 +72,66 @@ El tema d'ECharts que genera el sistema continua sense cap gràfic que el faci s
 
 **Què situa el mapa i què no:** un model hi surt només si la seva marca declara les dues mesures. El pes és el de la talla que pesa cada marca i l'alçada es mesura diferent a cada casa: el mapa situa, no compara al mil·límetre, i ho diu.
 
-## La vista 3D: 96 dels 161 models, de fotos de la marca
+## La vista 3D: 131 dels 161 models, de fotos de la marca
 
-Decisió del titular (2026-11-20): la vista 3D del catàleg es fa amb **fotos oficials de la marca**, i no amb un model genèric de mesures (que hauria demanat una amplada que cap marca declara). És el mateix mètode de les dues sabatilles de la Fase 1 (`apps/web/scripts/photo-model.py`): la silueta es llegeix de la foto lateral i de la de dalt, se li dona volum i s'hi posen les fotos a sobre. El 2026-11-20 se'n van fer sis; el 2026-11-22 el titular va demanar-les totes («les bambes haurien d'estar totes en 3D no?») i se n'han fet **90 més: 96 de 161**.
+Decisió del titular (2026-11-20): la vista 3D del catàleg es fa amb **fotos oficials de la marca**, i no amb un model genèric de mesures (que hauria demanat una amplada que cap marca declara). És el mateix mètode de les dues sabatilles de la Fase 1 (`apps/web/scripts/photo-model.py`): la silueta es llegeix de la foto lateral i de la de dalt, se li dona volum i s'hi posen les fotos a sobre. El 2026-11-20 se'n van fer sis. El 2026-11-22 el titular va demanar-les totes («les bambes haurien d'estar totes en 3D no?»): al matí se'n van fer 90 més amb peticions simples (96 de 161), i a la tarda, amb el seu permís per llegir amb el navegador les pàgines de les marques que les rebutgen, **35 més: 131 de 161**.
 
 | Marca | Amb vista 3D | Fotos que hi ha | Notes |
 |---|---|---|---|
 | On | 18 de 18 | lateral, medial, dalt, taló, sola | PNG transparents |
+| Hoka | 15 de 15 | lateral, medial, dalt, taló, sola | PNG transparents. Codi de color llegit amb el navegador |
 | Nike | 13 de 14 | lateral, medial, dalt, taló, sola | Falta l'Alphafly 4. La Pegasus 42 (feta el dia 20) no té sola |
 | Topo Athletic | 13 de 13 | lateral, medial, dalt; sola en 6 | Sense foto de taló. En 7 models la foto de la sola és obliqua i no s'ha fet servir |
 | Puma | 12 de 12 | lateral, medial, dalt, sola | Sense foto de taló. La sola és de l'altre peu, emmirallada (vegeu més avall) |
 | Saucony | 11 de 11 | lateral, medial, dalt, taló, sola | |
 | Mizuno | 10 de 11 | lateral, medial, dalt, taló, sola | Falta la Wave Rebellion Pro 3. La Neo Vista 3 no té foto de sola |
 | Merrell | 10 de 10 | lateral, medial, dalt, taló, sola | |
+| Altra | 8 de 8 | lateral, medial, dalt, sola | PNG transparents. Cinc amb el codi de color llegit amb el navegador |
+| Scarpa | 8 de 8 | lateral, medial, dalt, sola | Fons blanc. Sense taló: la foto de darrere és de biaix. La Spin Planet surt de la coloració fosca |
 | Asics | 6 de 6 | lateral, medial, dalt, taló, sola | PNG transparents |
-| Altra | 3 de 8 | lateral, medial, dalt, sola | Lone Peak 9, Timp 6 i Experience Flow 3 |
-| Hoka, Adidas, Scarpa, La Sportiva, Salomon, NNormal, Brooks, Decathlon | 0 de 58 | — | Vegeu «Les que no en tenen» |
+| Salomon | 6 de 6 | lateral, medial, dalt, taló, sola | PNG transparents. La foto de dalt és de l'altre peu, emmirallada. La Speedcross 6, sense taló |
+| Decathlon | 1 de 5 | lateral, medial, dalt, sola | Només la Kipstorm Elite |
+| Adidas, La Sportiva, Brooks, NNormal | 0 de 24 | — | Vegeu «Les que no en tenen» |
 
-### Les que no en tenen (65), i per què
+### Les que no en tenen (30), i per què
 
-La regla, fixada pel titular: les fotos surten **només del web o del servidor d'imatges de cada marca, amb peticions simples** (sense fer-se passar per un navegador, respectant `robots.txt` i amb segons entre petició i petició), i **davant d'una comprovació antirobots s'atura** i la marca queda sense fer.
+La regla, fixada pel titular: les fotos surten **només del web o del servidor d'imatges de cada marca, amb peticions simples** (sense fer-se passar per un navegador, respectant `robots.txt` i amb segons entre petició i petició). Des de la tarda del 2026-11-22, **la pàgina d'una marca que rebutja les peticions simples es pot llegir amb el navegador** per saber-ne les adreces de les fotos; les fotos es continuen demanant amb peticions simples. **Davant d'una comprovació antirobots, també al navegador, s'atura** i la marca queda sense fer.
 
 | Què | Quantes | Per què |
 |---|---|---|
-| Hoka (totes) | 15 | hoka.com respon 406 a les peticions simples i una pàgina de comprovació («Please enable JS») al mapa del web. Les fotos sí que es poden demanar al servidor d'imatges (`dms.deckers.com`), però cal el codi de color de cada model, que només és a hoka.com |
-| Adidas (totes) | 8 | adidas.es respon 403 (el seu tallafocs), fins i tot al `robots.txt` |
-| Scarpa (totes) | 8 | La botiga (Shopify) respon 429 a totes les peticions simples, pàgina i fitxer de producte |
-| La Sportiva (totes) | 6 | 403, també al `robots.txt` |
-| Salomon (totes) | 6 | 403, «Access to this page has been denied» |
+| Adidas (totes) | 8 | La pàgina es llegeix amb el navegador i el servidor d'imatges respon. Però quatre models (Evo SL, Boston 13, Prime X3 Strung, SL 2) només tenen, en la coloració del catàleg, fotos de carrer; i les fotos d'estudi dels altres quatre porten una ombra projectada dura i una vista de dalt presa de biaix: l'eina hi llegeix siluetes falses (amplades de 230 mm). Cap no s'ha publicat. Demanaria un retall de debò de la sabatilla, que no s'ha fet |
+| La Sportiva (totes) | 6 | 403 a les peticions simples, i al navegador una pàgina de comprovació («SECURITY PAGE») |
+| Brooks (totes) | 5 | La pàgina es llegeix amb el navegador, però el camí de les imatges respon 403 a les peticions simples, i la imatge oberta sola al navegador tampoc es dona |
 | NNormal (totes) | 5 | Respon bé, però **no publica cap vista medial**: només lateral, parella de dalt, sola i un detall. Sense les dues bandes no hi ha model, i no se n'inventa cap |
-| Brooks (totes) | 5 | 403, també al `robots.txt` |
-| Decathlon (totes) | 5 | Comprovació de Cloudflare («Just a moment…») |
-| Altra: Olympus 7, Torin 9, Escalante 5, Vanish Carbon 3, Experience Wild 3 | 5 | El servidor d'imatges respon, però la botiga (Shopify) respon 429 a gairebé totes les pàgines, i sense la pàgina no se sap el codi de color de cada model. Els tres fets són els que es van poder llegir |
-| Nike Alphafly 4 | 1 | La pàgina del model (l'adreça del catàleg) respon 404 el 2026-11-22. Les xifres del catàleg es van llegir d'aquella pàgina el dia 20 |
+| Decathlon: Kipride Max, Kipride, Kipsummit Race, Kipsummit Max | 4 | La Kipride no té cap foto de dalt. A les altres tres, la sola blanca sobre fons blanc i les sabatilles fotografiades de biaix donen una silueta esquinçada o una amplada falsa: construïdes, mirades i no publicades |
+| Nike Alphafly 4 | 1 | L'adreça del catàleg ja no porta al model (404 a les peticions simples; al navegador, la portada de la botiga). Les xifres del catàleg es van llegir d'aquella pàgina el dia 20 |
 | Mizuno Wave Rebellion Pro 3 | 1 | La pàgina barreja un lateral renderitzat (verd apagat, sola blanca) amb fotos de l'altra banda, de dalt i de darrere d'un altre to (menta i blau, sola crema): les dues bandes no lligarien. L'altra coloració no té lateral |
-
-Per a Hoka, Altra i Scarpa, les fotos mateixes es poden demanar amb peticions simples: el que falta és una dada de la pàgina (el codi de color). **Llegir aquestes pàgines amb el navegador, com es va fer per a les xifres del catàleg, és una decisió del titular**; no s'ha fet.
 
 ### Què s'ha triat en fer-les
 
-- **La coloració no és sempre la de l'adreça del catàleg.** S'ha agafat una coloració amb color quan la pàgina en dona, perquè una sabatilla tota negra o tota blanca dona poc detall i, sobre fons blanc, no es retalla bé. La Mizuno Wave Inspire 22 surt d'una altra coloració perquè la del catàleg no té foto de dalt. La coloració i l'adreça de cada foto són al `config.json` de cada model.
-- **Textures més petites que les del dia 20:** 1024 px de llarg als costats (abans 1280), qualitat 82. Un model pesa uns 335 KB de mitjana (abans uns 600 KB); el més pesant, 593 KB, és un dels sis antics. La silueta es desa en proporcions, de manera que no canvia.
-- **Les fotos transparents es retallen pel seu canal alfa** (On, Mizuno, Asics, Altra): la sabatilla és el que és opac, i l'ombra de terra, mig transparent, es descarta. Abans es posaven sobre gris i l'ombra entrava a la silueta.
+- **La coloració no és sempre la de l'adreça del catàleg.** S'ha agafat una coloració amb color quan la pàgina en dona, perquè una sabatilla tota negra o tota blanca dona poc detall i, sobre fons blanc, no es retalla bé. La Mizuno Wave Inspire 22 surt d'una altra coloració perquè la del catàleg no té foto de dalt, i la Scarpa Spin Planet de la fosca perquè la blanca es perdia contra el fons. La coloració i l'adreça de cada foto són al `config.json` de cada model.
+- **Textures més petites que les del dia 20:** 1024 px de llarg als costats (abans 1280), qualitat 82. Un model pesa uns 357 KB de mitjana (abans uns 600 KB); el més pesant, 651 KB, és la Salomon Genesis 2. La silueta es desa en proporcions, de manera que no canvia.
+- **Les fotos transparents es retallen pel seu canal alfa** (On, Hoka, Mizuno, Asics, Altra, Salomon): la sabatilla és el que és opac, i l'ombra de terra, mig transparent, es descarta. Abans es posaven sobre gris i l'ombra entrava a la silueta.
 - **Una sola fotografiada de l'altre peu s'emmiralla** (12 models: els 11 de Puma, on la foto ensenya l'esquerra de dalt i la dreta girada, i l'Altra Lone Peak 9). El dibuix de la sola és el del peu que toca, però **les lletres hi surten del revés**. L'alternativa era deixar la sola sense foto. És al `config.json` (`"mirror": true`).
+- **A Salomon s'emmiralla la foto de dalt** (els 6 models): la marca fotografia de costat la sabatilla dreta i de dalt l'esquerra. Les lletres petites de la llengüeta i de la plantilla hi surten del revés; l'alternativa era emmirallar les dues bandes, amb el nom de la marca del revés.
 - **Quin peu és cada foto, cap on apunta i cap on mira la sola** ho dedueix l'eina de les fotos mateixes (la punta s'inclina cap al dit gros; l'avantpeu és la part ampla), i avisa quan alguna cosa no quadra.
+- **El fons ja no es cola a les vores** (models de la tarda del 22: Hoka, Scarpa, Salomon, Decathlon i cinc Altra). La silueta tanca per sobre dels racons de fons, i abans aquell gris o blanc tenyia el taló i la punta. Ara `photo-model.py` no en pren el color (`"halo"`, i `"rim"` per a la vora desenfocada). **Els 96 models anteriors no s'han refet** i conserven aquell defecte, petit; refer-los és un quart d'hora de màquina i tornar-los a mirar tots.
 - **Els sis models del dia 20 no s'han tocat**: continuen amb les textures grans i sense `config.json`.
 
 ### On surt, i com es carrega
 
 - **On surt:** a la fitxa de cada un («En 3D») i al comparador («Cara a cara en 3D»), quan els dos models de la parella en tenen. El comparador diu quants en tenen i quins no.
-- **La silueta es demana amb la vista, no va escrita a la pàgina.** Al comparador cada sabatilla hi és dues vegades; amb 96 siluetes escrites, la pàgina hauria fet 2,1 MB. Ara cada visor porta l'adreça de la seva silueta (4 KB) i la demana quan arrenca. `/ca/comparar/` fa 1,36 MB (76 KB comprimida; amb sis models feia 1,0 MB i 69 KB). La fitxa d'una sabatilla amb vista 3D fa uns 35 KB.
-- **La compilació** no ho nota: 606 pàgines en 8 segons, igual que abans. El `dist` de staging passa de 94 MB a 126 MB. El pressupost (`pnpm --filter @tram/web budget`) passa: només compta JavaScript, i no n'hi ha de nou.
+- **La silueta es demana amb la vista, no va escrita a la pàgina.** Al comparador cada sabatilla hi és dues vegades; amb les siluetes escrites, la pàgina hauria passat de 2 MB. Ara cada visor porta l'adreça de la seva silueta (4 KB) i la demana quan arrenca. `/ca/comparar/` fa 1,51 MB (83 KB comprimida; amb sis models feia 1,0 MB i 69 KB). La fitxa d'una sabatilla amb vista 3D fa uns 35 KB.
+- **La compilació** no ho nota: 606 pàgines en 8 segons, igual que abans. El `dist` de staging passa de 94 MB a 141 MB. El pressupost (`pnpm --filter @tram/web budget`) passa: només compta JavaScript, i no n'hi ha de nou.
 - **La mida és nominal.** Cap marca declara l'amplada, i el model es fa sobre una llargada de 300 mm: no se'n pot llegir cap mesura, i la fitxa ho diu. Al comparador cada sabatilla omple el seu marc.
-- **No són escanejos**, i cada vista ho diu: fidels de costat i de dalt; de darrere, només on hi ha foto de taló (a Puma, Topo i Altra el darrere és una barreja dels dos costats); aproximades de front.
+- **No són escanejos**, i cada vista ho diu: fidels de costat i de dalt; de darrere, només on hi ha foto de taló (a Puma, Topo, Altra i Scarpa el darrere és una barreja dels dos costats); aproximades de front.
 - **Les fotos són de les marques i no són al repositori** (`apps/web/src/content/shoes-local/`, exclòs). Hi ha, per a cada model, les textures, la configuració i les fotos originals baixades, a més de les eines que els han fet (`shoes-local/README.md`). Només són a staging, publicades des de la màquina que les té. Una compilació sense elles, com la de CI, no té cap vista 3D del catàleg, i una compilació de producció no les agafa encara que hi siguin; les proves cobreixen els dos casos.
-- **Risc:** ara són fotos de nou marques, d'un centenar de models, a un staging públic. La revisió legal ja ho assenyalava com el punt més feble amb vuit models.
+- **Risc:** ara són fotos de tretze marques, de 131 models, a un staging públic. La revisió legal ja ho assenyalava com el punt més feble amb vuit models.
 
 ### Què s'ha mirat i què no
 
-- **Mirat:** cada un dels 90 models nous, dibuixat fora del navegador amb la mateixa geometria i la mateixa barreja de fotos que el visor (de costat per les dues bandes, de dalt, de sota, de darrere, de front i en dos tres quarts), al costat de les fotos d'origen. Al visor de debò: la Nike Vomero 18 en local i, a staging, la Saucony Peregrine 16, la Topo Athletic MTN Racer 4, l'Altra Lone Peak 9 i el cara a cara On Cloudsurfer Max / Asics Megablast.
-- **No mirat:** els altres models un per un al visor de debò, ni cap en un mòbil. De la bateria de proves de navegador només s'han passat les dues del catàleg en 3D, en un sol format (escriptori, clar). A GitHub, el CI d'aquests canvis surt vermell en dues feines que no toquen les sabatilles: `visual` (captures de «a peu», del moment M2 i de la capçalera, amb les línies base pendents de regenerar) i `engines` (el visor de rutes a Firefox i WebKit, que ja fallava abans); `web`, `design-system` i `database` passen.
+- **Mirat:** cada un dels 125 models nous, dibuixat fora del navegador amb la mateixa geometria i la mateixa barreja de fotos que el visor (de costat per les dues bandes, de dalt, de sota, de darrere, de front i en dos tres quarts), al costat de les fotos d'origen. Al visor de debò: la Nike Vomero 18 en local i, a staging, la Saucony Peregrine 16, la Topo Athletic MTN Racer 4, l'Altra Lone Peak 9, la Hoka Mafate 5, la Scarpa Spin ST, la Salomon Genesis 2 i dos cara a cara (On Cloudsurfer Max / Asics Megablast, Hoka Speedgoat 7 / Salomon Speedcross 6).
+- **No mirat:** els altres models un per un al visor de debò, ni cap en un mòbil. De la bateria de proves de navegador només s'han passat, al matí, les dues del catàleg en 3D, en un sol format (escriptori, clar); a la tarda, cap. A GitHub, el CI dels canvis del matí sortia vermell en dues feines que no toquen les sabatilles (`visual` i `engines`, per captures i proves del visor de rutes); amb les línies base regenerades, el CI del commit següent (`d111f2b`) passa sencer.
 
 ## El comparador: una pàgina per a totes les parelles
 

@@ -621,6 +621,12 @@ test.describe('Route as a story (M5)', () => {
     await expect(sheet).toContainText(/12,13\skm/);
     await expect(sheet).toContainText('01:11:22');
     await expect(sheet).toContainText(/5:53\s?\/km/);
+    // Run a second time, a little shorter: both outings are told, each with what its own GPX says.
+    const outings = sheet.locator('[data-outings]');
+    await expect(outings.getByRole('row')).toHaveCount(3);
+    await expect(outings.getByRole('row').nth(1)).toContainText(/1 · traç.*12,13\skm.*01:11:22.*5:53\s?\/km/);
+    await expect(outings.getByRole('row').nth(2)).toContainText(/2.*11,43\skm.*01:05:50.*5:46\s?\/km/);
+    await expect(outings).toContainText('El traç, el perfil i les xifres de dalt són de la primera sortida.');
     await expect(share(page).getByRole('link', { name: 'Baixa-la' }).first()).toHaveAttribute('download', 'tram-rutes-riera-de-santa-coloma.png');
     expect((await page.request.get('/stories/rutes/riera-de-santa-coloma-nit.png')).status()).toBe(200);
     expect(await overflow(page)).toBe(0);

@@ -3,7 +3,7 @@
 // file and nothing else.
 import { type ProfilePoint, summarize } from '@tram/design-system/patterns/elevation.ts';
 import type { Plate } from '@tram/design-system/patterns/route-plate.ts';
-import { CALONGE, PALAMOS, RIERA_DE_SANTA_COLOMA, SILS } from './profiles';
+import { CALONGE, PALAMOS, RIERA_DE_SANTA_COLOMA, RIERA_DE_SANTA_COLOMA_2, SILS } from './profiles';
 import calongePlate from './routes/calonge/plate.json';
 import palamosPlate from './routes/palamos/plate.json';
 import rieraPlate from './routes/riera-de-santa-coloma/plate.json';
@@ -63,6 +63,16 @@ export interface OnFoot {
   posterAlt: string;
 }
 
+/** Another time a route was run: what its own GPX says of it. Its track is not drawn: the page shows the route once. */
+export interface Outing {
+  /** Kilometre and elevation of that outing, from its own GPX. */
+  profile: readonly ProfilePoint[];
+  /** Seconds the watch was recording, as for the route's own `timeS`, and under the same rule: only with the say of whoever ran it. */
+  timeS?: number;
+  /** How it differed from the outing the track of the page is of, in words. */
+  note?: string;
+}
+
 export interface Route {
   slug: string;
   name: string;
@@ -81,6 +91,8 @@ export interface Route {
    * average pace of the page come from. Only where whoever ran it has said it may be told; absent otherwise.
    */
   timeS?: number;
+  /** The other times the same route was run, in the order they were run. The track, the profile and the figures of the page are of the first. */
+  more?: readonly Outing[];
   /** Present when the route can be run on foot inside its town in 3D. */
   onFoot?: OnFoot;
   isPlaceholder: boolean;
@@ -162,6 +174,7 @@ export const ROUTES: Route[] = [
     credit: GPX_CREDIT,
     origin: 'Anada i tornada des de Sils: per l’estany de Sils fins a la riera de Santa Coloma.',
     timeS: 4282,
+    more: [{ profile: RIERA_DE_SANTA_COLOMA_2, timeS: 3950, note: 'La mateixa anada i tornada, una mica més curta: gira una mica abans i s’atura abans d’arribar al punt de sortida.' }],
     isPlaceholder: false,
   },
   { slug: 'sils', name: 'Sils', place: 'Sils, la Selva', profile: SILS, plate: silsPlate as unknown as Plate, source: 'gpx', credit: GPX_CREDIT, origin: 'Gravada en un entrenament suau: «Easy Run Sils 10k».', timeS: 3527, isPlaceholder: false },

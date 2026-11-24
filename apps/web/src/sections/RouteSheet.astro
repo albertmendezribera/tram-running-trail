@@ -31,6 +31,13 @@ const stats = [
   // The time the watch was recording and the pace it makes over the distance: only for a route that tells its time.
   ...(time && route.timeS ? ([{ label: 'Temps', value: route.timeS, unit: 'duration' }, { label: 'Ritme mitjà', value: route.timeS / summary.distanceKm, unit: 'pace' }] as const) : []),
 ] as const;
+// A route run more than once: each outing with what its own GPX says of it, the one the track is of first.
+const outing = (label: string, profile: Route['profile'], timeS: number | undefined) => {
+  const run = summarize(profile);
+  return { outing: label, distance: Number(run.distanceKm.toFixed(2)), gain: Math.round(run.gainM), time: timeS ?? null, pace: timeS ? timeS / run.distanceKm : null };
+};
+const more = time ? (route.more ?? []) : [];
+const outings = more.length ? [outing('1 · traç', route.profile, route.timeS), ...more.map((other, i) => outing(String(i + 2), other.profile, other.timeS))] : [];
 const rows = kmStretches(route.profile).map((r) => ({ km: r.km, gain: Math.round(r.gainM), loss: Math.round(r.lossM), grade: Math.round(r.grade) }));
 ---
 
@@ -39,6 +46,31 @@ const rows = kmStretches(route.profile).map((r) => ({ km: r.km, gain: Math.round
   <Panel>
     <StatBlock stats={stats} lead />
   </Panel>
+  {
+    outings.length > 0 && (
+      <Panel title="Sortides">
+        <div data-outings>
+          <Stack gap={3}>
+            <DataTable
+              caption={`Les ${outings.length} sortides per aquest recorregut`}
+              density="compact"
+              columns={[
+                { key: 'outing', label: 'Sortida' },
+                { key: 'distance', label: 'Distància', unit: 'km' },
+                { key: 'gain', label: 'D+', unit: 'm-gain' },
+                { key: 'time', label: 'Temps', unit: 'duration' },
+                { key: 'pace', label: 'Ritme mitjà', unit: 'pace' },
+              ]}
+              rows={outings}
+            />
+            <Text size="sm" tone="muted" measure>
+              El traç, el perfil i les xifres de dalt són de la primera sortida. {more.map((other, i) => (other.note ? `Sortida ${i + 2}: ${other.note}` : '')).filter(Boolean).join(' ')}
+            </Text>
+          </Stack>
+        </div>
+      </Panel>
+    )
+  }
   <Split>
     <Stack gap={6}>
       <Panel title="El recorregut, en planta">

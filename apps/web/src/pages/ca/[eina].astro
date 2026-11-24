@@ -1,0 +1,38 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { DEM_CREDIT, STORY_MAKER_SHOWN } from '../../content';
+import Site from '../../layouts/Site.astro';
+import StoryMaker from '../../sections/StoryMaker.astro';
+
+// The tools of the site, each at an address of its own under `/ca/`: today, the story maker. It is on the
+// test environment only until it is decided that it goes to production, as «Palamós a peu» is.
+export const getStaticPaths = (() => (STORY_MAKER_SHOWN ? [{ params: { eina: 'stories' } }] : [])) satisfies GetStaticPaths;
+
+const title = 'La teva sortida, en una story';
+const intro =
+  'Puja el GPX d’una sortida i te’n fem la imatge vertical, a la mida de les stories d’Instagram i dels estats de WhatsApp: el recorregut sobre les corbes de nivell, les xifres i el perfil. És la mateixa que tenen les rutes d’aquesta web, feta amb la teva.';
+---
+
+<Site title={title} trail={[]} description={intro} credits={[DEM_CREDIT]}>
+  <Stack gap={4}>
+    <Heading level={1} size="lg" kicker="Stories">{title}</Heading>
+    <Text size="lg" measure>{intro}</Text>
+  </Stack>
+  <StoryMaker />
+  <Panel title="Què passa amb el teu fitxer">
+    <Stack gap={3}>
+      <Text measure>
+        El fitxer no s’envia enlloc: es llegeix al teu navegador i la imatge es fa al teu dispositiu. Del fitxer se’n fan servir les posicions, l’alçada i, si ho vols, el temps total que el rellotge va estar gravant. El ritme cardíac, la cadència,
+        el dia i l’hora no es llegeixen.
+      </Text>
+      <Text measure>
+        L’única cosa que es demana a fora és el relleu: el model d’elevacions de l’ICGC, per dibuixar les corbes de nivell. El seu servidor rep el rectangle on cau la ruta, amb un marge, i no el traç.
+      </Text>
+      <Text measure>El relleu de l’ICGC cobreix Catalunya. D’una sortida de fora en surt el traç, les xifres i el perfil, sense corbes de nivell.</Text>
+    </Stack>
+  </Panel>
+</Site>

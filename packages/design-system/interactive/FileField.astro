@@ -1,0 +1,74 @@
+---
+export interface Props {
+  /** Name of the field in its form. */
+  name: string;
+  /** What file is asked for, said over the field. */
+  label: string;
+  /** The kinds of file it takes, as the browser's own chooser reads them: `.gpx,application/gpx+xml`. */
+  accept?: string;
+  /** A line under the field: what is done with the file. */
+  hint?: string;
+}
+
+// The browser's own file field: its button opens the system's chooser (the files of a phone, too), a
+// file can be dropped on it where the browser lets one, and it says the name of the file chosen.
+const { name, label, accept, hint } = Astro.props;
+---
+
+<label class="field">
+  <span class="label" data-type="text-xs">{label}</span>
+  <input class="input" type="file" name={name} accept={accept} data-type="text-sm" />
+  {hint && <span class="hint" data-type="text-xs">{hint}</span>}
+</label>
+
+<style>
+  .field {
+    display: grid;
+    gap: var(--tram-sys-space-1);
+    min-inline-size: 0;
+  }
+
+  .label {
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
+  .hint {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .input {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    inline-size: 100%;
+    padding: var(--tram-sys-space-2);
+    border: var(--tram-sys-line-hairline) dashed var(--tram-sys-rule-strong);
+    border-radius: var(--tram-sys-radius-soft);
+    color: var(--tram-sys-text);
+    background: var(--tram-sys-surface);
+    cursor: pointer;
+  }
+
+  .input:hover {
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .input:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  /* The button of the browser, in TRAM's own ink: a secondary button, since choosing a file is not yet the action. */
+  .input::file-selector-button {
+    min-block-size: var(--tram-sys-space-8);
+    margin-inline-end: var(--tram-sys-space-3);
+    padding-inline: var(--tram-sys-space-4);
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-text);
+    border-radius: var(--tram-sys-radius-soft);
+    color: var(--tram-sys-text);
+    font: inherit;
+    font-weight: 700;
+    background: transparent;
+    cursor: pointer;
+  }
+</style>

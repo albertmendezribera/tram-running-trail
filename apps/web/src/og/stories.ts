@@ -5,6 +5,7 @@ import type { TramOgTheme } from '@tram/design-system/og';
 import { formatMeasure } from '@tram/formats';
 import { RACES, ROUTES, routeOf, visible } from '../content';
 import { ogCards } from './cards';
+import { clock } from './clock';
 import type { StoryCard } from './story';
 
 export interface Story {
@@ -14,15 +15,8 @@ export interface Story {
   card: StoryCard;
 }
 
-/** A time as a runner writes it: `1:23:15`, or `58:53` under the hour. The page keeps the clock of a results sheet. */
-const clock = (seconds: number): string => {
-  const s = Math.round(seconds);
-  const tail = `${String(Math.floor(s / 60) % 60).padStart(s >= 3600 ? 2 : 1, '0')}:${String(s % 60).padStart(2, '0')}`;
-  return s >= 3600 ? `${Math.floor(s / 3600)}:${tail}` : tail;
-};
-
 /** The relief of every plate is the ICGC's; its licence asks to be named where the work is shown. */
-const RELIEF = 'Relleu: ICGC, CC BY 4.0';
+export const RELIEF = 'Relleu: ICGC, CC BY 4.0';
 const THEMES: ReadonlyArray<{ theme: TramOgTheme; suffix: string; name: string }> = [
   { theme: 'light', suffix: '', name: 'Clara' },
   { theme: 'night', suffix: '-nit', name: 'Fosca' },

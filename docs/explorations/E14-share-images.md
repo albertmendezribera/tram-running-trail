@@ -52,3 +52,18 @@ Un segon format, vertical, per a les stories d'Instagram i els estats de WhatsAp
 - **Només mode clar.** No hi ha versió de nit.
 - **La portada, les llistes i les fitxes de sabatilla no tenen imatge pròpia.**
 - **La cursa de mostra també en té**, amb el seu nom. No entra a producció.
+
+## La story d'una sortida pròpia (24 de novembre de 2026)
+
+Encàrrec del titular: «un apartat específic a la web on pujant un arxiu .gpx se't generen les imatges per stories, les versions actuals però adaptades al GPX que l'usuari pugi». És a `/ca/stories/` («Stories» al menú), només a l'entorn de proves fins que es decideixi que va a producció (`STORY_MAKER_SHOWN`).
+
+- **El fitxer no surt del navegador.** Es llegeix allà mateix (`story-maker/track.ts`): les posicions, l'alçada i, del temps, només quant va estar gravant el rellotge, amb la mateixa regla de les pauses que `scripts/gpx-time.mjs`. El ritme cardíac i la cadència no es llegeixen. Qui el puja pot treure el temps i el ritme de la imatge.
+- **El mateix dibuix.** `og/story.ts` ja no sap com s'escriu el text: rep una ploma (`Pen`). En compilar, la ploma treu els contorns de les lletres dels fitxers de font (`render.ts`); al navegador, mesura amb les fonts de la pàgina i escriu sobre un llenç (`islands/story-maker/make.ts`), al mateix pes i amb el mateix gruix afegit. Les formes es pinten com a SVG i el text a sobre. Comparada amb la story feta en compilar per a la mateixa ruta, només canvien les corbes.
+- **El relleu es demana a l'ICGC des del navegador** (el seu WCS respon amb `Access-Control-Allow-Origin: *`): el rectangle de la ruta amb 400 m de marge, en cel·les prou grosses perquè el costat llarg no passi de 200 (30 m per a una sortida d'11 km; les rutes de la web es fan a 10 m). Una o dues peticions, uns 350 KB. El servidor rep el rectangle, no el traç, i la pàgina ho diu.
+- **Fora de Catalunya** no hi ha relleu: surt el traç, les xifres i el perfil, sense corbes ni crèdit de l'ICGC, i la pàgina ho diu. El traç es posa en els metres del seu propi fus UTM.
+- **Un GPX sense alçades** (una ruta planificada) pren les del relleu, si n'hi ha; si no, no es pot fer el perfil i es diu. **Sense temps**, no s'ofereix temps ni ritme.
+- **Pes:** la pàgina carrega 2,3 KB de JavaScript; la part que llegeix i dibuixa es demana quan es tria un fitxer.
+- **Peces noves al sistema de disseny:** `TextField` i `FileField`.
+
+Comprovat: proves unitàries de la lectura i del marc (`scripts/story-maker.test.mjs`), proves de navegador amb un GPX inventat i el servei de l'ICGC substituït (dins i fora de Catalunya, sense temps, un fitxer que no és GPX), i a mà amb un GPX real de Sils a Chromium, d'escriptori i en mida de mòbil. **No comprovat:** Safari ni Firefox (el text es posa lletra a lletra on el llenç no sap espaiar-les), cap mòbil de debò, «Comparteix» (només surt on el navegador pot passar un fitxer a una altra aplicació), ni un GPX molt llarg o de la costa.
+

@@ -1,0 +1,115 @@
+---
+import FileField from '@tram/design-system/interactive/FileField.astro';
+import SegmentedControl from '@tram/design-system/interactive/SegmentedControl.astro';
+import TextField from '@tram/design-system/interactive/TextField.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Panel from '@tram/design-system/primitives/Panel.astro';
+import Split from '@tram/design-system/primitives/Split.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { STORY } from '../og/story';
+
+const THEMES = [
+  { key: 'light', name: 'Clara' },
+  { key: 'night', name: 'Fosca' },
+];
+---
+
+<!--
+  A story of the visitor's own outing: they choose a GPX and the same tall image the routes of the site
+  have is drawn for it, in the browser. The file is sent nowhere; the script that does the work is asked
+  for only when a file is chosen.
+-->
+<Band tone="alt" title="La teva sortida">
+  <div data-story-maker>
+    <Split ratio="2:3">
+      <Panel title="El fitxer">
+        <form data-maker-form>
+          <Stack gap={5}>
+            <FileField name="gpx" label="El teu fitxer GPX" accept=".gpx,application/gpx+xml,application/xml,text/xml" hint="No surt del teu dispositiu: es llegeix i es dibuixa al navegador." />
+            <TextField name="titol" label="Nom de la ruta" maxlength={40} />
+            <TextField name="lloc" label="Lloc (si el vols dir)" maxlength={48} />
+            <SegmentedControl
+              name="temps"
+              legend="Temps i ritme"
+              options={[
+                { value: 'si', label: 'Amb temps i ritme' },
+                { value: 'no', label: 'Sense' },
+              ]}
+              value="si"
+            />
+            <Text size="sm"><span data-maker-status role="status">Tria un fitxer GPX per començar.</span></Text>
+            <noscript><Text size="sm">Aquesta eina necessita JavaScript: la imatge es dibuixa al teu navegador.</Text></noscript>
+          </Stack>
+        </form>
+      </Panel>
+      <div slot="aside">
+        <Panel title="Les imatges">
+          <Stack gap={5}>
+            <div data-maker-empty><Text tone="muted" measure>Quan triïs un fitxer, aquí hi sortiran les dues versions de la imatge, la clara i la fosca, a punt per baixar.</Text></div>
+            <ul class="stories" data-maker-results hidden>
+              {
+                THEMES.map((theme) => (
+                  <li class="story" data-story={theme.key}>
+                    <a class="preview" data-maker-open target="_blank" rel="noopener">
+                      <img alt="" width={STORY.width} height={STORY.height} decoding="async" />
+                    </a>
+                    <Text size="sm" tone="muted">{theme.name}</Text>
+                    <Cluster gap={2}>
+                      <span data-maker-share hidden>
+                        <Button variant="primary" size="sm">Comparteix</Button>
+                      </span>
+                      <span data-maker-save><Button href="#" download="tram-story.png" size="sm">Baixa-la</Button></span>
+                    </Cluster>
+                  </li>
+                ))
+              }
+            </ul>
+            <Text size="sm" tone="muted"><span data-maker-share-status role="status" /></Text>
+          </Stack>
+        </Panel>
+      </div>
+    </Split>
+  </div>
+</Band>
+
+<script>
+  import '../islands/story-maker.ts';
+</script>
+
+<style>
+  .stories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tram-sys-space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .story {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+    justify-items: start;
+    inline-size: calc(var(--tram-sys-space-12) * 2.75);
+    max-inline-size: calc(50% - var(--tram-sys-space-3));
+  }
+
+  .preview {
+    display: block;
+    border: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+  }
+
+  .preview img {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  .preview:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+</style>

@@ -2,9 +2,11 @@
 import Band from '@tram/design-system/primitives/Band.astro';
 import Button from '@tram/design-system/primitives/Button.astro';
 import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
 import Panel from '@tram/design-system/primitives/Panel.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
+import { STORY_MAKER_SHOWN } from '../content';
 import { storiesOf } from '../og/stories';
 
 export interface Props {
@@ -51,6 +53,7 @@ const stories = storiesOf(path);
               ))}
             </ul>
             <Text size="sm" tone="muted"><span data-share-status role="status" /></Text>
+            {STORY_MAKER_SHOWN && <div data-own-story><Link href="/ca/stories/" variant="standalone">Fes la story d’una sortida teva, amb el teu GPX</Link></div>}
           </Stack>
         </div>
       </Panel>

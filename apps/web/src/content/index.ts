@@ -209,6 +209,8 @@ export const RACES: Race[] = [
 
 /** Staging and development show placeholders; a production build never does (CLAUDE.md 0). */
 export const SHOWS_PLACEHOLDERS = import.meta.env.DEV || process.env['TRAM_DS'] === '1';
+/** The story maker (`/ca/stories/`): where the site is tried out, until it is decided that it goes to production. */
+export const STORY_MAKER_SHOWN = SHOWS_PLACEHOLDERS;
 export const visible = <T extends { isPlaceholder: boolean }>(items: readonly T[]): T[] => items.filter((item) => SHOWS_PLACEHOLDERS || !item.isPlaceholder);
 export const routeOf = (slug: string): Route => {
   const route = ROUTES.find((r) => r.slug === slug);

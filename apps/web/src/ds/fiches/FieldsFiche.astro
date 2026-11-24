@@ -1,0 +1,57 @@
+---
+import FileField from '@tram/design-system/interactive/FileField.astro';
+import TextField from '@tram/design-system/interactive/TextField.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Fiche from '../Fiche.astro';
+import Mode from '../Mode.astro';
+import { MODES } from '../nav';
+
+const code = `<TextField name="titol" label="Nom de la ruta" value="" maxlength={40} />
+<FileField name="gpx" label="El teu fitxer GPX" accept=".gpx,application/gpx+xml" hint="No surt del teu dispositiu." />`;
+---
+
+<Fiche
+  group="Interactiu"
+  title="TextField i FileField"
+  use="Demanar unes paraules (un nom, un lloc) o un fitxer a qui visita la web, en una eina que treballa amb el que ell hi porta."
+  avoid="Cercar en una llista (és un SearchField) o triar entre opcions conegudes (Select, SegmentedControl). Tampoc un formulari que envia dades a un servidor sense dir-ho al costat."
+  code={code}
+>
+  <section class="fiche-block">
+    <h2 data-type="display-sm">TextField</h2>
+    <div class="fiche-row" data-testid="text">
+      <TextField name="empty" label="Nom de la ruta" />
+      <TextField name="filled" label="Nom de la ruta" value="Volta de l'estany" />
+    </div>
+    <p class="fiche-note">El camp de text del navegador. L'etiqueta va sempre a sobre, visible; no hi ha text de mostra dins del camp. Ocupa l'amplada que li deixa qui el conté.</p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">FileField</h2>
+    <div class="fiche-row" data-testid="file">
+      <FileField name="file" label="El teu fitxer GPX" accept=".gpx,application/gpx+xml" hint="No surt del teu dispositiu: es llegeix al navegador." />
+    </div>
+    <p class="fiche-note">
+      El camp de fitxer del navegador: el botó obre el selector del sistema (també els fitxers d'un mòbil), s'hi pot deixar anar un fitxer on el navegador ho permet, i ell mateix diu el nom del fitxer triat. El text del botó («Tria un fitxer») el
+      posa el navegador, en la llengua de qui el fa servir. La línia de sota diu què es fa amb el fitxer. El component no llegeix res: qui l'usa hi escolta l'esdeveniment <code>change</code>.
+    </p>
+  </section>
+
+  <section class="fiche-block">
+    <h2 data-type="display-sm">Modes</h2>
+    <div class="fiche-grid">
+      {
+        MODES.map((m, i) => (
+          <Mode {...m}>
+            <div style="inline-size: 100%">
+              <Stack gap={4}>
+                <TextField name={`mode-text-${i}`} label="Nom de la ruta" value="Volta de l'estany" />
+                <FileField name={`mode-file-${i}`} label="El teu fitxer GPX" />
+              </Stack>
+            </div>
+          </Mode>
+        ))
+      }
+    </div>
+  </section>
+</Fiche>

@@ -4,6 +4,10 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Stories d'una sortida pròpia.
+
+- `TextField` i `FileField` (interactius nous, amb fitxa): el camp de text i el camp de fitxer del navegador, amb l'etiqueta a sobre. Són per a una eina que treballa amb el que hi porta qui visita la web. No hi ha «abans»: són nous.
+
 Catàleg per necessitat («Què busques?»).
 
 - `ShoeRow`: propietat nova `note`, unes paraules sota el nom del model: per què és en una llista feta amb una regla («També en Wide», «40 mm al taló»). Sense `note`, la fila és com era.

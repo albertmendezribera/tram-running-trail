@@ -13,6 +13,7 @@ const PAGES = {
   compare: COMPARE,
   'on-foot': '/ca/rutes/palamos/a-peu/',
   'shoe-need': '/ca/sabatilles/amples/',
+  stories: '/ca/stories/',
 };
 // These carry a route to run: their long scroll and their 3D are covered by the M2 tests.
 const ROUTE_PAGES = { 'race-trail': '/ca/curses/marxa-de-les-tines/', 'route-flat': '/ca/rutes/sils/' };
@@ -636,6 +637,99 @@ test.describe('Route as a story (M5)', () => {
     await open(page, '/ca/curses/32a-marxa-dels-arrossars-2026/');
     await expect(share(page)).toHaveCount(0);
     expect((await page.request.get('/stories/curses/32a-marxa-dels-arrossars-2026.png')).status()).toBe(404);
+  });
+});
+
+test.describe('Story maker', () => {
+  const PATH = '/ca/stories/';
+  const maker = (page: Page) => page.locator('[data-story-maker]');
+  // A made-up outing: a line east, a point a second, climbing a metre a point. Nobody's run.
+  const gpx = (lon: number, { times = true, name = 'Volta de prova' } = {}): string =>
+    `<?xml version="1.0"?><gpx><trk><name>${name}</name><trkseg>${Array.from(
+      { length: 30 },
+      (_, i) => `<trkpt lat="41.8" lon="${(lon + i * 0.0001).toFixed(4)}"><ele>${100 + i}</ele>${times ? `<time>2020-01-01T00:00:${String(i).padStart(2, '0')}Z</time>` : ''}</trkpt>`,
+    ).join('')}</trkseg></trk></gpx>`;
+  const choose = (page: Page, text: string, name = 'sortida.gpx') => page.locator('input[name="gpx"]').setInputFiles({ name, mimeType: 'application/gpx+xml', buffer: Buffer.from(text) });
+  /** The ICGC's elevation service, stood in for: a slope, in the grid that was asked for. What was asked is kept. */
+  const relief = async (page: Page): Promise<string[]> => {
+    const asked: string[] = [];
+    await page.route('https://geoserveis.icgc.cat/**', (route) => {
+      const params = new URL(route.request().url()).searchParams;
+      asked.push(params.get('BBOX')!);
+      const [cols, rows] = [Number(params.get('WIDTH')), Number(params.get('HEIGHT'))];
+      const [minX, minY, maxX] = params.get('BBOX')!.split(',').map(Number);
+      const lines = Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => (90 + c * 0.6 + r * 0.9).toFixed(2)).join(' '));
+      return route.fulfill({ status: 200, contentType: 'text/plain', headers: { 'Access-Control-Allow-Origin': '*' }, body: `NCOLS ${cols}\nNROWS ${rows}\nXLLCORNER ${minX}\nYLLCORNER ${minY}\nCELLSIZE ${(maxX! - minX!) / cols}\nNODATA_VALUE -9999.0\n${lines.join('\n')}\n` });
+    });
+    return asked;
+  };
+  const picture = (page: Page, theme: string) => maker(page).locator(`[data-story="${theme}"]`);
+
+  test('draws the story of a visitor’s own GPX in the browser, in both themes, and asks only for the relief around it', async ({ page }) => {
+    const asked = await relief(page);
+    await open(page, PATH);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('La teva sortida, en una story');
+    await expect(page.locator('header nav a[aria-current="page"]')).toHaveText('Stories');
+    await expect(main(page)).toContainText('El fitxer no s’envia enlloc');
+    // Nothing is drawn and nothing is asked for until a file is chosen.
+    await expect(maker(page).locator('[data-maker-results]')).toBeHidden();
+    expect(asked).toEqual([]);
+    await choose(page, gpx(2.7));
+    await expect(maker(page)).toHaveAttribute('data-state', 'ready');
+    await expect(maker(page).getByRole('status').first()).toHaveText('A punt: baixa la que vulguis.');
+    // The name the file gives the outing is offered as its title.
+    await expect(maker(page).getByLabel('Nom de la ruta')).toHaveValue('Volta de prova');
+    for (const [theme, file] of [['light', 'tram-story-volta-de-prova.png'], ['night', 'tram-story-volta-de-prova-nit.png']] as const) {
+      const image = picture(page, theme).locator('img');
+      expect(await image.evaluate(async (img: HTMLImageElement) => (await img.decode(), [img.naturalWidth, img.naturalHeight]))).toEqual([1080, 1920]);
+      await expect(image).toHaveAttribute('alt', /el recorregut sobre les corbes de nivell, distància 0,24\skm, temps 0:29, ritme mitjà \d:\d\d\s?\/km, desnivell positiu 27\sm\sD\+, i el perfil\.$/);
+      await expect(picture(page, theme).getByRole('link', { name: 'Baixa-la' })).toHaveAttribute('download', file);
+      await expect(picture(page, theme).getByRole('link', { name: 'Baixa-la' })).toHaveAttribute('href', /^blob:/);
+    }
+    // The one thing asked outside the page: a rectangle of ground, with its margin, in whole cells.
+    expect(asked.length).toBeGreaterThanOrEqual(1);
+    const [minX, minY, maxX, maxY] = asked[0]!.split(',').map(Number);
+    expect(maxX! - minX!).toBeGreaterThan(800);
+    expect(maxY! - minY!).toBeGreaterThanOrEqual(800);
+    // Other words, and the time left out: drawn again without asking for anything again.
+    const before = asked.length;
+    await maker(page).getByLabel('Nom de la ruta').fill('Camí de l’estany');
+    await expect(picture(page, 'light').getByRole('link', { name: 'Baixa-la' })).toHaveAttribute('download', 'tram-story-cami-de-l-estany.png');
+    await maker(page).getByRole('radio', { name: 'Sense' }).check({ force: true });
+    await expect(picture(page, 'light').locator('img')).toHaveAttribute('alt', /Camí de l’estany.*distància 0,24\skm, desnivell positiu 27\sm\sD\+, punt més alt 129\sm, i el perfil\.$/);
+    expect(asked.length).toBe(before);
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('an outing outside Catalonia is drawn without contour lines, and says so; the ICGC is not asked', async ({ page }) => {
+    const asked = await relief(page);
+    await open(page, PATH);
+    await choose(page, gpx(-3.7));
+    await expect(maker(page)).toHaveAttribute('data-state', 'ready');
+    await expect(maker(page).getByRole('status').first()).toContainText('Fora de Catalunya no tenim relleu');
+    await expect(picture(page, 'light').locator('img')).toHaveAttribute('alt', /: el recorregut, distància/);
+    expect(asked).toEqual([]);
+  });
+
+  test('a file with no times has no time to tell, and a file that is not a GPX is refused in words', async ({ page }) => {
+    await relief(page);
+    await open(page, PATH);
+    await choose(page, gpx(2.7, { times: false }));
+    await expect(maker(page)).toHaveAttribute('data-state', 'ready');
+    await expect(maker(page).getByRole('radio', { name: 'Amb temps i ritme' })).toBeDisabled();
+    await expect(maker(page).getByRole('radio', { name: 'Sense' })).toBeChecked();
+    await expect(picture(page, 'night').locator('img')).toHaveAttribute('alt', /punt més alt 129\sm/);
+    await choose(page, '<html><body>No soc un GPX</body></html>', 'pagina.gpx');
+    await expect(maker(page)).toHaveAttribute('data-state', 'error');
+    await expect(maker(page).getByRole('status').first()).toHaveText('Aquest fitxer no és un GPX amb un traç.');
+  });
+
+  test('a route run twice says so on the list, and its stories lead to the maker', async ({ page }) => {
+    await open(page, PAGES.routes);
+    await expect(page.locator('main a[href="/ca/rutes/riera-de-santa-coloma/"]')).toContainText('Sils, la Selva · 2 sortides');
+    await expect(page.locator('main a[href="/ca/rutes/sils/"]')).not.toContainText('sortides');
+    await open(page, '/ca/rutes/riera-de-santa-coloma/');
+    await expect(page.locator('[data-own-story]').getByRole('link')).toHaveAttribute('href', PATH);
   });
 });
 

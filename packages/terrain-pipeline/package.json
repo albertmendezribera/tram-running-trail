@@ -8,6 +8,8 @@
     ".": "./src/index.ts",
     "./terrain-rgb": "./src/terrain-rgb.ts",
     "./utm": "./src/utm.ts",
+    "./icgc": "./src/icgc.ts",
+    "./plate": "./src/plate.ts",
     "./world": "./src/world.ts"
   },
   "scripts": {

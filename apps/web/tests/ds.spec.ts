@@ -25,6 +25,7 @@ const PAGES = {
   'shoe-sheet': '/ds/patterns/shoe-sheet/',
   'segmented-control': '/ds/interactive/segmented-control/',
   'search-field': '/ds/interactive/search-field/',
+  fields: '/ds/interactive/fields/',
   select: '/ds/interactive/select/',
   'theme-toggle': '/ds/interactive/theme-toggle/',
   viewer: '/ds/interactive/viewer-3d-shell/',

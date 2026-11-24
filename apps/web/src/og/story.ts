@@ -5,13 +5,24 @@
 import { tramOg, type TramOgTerrain, type TramOgTheme } from '@tram/design-system/og';
 import { areaPath, createPlot, linePath, type ProfilePoint } from '@tram/design-system/patterns/elevation.ts';
 import type { Plate } from '@tram/design-system/patterns/route-plate.ts';
-import { fitted, write } from './render.ts';
 
 export const STORY = { width: 1080, height: 1920 };
 /** What the apps cover, at the top and at the bottom. */
 const COVERED = 250;
 const EDGE = 72;
 const [WIDTH, HEIGHT] = [STORY.width, STORY.height];
+
+/**
+ * What writes the text of a story. At build time the letters are outlines read from the font files
+ * (`render.ts`); in the browser, where a visitor makes a story of their own, they are drawn on a canvas
+ * with the fonts of the page. The drawing asks only where a line goes and how wide it is.
+ */
+export interface Pen {
+  /** A line of text, its baseline at `y`. `tracking` is in ems. Gives what to add to the drawing, and the width of the line. */
+  write(text: string, face: 'display' | 'text', size: number, x: number, y: number, fill: string, options?: { anchor?: 'start' | 'end'; tracking?: number }): { svg: string; width: number };
+  /** The largest size, up to `most`, at which a line fits a width. */
+  fitted(text: string, face: 'display' | 'text', most: number, room: number): number;
+}
 
 export interface StoryCard {
   terrain: TramOgTerrain;
@@ -22,11 +33,11 @@ export interface StoryCard {
   figures: ReadonlyArray<{ value: string; label: string }>;
   profile: readonly ProfilePoint[];
   plate: Plate;
-  /** Whose the relief of the plate is: said on the image itself, as its licence asks. */
+  /** Whose the relief of the plate is: said on the image itself, as its licence asks. Empty where the plate has no relief. */
   credit: string;
 }
 
-export function storyCard({ terrain, kicker, title, place, figures, profile, plate, credit }: StoryCard, theme: TramOgTheme = 'light'): string {
+export function storyCard({ terrain, kicker, title, place, figures, profile, plate, credit }: StoryCard, theme: TramOgTheme, { write, fitted }: Pen): string {
   const { color } = tramOg[theme][terrain];
   const parts: string[] = [`<rect width="${WIDTH}" height="${HEIGHT}" fill="${color.surface}"/>`];
 
@@ -43,7 +54,7 @@ export function storyCard({ terrain, kicker, title, place, figures, profile, pla
   parts.push(write(title, 'display', size, EDGE - size * 0.012, base, color.text, { tracking: -0.01 }).svg);
   // The place under the name, clear of the letters that hang below its line.
   const under = base + size * 0.24 + 48;
-  parts.push(write(place, 'text', 40, EDGE, under, color['text-muted']).svg);
+  if (place) parts.push(write(place, 'text', 40, EDGE, under, color['text-muted']).svg);
 
   // The route on its contours. A plate taller than wide leaves the figures a column at its side; a wide one, a row under it.
   const upright = plate.height > plate.width;
@@ -63,7 +74,7 @@ export function storyCard({ terrain, kicker, title, place, figures, profile, pla
       `<circle cx="${plate.start[0]}" cy="${plate.start[1]}" r="${px(14)}" fill="${color.accent}" stroke="${color.surface}" stroke-width="${px(5)}"/>` +
       `</g>`,
   );
-  parts.push(write(credit, 'text', 22, box.x, box.y + drawn.height + 40, color['text-muted']).svg);
+  if (credit) parts.push(write(credit, 'text', 22, box.x, box.y + drawn.height + 40, color['text-muted']).svg);
 
   // Under four figures the profile is lower: they need the room, and it keeps its shape.
   const tall = figures.length > 3 && !upright ? 170 : 230;

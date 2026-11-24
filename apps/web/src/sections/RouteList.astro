@@ -20,7 +20,7 @@ const scale = Math.max(...rows.map((r) => r.summary.highest[1] - r.summary.lowes
         <RaceRow
           href={`/ca/rutes/${route.slug}/`}
           name={route.name}
-          place={route.place}
+          place={route.more?.length ? `${route.place} · ${route.more.length + 1} sortides` : route.place}
           distanceKm={Number(summary.distanceKm.toFixed(2))}
           gainM={Math.round(summary.gainM)}
           profile={route.profile}

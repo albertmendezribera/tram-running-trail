@@ -80,6 +80,12 @@ interface Line {
 const WEIGHT: Record<Face, number> = { display: 700, text: 400 };
 const family = (face: Face): string => getComputedStyle(document.documentElement).getPropertyValue(`--tram-sys-font-${face}`).trim() || 'sans-serif';
 const fontOf = (face: Face, size: number): string => `${WEIGHT[face]} ${size}px ${family(face)}`;
+/**
+ * The font of the site itself, the first of the list, asked for by name. The list goes on with stand-ins
+ * made of fonts of the system (Arial, Roboto): where the device has none of one of them, asking for the
+ * whole list fails, and so the story was not drawn on a phone without Arial.
+ */
+const own = (face: Face): string => `${WEIGHT[face]} 100px ${family(face).split(',')[0]}`;
 
 /** A pen that measures with the fonts of the page and keeps each line, to be drawn over the shapes afterwards. */
 function canvasPen(lines: Line[]): Pen {
@@ -139,7 +145,8 @@ export interface Drawn {
 
 /** The story of an outing in the two themes, each a PNG of 1080 × 1920. */
 export async function draw(outing: Outing, wording: Wording): Promise<Drawn[]> {
-  await Promise.all((['display', 'text'] as const).map((face) => document.fonts.load(fontOf(face, 100))));
+  // The fonts are waited for, never depended on: without them the text is written in the stand-in the page itself would use.
+  await Promise.allSettled((['display', 'text'] as const).map((face) => document.fonts.load(own(face))));
   const card = cardOf(outing, wording);
   const drawn: Drawn[] = [];
   for (const { theme, suffix, name } of THEMES) {
@@ -148,8 +155,12 @@ export async function draw(outing: Outing, wording: Wording): Promise<Drawn[]> {
     const address = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
     try {
       const shapes = new Image();
-      shapes.src = address;
-      await shapes.decode();
+      // `decode()` is refused for an SVG by some browsers: the load of the image is waited for instead.
+      await new Promise<void>((resolve, reject) => {
+        shapes.onload = () => resolve();
+        shapes.onerror = () => reject(new Error('the shapes of the story could not be read as an image'));
+        shapes.src = address;
+      });
       const canvas = document.createElement('canvas');
       [canvas.width, canvas.height] = [STORY.width, STORY.height];
       const ctx = canvas.getContext('2d')!;

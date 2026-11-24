@@ -701,6 +701,20 @@ test.describe('Story maker', () => {
     expect(await overflow(page)).toBe(0);
   });
 
+  test('a device without the system fonts the page stands in with still gets its story', async ({ page }) => {
+    await relief(page);
+    await open(page, PATH);
+    // A phone has no Arial: a stand-in face whose only source is a font the device lacks. Asking for it fails, and the story must not.
+    await page.addStyleTag({
+      content:
+        '@font-face { font-family: "Missing local"; src: local("No Such Font On This Device"); } :root { --tram-sys-font-display: "Missing local", sans-serif; --tram-sys-font-text: "Missing local", sans-serif; }',
+    });
+    expect(await page.evaluate(() => document.fonts.load('700 100px "Missing local", sans-serif').then(() => 'loaded', () => 'refused'))).toBe('refused');
+    await choose(page, gpx(2.7));
+    await expect(maker(page)).toHaveAttribute('data-state', 'ready');
+    expect(await picture(page, 'light').locator('img').evaluate(async (img: HTMLImageElement) => (await img.decode(), [img.naturalWidth, img.naturalHeight]))).toEqual([1080, 1920]);
+  });
+
   test('an outing outside Catalonia is drawn without contour lines, and says so; the ICGC is not asked', async ({ page }) => {
     const asked = await relief(page);
     await open(page, PATH);

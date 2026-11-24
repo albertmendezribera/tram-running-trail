@@ -70,7 +70,9 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-story-maker]'))
       show(drawn, fileSlug(name));
       const bare = prepared.bare === 'unanswered' ? ' El relleu de l’ICGC no ha arribat: surt sense corbes de nivell.' : prepared.bare === 'outside' ? ' Fora de Catalunya no tenim relleu: surt el traç sense corbes de nivell.' : '';
       say(`A punt: baixa la que vulguis.${bare}`, 'ready');
-    } catch {
+    } catch (error) {
+      // Said in the console too, for whoever looks into why.
+      console.error(error);
       if (mine === attempt) say('No s’ha pogut dibuixar la imatge en aquest navegador.', 'error');
     }
   };

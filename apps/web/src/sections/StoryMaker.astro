@@ -9,17 +9,13 @@ import Panel from '@tram/design-system/primitives/Panel.astro';
 import Split from '@tram/design-system/primitives/Split.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
-import { STORY } from '../og/story';
+import { STORY, STORY_DESIGNS } from '../og/story';
 
-const THEMES = [
-  { key: 'light', name: 'Clara' },
-  { key: 'night', name: 'Fosca' },
-];
 ---
 
 <!--
   A story of the visitor's own outing: they choose a GPX and the same tall image the routes of the site
-  have is drawn for it, in the browser. The file is sent nowhere; the script that does the work is asked
+  have is drawn for it, in every design the stories come in, in the browser. The file is sent nowhere; the script that does the work is asked
   for only when a file is chosen.
 -->
 <Band tone="alt" title="La teva sortida">
@@ -40,6 +36,15 @@ const THEMES = [
               ]}
               value="si"
             />
+            <SegmentedControl
+              name="versio"
+              legend="Versió"
+              options={[
+                { value: 'light', label: 'Clara' },
+                { value: 'night', label: 'Fosca' },
+              ]}
+              value="light"
+            />
             <Text size="sm"><span data-maker-status role="status">Tria un fitxer GPX per començar.</span></Text>
             <noscript><Text size="sm">Aquesta eina necessita JavaScript: la imatge es dibuixa al teu navegador.</Text></noscript>
           </Stack>
@@ -48,15 +53,20 @@ const THEMES = [
       <div slot="aside">
         <Panel title="Les imatges">
           <Stack gap={5}>
-            <div data-maker-empty><Text tone="muted" measure>Quan triïs un fitxer, aquí hi sortiran les dues versions de la imatge, la clara i la fosca, a punt per baixar.</Text></div>
+            <div data-maker-empty>
+              <Text tone="muted" measure>{`Quan triïs un fitxer, aquí hi sortirà la teva sortida en ${STORY_DESIGNS.length} dissenys, a punt per baixar: ${STORY_DESIGNS.map((design) => design.name).join(', ')}. Cadascun en clar i en fosc.`}</Text>
+            </div>
             <ul class="stories" data-maker-results hidden>
               {
-                THEMES.map((theme) => (
-                  <li class="story" data-story={theme.key}>
+                STORY_DESIGNS.map((design) => (
+                  <li class="story" data-story={design.key} hidden>
                     <a class="preview" data-maker-open target="_blank" rel="noopener">
                       <img alt="" width={STORY.width} height={STORY.height} decoding="async" />
                     </a>
-                    <Text size="sm" tone="muted">{theme.name}</Text>
+                    <Stack gap={1}>
+                      <Text size="sm"><strong>{design.name}</strong></Text>
+                      <Text size="sm" tone="muted">{design.leads}</Text>
+                    </Stack>
                     <Cluster gap={2}>
                       <span data-maker-share hidden>
                         <Button variant="primary" size="sm">Comparteix</Button>
@@ -80,10 +90,11 @@ const THEMES = [
 </script>
 
 <style>
+  /* As many across as fit: two on a phone, three or more where there is room. */
   .stories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--tram-sys-space-6);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(var(--tram-sys-space-12) * 1.5), 1fr));
+    gap: var(--tram-sys-space-6) var(--tram-sys-space-5);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -92,9 +103,9 @@ const THEMES = [
   .story {
     display: grid;
     gap: var(--tram-sys-space-2);
+    align-content: start;
     justify-items: start;
-    inline-size: calc(var(--tram-sys-space-12) * 2.75);
-    max-inline-size: calc(50% - var(--tram-sys-space-3));
+    min-inline-size: 0;
   }
 
   .preview {

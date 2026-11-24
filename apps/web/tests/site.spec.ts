@@ -663,9 +663,11 @@ test.describe('Story maker', () => {
     });
     return asked;
   };
-  const picture = (page: Page, theme: string) => maker(page).locator(`[data-story="${theme}"]`);
+  const picture = (page: Page, design: string) => maker(page).locator(`[data-story="${design}"]`);
+  const DESIGNS = ['fitxa', 'planol', 'dorsal', 'perfil', 'trac'];
+  const size = (image: ReturnType<typeof picture>) => image.locator('img').evaluate(async (img: HTMLImageElement) => (await img.decode(), [img.naturalWidth, img.naturalHeight]));
 
-  test('draws the story of a visitor’s own GPX in the browser, in both themes, and asks only for the relief around it', async ({ page }) => {
+  test('draws the story of a visitor’s own GPX in the browser, in five designs and both themes, and asks only for the relief around it', async ({ page }) => {
     const asked = await relief(page);
     await open(page, PATH);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('La teva sortida, en una story');
@@ -675,28 +677,38 @@ test.describe('Story maker', () => {
     await expect(maker(page).locator('[data-maker-results]')).toBeHidden();
     expect(asked).toEqual([]);
     await choose(page, gpx(2.7));
-    await expect(maker(page)).toHaveAttribute('data-state', 'ready');
-    await expect(maker(page).getByRole('status').first()).toHaveText('A punt: baixa la que vulguis.');
+    await expect(maker(page)).toHaveAttribute('data-state', 'ready', { timeout: 30_000 });
+    await expect(maker(page).getByRole('status').first()).toHaveText('A punt: tria el disseny que vulguis i baixa’l.');
     // The name the file gives the outing is offered as its title.
     await expect(maker(page).getByLabel('Nom de la ruta')).toHaveValue('Volta de prova');
-    for (const [theme, file] of [['light', 'tram-story-volta-de-prova.png'], ['night', 'tram-story-volta-de-prova-nit.png']] as const) {
-      const image = picture(page, theme).locator('img');
-      expect(await image.evaluate(async (img: HTMLImageElement) => (await img.decode(), [img.naturalWidth, img.naturalHeight]))).toEqual([1080, 1920]);
-      await expect(image).toHaveAttribute('alt', /el recorregut sobre les corbes de nivell, distància 0,24\skm, temps 0:29, ritme mitjà \d:\d\d\s?\/km, desnivell positiu 27\sm\sD\+, i el perfil\.$/);
-      await expect(picture(page, theme).getByRole('link', { name: 'Baixa-la' })).toHaveAttribute('download', file);
-      await expect(picture(page, theme).getByRole('link', { name: 'Baixa-la' })).toHaveAttribute('href', /^blob:/);
+    // Every design, drawn with the outing: each an image of its own, with its name, to save.
+    for (const design of DESIGNS) {
+      expect(await size(picture(page, design))).toEqual([1080, 1920]);
+      await expect(picture(page, design).getByRole('link', { name: 'Baixa-la' })).toHaveAttribute('download', `tram-story-volta-de-prova-${design}.png`);
+      await expect(picture(page, design).getByRole('link', { name: 'Baixa-la' })).toHaveAttribute('href', /^blob:/);
     }
-    // The one thing asked outside the page: a rectangle of ground, with its margin, in whole cells.
-    expect(asked.length).toBeGreaterThanOrEqual(1);
-    const [minX, minY, maxX, maxY] = asked[0]!.split(',').map(Number);
-    expect(maxX! - minX!).toBeGreaterThan(800);
-    expect(maxY! - minY!).toBeGreaterThanOrEqual(800);
-    // Other words, and the time left out: drawn again without asking for anything again.
+    await expect(picture(page, 'fitxa').locator('img')).toHaveAttribute('alt', /disseny «Fitxa» \(clara\): el recorregut sobre les corbes de nivell, distància 0,24\skm, temps 0:29, ritme mitjà \d:\d\d\s?\/km, desnivell positiu 27\sm\sD\+, i el perfil\.$/);
+    await expect(picture(page, 'dorsal').locator('img')).toHaveAttribute('alt', /disseny «Dorsal» \(clara\): la distància en gran/);
+    await expect(picture(page, 'planol')).toContainText('Plànol');
+    // No two designs are the same picture.
+    const sources = await maker(page).locator('[data-story] img').evaluateAll((images) => Promise.all(images.map(async (img) => (await (await fetch((img as HTMLImageElement).src)).blob()).size)));
+    expect(new Set(sources).size).toBe(DESIGNS.length);
+    // What is asked outside the page: two rectangles of ground, the route's and the wider one of «Plànol», each with its margin.
+    expect(asked.length).toBeGreaterThanOrEqual(2);
+    for (const bbox of asked) {
+      const [minX, minY, maxX, maxY] = bbox.split(',').map(Number);
+      expect(maxX! - minX!).toBeGreaterThan(800);
+      expect(maxY! - minY!).toBeGreaterThanOrEqual(800);
+    }
+    // The dark version, other words and the time left out: drawn again without asking for anything again.
     const before = asked.length;
+    await maker(page).getByRole('radio', { name: 'Fosca' }).check({ force: true });
+    await expect(picture(page, 'trac').getByRole('link', { name: 'Baixa-la' })).toHaveAttribute('download', 'tram-story-volta-de-prova-trac-nit.png', { timeout: 30_000 });
+    await expect(picture(page, 'trac').locator('img')).toHaveAttribute('alt', /disseny «Traç» \(fosca\)/);
     await maker(page).getByLabel('Nom de la ruta').fill('Camí de l’estany');
-    await expect(picture(page, 'light').getByRole('link', { name: 'Baixa-la' })).toHaveAttribute('download', 'tram-story-cami-de-l-estany.png');
+    await expect(picture(page, 'fitxa').getByRole('link', { name: 'Baixa-la' })).toHaveAttribute('download', 'tram-story-cami-de-l-estany-fitxa-nit.png', { timeout: 30_000 });
     await maker(page).getByRole('radio', { name: 'Sense' }).check({ force: true });
-    await expect(picture(page, 'light').locator('img')).toHaveAttribute('alt', /Camí de l’estany.*distància 0,24\skm, desnivell positiu 27\sm\sD\+, punt més alt 129\sm, i el perfil\.$/);
+    await expect(picture(page, 'perfil').locator('img')).toHaveAttribute('alt', /Camí de l’estany.*distància 0,24\skm, desnivell positiu 27\sm\sD\+, punt més alt 129\sm\.$/, { timeout: 30_000 });
     expect(asked.length).toBe(before);
     expect(await overflow(page)).toBe(0);
   });
@@ -711,17 +723,18 @@ test.describe('Story maker', () => {
     });
     expect(await page.evaluate(() => document.fonts.load('700 100px "Missing local", sans-serif').then(() => 'loaded', () => 'refused'))).toBe('refused');
     await choose(page, gpx(2.7));
-    await expect(maker(page)).toHaveAttribute('data-state', 'ready');
-    expect(await picture(page, 'light').locator('img').evaluate(async (img: HTMLImageElement) => (await img.decode(), [img.naturalWidth, img.naturalHeight]))).toEqual([1080, 1920]);
+    await expect(maker(page)).toHaveAttribute('data-state', 'ready', { timeout: 30_000 });
+    for (const design of DESIGNS) expect(await size(picture(page, design))).toEqual([1080, 1920]);
   });
 
   test('an outing outside Catalonia is drawn without contour lines, and says so; the ICGC is not asked', async ({ page }) => {
     const asked = await relief(page);
     await open(page, PATH);
     await choose(page, gpx(-3.7));
-    await expect(maker(page)).toHaveAttribute('data-state', 'ready');
+    await expect(maker(page)).toHaveAttribute('data-state', 'ready', { timeout: 30_000 });
     await expect(maker(page).getByRole('status').first()).toContainText('Fora de Catalunya no tenim relleu');
-    await expect(picture(page, 'light').locator('img')).toHaveAttribute('alt', /: el recorregut, distància/);
+    await expect(picture(page, 'fitxa').locator('img')).toHaveAttribute('alt', /: el recorregut, distància/);
+    await expect(picture(page, 'planol').locator('img')).toHaveAttribute('alt', /el mapa del recorregut de banda a banda, i a sota/);
     expect(asked).toEqual([]);
   });
 
@@ -729,10 +742,10 @@ test.describe('Story maker', () => {
     await relief(page);
     await open(page, PATH);
     await choose(page, gpx(2.7, { times: false }));
-    await expect(maker(page)).toHaveAttribute('data-state', 'ready');
+    await expect(maker(page)).toHaveAttribute('data-state', 'ready', { timeout: 30_000 });
     await expect(maker(page).getByRole('radio', { name: 'Amb temps i ritme' })).toBeDisabled();
     await expect(maker(page).getByRole('radio', { name: 'Sense' })).toBeChecked();
-    await expect(picture(page, 'night').locator('img')).toHaveAttribute('alt', /punt més alt 129\sm/);
+    await expect(picture(page, 'dorsal').locator('img')).toHaveAttribute('alt', /punt més alt 129\sm/);
     await choose(page, '<html><body>No soc un GPX</body></html>', 'pagina.gpx');
     await expect(maker(page)).toHaveAttribute('data-state', 'error');
     await expect(maker(page).getByRole('status').first()).toHaveText('Aquest fitxer no és un GPX amb un traç.');

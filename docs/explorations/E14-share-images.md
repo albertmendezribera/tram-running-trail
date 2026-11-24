@@ -67,3 +67,21 @@ Encàrrec del titular: «un apartat específic a la web on pujant un arxiu .gpx 
 
 Comprovat: proves unitàries de la lectura i del marc (`scripts/story-maker.test.mjs`), proves de navegador amb un GPX inventat i el servei de l'ICGC substituït (dins i fora de Catalunya, sense temps, un fitxer que no és GPX), i a mà amb un GPX real de Sils a Chromium, d'escriptori i en mida de mòbil. **No comprovat:** Safari ni Firefox (el text es posa lletra a lletra on el llenç no sap espaiar-les), cap mòbil de debò, «Comparteix» (només surt on el navegador pot passar un fitxer a una altra aplicació), ni un GPX molt llarg o de la costa.
 
+## Cinc dissenys (24 de novembre de 2026)
+
+Encàrrec del titular, un cop el generador va funcionar al seu mòbil: «pots imaginar més dissenys seguint la mateixa imatge corporativa? […] en vull 4 més, en blanc i en mode nit». Ara una story es pot dibuixar de cinc maneres (`STORY_DESIGNS` a `og/story.ts`), totes amb el mateix cap (la marca com en un dorsal), la mateixa lletra, el paper i la tinta dels dos temes i els mateixos dibuixos:
+
+| Disseny | Què hi mana |
+|---|---|
+| **Fitxa** | El d'abans: plànol, xifres i perfil al peu. És el que tenen les rutes de la web |
+| **Plànol** | El mapa de banda a banda de la imatge; el nom i les xifres, sobre una franja impresa a l'inrevés (tinta en clar, paper en nit) |
+| **Dorsal** | La distància, tan gran com la imatge és ampla, amb la unitat en el color d'accent; la resta, com les línies d'un full de resultats |
+| **Perfil** | El perfil gran, sobre els seus nivells d'alçada i amb el punt més alt marcat; sense mapa |
+| **Traç** | Només la línia de la ruta, amb els quilòmetres numerats; les xifres, en una sola línia |
+
+- El generador els dibuixa tots cinc amb la sortida de qui hi puja el GPX, en el tema triat («Clara» o «Fosca»), i cada un apareix quan està fet. El nom del fitxer porta el disseny i el tema (`tram-story-<nom>-planol-nit.png`).
+- «Plànol» ensenya el terreny per una finestra de la seva forma: es demana a l'ICGC un segon rectangle, més ample, en cel·les més grosses. Són dues peticions més, com a molt.
+- Les rutes de la web segueixen oferint només «Fitxa». Fer-ne els cinc en compilar serien deu imatges per ruta; no s'ha fet.
+- **Decisions meves:** «Perfil» no porta mapa (amb un plànol petit a sota quedava descompensat); «Traç» no numera un quilòmetre que cau a sobre d'un altre (anada i tornada); una ruta plana es dibuixa plana també a «Perfil», amb la línia dels 100 m que ho fa llegir.
+- Comprovat: els deu resultats mirats un per un amb una ruta plana i una de muntanya, i les proves de navegador. Cinc imatges triguen 1,5 s en un Mac; en un mòbil, més, i no s'ha mesurat.
+

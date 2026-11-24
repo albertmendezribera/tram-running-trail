@@ -4,7 +4,7 @@
 import type { TramOgTheme } from '@tram/design-system/og';
 import { fetchTile, planTiles } from '@tram/terrain-pipeline/icgc';
 import { buildPlate } from '@tram/terrain-pipeline/plate';
-import { STORY, storyCard, type Pen } from '../../og/story';
+import { MAP_WINDOW, STORY, STORY_DESIGNS, storyCard, type Pen, type StoryDesign } from '../../og/story';
 import { altOf, cardOf, type Outing, type Wording } from '../../story-maker/card';
 import { frameOf, heightAt, ICGC_ZONE, inCatalonia, project, routeIn, settle, type Frame } from '../../story-maker/ground';
 import { profileOf, readGpx, recordedSeconds, TrackError } from '../../story-maker/track';
@@ -48,12 +48,16 @@ export async function prepare(xml: string, tell: (stage: 'relief') => void): Pro
   const track = readGpx(xml);
   const { zone, xy } = project(track.points);
   const frame = frameOf(xy, zone);
+  // «Plànol» shows the ground through a window of its own shape: more ground at the sides, in larger cells.
+  const wide = frameOf(xy, zone, MAP_WINDOW.width / MAP_WINDOW.height);
   let heights: Float32Array | null = null;
+  let around: Float32Array | null = null;
   let bare: Prepared['bare'] = 'outside';
   if (zone === ICGC_ZONE && inCatalonia(track.points)) {
     tell('relief');
-    const answered = await reliefOf(frame);
+    const [answered, more] = await Promise.all([reliefOf(frame), reliefOf(wide)]);
     heights = answered && settle(answered);
+    around = more && settle(more);
     bare = heights ? null : answered ? 'outside' : 'unanswered';
   }
   // The heights of the watch where the file has them all; if not, those of the ground under each point.
@@ -61,8 +65,11 @@ export async function prepare(xml: string, tell: (stage: 'relief') => void): Pro
   if (!own && !heights) throw new NoHeightsError();
   const elevations = own ? track.points.map((point) => point.ele!) : xy.map((point) => heightAt(frame, heights!, point));
   const profile = profileOf(track.points, elevations);
-  const plate = buildPlate({ heights: heights ?? new Float32Array(frame.cols * frame.rows), cols: frame.cols, rows: frame.rows, cell: frame.cell, route: routeIn(frame, xy), distanceKm: profile.at(-1)![0] });
-  return { name: track.name, profile, plate, seconds: recordedSeconds(track.points), relief: heights !== null, bare };
+  const plateOf = (ground: Frame, relief: Float32Array | null) =>
+    buildPlate({ heights: relief ?? new Float32Array(ground.cols * ground.rows), cols: ground.cols, rows: ground.rows, cell: ground.cell, route: routeIn(ground, xy), distanceKm: profile.at(-1)![0] });
+  // Where the relief around did not come and the one of the route did, the window keeps the plate of the route.
+  const window = around || !heights ? plateOf(wide, around) : undefined;
+  return { name: track.name, profile, plate: plateOf(frame, heights), window, seconds: recordedSeconds(track.points), relief: heights !== null, bare };
 }
 
 type Face = 'display' | 'text';
@@ -130,28 +137,25 @@ function writeLine(ctx: CanvasRenderingContext2D, { text, face, size, x, y, fill
   }
 }
 
-const THEMES: ReadonlyArray<{ theme: TramOgTheme; suffix: string; name: string }> = [
-  { theme: 'light', suffix: '', name: 'Clara' },
-  { theme: 'night', suffix: '-nit', name: 'Fosca' },
-];
+const THEMES: Record<TramOgTheme, { suffix: string; name: string }> = { light: { suffix: '', name: 'clara' }, night: { suffix: '-nit', name: 'fosca' } };
 
 export interface Drawn {
-  theme: TramOgTheme;
+  design: StoryDesign;
+  /** What follows the name of the outing in the name of the file: the design and, for the dark one, the theme. */
   suffix: string;
-  name: string;
   alt: string;
   blob: Blob;
 }
 
-/** The story of an outing in the two themes, each a PNG of 1080 × 1920. */
-export async function draw(outing: Outing, wording: Wording): Promise<Drawn[]> {
+/** The story of an outing in every design, in one theme, each a PNG of 1080 × 1920. `each` is told as every one is ready. */
+export async function draw(outing: Outing, wording: Wording, theme: TramOgTheme, each?: (story: Drawn) => void): Promise<Drawn[]> {
   // The fonts are waited for, never depended on: without them the text is written in the stand-in the page itself would use.
   await Promise.allSettled((['display', 'text'] as const).map((face) => document.fonts.load(own(face))));
   const card = cardOf(outing, wording);
   const drawn: Drawn[] = [];
-  for (const { theme, suffix, name } of THEMES) {
+  for (const { key: design } of STORY_DESIGNS) {
     const lines: Line[] = [];
-    const svg = storyCard(card, theme, canvasPen(lines));
+    const svg = storyCard(card, theme, canvasPen(lines), design);
     const address = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
     try {
       const shapes = new Image();
@@ -168,7 +172,9 @@ export async function draw(outing: Outing, wording: Wording): Promise<Drawn[]> {
       for (const line of lines) writeLine(ctx, line);
       const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
       if (!blob) throw new Error('the canvas gave no image');
-      drawn.push({ theme, suffix, name, alt: altOf(card, name.toLocaleLowerCase('ca')), blob });
+      const story = { design, suffix: `-${design}${THEMES[theme].suffix}`, alt: altOf(card, design, THEMES[theme].name), blob };
+      drawn.push(story);
+      each?.(story);
     } finally {
       URL.revokeObjectURL(address);
     }

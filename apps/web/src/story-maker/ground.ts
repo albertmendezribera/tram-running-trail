@@ -40,15 +40,18 @@ export function project(points: ReadonlyArray<{ lat: number; lon: number }>): { 
 /**
  * The frame of a track: its bounds and a margin, in cells of a size that keeps the longer side under
  * `MOST_CELLS`. The cell is a multiple of five metres, ten at the least: the model has a point every five.
+ * With `aspect` (width over height) the frame grows, evenly at both sides, to that shape: the ground a
+ * design shows through a window of its own.
  */
-export function frameOf(xy: readonly Point[], zone: number): Frame {
+export function frameOf(xy: readonly Point[], zone: number, aspect?: number): Frame {
   let [minX, minY, maxX, maxY] = [Infinity, Infinity, -Infinity, -Infinity];
   for (const [x, y] of xy) [minX, minY, maxX, maxY] = [Math.min(minX, x), Math.min(minY, y), Math.max(maxX, x), Math.max(maxY, y)];
-  const side = Math.max(maxX - minX, maxY - minY) + MARGIN_M * 2;
-  const cell = Math.max(10, Math.ceil(side / MOST_CELLS / 5) * 5);
-  const x0 = Math.floor((minX - MARGIN_M) / cell) * cell;
-  const y0 = Math.floor((minY - MARGIN_M) / cell) * cell;
-  return { zone, x0, y0, cell, cols: Math.ceil((maxX + MARGIN_M - x0) / cell), rows: Math.ceil((maxY + MARGIN_M - y0) / cell) };
+  let [width, height] = [maxX - minX + MARGIN_M * 2, maxY - minY + MARGIN_M * 2];
+  if (aspect) [width, height] = width / height < aspect ? [height * aspect, height] : [width, width / aspect];
+  const cell = Math.max(10, Math.ceil(Math.max(width, height) / MOST_CELLS / 5) * 5);
+  const x0 = Math.floor(((minX + maxX) / 2 - width / 2) / cell) * cell;
+  const y0 = Math.floor(((minY + maxY) / 2 - height / 2) / cell) * cell;
+  return { zone, x0, y0, cell, cols: Math.ceil(width / cell), rows: Math.ceil(height / cell) };
 }
 
 /** The track in metres from the south-west corner of its frame, a point every ten metres or every third of a cell. */

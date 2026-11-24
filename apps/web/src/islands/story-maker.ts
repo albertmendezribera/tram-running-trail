@@ -24,10 +24,12 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-story-maker]'))
   const title = form.elements.namedItem('titol') as HTMLInputElement;
   const place = form.elements.namedItem('lloc') as HTMLInputElement;
   const timed = [...form.querySelectorAll<HTMLInputElement>('input[name="temps"]')];
+  const themes = [...form.querySelectorAll<HTMLInputElement>('input[name="versio"]')];
   const sharing = canShareFiles();
 
   let prepared: Prepared | undefined;
-  let shown: Array<{ address: string; file: File }> = [];
+  /** What is on show, by design: the address the browser gave the picture, and the picture as a file. */
+  const shown = new Map<string, { address: string; file: File }>();
   /** Every choice of file and every change of words is a new attempt: what arrives for an old one is dropped. */
   let attempt = 0;
   const say = (text: string, state: 'idle' | 'busy' | 'ready' | 'error'): void => {
@@ -35,25 +37,25 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-story-maker]'))
     root.dataset['state'] = state;
   };
   const wantsTime = (): boolean => timed.some((radio) => radio.checked && radio.value === 'si');
+  const theme = (): 'light' | 'night' => (themes.some((radio) => radio.checked && radio.value === 'night') ? 'night' : 'light');
 
-  const show = (drawn: Drawn[], name: string): void => {
-    for (const old of shown) URL.revokeObjectURL(old.address);
-    shown = drawn.map((story) => {
-      const picture = new File([story.blob], `tram-story-${name}${story.suffix}.png`, { type: 'image/png' });
-      return { address: URL.createObjectURL(picture), file: picture };
-    });
-    drawn.forEach((story, i) => {
-      const item = results.querySelector<HTMLElement>(`[data-story="${story.theme}"]`);
-      if (!item) return;
-      const { address, file: picture } = shown[i]!;
-      const image = item.querySelector('img')!;
-      image.src = address;
-      image.alt = story.alt;
-      item.querySelector<HTMLAnchorElement>('[data-maker-open]')!.href = address;
-      const save = item.querySelector<HTMLAnchorElement>('[data-maker-save] a')!;
-      save.href = address;
-      save.download = picture.name;
-    });
+  /** Puts one design on show as soon as it is drawn: its picture, what it shows in words, and the file to save. */
+  const show = (story: Drawn, name: string): void => {
+    const item = results.querySelector<HTMLElement>(`[data-story="${story.design}"]`);
+    if (!item) return;
+    const old = shown.get(story.design);
+    if (old) URL.revokeObjectURL(old.address);
+    const picture = new File([story.blob], `tram-story-${name}${story.suffix}.png`, { type: 'image/png' });
+    const address = URL.createObjectURL(picture);
+    shown.set(story.design, { address, file: picture });
+    const image = item.querySelector('img')!;
+    image.src = address;
+    image.alt = story.alt;
+    item.querySelector<HTMLAnchorElement>('[data-maker-open]')!.href = address;
+    const save = item.querySelector<HTMLAnchorElement>('[data-maker-save] a')!;
+    save.href = address;
+    save.download = picture.name;
+    item.hidden = false;
     results.hidden = false;
     empty.hidden = true;
   };
@@ -65,11 +67,12 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-story-maker]'))
     const { fileSlug } = await import('../story-maker/card');
     const name = title.value.trim() || 'La meva ruta';
     try {
-      const drawn = await draw(prepared, { title: name, place: place.value.trim(), time: wantsTime() });
+      const slug = fileSlug(name);
+      // Each design is shown as it is ready; one drawn for words that have changed since is dropped.
+      await draw(prepared, { title: name, place: place.value.trim(), time: wantsTime() }, theme(), (story) => mine === attempt && show(story, slug));
       if (mine !== attempt) return;
-      show(drawn, fileSlug(name));
       const bare = prepared.bare === 'unanswered' ? ' El relleu de l’ICGC no ha arribat: surt sense corbes de nivell.' : prepared.bare === 'outside' ? ' Fora de Catalunya no tenim relleu: surt el traç sense corbes de nivell.' : '';
-      say(`A punt: baixa la que vulguis.${bare}`, 'ready');
+      say(`A punt: tria el disseny que vulguis i baixa’l.${bare}`, 'ready');
     } catch (error) {
       // Said in the console too, for whoever looks into why.
       console.error(error);
@@ -110,7 +113,7 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-story-maker]'))
     }
   });
 
-  // The words and the choice of telling the time are drawn again as they change, without reading the file again.
+  // The words, the theme and the choice of telling the time are drawn again as they change, without reading the file again.
   let waiting: ReturnType<typeof setTimeout> | undefined;
   const again = (): void => {
     clearTimeout(waiting);
@@ -118,16 +121,16 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-story-maker]'))
   };
   title.addEventListener('input', again);
   place.addEventListener('input', again);
-  for (const radio of timed) radio.addEventListener('change', again);
+  for (const radio of [...timed, ...themes]) radio.addEventListener('change', again);
   form.addEventListener('submit', (event) => event.preventDefault());
 
   // Where the browser can hand a picture to another app (a phone, mostly), «Comparteix» opens its share sheet.
-  results.querySelectorAll<HTMLElement>('[data-story]').forEach((item, i) => {
+  results.querySelectorAll<HTMLElement>('[data-story]').forEach((item) => {
     const holder = item.querySelector<HTMLElement>('[data-maker-share]')!;
     if (!sharing) return;
     holder.hidden = false;
     holder.querySelector('button')?.addEventListener('click', async () => {
-      const picture = shown[i]?.file;
+      const picture = shown.get(item.dataset['story'] ?? '')?.file;
       if (!picture) return;
       shareStatus.textContent = '';
       try {

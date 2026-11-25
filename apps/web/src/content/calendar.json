@@ -4038,12 +4038,16 @@
    "lon": 0.58374,
    "terrain": null,
    "distancesM": [],
-   "organiser": null,
-   "website": null,
+   "organiser": "Lo Makot (Associació Caminadors i Corredors d'Alguaire)",
+   "website": "https://lomakot.cat/cursa-dorientacio-solidara-dalguaire/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-dorientacio-solidaria-dalguaire"
+    },
+    {
+     "id": "own",
+     "url": "https://lomakot.cat/cursa-dorientacio-solidara-dalguaire/"
     }
    ]
   },
@@ -4297,12 +4301,16 @@
    "lon": 0.96095,
    "terrain": null,
    "distancesM": [],
-   "organiser": null,
-   "website": null,
+   "organiser": "Ajuntament de Riudecanyes",
+   "website": "https://web.rockthesport.com/ca/event/cursa-del-gall-riudecanyes-2026",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-del-gall-riudecanyes"
+    },
+    {
+     "id": "own",
+     "url": "https://web.rockthesport.com/ca/event/cursa-del-gall-riudecanyes-2026"
     }
    ]
   },
@@ -5161,15 +5169,19 @@
    "lon": 1.75236,
    "terrain": "trail",
    "distancesM": [
-    10000,
+    12000,
     20000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Club SantKuTrail · CamiKursa",
+   "website": "https://www.santkutrail.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/santkutrail"
+    },
+    {
+     "id": "own",
+     "url": "https://www.santkutrail.com/"
     }
    ]
   },
@@ -5201,13 +5213,20 @@
    "lat": 41.16774,
    "lon": 1.44063,
    "terrain": "trail",
-   "distancesM": [],
-   "organiser": null,
-   "website": null,
+   "distancesM": [
+    3700,
+    10900
+   ],
+   "organiser": "Ajuntament de Creixell",
+   "website": "https://www.creixelltrail.es/reglament/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/creixelltrail"
+    },
+    {
+     "id": "own",
+     "url": "https://www.creixelltrail.es/reglament/"
     }
    ]
   },
@@ -5215,21 +5234,25 @@
    "slug": "cursa-al-castell-de-sant-miquel-2027",
    "name": "Cursa al Castell de Sant Miquel",
    "date": "2027-02-14",
-   "town": "Gerona",
-   "comarca": null,
-   "lat": 41.9794,
-   "lon": 2.82143,
+   "town": "Girona",
+   "comarca": "Gironès",
+   "lat": 41.98316,
+   "lon": 2.82487,
    "terrain": null,
    "distancesM": [
-    12000,
-    24000
+    14000,
+    23500
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "AVV de la Vall de Sant Daniel",
+   "website": "https://santdaniel.wixsite.com/cursa-sant-miquel",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-al-castell-de-sant-miquel"
+    },
+    {
+     "id": "own",
+     "url": "https://santdaniel.wixsite.com/cursa-sant-miquel"
     }
    ]
   },
@@ -5284,21 +5307,26 @@
    "slug": "travessa-trail-2027",
    "name": "Travessa Trail",
    "date": "2027-02-19",
-   "town": "Prades",
-   "comarca": "Baix Camp",
-   "lat": 41.30979,
-   "lon": 0.98819,
+   "town": "Cornudella de Montsant",
+   "comarca": "Priorat",
+   "lat": 41.26504,
+   "lon": 0.90495,
    "terrain": "trail",
    "distancesM": [
     45000,
+    85000,
     140000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Club Excursionista Trailgat",
+   "website": "https://www.travessatrail.org/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/travessa-trail"
+    },
+    {
+     "id": "own",
+     "url": "https://www.travessatrail.org/"
     }
    ]
   },
@@ -5327,22 +5355,26 @@
   {
    "slug": "c-t-t-trail-2027",
    "name": "C.T.T. Trail",
-   "date": "2027-02-21",
-   "town": "Cala Romana",
-   "comarca": null,
-   "lat": 41.12655,
-   "lon": 1.2871,
+   "date": "2027-03-07",
+   "town": "Tarragona",
+   "comarca": "Tarragonès",
+   "lat": 41.11743,
+   "lon": 1.25436,
    "terrain": "trail",
    "distancesM": [
-    11000,
+    10000,
     21000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Club Tennis Tarragona",
+   "website": "https://tennistarragona.com/ctttrail-nova-data/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/ctt-trail"
+    },
+    {
+     "id": "own",
+     "url": "https://tennistarragona.com/ctttrail-nova-data/"
     }
    ]
   },
@@ -5457,12 +5489,16 @@
     6000,
     22000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Sport Events 360º",
+   "website": "https://www.xtrailseriesrun.com/ca/mataro",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/xtrail-series-run-mataro"
+    },
+    {
+     "id": "own",
+     "url": "https://www.xtrailseriesrun.com/ca/mataro"
     }
    ]
   },
@@ -5532,15 +5568,19 @@
    "lon": 0.712,
    "terrain": null,
    "distancesM": [
-    8000,
+    16000,
     21000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "TR Cabra Feixet",
+   "website": "https://trcabrafeixet.com/bufavents.html",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/la-bufavents"
+    },
+    {
+     "id": "own",
+     "url": "https://trcabrafeixet.com/bufavents.html"
     }
    ]
   },
@@ -5608,15 +5648,19 @@
    "lon": 0.45898,
    "terrain": null,
    "distancesM": [
-    7000,
+    6500,
     10000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "XT Sport Events",
+   "website": "https://xtsportevents.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/volta-al-panta-dutxesa"
+    },
+    {
+     "id": "own",
+     "url": "https://xtsportevents.com/"
     }
    ]
   },
@@ -5719,14 +5763,19 @@
    "lon": 0.95812,
    "terrain": null,
    "distancesM": [
+    24000,
     32000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "CE l'Areny",
+   "website": "https://www.cursa4termes.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-4-termes"
+    },
+    {
+     "id": "own",
+     "url": "https://www.cursa4termes.com/"
     }
    ]
   },
@@ -5811,11 +5860,15 @@
     21000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.cursadelrocgros.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-del-roc-gros"
+    },
+    {
+     "id": "own",
+     "url": "https://www.cursadelrocgros.com/"
     }
    ]
   },
@@ -5870,12 +5923,16 @@
     11000,
     21000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Trail Serralavella",
+   "website": "https://trailserralavella.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-serralavella"
+    },
+    {
+     "id": "own",
+     "url": "https://trailserralavella.com/"
     }
    ]
   },
@@ -5959,11 +6016,15 @@
     10000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.correpoble.cat/",
    "sources": [
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    },
+    {
+     "id": "own",
+     "url": "https://www.correpoble.cat/"
     }
    ]
   },
@@ -5978,14 +6039,19 @@
    "terrain": "trail",
    "distancesM": [
     15000,
+    28000,
     55000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "RunThrough",
+   "website": "https://www.runthrough.co.uk/event/runthrough-trails-girona-april-2027",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/runthrough-trails-girona"
+    },
+    {
+     "id": "own",
+     "url": "https://www.runthrough.co.uk/event/runthrough-trails-girona-april-2027"
     }
    ]
   },
@@ -5999,15 +6065,20 @@
    "lon": 1.8851,
    "terrain": "trail",
    "distancesM": [
-    8000,
+    12000,
+    21000,
     37000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Associació de Muntanyencs Berguedans",
+   "website": "https://www.sobrepunytrail.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/sobrepuny-trail"
+    },
+    {
+     "id": "own",
+     "url": "https://www.sobrepunytrail.cat/"
     }
    ]
   },
@@ -6024,12 +6095,16 @@
     7000,
     87000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Naturetime Events",
+   "website": "https://www.naturetime.es/en/muntanyes-costa-daurada-ultra-trail/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/ultra-trail-muntanyes-costa-daurada"
+    },
+    {
+     "id": "own",
+     "url": "https://www.naturetime.es/en/muntanyes-costa-daurada-ultra-trail/"
     }
    ]
   },
@@ -6066,11 +6141,15 @@
    "terrain": "trail",
    "distancesM": [],
    "organiser": null,
-   "website": null,
+   "website": "https://www.traildevallforners.es/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-de-vallforners"
+    },
+    {
+     "id": "own",
+     "url": "https://www.traildevallforners.es/"
     }
    ]
   },
@@ -6113,11 +6192,15 @@
    "terrain": null,
    "distancesM": [],
    "organiser": null,
-   "website": null,
+   "website": "https://www.trencacims.com/2026/09/17/trencacims-2027-10-i-11-dabril/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trencacims-pauls"
+    },
+    {
+     "id": "own",
+     "url": "https://www.trencacims.com/2026/09/17/trencacims-2027-10-i-11-dabril/"
     }
    ]
   },
@@ -6161,14 +6244,19 @@
     10000,
     20000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Els Gafarrons",
+   "website": "https://www.gafarrons.com/caminada/caminada-daiguafreda-copia/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/caminada-daiguafreda"
+    },
+    {
+     "id": "own",
+     "url": "https://www.gafarrons.com/caminada/caminada-daiguafreda-copia/"
     }
-   ]
+   ],
+   "kind": "march"
   },
   {
    "slug": "marxa-del-garri-2027",
@@ -6201,12 +6289,16 @@
    "distancesM": [
     35000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "MOM Sports Events",
+   "website": "https://momsportsevents.com/trail-montgri/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-montgri"
+    },
+    {
+     "id": "own",
+     "url": "https://momsportsevents.com/trail-montgri/"
     }
    ]
   },
@@ -6214,21 +6306,25 @@
    "slug": "xtrail-series-run-orrius-2027",
    "name": "Xtrail Series Run Òrrius",
    "date": "2027-04-11",
-   "town": "Mataró",
+   "town": "Òrrius",
    "comarca": "Maresme",
-   "lat": 41.53981,
-   "lon": 2.4449,
+   "lat": 41.55508,
+   "lon": 2.35494,
    "terrain": "trail",
    "distancesM": [
     7000,
     21000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Sport Events 360º",
+   "website": "https://www.xtrailseriesrun.com/ca/orrius",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/xtrail-series-run-orrius"
+    },
+    {
+     "id": "own",
+     "url": "https://www.xtrailseriesrun.com/ca/orrius"
     }
    ]
   },
@@ -6265,14 +6361,19 @@
    "terrain": "trail",
    "distancesM": [
     48000,
+    49000,
     80000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.ametlla.cat/actualitat/noticies/lametlla-referma-el-seu-compromis-amb-oncodines.html",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/oncodines-trail"
+    },
+    {
+     "id": "own",
+     "url": "https://www.ametlla.cat/actualitat/noticies/lametlla-referma-el-seu-compromis-amb-oncodines.html"
     }
    ]
   },
@@ -6456,13 +6557,20 @@
    "lat": 41.89984,
    "lon": 1.87934,
    "terrain": null,
-   "distancesM": [],
+   "distancesM": [
+    27000,
+    83000
+   ],
    "organiser": null,
-   "website": null,
+   "website": "https://laromanicanavas.cat/romanica-2027/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/la-romanica-navas"
+    },
+    {
+     "id": "own",
+     "url": "https://laromanicanavas.cat/romanica-2027/"
     }
    ]
   },
@@ -6504,14 +6612,19 @@
    "terrain": "trail",
    "distancesM": [
     10000,
+    26000,
     51000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.skyracepicdelorri.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/skyrace-pic-de-lorri"
+    },
+    {
+     "id": "own",
+     "url": "https://www.skyracepicdelorri.com/"
     }
    ]
   },
@@ -6550,12 +6663,16 @@
     6000,
     20000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Sport Events 360º",
+   "website": "https://www.xtrailseriesrun.com/ca/vallgorguina",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/xtrail-series-run-vallgorguina"
+    },
+    {
+     "id": "own",
+     "url": "https://www.xtrailseriesrun.com/ca/vallgorguina"
     }
    ]
   },
@@ -6588,14 +6705,18 @@
    "lon": 1.32614,
    "terrain": "trail",
    "distancesM": [
-    11000
+    11300
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Fun Sports",
+   "website": "https://trailagullaelcatllar.webnode.es/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-lagulla"
+    },
+    {
+     "id": "own",
+     "url": "https://trailagullaelcatllar.webnode.es/"
     }
    ]
   },
@@ -6651,14 +6772,21 @@
    "terrain": null,
    "distancesM": [
     5000,
+    8000,
+    10000,
+    17000,
     21000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://runfestivaltossa.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/run-festival-tossa-de-mar"
+    },
+    {
+     "id": "own",
+     "url": "https://runfestivaltossa.com/"
     }
    ]
   },
@@ -6675,11 +6803,15 @@
     5000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.caraamon.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/caraamon"
+    },
+    {
+     "id": "own",
+     "url": "https://www.caraamon.com/"
     }
    ]
   },
@@ -6715,14 +6847,19 @@
    "terrain": "trail",
    "distancesM": [
     7000,
-    21000
+    13000,
+    22900
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.caraamon.com/trail-comaminyana",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-comaminyana"
+    },
+    {
+     "id": "own",
+     "url": "https://www.caraamon.com/trail-comaminyana"
     }
    ]
   },
@@ -6736,14 +6873,18 @@
    "lon": 3.12638,
    "terrain": null,
    "distancesM": [
-    7000
+    6700
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Fundació Oncolliga Girona",
+   "website": "https://participa.oncolligagirona.cat/activitats-solidaries/backyard-ultra-montgri.html",
    "sources": [
     {
      "id": "curses-cat",
      "url": "https://www.curses.cat/calendari"
+    },
+    {
+     "id": "own",
+     "url": "https://participa.oncolligagirona.cat/activitats-solidaries/backyard-ultra-montgri.html"
     }
    ]
   },
@@ -6870,11 +7011,15 @@
     12000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://cursadelserrat.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-del-serrat-llobater"
+    },
+    {
+     "id": "own",
+     "url": "https://cursadelserrat.com/"
     }
    ]
   },
@@ -6913,11 +7058,15 @@
     300000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.caminodedragones.es/en",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/camino-de-dragones"
+    },
+    {
+     "id": "own",
+     "url": "https://www.caminodedragones.es/en"
     }
    ]
   },
@@ -6930,13 +7079,21 @@
    "lat": 42.51515,
    "lon": 1.24288,
    "terrain": null,
-   "distancesM": [],
+   "distancesM": [
+    16000,
+    27000,
+    42000
+   ],
    "organiser": null,
-   "website": null,
+   "website": "https://laribalera.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/la-ribalera"
+    },
+    {
+     "id": "own",
+     "url": "https://laribalera.cat/"
     }
    ]
   },
@@ -6944,18 +7101,27 @@
    "slug": "garmin-mountain-festival-vall-de-boi-2027",
    "name": "Garmin Mountain Festival - Vall de Boí",
    "date": "2027-06-18",
-   "town": "Barruera",
-   "comarca": null,
-   "lat": 42.50556,
-   "lon": 0.80114,
+   "town": "la Vall de Boí",
+   "comarca": "Alta Ribagorça",
+   "lat": 42.50459,
+   "lon": 0.80046,
    "terrain": null,
-   "distancesM": [],
+   "distancesM": [
+    12000,
+    24000,
+    42000,
+    60000
+   ],
    "organiser": null,
-   "website": null,
+   "website": "https://garminmountainfestival.com/en/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/garmin-mountain-festival-vall-de-boi"
+    },
+    {
+     "id": "own",
+     "url": "https://garminmountainfestival.com/en/"
     }
    ]
   },
@@ -6969,16 +7135,21 @@
    "lon": 0.40016,
    "terrain": null,
    "distancesM": [
-    45000
+    44500
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "UEC Tortosa",
+   "website": "https://nocturna.uectortosa.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/nocturna-fredes-pauls"
+    },
+    {
+     "id": "own",
+     "url": "https://nocturna.uectortosa.cat/"
     }
-   ]
+   ],
+   "kind": "march"
   },
   {
    "slug": "survivor-barcelona-2027",
@@ -7058,11 +7229,15 @@
    "terrain": null,
    "distancesM": [],
    "organiser": null,
-   "website": null,
+   "website": "https://caminadadegosol.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-de-gosol"
+    },
+    {
+     "id": "own",
+     "url": "https://caminadadegosol.cat/"
     }
    ]
   },
@@ -7096,14 +7271,19 @@
    "terrain": "trail",
    "distancesM": [
     13000,
-    43000
+    24000,
+    42000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.trailmolieres3010.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-vielha-molieres-3010"
+    },
+    {
+     "id": "own",
+     "url": "https://www.trailmolieres3010.com/"
     }
    ]
   },
@@ -7138,15 +7318,18 @@
    "lon": 1.2261,
    "terrain": null,
    "distancesM": [
-    6000,
-    42000
+    23000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "XT Sport Events",
+   "website": "https://xtsportevents.com/curses/marato-valls-de-cardos/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/marato-valls-de-cardos"
+    },
+    {
+     "id": "own",
+     "url": "https://xtsportevents.com/curses/marato-valls-de-cardos/"
     }
    ]
   },
@@ -7163,14 +7346,19 @@
     18000,
     35000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Club Excursionista Alliberadrenalina",
+   "website": "https://alliberadrenalina.com/marxa-de-laigua-de-sant-magi/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/marxa-de-laigua-de-sant-magi"
+    },
+    {
+     "id": "own",
+     "url": "https://alliberadrenalina.com/marxa-de-laigua-de-sant-magi/"
     }
-   ]
+   ],
+   "kind": "march"
   },
   {
    "slug": "pedraforca-xtrail-2027",
@@ -7204,15 +7392,21 @@
    "lon": 2.30137,
    "terrain": "trail",
    "distancesM": [
-    8000,
+    7500,
+    9300,
+    11300,
     23000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://cursalamarrana.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/marrana-skyrace"
+    },
+    {
+     "id": "own",
+     "url": "https://cursalamarrana.com/"
     }
    ]
   },
@@ -7366,15 +7560,20 @@
    "lon": 0.98819,
    "terrain": "trail",
    "distancesM": [
-    13000,
-    50000
+    13750,
+    22800,
+    47750
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.muntanyesdepradesepictrail.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/muntanyes-de-prades-epic-trail"
+    },
+    {
+     "id": "own",
+     "url": "https://www.muntanyesdepradesepictrail.com/"
     }
    ]
   }

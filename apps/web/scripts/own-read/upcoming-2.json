@@ -1,0 +1,941 @@
+{
+ "read": "2026-11-25",
+ "races": [
+  {
+   "slug": "cursa-dorientacio-solidaria-dalguaire-2026",
+   "confirmed": true,
+   "website": "https://lomakot.cat/cursa-dorientacio-solidara-dalguaire/",
+   "name": "11a Cursa d'Orientació Solidària d'Alguaire Orienta't per La Marató de TV3",
+   "date": "2026-12-13",
+   "town": "Alguaire",
+   "distancesKm": null,
+   "organiser": "Lo Makot (Associació Caminadors i Corredors d'Alguaire)",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "cursa-del-gall-riudecanyes-2026",
+   "confirmed": true,
+   "website": "https://web.rockthesport.com/ca/event/cursa-del-gall-riudecanyes-2026",
+   "name": "Cursa del Gall Riudecanyes - 2026",
+   "date": "2026-12-20",
+   "town": "Riudecanyes",
+   "distancesKm": null,
+   "organiser": "Ajuntament de Riudecanyes",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "santkutrail-2027",
+   "confirmed": true,
+   "website": "https://www.santkutrail.com/",
+   "name": "SantKuTrail 2027",
+   "date": "2027-02-06",
+   "town": "Sant Cugat Sesgarrigues",
+   "distancesKm": [
+    20,
+    12
+   ],
+   "organiser": "Club SantKuTrail · CamiKursa",
+   "differs": "L'organitzador dona les curses de 20 i 12 km el dissabte 6 de febrer; els 10 km són la Marxa dels Cellers, sense cronometratge, el diumenge 7.",
+   "why": null
+  },
+  {
+   "slug": "baga-fast-trail-ccp-2027",
+   "confirmed": true,
+   "website": "https://fcatletisme.cat/event/baga-fast-trail-ccp-2/",
+   "name": "Bagà Fast Trail (CCP)",
+   "date": "2027-02-14",
+   "town": "Bagà",
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "creixelltrail-2027",
+   "confirmed": true,
+   "website": "https://www.creixelltrail.es/reglament/",
+   "name": "13a Cursa Trail Creixell",
+   "date": "2027-02-14",
+   "town": "Creixell",
+   "distancesKm": [
+    10.9,
+    3.7
+   ],
+   "organiser": "Ajuntament de Creixell",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "cursa-al-castell-de-sant-miquel-2027",
+   "confirmed": true,
+   "website": "https://santdaniel.wixsite.com/cursa-sant-miquel",
+   "name": "Cursa al Castell de Sant Miquel",
+   "date": "2027-02-14",
+   "town": "Girona",
+   "distancesKm": [
+    23.5,
+    14
+   ],
+   "organiser": "AVV de la Vall de Sant Daniel",
+   "differs": "L'organitzador dona un trail de 23,5 km i una exprés de 14 km; els 12 km són una caminada no cronometrada.",
+   "why": null
+  },
+  {
+   "slug": "marxa-solidaria-vilafant-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat cap pàgina de l'organitzador amb l'edició del 2027: l'agenda de l'Ajuntament de Vilafant encara no la porta."
+  },
+  {
+   "slug": "travessa-trail-2027",
+   "confirmed": true,
+   "website": "https://www.travessatrail.org/",
+   "name": "Travessa Trail",
+   "date": "2027-02-19",
+   "town": "Cornudella de Montsant",
+   "distancesKm": [
+    140,
+    85,
+    45
+   ],
+   "organiser": "Club Excursionista Trailgat",
+   "differs": "L'organitzador la situa a Cornudella de Montsant (sortida i arribada; només la de 45 km surt de Prades), del 19 al 21 de febrer, i hi afegeix la distància de 85 km.",
+   "why": null
+  },
+  {
+   "slug": "training-event-trailcat100-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat cap pàgina de l'organitzador amb aquesta prova: el domini trailcat200.com ja no és de la cursa i la web de la UTTGN no en parla."
+  },
+  {
+   "slug": "c-t-t-trail-2027",
+   "confirmed": true,
+   "website": "https://tennistarragona.com/ctttrail-nova-data/",
+   "name": "CTT Trail",
+   "date": "2027-03-07",
+   "town": "Tarragona",
+   "distancesKm": [
+    21,
+    10
+   ],
+   "organiser": "Club Tennis Tarragona",
+   "differs": "L'organitzador ha anunciat una data nova: diumenge 7 de març de 2027, no el 21 de febrer; les distàncies són 21 i 10 km (i una caminada de 10 km).",
+   "why": null
+  },
+  {
+   "slug": "xtrail-series-run-mataro-2027",
+   "confirmed": true,
+   "website": "https://www.xtrailseriesrun.com/ca/mataro",
+   "name": "Xtrail Mataró",
+   "date": "2027-02-21",
+   "town": "Mataró",
+   "distancesKm": null,
+   "organiser": "Sport Events 360º",
+   "differs": "L'organitzador dona quatre distàncies (22, 15,5, 10 i 5,5 km), no dues. Les distàncies de la pàgina són sota el títol «edició anterior» i no s’han fet servir.",
+   "why": null
+  },
+  {
+   "slug": "la-bufavents-2027",
+   "confirmed": true,
+   "website": "https://trcabrafeixet.com/bufavents.html",
+   "name": "La Bufavents",
+   "date": "2027-02-28",
+   "town": "El Perelló",
+   "distancesKm": [
+    21,
+    16
+   ],
+   "organiser": "TR Cabra Feixet",
+   "differs": "L'organitzador dona una absoluta de 21 km i una exprés de 16 km, a més d'una marxa no competitiva de 12 km i una cadet de 7,6 km; no hi ha cap cursa de 8 km.",
+   "why": null
+  },
+  {
+   "slug": "volta-al-panta-dutxesa-2027",
+   "confirmed": true,
+   "website": "https://xtsportevents.com/",
+   "name": "Volta al Pantà d'Utxesa",
+   "date": "2027-02-28",
+   "town": "Pantà d'Utxesa",
+   "distancesKm": [
+    10,
+    6.5
+   ],
+   "organiser": "XT Sport Events",
+   "differs": "L'organitzador només dona com a lloc el Pantà d'Utxesa, sense dir el municipi.",
+   "why": null
+  },
+  {
+   "slug": "embruixada-trail-2027",
+   "confirmed": false,
+   "website": "https://embruixada.com/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "La web de la cursa encara ensenya l'edició del 8 de març de 2026."
+  },
+  {
+   "slug": "cursa-4-termes-2027",
+   "confirmed": true,
+   "website": "https://www.cursa4termes.com/",
+   "name": "Cursa 4 Termes (XIII edició)",
+   "date": "2027-03-13",
+   "town": "Mont-roig del Camp",
+   "distancesKm": [
+    32,
+    24
+   ],
+   "organiser": "CE l'Areny",
+   "differs": "L'organitzador la fa en dos dies, 13 i 14 de març de 2027: la Sky de 32 km el dissabte 13 i el Trail de 24 km el diumenge 14, a més d'una exprés i una caminada.",
+   "why": null
+  },
+  {
+   "slug": "cursa-les-vetes-2027",
+   "confirmed": false,
+   "website": "http://www.lesvetes.cat/ca/fundacio-les-vetes/projeccio-social/13-cursa-popular-les-vetes",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "La pàgina de la Fundació Les Vetes encara ensenya la 13a edició, del 2026, i no dona la data del 2027."
+  },
+  {
+   "slug": "cursa-del-roc-gros-2027",
+   "confirmed": true,
+   "website": "https://www.cursadelrocgros.com/",
+   "name": "15a Cursa del Roc Gros",
+   "date": "2027-03-14",
+   "town": "Els Hostalets de Balenyà",
+   "distancesKm": [
+    21,
+    12
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "la-suada-i-marxa-agullana-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat cap pàgina de l'organitzador amb l'edició del 2027: la web de l'Ajuntament d'Agullana no l'anuncia a la portada."
+  },
+  {
+   "slug": "trail-serralavella-2027",
+   "confirmed": true,
+   "website": "https://trailserralavella.com/",
+   "name": "Trail Serralavella 2027",
+   "date": "2027-03-14",
+   "town": "Ullastrell",
+   "distancesKm": [
+    21,
+    11
+   ],
+   "organiser": "Trail Serralavella",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "campionat-de-catalunya-de-promocio-rasos-sky-trail-kids-ccp-2027",
+   "confirmed": true,
+   "website": "https://fcatletisme.cat/event/campionat-de-catalunya-de-promocio-rasos-sky-trail-kids-ccp/",
+   "name": "Campionat de Catalunya de Promoció (Rasos Sky Trail Kids) (CCP)",
+   "date": "2027-03-21",
+   "town": "Castellar del Riu",
+   "distancesKm": null,
+   "organiser": "Federació Catalana d'Atletisme",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "cursa-de-lairosa-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat la pàgina de l'organitzador: el web del circuit ebrenc prohibeix la lectura als agents (robots.txt) i només s'ha vist la fitxa de l'agenda de la FEEC, que no és de l'organitzador."
+  },
+  {
+   "slug": "correpoble-baix-emporda-2027",
+   "confirmed": true,
+   "website": "https://www.correpoble.cat/",
+   "name": "Correpoble Baix Empordà",
+   "date": "2027-04-03",
+   "town": "Begur",
+   "distancesKm": [
+    10
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "runthrough-trails-girona-2027",
+   "confirmed": true,
+   "website": "https://www.runthrough.co.uk/event/runthrough-trails-girona-april-2027",
+   "name": "RunThrough Trails Girona",
+   "date": "2027-04-03",
+   "town": "Girona",
+   "distancesKm": [
+    55,
+    28,
+    15
+   ],
+   "organiser": "RunThrough",
+   "differs": "L'organitzador dona tres distàncies, 55 (en algun punt de la pàgina hi diu 50), 28 i 15 km.",
+   "why": null
+  },
+  {
+   "slug": "sobrepuny-trail-2027",
+   "confirmed": true,
+   "website": "https://www.sobrepunytrail.cat/",
+   "name": "Sobrepuny Trail",
+   "date": "2027-04-03",
+   "town": "La Nou de Berguedà",
+   "distancesKm": [
+    37,
+    21,
+    12
+   ],
+   "organiser": "Associació de Muntanyencs Berguedans",
+   "differs": "L'organitzador anuncia l'edició del 2027 per als dies 3 i 4 d'abril, sense dir a la portada quina prova es fa cada dia; dona trail de 37 km, mitja de 21 km i exprés de 12 km, a més de la vertical (3,5 km), el canicròs i la caminada (7,8 km).",
+   "why": null
+  },
+  {
+   "slug": "ultra-trail-muntanyes-costa-daurada-2027",
+   "confirmed": true,
+   "website": "https://www.naturetime.es/en/muntanyes-costa-daurada-ultra-trail/",
+   "name": "Muntanyes de la Costa Daurada Ultra Trail (15a edició)",
+   "date": "2027-04-03",
+   "town": "Prades",
+   "distancesKm": null,
+   "organiser": "Naturetime Events",
+   "differs": "L'organitzador la fa en dos dies, 3 i 4 d'abril de 2027; no s'han llegit les distàncies del 2027.",
+   "why": null
+  },
+  {
+   "slug": "fox-trail-2027",
+   "confirmed": false,
+   "website": "http://www.foxtrail.cat/ca/fox-trail",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "La web de la cursa encara ensenya la vuitena edició, del 12 d'abril de 2026."
+  },
+  {
+   "slug": "trail-de-vallforners-2027",
+   "confirmed": true,
+   "website": "https://www.traildevallforners.es/",
+   "name": "Trail de Vallforners (13a edició)",
+   "date": "2027-04-04",
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "trencacims-pauls-2027",
+   "confirmed": true,
+   "website": "https://www.trencacims.com/2026/09/17/trencacims-2027-10-i-11-dabril/",
+   "name": "Trencacims Paüls",
+   "date": "2027-04-10",
+   "town": "Paüls",
+   "distancesKm": null,
+   "organiser": null,
+   "differs": "L'organitzador la fa en dos dies, 10 i 11 d'abril de 2027.",
+   "why": null
+  },
+  {
+   "slug": "caminada-daiguafreda-2027",
+   "confirmed": true,
+   "website": "https://www.gafarrons.com/caminada/caminada-daiguafreda-copia/",
+   "name": "29a Caminada d'Aiguafreda",
+   "date": "2027-04-11",
+   "town": "Aiguafreda",
+   "distancesKm": [
+    20,
+    10
+   ],
+   "organiser": "Els Gafarrons",
+   "differs": null,
+   "why": null,
+   "kind": "march"
+  },
+  {
+   "slug": "marxa-del-garri-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat cap pàgina de l'organitzador amb l'edició del 2027: l'agenda de l'Ajuntament de Garrigàs encara no la porta."
+  },
+  {
+   "slug": "trail-montgri-2027",
+   "confirmed": true,
+   "website": "https://momsportsevents.com/trail-montgri/",
+   "name": "Trail Montgrí",
+   "date": "2027-04-11",
+   "town": "Torroella de Montgrí",
+   "distancesKm": null,
+   "organiser": "MOM Sports Events",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "xtrail-series-run-orrius-2027",
+   "confirmed": true,
+   "website": "https://www.xtrailseriesrun.com/ca/orrius",
+   "name": "Xtrail Òrrius",
+   "date": "2027-04-11",
+   "town": "Òrrius",
+   "distancesKm": null,
+   "organiser": "Sport Events 360º",
+   "differs": "L'organitzador la fa a Òrrius (sortida al poliesportiu d'Òrrius), no a Mataró, i dona quatre distàncies (21, 15, 10 i 6,5 km). Les distàncies de la pàgina són sota el títol «edició anterior» i no s’han fet servir.",
+   "why": null
+  },
+  {
+   "slug": "oncodines-trail-2027",
+   "confirmed": true,
+   "website": "https://www.ametlla.cat/actualitat/noticies/lametlla-referma-el-seu-compromis-amb-oncodines.html",
+   "name": "OnCodines Trail (7a edició)",
+   "date": "2027-04-17",
+   "town": "l'Ametlla del Vallès",
+   "distancesKm": [
+    48,
+    49,
+    80
+   ],
+   "organiser": null,
+   "differs": "L'Ajuntament de l'Ametlla del Vallès, punt de sortida, dona tres recorreguts per equips: 48 i 49 km (caminant o corrent) i 80 km (només corrent), amb arribada a Sant Feliu de Codines.",
+   "why": null
+  },
+  {
+   "slug": "heracles-race-2027",
+   "confirmed": false,
+   "website": "https://heraclesrace.com/es",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "La web de la cursa no ensenya cap data en una lectura simple (es carrega amb JavaScript)."
+  },
+  {
+   "slug": "cm-vall-darbucies-2027",
+   "confirmed": false,
+   "website": "https://www.cmvalldarbucies.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "La web de la cursa no respon (error 503): no s'ha pogut llegir."
+  },
+  {
+   "slug": "la-romanica-navas-2027",
+   "confirmed": true,
+   "website": "https://laromanicanavas.cat/romanica-2027/",
+   "name": "La Romànica Navàs",
+   "date": "2027-05-08",
+   "town": "Navàs",
+   "distancesKm": [
+    83,
+    27
+   ],
+   "organiser": null,
+   "differs": "L'organitzador dona la Romànica de 83 km (caminant o corrent, autoguiada) el dissabte 8 de maig de 2027 i una de 27 km el diumenge 9.",
+   "why": null
+  },
+  {
+   "slug": "skyrace-pic-de-lorri-2027",
+   "confirmed": true,
+   "website": "https://www.skyracepicdelorri.com/",
+   "name": "Skyrace Pic de l'Orri",
+   "date": "2027-05-08",
+   "town": "Vilamur",
+   "distancesKm": [
+    51,
+    26,
+    10
+   ],
+   "organiser": null,
+   "differs": "L'organitzador hi afegeix una cursa de 26 km.",
+   "why": null
+  },
+  {
+   "slug": "xtrail-series-run-vallgorguina-2027",
+   "confirmed": true,
+   "website": "https://www.xtrailseriesrun.com/ca/vallgorguina",
+   "name": "Xtrail Vallgorguina",
+   "date": "2027-05-09",
+   "town": "Vallgorguina",
+   "distancesKm": null,
+   "organiser": "Sport Events 360º",
+   "differs": "L'organitzador dona quatre distàncies (20, 15, 10 i 6 km), no dues. Les distàncies de la pàgina són sota el títol «edició anterior» i no s’han fet servir.",
+   "why": null
+  },
+  {
+   "slug": "campionat-de-catalunya-de-trail-pujada-vertical-vertical-trail-bergued-2027",
+   "confirmed": true,
+   "website": "https://fcatletisme.cat/event/campionat-de-catalunya-de-trail-pujada-vertical-vertical-trail-bergueda-2/",
+   "name": "Campionat de Catalunya de Trail Pujada Vertical (Vertical Trail Berguedà)",
+   "date": "2027-05-15",
+   "town": "Berga",
+   "distancesKm": null,
+   "organiser": "JAB-Berga i Federació Catalana d'Atletisme",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "trail-lagulla-2027",
+   "confirmed": true,
+   "website": "https://trailagullaelcatllar.webnode.es/",
+   "name": "Trail l'Agulla",
+   "date": "2027-05-15",
+   "town": "El Catllar",
+   "distancesKm": [
+    11.3
+   ],
+   "organiser": "Fun Sports",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "desafio-barcelona-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "L'organitzador prohibeix la lectura als agents (robots.txt)."
+  },
+  {
+   "slug": "run-festival-tossa-de-mar-2027",
+   "confirmed": true,
+   "website": "https://runfestivaltossa.com/",
+   "name": "Run Festival Tossa de Mar",
+   "date": "2027-05-16",
+   "town": "Tossa de Mar",
+   "distancesKm": [
+    5,
+    10,
+    21,
+    8,
+    17
+   ],
+   "organiser": null,
+   "differs": "L'organitzador dona cinc distàncies: 5, 10 i 21 km d'asfalt i trails de 8 i 17 km.",
+   "why": null
+  },
+  {
+   "slug": "caraamon-2027",
+   "confirmed": true,
+   "website": "https://www.caraamon.com/",
+   "name": "Caraamon (18a edició)",
+   "date": "2027-05-22",
+   "town": "Barruera",
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "green-urban-badalona-5k-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat cap pàgina de l'organitzador amb l'edició del 2027: la data només surt a calendaris de tercers."
+  },
+  {
+   "slug": "trail-comaminyana-2027",
+   "confirmed": true,
+   "website": "https://www.caraamon.com/trail-comaminyana",
+   "name": "Skyrace & Trail Comaminyana",
+   "date": "2027-05-23",
+   "town": "Barruera",
+   "distancesKm": [
+    22.9,
+    13,
+    7
+   ],
+   "organiser": null,
+   "differs": "L'organitzador dona tres distàncies: la Skyrace Comaminyana (22,9 km, anunciada com a 21K o 23K segons la pàgina) i els trails de 13 i 7 km.",
+   "why": null
+  },
+  {
+   "slug": "backyard-ultra-montgri-2027",
+   "confirmed": true,
+   "website": "https://participa.oncolligagirona.cat/activitats-solidaries/backyard-ultra-montgri.html",
+   "name": "Backyard Ultra Montgrí (4a edició)",
+   "date": "2027-05-28",
+   "town": "Torroella de Montgrí",
+   "distancesKm": [
+    6.7
+   ],
+   "organiser": "Fundació Oncolliga Girona",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "good-loop-backyard-ultra-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat cap pàgina de l'organitzador amb l'edició del 2027: la data només surt a calendaris de tercers, i com a pendent de confirmar."
+  },
+  {
+   "slug": "la-cabanera-30k-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "L'organitzador prohibeix la lectura als agents (robots.txt)."
+  },
+  {
+   "slug": "cursa-de-la-dona-castello-dempuries-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat cap pàgina de l'organitzador amb l'edició del 2027: només surt a curses.cat."
+  },
+  {
+   "slug": "marxa-de-lordi-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat cap pàgina de l'organitzador amb l'edició del 2027: només surt a curses.cat."
+  },
+  {
+   "slug": "marxa-dels-dolmens-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat cap pàgina de l'organitzador amb l'edició del 2027: només surt a curses.cat."
+  },
+  {
+   "slug": "cursa-del-serrat-llobater-2027",
+   "confirmed": true,
+   "website": "https://cursadelserrat.com/",
+   "name": "La Cursa del Serrat",
+   "date": "2027-06-05",
+   "town": "Sant Feliu Sasserra",
+   "distancesKm": [
+    12,
+    5
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "cursa-de-la-cirera-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "No s'ha trobat cap pàgina de l'organitzador amb l'edició del 2027: només surt a curses.cat."
+  },
+  {
+   "slug": "camino-de-dragones-2027",
+   "confirmed": true,
+   "website": "https://www.caminodedragones.es/en",
+   "name": "Camino de Dragones (2a edició)",
+   "date": "2027-06-12",
+   "town": "Vallter 2000",
+   "distancesKm": [
+    300
+   ],
+   "organiser": null,
+   "differs": "L'organitzador la descriu com una cursa de relleus per equips de 300 km, els dies 12 i 13 de juny de 2027, amb sortida a Vallter 2000 i arribada a Barcelona / Sant Adrià de Besòs.",
+   "why": null
+  },
+  {
+   "slug": "la-ribalera-2027",
+   "confirmed": true,
+   "website": "https://laribalera.cat/",
+   "name": "La Ribalera 2027 (XIV edició)",
+   "date": "2027-06-13",
+   "town": "Tírvia",
+   "distancesKm": [
+    42,
+    27,
+    16
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "garmin-mountain-festival-vall-de-boi-2027",
+   "confirmed": true,
+   "website": "https://garminmountainfestival.com/en/",
+   "name": "Garmin Mountain Festival Vall de Boí",
+   "date": "2027-06-18",
+   "town": "Vall de Boí",
+   "distancesKm": [
+    60,
+    42,
+    24,
+    12
+   ],
+   "organiser": null,
+   "differs": "L'organitzador dona el festival del 18 al 20 de juny de 2027; les curses són el dissabte 19 (60 i 42 km) i el diumenge 20 (24 i 12 km).",
+   "why": null
+  },
+  {
+   "slug": "nocturna-fredes-pauls-2027",
+   "confirmed": true,
+   "website": "https://nocturna.uectortosa.cat/",
+   "name": "XXX Nocturna Fredes – Paüls GR7",
+   "date": "2027-06-19",
+   "town": "Fredes – Paüls",
+   "distancesKm": [
+    44.5
+   ],
+   "organiser": "UEC Tortosa",
+   "differs": "L'organitzador diu que no és una cursa sinó una marxa excursionista de resistència no competitiva, de 44,5 km, amb sortida a Fredes i arribada a Paüls.",
+   "why": null,
+   "kind": "march"
+  },
+  {
+   "slug": "survivor-barcelona-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "L'organitzador prohibeix la lectura als agents (robots.txt)."
+  },
+  {
+   "slug": "olla-de-tapis-2027",
+   "confirmed": false,
+   "website": null,
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "La web de la cursa (olladetapis.cat) no respon, i la pàgina de l'Ajuntament de Maçanet de Cabrenys no dona la data del 2027."
+  },
+  {
+   "slug": "caminada-de-gosol-2027",
+   "confirmed": true,
+   "website": "https://caminadadegosol.cat/",
+   "name": "39a Caminada Popular - Trail 2027",
+   "date": "2027-07-11",
+   "town": "Gósol",
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "trail-els-esterregalls-2027",
+   "confirmed": false,
+   "website": "https://trailesterregalls.com/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "La web de la cursa encara ensenya l'edició del 2026 (curses infantils el dissabte 11 de juliol i cursa l'endemà)."
+  },
+  {
+   "slug": "trail-vielha-molieres-2027",
+   "confirmed": true,
+   "website": "https://www.trailmolieres3010.com/",
+   "name": "Trail Vielha Molières 3010",
+   "date": "2027-07-17",
+   "town": "Vielha",
+   "distancesKm": [
+    42,
+    24,
+    13
+   ],
+   "organiser": null,
+   "differs": "L'organitzador dona tres curses: 42, 24 i 13 km.",
+   "why": null
+  },
+  {
+   "slug": "marxa-la-borda-del-pubill-2027",
+   "confirmed": false,
+   "website": "https://xtsportevents.com/curses/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "L'organitzador (XT Sport Events) la té a la llista de curses de la temporada, però encara sense data del 2027."
+  },
+  {
+   "slug": "marato-valls-de-cardos-2027",
+   "confirmed": true,
+   "website": "https://xtsportevents.com/curses/marato-valls-de-cardos/",
+   "name": "Marató Valls de Cardós (4a edició)",
+   "date": "2027-09-04",
+   "town": "Ribera de Cardós",
+   "distancesKm": [
+    23
+   ],
+   "organiser": "XT Sport Events",
+   "differs": "L'organitzador dona una marató de muntanya (sense distància publicada encara), una mitja de 23 km i una marxa de 5,5 km.",
+   "why": null
+  },
+  {
+   "slug": "marxa-de-laigua-de-sant-magi-2027",
+   "confirmed": true,
+   "website": "https://alliberadrenalina.com/marxa-de-laigua-de-sant-magi/",
+   "name": "X Marxa de l'aigua de Sant Magí de Tarragona",
+   "date": "2027-09-04",
+   "town": "Tarragona",
+   "distancesKm": [
+    35,
+    18
+   ],
+   "organiser": "Club Excursionista Alliberadrenalina",
+   "differs": null,
+   "why": null,
+   "kind": "march"
+  },
+  {
+   "slug": "marrana-skyrace-2027",
+   "confirmed": true,
+   "website": "https://cursalamarrana.com/",
+   "name": "Cursa La Marrana",
+   "date": "2027-09-05",
+   "town": null,
+   "distancesKm": [
+    23,
+    11.3,
+    9.3,
+    7.5
+   ],
+   "organiser": null,
+   "differs": "L'organitzador dona quatre circuits: 23, 11,3, 9,3 i 7,5 km.",
+   "why": null
+  },
+  {
+   "slug": "taga-2027",
+   "confirmed": true,
+   "website": "https://www.feec.cat/agenda/competicions/curses-per-muntanya/taga-evo-2040-2/",
+   "name": "Taga Evo 2040",
+   "date": "2027-09-18",
+   "town": "Sant Joan de les Abadesses",
+   "distancesKm": [
+    28
+   ],
+   "organiser": "Unió Excursionista Sant Joan de les Abadesses",
+   "differs": "La fitxa de la Copa Catalana de la FEEC l'anomena «Taga Evo 2040» i només dona la cursa de 28 km.",
+   "why": null
+  },
+  {
+   "slug": "trail-del-bisaura-2027",
+   "confirmed": false,
+   "website": "https://www.traildelbisaura.com/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": null,
+   "organiser": null,
+   "differs": null,
+   "why": "La web de la cursa encara no dona la data del 2027: hi té els recorreguts i els resultats del 2026."
+  },
+  {
+   "slug": "muntanyes-de-prades-epic-trail-2027",
+   "confirmed": true,
+   "website": "https://www.muntanyesdepradesepictrail.com/",
+   "name": "Prades Epic Trail",
+   "date": "2027-11-06",
+   "town": "Prades",
+   "distancesKm": [
+    47.75,
+    22.8,
+    13.75
+   ],
+   "organiser": null,
+   "differs": "L'organitzador la fa en dos dies, 6 i 7 de novembre de 2027: les de 50K (47,75 km) i 25K (22,8 km) el dissabte, i la de 13K (13,75 km) i la infantil de 7K el diumenge.",
+   "why": null
+  }
+ ]
+}

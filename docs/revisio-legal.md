@@ -113,7 +113,7 @@ El titular va decidir importar les curses de diversos calendaris citant la font 
 
 ### Actualització del 25 de novembre de 2026: la font pròpia
 
-Per decisió del titular («resol-ho tu»), s'ha anat al web de l'organitzador de cada cursa a llegir-hi la data, el lloc i les distàncies. Les 90 que l'organitzador confirma passen a tenir-lo com a font i poden anar a producció: en total, 103 de 324 (detall a `docs/F2-estat.md`). És l'opció que aquest mateix apartat anomenava neta («que cada organitzador doni les seves dades»), amb una diferència que s'ha de dir: l'organitzador no ens les ha donat, les hem llegit al seu web públic, i la llista de curses a mirar va sortir dels calendaris. No s'han fet servir les pàgines de Curses.cat ni les de cap organitzador que prohibeixi la lectura als agents. Les altres 221 curses continuen fora de producció.
+Per decisió del titular («resol-ho tu»), s'ha anat al web de l'organitzador de cada cursa a llegir-hi la data, el lloc i les distàncies. Les 132 que l'organitzador confirma passen a tenir-lo com a font i poden anar a producció: en total, 145 de 324 (detall a `docs/F2-estat.md`). És l'opció que aquest mateix apartat anomenava neta («que cada organitzador doni les seves dades»), amb una diferència que s'ha de dir: l'organitzador no ens les ha donat, les hem llegit al seu web públic, i la llista de curses a mirar va sortir dels calendaris. No s'han fet servir les pàgines de Curses.cat, de la FCA ni de la FEEC, ni les de cap organitzador que prohibeixi la lectura als agents. Les altres 179 curses continuen fora de producció.
 
 ## 12 · Codi i tipografia
 

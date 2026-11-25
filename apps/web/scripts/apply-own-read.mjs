@@ -8,10 +8,11 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { bare } from './calendar-parse.mjs';
 
 /**
- * Pages that are not taken as the organiser's own word, though a race was read on them: the sign-up pages
- * of Curses.cat, the timing company whose calendar is one of the sources that have given no leave.
+ * Pages that are not taken as the organiser's own word, though a race was read on them: those of the
+ * publishers whose calendars are among the sources that have given no leave (the sign-up pages of
+ * Curses.cat, a timing company, and the competition pages of the two federations).
  */
-const NOT_OWN = /(^|\.)curses\.cat$/;
+const NOT_OWN = /(^|\.)(curses\.cat|fcatletisme\.cat|feec\.cat)$/;
 /**
  * Races whose organiser bars Anthropic's agents on its own site (robots.txt). Their date was read on
  * another page (a council's agenda, a sign-up platform, a sister host): not used, against that wish.
@@ -88,5 +89,5 @@ if (told.unknown.length) console.log(`Not in the calendar: ${told.unknown.join('
 if (told.moved.length) console.log(`Towns the organiser gives otherwise:\n  ${told.moved.join('\n  ')}`);
 if (told.unplaced.length) console.log(`Towns that are no municipality, left as they were:\n  ${told.unplaced.join('\n  ')}`);
 if (told.dropped.length) console.log(`Held twice, one copy dropped: ${told.dropped.join(', ')}`);
-console.log(`${told.left} confirmations not used (a page of Curses.cat, or an organiser that bars the reading)`);
+console.log(`${told.left} confirmations not used (a page of a calendar that has given no leave, or an organiser that bars the reading)`);
 console.log(`${open} of ${calendar.races.length} races may now reach production`);

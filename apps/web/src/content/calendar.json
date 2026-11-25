@@ -5353,32 +5353,6 @@
    ]
   },
   {
-   "slug": "c-t-t-trail-2027",
-   "name": "C.T.T. Trail",
-   "date": "2027-03-07",
-   "town": "Tarragona",
-   "comarca": "Tarragonès",
-   "lat": 41.11743,
-   "lon": 1.25436,
-   "terrain": "trail",
-   "distancesM": [
-    10000,
-    21000
-   ],
-   "organiser": "Club Tennis Tarragona",
-   "website": "https://tennistarragona.com/ctttrail-nova-data/",
-   "sources": [
-    {
-     "id": "gotrail",
-     "url": "https://gotrail.run/en/event/ctt-trail"
-    },
-    {
-     "id": "own",
-     "url": "https://tennistarragona.com/ctttrail-nova-data/"
-    }
-   ]
-  },
-  {
    "slug": "cros-de-sant-pau-2027",
    "name": "Cros de Sant Pau",
    "date": "2027-02-21",
@@ -5680,6 +5654,32 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/oli-trail-montserrat-promocio-ccp/"
+    }
+   ]
+  },
+  {
+   "slug": "c-t-t-trail-2027",
+   "name": "C.T.T. Trail",
+   "date": "2027-03-07",
+   "town": "Tarragona",
+   "comarca": "Tarragonès",
+   "lat": 41.11743,
+   "lon": 1.25436,
+   "terrain": "trail",
+   "distancesM": [
+    10000,
+    21000
+   ],
+   "organiser": "Club Tennis Tarragona",
+   "website": "https://tennistarragona.com/ctttrail-nova-data/",
+   "sources": [
+    {
+     "id": "gotrail",
+     "url": "https://gotrail.run/en/event/ctt-trail"
+    },
+    {
+     "id": "own",
+     "url": "https://tennistarragona.com/ctttrail-nova-data/"
     }
    ]
   },

@@ -81,6 +81,8 @@ for (const file of readdirSync(at('./own-read/')).filter((name) => name.endsWith
     }
   }
 }
+// A date its organiser gives otherwise moves a race: the calendar is kept in the order of its days, as the pages read it.
+calendar.races = calendar.races.map((race, at) => ({ race, at })).sort((a, b) => a.race.date.localeCompare(b.race.date) || a.at - b.at).map(({ race }) => race);
 writeFileSync(at('../src/content/calendar.json'), `${JSON.stringify(calendar, null, 1)}\n`);
 const open = calendar.races.filter((race) => race.sources.some((source) => source.id === 'bcn' || source.id === 'own')).length;
 console.log(`${told.confirmed} races confirmed by their organiser (${told.already} already were); ${told.distances} with other distances, ${told.marches} marches, ${told.cancelled} called off or put off`);

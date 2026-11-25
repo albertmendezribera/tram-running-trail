@@ -106,6 +106,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/10-km-vilafranca-2/"
+    },
+    {
+     "id": "own",
+     "url": "https://10k.vilafranca.cat/"
     }
    ]
   },
@@ -150,6 +154,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-5-km-absolut-i-master-cursa-moritz-sant-antoni-5-i-10-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://cursasantantoni.cat/"
     }
    ]
   },
@@ -246,7 +254,7 @@
    "lon": 2.17724,
    "terrain": "road",
    "distancesM": [
-    21097
+    21100
    ],
    "organiser": "Club Esportiu Marató de Barcelona",
    "website": "https://www.mitjamarato.barcelona/",
@@ -254,6 +262,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/hyundai-mitja-marato-de-barcelona-rfea/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.mitjamarato.barcelona/"
     }
    ]
   },
@@ -286,14 +298,19 @@
    "lon": 2.20793,
    "terrain": "road",
    "distancesM": [
-    10000
+    10000,
+    21100
    ],
-   "organiser": "Unió Colomenca At.",
-   "website": "https://uca.cat/",
+   "organiser": "Unió Colomenca d’Atletisme",
+   "website": "https://uca.cat/xiii-mitja-marato-colomenca-i-10k-informacio-inscripcions/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/13a-mitja-colomenca-cursa-de-10-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://uca.cat/xiii-mitja-marato-colomenca-i-10k-informacio-inscripcions/"
     }
    ]
   },
@@ -349,12 +366,16 @@
    "distancesM": [
     5000
    ],
-   "organiser": "Cornellà At.",
+   "organiser": "Cornellà Atlètic - Fundació Ipicoop",
    "website": "https://www.rockthesport.com/ca/esdeveniment/cursa-de-la-dona-de-cornella-2026",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/10a-cursa-de-la-dona-de-cornella-5-km-circuit-no-homologat/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.rockthesport.com/ca/esdeveniment/cursa-de-la-dona-de-cornella-2026"
     }
    ]
   },
@@ -544,6 +565,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/petita-jab-trail-ccp/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.jaberga.com/petita"
     }
    ]
   },
@@ -578,13 +603,20 @@
    "lat": 41.92997,
    "lon": 2.25426,
    "terrain": "road",
-   "distancesM": [],
+   "distancesM": [
+    5000,
+    21100
+   ],
    "organiser": "CEES (Centre d’Estudis el Seminari)",
    "website": "https://www.lamitjaderams.cat/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/1a-edicio-la-mitja-de-rams/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.lamitjaderams.cat/"
     }
    ]
   },
@@ -597,13 +629,20 @@
    "lat": null,
    "lon": null,
    "terrain": "trail",
-   "distancesM": [],
+   "distancesM": [
+    12000,
+    21000
+   ],
    "organiser": "Associació Cursa del Roc Gros",
-   "website": "https://www.cursadelrocgros.com/",
+   "website": "https://www.cursadelrocgros.com/edicions-anteriors/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-trail-absolut-i-sub23-cursa-del-roc-gros-trscmt/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.cursadelrocgros.com/edicions-anteriors/"
     }
    ]
   },
@@ -641,12 +680,16 @@
    "distancesM": [
     5000
    ],
-   "organiser": "Martorell AC",
-   "website": "https://martorellatletic.cat/",
+   "organiser": "Martorell Atlètic Club",
+   "website": "https://martorellatletic.cat/26-cursa-de-martorell/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/26a-cursa-de-martorell-5-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://martorellatletic.cat/26-cursa-de-martorell/"
     }
    ]
   },
@@ -703,7 +746,8 @@
    "lon": 2.26731,
    "terrain": "road",
    "distancesM": [
-    21097
+    6000,
+    21100
    ],
    "organiser": "CA Montornès",
    "website": "https://mitjamontornes.com/",
@@ -711,6 +755,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/31a-mitja-marato-montornes-montmelo-vilanova-la-roca/"
+    },
+    {
+     "id": "own",
+     "url": "https://mitjamontornes.com/"
     }
    ]
   },
@@ -789,13 +837,20 @@
    "lat": 42.22384,
    "lon": 1.89292,
    "terrain": "trail",
-   "distancesM": [],
+   "distancesM": [
+    12000,
+    20000
+   ],
    "organiser": "JAB-Berga",
    "website": "https://www.jaberga.com/trailcerdanyola",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/trail-cerdanyola-trscmt/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.jaberga.com/trailcerdanyola"
     }
    ]
   },
@@ -808,15 +863,22 @@
    "lat": 41.57317,
    "lon": 2.23358,
    "terrain": "trail",
-   "distancesM": [],
-   "organiser": "Club d’Activitats de Muntanya Parets CAM",
+   "distancesM": [
+    37630
+   ],
+   "organiser": "CAM Parets",
    "website": "https://labastardadelcam.wordpress.com/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/la-bastarda-2/"
+    },
+    {
+     "id": "own",
+     "url": "https://labastardadelcam.wordpress.com/"
     }
-   ]
+   ],
+   "kind": "march"
   },
   {
    "slug": "17a-cinc-cims-2026",
@@ -1013,6 +1075,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/26a-cursa-delta-prat-5-i-10-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.cursadeltaprat.org/"
     }
    ]
   },
@@ -1029,11 +1095,15 @@
     10000
    ],
    "organiser": "El Corte Inglés",
-   "website": "https://lacursa.barcelona/",
+   "website": "https://lacursa.barcelona/info-cursa/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/46a-cursa-el-corte-ingles-10-km-amb-desnivell/"
+    },
+    {
+     "id": "own",
+     "url": "https://lacursa.barcelona/info-cursa/"
     }
    ]
   },
@@ -1047,12 +1117,16 @@
    "lon": 2.8476,
    "terrain": "trail",
    "distancesM": [],
-   "organiser": "CA La Sansi",
+   "organiser": "La Sansi",
    "website": "https://www.lasansi.com/es/lloretdemartrail",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-trail-per-relleus-mixtos-absolut-master-i-promocio/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.lasansi.com/es/lloretdemartrail"
     }
    ]
   },
@@ -1075,6 +1149,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/16a-cursa-nocturna-de-lhospitalet-5-i-10-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://cursanocturnalh.cat/"
     }
    ]
   },
@@ -1129,16 +1207,19 @@
    "lon": 1.72618,
    "terrain": "road",
    "distancesM": [
-    1609,
     5000,
     10000
    ],
-   "organiser": "CA Atletes vng.org",
+   "organiser": "Club Atletisme Atletesvng.org",
    "website": "https://cursa10kmvng.com/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/11a-cursa-5-km-13a-cursa-10-km-i-1a-milla-ciutat-de-vilanova/"
+    },
+    {
+     "id": "own",
+     "url": "https://cursa10kmvng.com/"
     }
    ]
   },
@@ -1454,6 +1535,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/9a-milla-urbana-ciutat-de-badalona/"
+    },
+    {
+     "id": "own",
+     "url": "https://gesport.cat/2026-milla-urbana-badalona/"
     }
    ]
   },
@@ -1490,12 +1575,16 @@
    "distancesM": [
     5000
    ],
-   "organiser": "CA La Sansi",
+   "organiser": "La Sansi",
    "website": "https://www.lasansi.com/ca/sansi-viladecans",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/19a-la-sansi-viladecans-5-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.lasansi.com/ca/sansi-viladecans"
     }
    ]
   },
@@ -1509,13 +1598,19 @@
    "lon": null,
    "terrain": "road",
    "status": "cancelled",
-   "distancesM": [],
-   "organiser": "CA Palafrugell – Girona Costa Brava",
+   "distancesM": [
+    10200
+   ],
+   "organiser": "Club Atlètic Palafrugell",
    "website": "https://www.capalafrugell.cat/llafranc/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/18a-cursa-de-llafranc-pujada-al-far-de-sant-sebastia/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.capalafrugell.cat/llafranc/"
     }
    ]
   },
@@ -1529,14 +1624,18 @@
    "lon": null,
    "terrain": "road",
    "distancesM": [
-    42195
+    8800
    ],
-   "organiser": "CA Palafrugell – Girona Costa Brava",
+   "organiser": "Club Atlètic Palafrugell",
    "website": "https://www.capalafrugell.cat/mini-marato-calella-de-palafrugell/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/56a-mini-marato-de-calella-de-palafrugell-gp-intersport-sports-77/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.capalafrugell.cat/mini-marato-calella-de-palafrugell/"
     }
    ]
   },
@@ -1636,13 +1735,20 @@
    "lat": 41.70007,
    "lon": 1.87062,
    "terrain": "trail",
-   "distancesM": [],
+   "distancesM": [
+    11000,
+    17000
+   ],
    "organiser": "Ajuntament del Pont de Vilomara i Rocafort",
-   "website": "http://cursaelpont.cat/",
+   "website": "https://cursaelpont.cat/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/campionat-de-catalunya-trail-master/"
+    },
+    {
+     "id": "own",
+     "url": "https://cursaelpont.cat/"
     }
    ]
   },
@@ -1688,6 +1794,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/15a-edicio-nocturna-cursa-de-la-tardor-gran-premi-pohlcon-5-i-10-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://cursadelatardor.com/"
     }
    ]
   },
@@ -1742,13 +1852,21 @@
    "lat": 41.7178,
    "lon": 2.93084,
    "terrain": "trail",
-   "distancesM": [],
+   "distancesM": [
+    5000,
+    10000,
+    21000
+   ],
    "organiser": "Club Esportiu Fondistes Tossa",
    "website": "https://lamegalitica.es/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/la-megalitica-de-tossa-de-mar-2/"
+    },
+    {
+     "id": "own",
+     "url": "https://lamegalitica.es/"
     }
    ]
   },
@@ -1869,12 +1987,16 @@
    "distancesM": [
     10000
    ],
-   "organiser": "Cornellà At.",
+   "organiser": "Club Cornellà Atlètic",
    "website": "https://cornellaatletic.com/la-de-deu/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/45a-cursa-solidaria-ciutat-de-cornella-la-de-deu-10-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://cornellaatletic.com/la-de-deu/"
     }
    ]
   },
@@ -1939,6 +2061,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/19a-cursa-i-caminada-lluis-companys-5-i-10-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://cursacompanys.cat/"
     }
    ]
   },
@@ -1976,12 +2102,16 @@
    "distancesM": [
     13400
    ],
-   "organiser": "CE Penedès",
+   "organiser": "Confraria del Cava i Esedosevents",
    "website": "https://www.rockthesport.com/ca/esdeveniment/xv-cursa-solidaria-pais-del-cava-",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/15a-cursa-solidaria-pais-del-cava-13-400-m/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.rockthesport.com/ca/esdeveniment/xv-cursa-solidaria-pais-del-cava-"
     }
    ]
   },
@@ -2200,12 +2330,16 @@
    "distancesM": [
     10000
    ],
-   "organiser": "SEVEN MARKETING ON SPORTS & LEISURE SL",
+   "organiser": "Prensa Ibérica, Relay Events i Sport Life Ibérica",
    "website": "https://cursadebombers.barcelona/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/campionat-de-catalunya-de-10-km-27a-vueling-cursa-bombers-barcelona/"
+    },
+    {
+     "id": "own",
+     "url": "https://cursadebombers.barcelona/"
     }
    ]
   },
@@ -2252,6 +2386,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/14a-cursa-benefica-els-10-km-de-les-franqueses/"
+    },
+    {
+     "id": "own",
+     "url": "http://www.els10delesfranqueses.cat/"
     }
    ]
   },
@@ -2293,6 +2431,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/2a-cursa-de-5-i-10k-de-vic/"
+    },
+    {
+     "id": "own",
+     "url": "https://5k10kvic.cat/"
     }
    ]
   },
@@ -2398,11 +2540,15 @@
    "terrain": "mixed",
    "distancesM": [],
    "organiser": "Consell Esportiu de la Selva",
-   "website": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&amp;id_act=1368&amp;nom_jornada=51e-Cros-Santa-Coloma-Farners&amp;id_jornada=658",
+   "website": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&id_act=1368&nom_jornada=51e-Cros-Santa-Coloma-Farners&id_jornada=658",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/51e-cros-de-santa-coloma-de-farners/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&id_act=1368&nom_jornada=51e-Cros-Santa-Coloma-Farners&id_jornada=658"
     }
    ]
   },
@@ -2692,6 +2838,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/38a-milles-de-cerdanyola-5-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.atcerdanyola.com/curses/milles-cerdanyola/"
     }
    ]
   },
@@ -2815,12 +2965,16 @@
     5000,
     10000
    ],
-   "organiser": "CA Parets",
+   "organiser": "Club Atletisme Parets",
    "website": "https://www.caparets.com/la-cursa",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/20a-cursa-de-parets-5-i-10-km-circuits-no-homologats/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.caparets.com/la-cursa"
     }
    ]
   },
@@ -2876,7 +3030,8 @@
    "lon": 1.69722,
    "terrain": "road",
    "distancesM": [
-    21097
+    5000,
+    21100
    ],
    "organiser": "Ajuntament de Vilafranca del Penedès",
    "website": "https://mitja.vilafranca.cat/",
@@ -2884,6 +3039,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/47a-mitja-marato-espirall-vilafranca/"
+    },
+    {
+     "id": "own",
+     "url": "https://mitja.vilafranca.cat/"
     }
    ]
   },
@@ -3137,12 +3296,16 @@
    "lon": 2.68953,
    "terrain": null,
    "distancesM": [],
-   "organiser": null,
-   "website": null,
+   "organiser": "Gesport, amb el Consell Esportiu del Maresme (Circuit Maresmenc de Cros)",
+   "website": "https://gesport.cat/circuit-maresmenc-cros/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cros-de-pineda"
+    },
+    {
+     "id": "own",
+     "url": "https://gesport.cat/circuit-maresmenc-cros/"
     }
    ]
   },
@@ -3177,15 +3340,19 @@
    "lon": 1.99642,
    "terrain": "trail",
    "distancesM": [
-    8000,
+    7500,
     11000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Amics de la Cursa",
+   "website": "https://www.santclimentdellobregat.cat/actualitat/agenda/trail-popular-dhivern.html",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-popular-dhivern-de-sant-climent"
+    },
+    {
+     "id": "own",
+     "url": "https://www.santclimentdellobregat.cat/actualitat/agenda/trail-popular-dhivern.html"
     }
    ]
   },
@@ -3199,15 +3366,21 @@
    "lon": 1.55927,
    "terrain": null,
    "distancesM": [
-    13000,
+    12500,
+    20000,
+    32300,
     55000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://ultrapenedes.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/ultra-penedes"
+    },
+    {
+     "id": "own",
+     "url": "https://ultrapenedes.com/"
     }
    ]
   },
@@ -3249,11 +3422,15 @@
    "terrain": "mixed",
    "distancesM": [],
    "organiser": "Consell Esportiu de la Selva",
-   "website": null,
+   "website": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&id_act=1368&nom_jornada=35e-Cros-Vidreres&id_jornada=660",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/35e-cros-de-vidreres/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&id_act=1368&nom_jornada=35e-Cros-Vidreres&id_jornada=660"
     }
    ]
   },
@@ -3270,12 +3447,16 @@
     5000,
     13000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Tretzesports",
+   "website": "https://web.rockthesport.com/es/event/avenc-trail-cunit-2026",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/avenc-trail-cunit"
+    },
+    {
+     "id": "own",
+     "url": "https://web.rockthesport.com/es/event/avenc-trail-cunit-2026"
     }
    ]
   },
@@ -3290,14 +3471,20 @@
    "terrain": null,
    "distancesM": [
     5000,
+    10000,
+    15000,
     21000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.campionatmaqui.cat/cursa-bell-race/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/bell-race"
+    },
+    {
+     "id": "own",
+     "url": "https://www.campionatmaqui.cat/cursa-bell-race/"
     }
    ]
   },
@@ -3350,20 +3537,25 @@
    "slug": "pujada-a-sant-pau-2026",
    "name": "Pujada a Sant Pau",
    "date": "2026-11-29",
-   "town": "La Bleda",
-   "comarca": null,
-   "lat": 41.34646,
-   "lon": 1.65425,
+   "town": "Pacs del Penedès",
+   "comarca": "Alt Penedès",
+   "lat": 41.36152,
+   "lon": 1.66901,
    "terrain": null,
    "distancesM": [
+    10000,
     11000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.pacsdelpenedes.cat/actualitat/noticies/obertura-dinscripcions-de-la-15a-pujada-a-sant-pau.html",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/pujada-a-sant-pau"
+    },
+    {
+     "id": "own",
+     "url": "https://www.pacsdelpenedes.cat/actualitat/noticies/obertura-dinscripcions-de-la-15a-pujada-a-sant-pau.html"
     }
    ]
   },
@@ -3377,15 +3569,20 @@
    "lon": 0.87633,
    "terrain": "trail",
    "distancesM": [
-    6000,
+    5000,
+    14000,
     21000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Naturetime Events",
+   "website": "https://www.naturetime.es/ca/trailseries-les-ermites-ulldemolins-esp/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trailseries-les-ermites"
+    },
+    {
+     "id": "own",
+     "url": "https://www.naturetime.es/ca/trailseries-les-ermites-ulldemolins-esp/"
     }
    ]
   },
@@ -3440,14 +3637,19 @@
    "terrain": "trail",
    "distancesM": [
     12000,
+    13000,
     26000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Club Excursionista Alliberadrenalina",
+   "website": "https://alliberadrenalina.com/imperial-tarraco/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/imperial-tarraco-trail"
+    },
+    {
+     "id": "own",
+     "url": "https://alliberadrenalina.com/imperial-tarraco/"
     }
    ]
   },
@@ -3462,14 +3664,18 @@
    "terrain": "road",
    "distancesM": [
     10000,
-    21097
+    21100
    ],
-   "organiser": "AA Mitja Marató de Figueres",
+   "organiser": "Associació Mitja Marató Figueres",
    "website": "https://mitjafigueres.com/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/10a-mitja-marato-de-figueres-i-10-km-de-figueres/"
+    },
+    {
+     "id": "own",
+     "url": "https://mitjafigueres.com/"
     }
    ]
   },
@@ -3485,12 +3691,16 @@
    "distancesM": [
     5000
    ],
-   "organiser": "CN Sant Andreu",
+   "organiser": "Club Natació Sant Andreu",
    "website": "https://www.cnsantandreu.com/cursa-de-sant-andreu-2025/",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/47a-cursa-de-sant-andreu-5-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.cnsantandreu.com/cursa-de-sant-andreu-2025/"
     }
    ]
   },
@@ -3504,12 +3714,16 @@
    "lon": 2.74074,
    "terrain": null,
    "distancesM": [],
-   "organiser": null,
-   "website": null,
+   "organiser": "Gesport, amb el Consell Esportiu del Maresme (Circuit Maresmenc de Cros)",
+   "website": "https://gesport.cat/circuit-maresmenc-cros/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cros-de-malgrat"
+    },
+    {
+     "id": "own",
+     "url": "https://gesport.cat/circuit-maresmenc-cros/"
     }
    ]
   },
@@ -3538,20 +3752,24 @@
    "slug": "cursa-popular-de-porqueres-2026",
    "name": "Cursa Popular de Porqueres",
    "date": "2026-12-08",
-   "town": "Sant Vincenç de Camós",
-   "comarca": null,
-   "lat": 42.09415,
-   "lon": 2.76707,
+   "town": "Porqueres",
+   "comarca": "Pla de l'Estany",
+   "lat": 42.10431,
+   "lon": 2.77806,
    "terrain": null,
    "distancesM": [
-    7000
+    7200
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Ajuntament de Porqueres",
+   "website": "https://www.esportsporqueres.com/ca/noticies/30a-cursa-popular-de-porqueres/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-popular-de-porqueres"
+    },
+    {
+     "id": "own",
+     "url": "https://www.esportsporqueres.com/ca/noticies/30a-cursa-popular-de-porqueres/"
     }
    ]
   },
@@ -3566,13 +3784,18 @@
    "terrain": null,
    "distancesM": [],
    "organiser": null,
-   "website": null,
+   "website": "https://collserola.cec.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-cec-collserola"
+    },
+    {
+     "id": "own",
+     "url": "https://collserola.cec.cat/"
     }
-   ]
+   ],
+   "status": "cancelled"
   },
   {
    "slug": "cursa-de-la-llum-2026",
@@ -3609,12 +3832,16 @@
     5000,
     10000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Fundació Viver de Bell-lloc",
+   "website": "https://ensmou.vivelloc.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-ens-mou-cardedeu"
+    },
+    {
+     "id": "own",
+     "url": "https://ensmou.vivelloc.cat/"
     }
    ]
   },
@@ -3695,7 +3922,7 @@
    "terrain": "road",
    "distancesM": [
     10000,
-    21097
+    21100
    ],
    "organiser": "AE Evasión Running Vilanova",
    "website": "https://mitjavilanova.com/",
@@ -3703,6 +3930,10 @@
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/37a-mitja-marato-i-10-km-de-vilanova-i-la-geltru/"
+    },
+    {
+     "id": "own",
+     "url": "https://mitjavilanova.com/"
     }
    ]
   },
@@ -3735,12 +3966,16 @@
    "lon": 2.15349,
    "terrain": "mixed",
    "distancesM": [],
-   "organiser": "Ripollet UA",
-   "website": null,
+   "organiser": "Ripollet Unió Atlètica",
+   "website": "http://www.ripolletua.com/?a=page%3A22",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/44e-cros-vila-de-ripollet/"
+    },
+    {
+     "id": "own",
+     "url": "http://www.ripolletua.com/?a=page%3A22"
     }
    ]
   },
@@ -3780,12 +4015,16 @@
    "lon": 2.29514,
    "terrain": null,
    "distancesM": [],
-   "organiser": null,
-   "website": null,
+   "organiser": "Gesport, amb el Consell Esportiu del Maresme (Circuit Maresmenc de Cros)",
+   "website": "https://gesport.cat/circuit-maresmenc-cros/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cros-dalella"
+    },
+    {
+     "id": "own",
+     "url": "https://gesport.cat/circuit-maresmenc-cros/"
     }
    ]
   },
@@ -3842,12 +4081,16 @@
     6000,
     20000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Fira De Prop, Preixana",
+   "website": "https://www.preixana.cat/de-prop/fira-gastronomica/cursa_entre_cabanes/2026-7a-edicio",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/entre-cabanes"
+    },
+    {
+     "id": "own",
+     "url": "https://www.preixana.cat/de-prop/fira-gastronomica/cursa_entre_cabanes/2026-7a-edicio"
     }
    ]
   },
@@ -3855,20 +4098,24 @@
    "slug": "la-neorural-2026",
    "name": "La Neorural",
    "date": "2026-12-13",
-   "town": "Martorelles",
+   "town": "Santa Maria de Martorelles",
    "comarca": "Vallès Oriental",
-   "lat": 41.5257,
-   "lon": 2.24277,
+   "lat": 41.51958,
+   "lon": 2.25335,
    "terrain": null,
    "distancesM": [
     25000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://laneorural.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/la-neorural"
+    },
+    {
+     "id": "own",
+     "url": "https://laneorural.com/"
     }
    ]
   },
@@ -3882,15 +4129,20 @@
    "lon": 1.36139,
    "terrain": "trail",
    "distancesM": [
-    9000,
-    20000
+    8500,
+    13000,
+    20400
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://cursalarieragaia.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-trail-la-riera-de-gaia"
+    },
+    {
+     "id": "own",
+     "url": "https://cursalarieragaia.cat/"
     }
    ]
   },
@@ -3926,20 +4178,24 @@
    "slug": "cursa-de-nadal-bigues-i-riells-del-fai-2026",
    "name": "Cursa de Nadal Bigues i Riells del Fai",
    "date": "2026-12-19",
-   "town": "Bigues i Riells",
-   "comarca": null,
-   "lat": 41.67693,
-   "lon": 2.22597,
+   "town": "Bigues i Riells del Fai",
+   "comarca": "Vallès Oriental",
+   "lat": 41.67932,
+   "lon": 2.20827,
    "terrain": null,
    "distancesM": [
-    9000
+    8500
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Ajuntament de Bigues i Riells del Fai",
+   "website": "https://www.biguesiriells.cat/ca/actualitat-2/noticies-2/cursa-nadal-torna-bigues-riells-del-fai-19-desembre-2056.htm",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-de-nadal-bigues-i-riells-del-fai"
+    },
+    {
+     "id": "own",
+     "url": "https://www.biguesiriells.cat/ca/actualitat-2/noticies-2/cursa-nadal-torna-bigues-riells-del-fai-19-desembre-2056.htm"
     }
    ]
   },
@@ -3996,12 +4252,16 @@
     6000,
     22000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Naturetime Events",
+   "website": "https://www.naturetime.es/ca/evadict-trailseries-costa-daurada-2/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-de-nadal-trail-colldejou"
+    },
+    {
+     "id": "own",
+     "url": "https://www.naturetime.es/ca/evadict-trailseries-costa-daurada-2/"
     }
    ]
   },
@@ -4058,34 +4318,16 @@
    "distancesM": [
     10000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Circuit de curses del Pla de l'Estany",
+   "website": "https://cursesplaestany.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/descoberta-run-fontcoberta"
-    }
-   ]
-  },
-  {
-   "slug": "trailseries-costa-daurada-2026",
-   "name": "Trailseries Costa Daurada",
-   "date": "2026-12-20",
-   "town": "Tarragona",
-   "comarca": "Tarragonès",
-   "lat": 41.11743,
-   "lon": 1.25436,
-   "terrain": "trail",
-   "distancesM": [
-    5000,
-    21000
-   ],
-   "organiser": null,
-   "website": null,
-   "sources": [
+    },
     {
-     "id": "gotrail",
-     "url": "https://gotrail.run/en/event/trailseries-costa-daurada/2026-12-20"
+     "id": "own",
+     "url": "https://cursesplaestany.cat/"
     }
    ]
   },
@@ -4142,12 +4384,16 @@
    "distancesM": [
     5000
    ],
-   "organiser": "CA La Sansi",
+   "organiser": "La Sansi",
    "website": "https://www.lasansi.com/es/sant-silvestre-masnou",
    "sources": [
     {
      "id": "fca",
      "url": "https://fcatletisme.cat/event/47a-sant-silvestre-del-masnou-5-km/"
+    },
+    {
+     "id": "own",
+     "url": "https://www.lasansi.com/es/sant-silvestre-masnou"
     }
    ]
   },
@@ -4270,11 +4516,15 @@
     11000
    ],
    "organiser": null,
-   "website": null,
+   "website": "http://cursadelsnassos.blogspot.com/2026/11/benvinguts-la-nova-edicio-de-la-cursa.html",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-dels-nassos-doliana"
+    },
+    {
+     "id": "own",
+     "url": "http://cursadelsnassos.blogspot.com/2026/11/benvinguts-la-nova-edicio-de-la-cursa.html"
     }
    ]
   },
@@ -4290,12 +4540,16 @@
    "distancesM": [
     13000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "AEM Montsignus",
+   "website": "https://montsignus.com/la-sotabosc/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/la-sotabosc"
+    },
+    {
+     "id": "own",
+     "url": "https://montsignus.com/la-sotabosc/"
     }
    ]
   },
@@ -4405,12 +4659,16 @@
    "distancesM": [
     5000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Ajuntament de Calldetenes",
+   "website": "https://www.calldetenes.cat/lactualitat/noticies/la-torronada-de-calldetenes-celebrara-la-seva-8a-edicio-el-2-de-gener-de-2027.html",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-la-torronada"
+    },
+    {
+     "id": "own",
+     "url": "https://www.calldetenes.cat/lactualitat/noticies/la-torronada-de-calldetenes-celebrara-la-seva-8a-edicio-el-2-de-gener-de-2027.html"
     }
    ]
   },
@@ -4472,11 +4730,15 @@
     27000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.cinccims.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cinc-cims-corbera-de-llobregat"
+    },
+    {
+     "id": "own",
+     "url": "https://www.cinccims.cat/"
     }
    ]
   },
@@ -4491,14 +4753,20 @@
    "terrain": null,
    "distancesM": [
     9000,
+    10000,
+    17000,
     20000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Fondistes Blanes",
+   "website": "https://fondistesblanes.cat/CURSA-MAR-i-MURTRA/INSCRIPCIONS/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-mar-i-murtra"
+    },
+    {
+     "id": "own",
+     "url": "https://fondistesblanes.cat/CURSA-MAR-i-MURTRA/INSCRIPCIONS/"
     }
    ]
   },
@@ -4537,11 +4805,15 @@
     10000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.lanavarclina.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/la-navarclina"
+    },
+    {
+     "id": "own",
+     "url": "https://www.lanavarclina.cat/"
     }
    ]
   },
@@ -4614,20 +4886,24 @@
    "slug": "cursa-popular-de-camos-2027",
    "name": "Cursa Popular de Camós",
    "date": "2027-01-17",
-   "town": "Sant Vincenç de Camós",
-   "comarca": null,
-   "lat": 42.09415,
-   "lon": 2.76707,
+   "town": "Camós",
+   "comarca": "Pla de l'Estany",
+   "lat": 42.09382,
+   "lon": 2.76805,
    "terrain": null,
    "distancesM": [
     8000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Circuit de curses del Pla de l'Estany",
+   "website": "https://cursesplaestany.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-popular-de-camos"
+    },
+    {
+     "id": "own",
+     "url": "https://cursesplaestany.cat/"
     }
    ]
   },
@@ -4645,11 +4921,15 @@
     18000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://sites.google.com/xtec.cat/ganxotrail",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/ganxotrail"
+    },
+    {
+     "id": "own",
+     "url": "https://sites.google.com/xtec.cat/ganxotrail"
     }
    ]
   },
@@ -4663,14 +4943,18 @@
    "lon": 1.32991,
    "terrain": null,
    "distancesM": [
-    7000
+    6700
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Associació Esportiva Camins de Pedra",
+   "website": "https://andomita.com/backyard-ultra/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/the-last-lap-backyard-ultra-vilabella"
+    },
+    {
+     "id": "own",
+     "url": "https://andomita.com/backyard-ultra/"
     }
    ]
   },
@@ -4686,12 +4970,16 @@
    "distancesM": [
     10000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Circuit de curses del Pla de l'Estany",
+   "website": "https://cursesplaestany.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-atletica-run-run-la-vall-del-terri"
+    },
+    {
+     "id": "own",
+     "url": "https://cursesplaestany.cat/"
     }
    ]
   },
@@ -4725,14 +5013,19 @@
    "terrain": "trail",
    "distancesM": [
     12000,
+    21000,
     43000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.lallanera.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/la-llanera-trail"
+    },
+    {
+     "id": "own",
+     "url": "https://www.lallanera.cat/"
     }
    ]
   },
@@ -4817,14 +5110,19 @@
     16000,
     26000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Sports Events",
+   "website": "https://web.rockthesport.com/es/event/marxa-castells-altafulla-baix-gaia-2027",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/marxa-castells-altafulla"
+    },
+    {
+     "id": "own",
+     "url": "https://web.rockthesport.com/es/event/marxa-castells-altafulla-baix-gaia-2027"
     }
-   ]
+   ],
+   "kind": "march"
   },
   {
    "slug": "trail-del-senglar-cabrera-2027",
@@ -4837,14 +5135,19 @@
    "terrain": "trail",
    "distancesM": [
     10000,
+    15000,
     21000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://traildelsenglar.com/cabrera-de-mar/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-del-senglar-cabrera"
+    },
+    {
+     "id": "own",
+     "url": "https://traildelsenglar.com/cabrera-de-mar/"
     }
    ]
   },
@@ -5056,12 +5359,16 @@
     12000,
     25000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "GER",
+   "website": "https://entitatger.cat/cros-de-sant-pau/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cros-de-sant-pau"
+    },
+    {
+     "id": "own",
+     "url": "https://entitatger.cat/cros-de-sant-pau/"
     }
    ]
   },
@@ -5108,6 +5415,10 @@
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/cursa-hostrailric"
+    },
+    {
+     "id": "own",
+     "url": "https://hostrailric.com/"
     }
    ]
   },
@@ -5168,12 +5479,16 @@
     12000,
     25000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Centre Excursionista de Sitges",
+   "website": "https://sitgesrocktrail.cat/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/sitges-rock-trail"
+    },
+    {
+     "id": "own",
+     "url": "https://sitgesrocktrail.cat/"
     }
    ]
   },
@@ -5187,8 +5502,8 @@
    "lon": 2.00971,
    "terrain": "trail",
    "distancesM": [
-    13000,
-    21000
+    10000,
+    18000
    ],
    "organiser": "Club Esportiu Santvi",
    "website": "https://sendersdecancosta.com/",
@@ -5200,6 +5515,10 @@
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/senders-de-can-costa"
+    },
+    {
+     "id": "own",
+     "url": "https://sendersdecancosta.com/"
     }
    ]
   },
@@ -5229,19 +5548,26 @@
    "slug": "mitja-de-cambrils-2027",
    "name": "Mitja de Cambrils",
    "date": "2027-02-28",
-   "town": null,
-   "comarca": null,
+   "town": "Cambrils",
+   "comarca": "Baix Camp",
    "region": "tarragona",
-   "lat": null,
-   "lon": null,
+   "lat": 41.07103,
+   "lon": 1.0578,
    "terrain": null,
-   "distancesM": [],
+   "distancesM": [
+    10000,
+    21100
+   ],
    "organiser": "Ayuntamiento de Cambrils I CA Runners Tarragona",
-   "website": null,
+   "website": "https://mitjadecambrils.com/",
    "sources": [
     {
      "id": "runnea",
      "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/"
+    },
+    {
+     "id": "own",
+     "url": "https://mitjadecambrils.com/"
     }
    ]
   },
@@ -5256,14 +5582,19 @@
    "terrain": "trail",
    "distancesM": [
     10000,
+    15000,
     21000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://traildelsenglar.com/llavaneres/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-del-senglar-llavaneres"
+    },
+    {
+     "id": "own",
+     "url": "https://traildelsenglar.com/llavaneres/"
     }
    ]
   },
@@ -5558,15 +5889,19 @@
    "lon": 3.20732,
    "terrain": "trail",
    "distancesM": [
-    14000,
-    38000
+    13000,
+    23000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.bacanardtrail.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/bacanard-trail"
+    },
+    {
+     "id": "own",
+     "url": "https://www.bacanardtrail.com/"
     }
    ]
   },
@@ -5748,13 +6083,22 @@
    "lat": 41.3465,
    "lon": 1.69722,
    "terrain": "trail",
-   "distancesM": [],
-   "organiser": null,
-   "website": null,
+   "distancesM": [
+    10000,
+    25000,
+    50000,
+    100000
+   ],
+   "organiser": "Oxfam Intermón",
+   "website": "https://www.oxfamintermon.org/es/trailwalker",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/oxfam-intermon-trailwalker-girona"
+    },
+    {
+     "id": "own",
+     "url": "https://www.oxfamintermon.org/es/trailwalker"
     }
    ]
   },
@@ -5786,13 +6130,21 @@
    "lat": 41.84769,
    "lon": 2.38995,
    "terrain": null,
-   "distancesM": [],
+   "distancesM": [
+    23000,
+    34000,
+    70000
+   ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.ultramontseny.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/ultra-montseny"
+    },
+    {
+     "id": "own",
+     "url": "https://www.ultramontseny.com/"
     }
    ]
   },
@@ -5957,14 +6309,20 @@
    "terrain": "trail",
    "distancesM": [
     9000,
+    16000,
+    23000,
     42000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.trailvallderibes.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-vall-de-ribes"
+    },
+    {
+     "id": "own",
+     "url": "https://www.trailvallderibes.com/"
     }
    ]
   },
@@ -5998,14 +6356,20 @@
    "terrain": null,
    "distancesM": [
     10000,
+    21000,
+    30000,
     42000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://maratonviasverdes.com/ca/girona",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/marato-vies-verdes-girona"
+    },
+    {
+     "id": "own",
+     "url": "https://maratonviasverdes.com/ca/girona"
     }
    ]
   },
@@ -6020,14 +6384,19 @@
    "terrain": "trail",
    "distancesM": [
     10000,
+    15000,
     21000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://traildelsenglar.com/cabrils/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/trail-del-senglar-cabrils"
+    },
+    {
+     "id": "own",
+     "url": "https://traildelsenglar.com/cabrils/"
     }
    ]
   },
@@ -6041,15 +6410,18 @@
    "lon": 3.06686,
    "terrain": null,
    "distancesM": [
-    16000,
-    103000
+    102700
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://ultravimar.org/reglament/ultra-vimar/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/ultra-vimar"
+    },
+    {
+     "id": "own",
+     "url": "https://ultravimar.org/reglament/ultra-vimar/"
     }
    ]
   },
@@ -6104,15 +6476,20 @@
    "lon": 1.84585,
    "terrain": null,
    "distancesM": [
-    13000,
-    45000
+    12400,
+    27300,
+    44500
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Club Esquí Berguedà i A.E. Mountain Runners del Berguedà",
+   "website": "https://lesclassiquesberga.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/les-classiques-de-berga"
+    },
+    {
+     "id": "own",
+     "url": "https://lesclassiquesberga.com/"
     }
    ]
   },
@@ -6658,31 +7035,15 @@
    "terrain": null,
    "distancesM": [],
    "organiser": null,
-   "website": null,
+   "website": "https://valdaran.utmb.world/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/val-daran-by-utmb"
-    }
-   ]
-  },
-  {
-   "slug": "trail-val-daran-utmb-2027",
-   "name": "Trail Val d'Aran UTMB",
-   "date": "2027-07-09",
-   "town": null,
-   "comarca": null,
-   "region": "lerida",
-   "lat": null,
-   "lon": null,
-   "terrain": null,
-   "distancesM": [],
-   "organiser": "UTMB IBERIA S.L. y la Associació Esportiva TRAIL RUNNERS ARAN",
-   "website": null,
-   "sources": [
+    },
     {
-     "id": "runnea",
-     "url": "https://www.runnea.com/carreras-populares/calendario/catalunya/"
+     "id": "own",
+     "url": "https://valdaran.utmb.world/"
     }
    ]
   },
@@ -6907,14 +7268,19 @@
    "terrain": null,
    "distancesM": [
     15000,
+    23000,
     32000
    ],
    "organiser": null,
-   "website": null,
+   "website": "https://www.vallsdelfreser.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/valls-del-freser"
+    },
+    {
+     "id": "own",
+     "url": "https://www.vallsdelfreser.com/"
     }
    ]
   },
@@ -6929,11 +7295,15 @@
    "terrain": null,
    "distancesM": [],
    "organiser": null,
-   "website": null,
+   "website": "https://ultrapirineu.com/",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/salomon-ultra-pirineu"
+    },
+    {
+     "id": "own",
+     "url": "https://ultrapirineu.com/"
     }
    ]
   },
@@ -6948,14 +7318,19 @@
    "terrain": null,
    "distancesM": [
     5000,
+    10000,
     21000
    ],
-   "organiser": null,
-   "website": null,
+   "organiser": "Spartan",
+   "website": "https://es.spartan.com/es/races/santa-susanna-barcelona",
    "sources": [
     {
      "id": "gotrail",
      "url": "https://gotrail.run/en/event/barcelona-spartan-trifecta-weekend"
+    },
+    {
+     "id": "own",
+     "url": "https://es.spartan.com/es/races/santa-susanna-barcelona"
     }
    ]
   },

@@ -25,7 +25,7 @@ La fase es va començar amb la Fase 1 sense tancar (hi falta una cursa d'asfalt 
 
 ## Què falta de l'encàrrec
 
-- **300 curses:** n'hi ha 326, però només 13 poden anar a producció. La resta depèn del permís de les seves fonts.
+- **300 curses:** n'hi ha 324, i **103 poden anar a producció** (eren 13): les de dades obertes de Barcelona i les que el seu organitzador confirma al seu propi web (vegeu «El que diu cada organitzador», més avall). Les altres 221 segueixen esperant: el permís de la seva font, o que el web de l'organitzador en digui la data.
 - **Facetes que no hi són:** per província o per municipi (les fonts donen municipi i comarca; la província només es podria deduir), per any sol i tipus × any. Les pàgines per faceta no tenen imatge per compartir.
 - **`hreflang`:** el web només és en català; quan hi hagi castellà i anglès, cada pàgina i els sitemaps han de dir les seves germanes. Els sitemaps tampoc diuen `lastmod`: no hi ha una data fiable de l'últim canvi de cada pàgina.
 - **M4 sense validar:** la franja està feta, però la prova amb 3–5 corredors que demana E07 no. No segueix els filtres ni la cerca.
@@ -46,3 +46,18 @@ La fase es va començar amb la Fase 1 sense tancar (hi falta una cursa d'asfalt 
 - **La cerca** només mira el nom i la població: no troba una prova per la comarca (té el seu filtre), per l'organitzador ni per la data, i no perdona errors d'escriptura.
 - **Els filtres** s'han provat a Chromium, a mida d'escriptori i de mòbil. Sense JavaScript no es mostren i la llista queda sencera.
 - **Les opcions sense dada**: 109 proves no diuen el terreny i 78 no diuen la distància. Tenen la seva opció al filtre, però no surten sota «Asfalt» o «Muntanya» encara que ho siguin.
+
+## El que diu cada organitzador (25 de novembre de 2026)
+
+Encàrrec del titular davant de «només 13 curses poden anar a producció»: «resol-ho tu», amb font pròpia. S'ha anat al web de qui organitza cada cursa i s'hi ha llegit el nom, la data, el lloc i les distàncies. Una cursa que el seu organitzador confirma guanya la font `own`, que és la que la deixa entrar a producció sense dependre del calendari on es va trobar.
+
+- **Què s'ha mirat:** les 175 curses que vénen (se n'han arribat a mirar 108, per ordre de data; la resta, de febrer de 2027 endavant, s'està mirant en una segona tanda) i les 79 ja disputades que tenien el web apuntat. Les 59 ja disputades sense web no s'han mirat.
+- **Què n'ha sortit:** 90 de confirmades i fetes servir. El calendari de producció passa de 13 a **103 curses** (63 per disputar i 40 de disputades), i la compilació de producció, de 7 pàgines a 159.
+- **Regla:** compta la pàgina de qui organitza (el web de la cursa, del club, de l'ajuntament, del circuit, o la seva pàgina d'inscripció en una plataforma) quan hi diu la data d'aquella edició, amb el dia i l'any sense dubte. No compta cap calendari d'un tercer, cap mitjà ni cap xarxa social.
+- **El que no s'ha fet servir, tot i haver-se llegit (14):** les pàgines d'inscripció de Curses.cat, perquè és la mateixa empresa d'un dels calendaris que no ha donat permís (11), i tres curses l'organitzador de les quals prohibeix la lectura als agents al seu web (Cursa del Tractor, Cursa del Bolet i El Tast de la Mitja): la data s'havia llegit en una altra pàgina, i no s'ha volgut anar contra aquella voluntat.
+- **Webs que no s'han llegit** perquè el seu `robots.txt` ho prohibeix als agents d'Anthropic o a tots els robots: una quinzena, apuntats a `apps/web/scripts/own-read/`.
+- **Correccions que n'han sortit:** dues curses que el calendari tenia dues vegades (se n'ha tret la còpia: per això són 324 i no 326), tres anul·lades pel seu organitzador (Cursa CEC Collserola, Pujada al Far de Llafranc i Cursa de la Tardor), sis pobles corregits (Pacs del Penedès, Porqueres, Santa Maria de Martorelles, Camós, Bigues i Riells del Fai i Cambrils) i distàncies diferents en 41 curses. La Mini-marató de Calella de Palafrugell fa 8,8 km, no 42,2.
+- **Com es refà:** les lectures són a `apps/web/scripts/own-read/*.json`, amb el dia de la consulta; `node scripts/apply-own-read.mjs` les fusiona amb `calendar.json`.
+
+**Què no s'ha comprovat:** cada dada s'ha llegit una sola vegada, per un agent, i jo n'he repassat els casos dubtosos i no cada pàgina. Cinc confirmacions venen de la pàgina d'un ajuntament i sis de la pàgina d'un circuit, no de la cursa mateixa. El terreny (asfalt o muntanya) continua sent el que deia el calendari d'origen: l'organitzador no s'ha fet servir per a això. No soc advocat: que una cursa confirmada pel seu organitzador ja no depengui del calendari on es va trobar és la meva lectura de `docs/revisio-legal.md`, no un dictamen.
+

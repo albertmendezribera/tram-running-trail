@@ -111,6 +111,10 @@ El titular va decidir importar les curses de diversos calendaris citant la font 
 - **Què cal per treure'l:** el correu a la FCA (l'esborrany és a E19) i un avís a Curses.cat, Runnea, gotrail i la FEEC. Fins llavors, que es quedin a l'entorn de proves.
 - **Què s'ha respectat:** dues empreses de cronometratge (ChampionChip i Lasttiming) prohibeixen al seu `robots.txt` l'accés als agents d'Anthropic, i no s'han llegit.
 
+### Actualització del 25 de novembre de 2026: la font pròpia
+
+Per decisió del titular («resol-ho tu»), s'ha anat al web de l'organitzador de cada cursa a llegir-hi la data, el lloc i les distàncies. Les 90 que l'organitzador confirma passen a tenir-lo com a font i poden anar a producció: en total, 103 de 324 (detall a `docs/F2-estat.md`). És l'opció que aquest mateix apartat anomenava neta («que cada organitzador doni les seves dades»), amb una diferència que s'ha de dir: l'organitzador no ens les ha donat, les hem llegit al seu web públic, i la llista de curses a mirar va sortir dels calendaris. No s'han fet servir les pàgines de Curses.cat ni les de cap organitzador que prohibeixi la lectura als agents. Les altres 221 curses continuen fora de producció.
+
 ## 12 · Codi i tipografia
 
 - Sofia Sans: SIL OFL 1.1, amb la llicència al repositori. Permet l'ús i la redistribució.

@@ -1,0 +1,1031 @@
+{
+ "read": "2026-11-25",
+ "races": [
+  {
+   "slug": "42a-mitja-marato-de-sitges-i-quart-de-marato-2026",
+   "confirmed": false,
+   "website": "https://www.zonavipevents.com/mitja-sitges/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (43a, 10 de gener de 2027) i no diu la data de la de 2026."
+  },
+  {
+   "slug": "campionat-de-catalunya-de-mitja-marato-absolut-i-master-40a-mitja-mara-2026",
+   "confirmed": false,
+   "website": "https://www.lamitja.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El robots.txt del web prohibeix l’accés als agents d’Anthropic: no s’ha llegit."
+  },
+  {
+   "slug": "10-km-vilafranca-2026",
+   "confirmed": true,
+   "website": "https://10k.vilafranca.cat/",
+   "name": "10K Vilafranca",
+   "date": "2026-01-25",
+   "town": "Vilafranca del Penedès",
+   "distancesKm": [
+    10
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "10a-agro-llobera-cursa-sant-blai-5-i-10-km-2026",
+   "confirmed": false,
+   "website": "https://www.cursadesantblai.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "La pàgina de l’edició de 2026 (10a) no en diu la data al text; la portada anuncia l’11a."
+  },
+  {
+   "slug": "campionat-de-catalunya-de-5-km-absolut-i-master-cursa-moritz-sant-anto-2026",
+   "confirmed": true,
+   "website": "https://cursasantantoni.cat/",
+   "name": "Cursa Moritz Sant Antoni",
+   "date": "2026-01-25",
+   "town": "Barcelona",
+   "distancesKm": [
+    5,
+    10
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "20a-cursa-santi-centelles-5-km-2026",
+   "confirmed": false,
+   "website": "https://www.mitjaterrassa.org/curses/santi-centelles/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (28 de febrer de 2027) i no diu la data de la de 2026."
+  },
+  {
+   "slug": "26a-mitja-marato-internacional-de-terrassa-rfea-2026",
+   "confirmed": false,
+   "website": "https://www.mitjaterrassa.org/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (27a, 28 de febrer de 2027) i no diu la data de la de 2026."
+  },
+  {
+   "slug": "baga-fast-trail-ccp-2026",
+   "confirmed": false,
+   "website": "https://sites.google.com/view/runnersaltbergueda/inici",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web (Google Sites) demana iniciar sessió: no es pot llegir."
+  },
+  {
+   "slug": "hyundai-mitja-marato-de-barcelona-rfea-2026",
+   "confirmed": true,
+   "website": "https://www.mitjamarato.barcelona/",
+   "name": "Hyundai Mitja Marató Barcelona by Brooks",
+   "date": "2026-02-15",
+   "town": "Barcelona",
+   "distancesKm": [
+    21.1
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "13a-mitja-colomenca-cursa-de-10-km-2026",
+   "confirmed": true,
+   "website": "https://uca.cat/xiii-mitja-marato-colomenca-i-10k-informacio-inscripcions/",
+   "name": "XIII Mitja Marató Colomenca i cursa de 10Km",
+   "date": "2026-02-22",
+   "town": "Santa Coloma de Gramenet",
+   "distancesKm": [
+    10,
+    21.1
+   ],
+   "organiser": "Unió Colomenca d’Atletisme",
+   "differs": "L’organitzador hi posa la mitja marató a més de la cursa de 10 km; el calendari només hi tenia els 10 km.",
+   "why": null
+  },
+  {
+   "slug": "32a-cursa-de-muntanya-del-farell-2026",
+   "confirmed": false,
+   "website": "https://cncaldes.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El robots.txt del web prohibeix l’accés als agents d’Anthropic: no s’ha llegit."
+  },
+  {
+   "slug": "sismica-race-2026",
+   "confirmed": false,
+   "website": "https://www.sismicarace.es/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web continua a l’edició de 2024 (25 de febrer de 2024)."
+  },
+  {
+   "slug": "10a-cursa-de-la-dona-de-cornella-5-km-circuit-no-homologat-2026",
+   "confirmed": true,
+   "website": "https://www.rockthesport.com/ca/esdeveniment/cursa-de-la-dona-de-cornella-2026",
+   "name": "Cursa de la Dona de Cornellà",
+   "date": "2026-03-01",
+   "town": "Cornellà de Llobregat",
+   "distancesKm": [],
+   "organiser": "Cornellà Atlètic - Fundació Ipicoop",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "30a-mitja-marato-de-la-garrotxa-campionat-territorial-2026",
+   "confirmed": false,
+   "website": "https://www.cnolot.cat/catalan/esdeveniments-mitja-marato-subcategoria",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (31a, 7 de març de 2027); la pàgina de l’edició de 2026 dona guanyadors, sense data."
+  },
+  {
+   "slug": "oli-trail-montserrat-promocio-2026",
+   "confirmed": false,
+   "website": "https://www.olitrail.com/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web de l’organitzador diu «OLI TRAIL 2026 · CURSA SUSPESA» i no en diu la data de manera inequívoca."
+  },
+  {
+   "slug": "37a-mitja-marato-ciutat-de-balaguer-2026",
+   "confirmed": false,
+   "website": "https://www.runners.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de la mitja de 2027; de la de 2026 n’anomena els resultats, sense data."
+  },
+  {
+   "slug": "oli-trail-montserrat-2026",
+   "confirmed": false,
+   "website": "https://www.olitrail.com/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web de l’organitzador diu «OLI TRAIL 2026 · CURSA SUSPESA» i no en diu la data de manera inequívoca."
+  },
+  {
+   "slug": "campionat-despanya-de-marato-absolut-i-master-zurich-marato-de-barcelo-2026",
+   "confirmed": false,
+   "website": "https://atletismorfea.es/calendario/campeonato/campeonato-de-espana-de-maraton-absoluto-y-master-0",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "L’adreça és el calendari de la federació espanyola (RFEA), no el web de l’organitzador."
+  },
+  {
+   "slug": "petita-jab-trail-ccp-2026",
+   "confirmed": true,
+   "website": "https://www.jaberga.com/petita",
+   "name": "La petita JAB Trail",
+   "date": "2026-03-15",
+   "town": "l’Espunyola",
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "1a-edicio-la-mitja-de-rams-2026",
+   "confirmed": true,
+   "website": "https://www.lamitjaderams.cat/",
+   "name": "La Mitja de Rams",
+   "date": "2026-03-22",
+   "town": "Vic",
+   "distancesKm": [
+    5,
+    21.1
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "campionat-de-catalunya-de-trail-absolut-i-sub23-cursa-del-roc-gros-trs-2026",
+   "confirmed": true,
+   "website": "https://www.cursadelrocgros.com/edicions-anteriors/",
+   "name": "14a Cursa del Roc Gros",
+   "date": "2026-03-22",
+   "town": null,
+   "distancesKm": [
+    12,
+    21
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "26a-cursa-de-martorell-5-km-2026",
+   "confirmed": true,
+   "website": "https://martorellatletic.cat/26-cursa-de-martorell/",
+   "name": "26a Cursa de Martorell",
+   "date": "2026-03-29",
+   "town": "Martorell",
+   "distancesKm": [
+    5
+   ],
+   "organiser": "Martorell Atlètic Club",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "31a-mitja-marato-del-pla-de-lestany-2026",
+   "confirmed": false,
+   "website": "https://cnbanyoles.cat/competicions/mitja-marato-del-pla-de-lestany/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (32a, 4 d’abril de 2027); de la de 2026 n’hi ha el reglament en PDF i els resultats, sense data al text."
+  },
+  {
+   "slug": "31a-mitja-marato-montornes-montmelo-vilanova-la-roca-2026",
+   "confirmed": true,
+   "website": "https://mitjamontornes.com/",
+   "name": "31a Mitja Marató Montornès-Montmeló-Vilanova-La Roca",
+   "date": "2026-04-12",
+   "town": "Montornès del Vallès",
+   "distancesKm": [
+    6,
+    21.1
+   ],
+   "organiser": null,
+   "differs": "L’organitzador hi posa també una cursa de 6 km; el calendari només hi tenia la mitja marató.",
+   "why": null
+  },
+  {
+   "slug": "21a-marato-dempuries-16a-mitja-marato-i-16a-cursa-de-10-km-campionat-t-2026",
+   "confirmed": false,
+   "website": "https://esportslescala.cat/marato-dempuries/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (17 i 18 d’abril de 2027) i no diu la data de la de 2026."
+  },
+  {
+   "slug": "trail-cerdanyola-trs-cmt-2026",
+   "confirmed": true,
+   "website": "https://www.jaberga.com/trailcerdanyola",
+   "name": "Trail Cerdanyola",
+   "date": "2026-04-19",
+   "town": "Sant Julià de Cerdanyola",
+   "distancesKm": [
+    12,
+    20
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "la-bastarda-2026",
+   "confirmed": true,
+   "website": "https://labastardadelcam.wordpress.com/",
+   "name": "La Bastarda",
+   "date": "2026-04-25",
+   "town": null,
+   "distancesKm": [
+    37.63
+   ],
+   "organiser": "CAM Parets",
+   "kind": "march",
+   "differs": "L’organitzador la descriu com una caminada de resistència no competitiva, de 37,63 km; el calendari no en deia el tipus ni la distància.",
+   "why": null
+  },
+  {
+   "slug": "21a-marato-del-mediterrani-5k-10k-mitja-marato-2026",
+   "confirmed": false,
+   "website": "https://www.zonavipevents.com/marato-del-mediterrani/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (XXII, 25 d’abril de 2027) i no diu la data de la de 2026."
+  },
+  {
+   "slug": "34a-milla-urbana-de-santa-eulalia-i-17a-solidaria-ciutat-de-lhospitale-2026",
+   "confirmed": false,
+   "website": "https://millaurbanasantaeulalia.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web no respon."
+  },
+  {
+   "slug": "cursa-de-montgat-5-i-10-km-2026",
+   "confirmed": false,
+   "website": "https://www.lasansieventos.com/ca/cursa-montgat",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "La pàgina no dona cap data a una petició simple (el contingut el posa un script)."
+  },
+  {
+   "slug": "30a-cursa-solidaria-de-cardedeu-10-km-circuit-mixte-2026",
+   "confirmed": false,
+   "website": "https://corrigaires.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El robots.txt del web prohibeix l’accés a tots els robots: no s’ha llegit."
+  },
+  {
+   "slug": "26a-cursa-delta-prat-5-i-10-km-2026",
+   "confirmed": true,
+   "website": "https://www.cursadeltaprat.org/",
+   "name": "26a Cursa Delta Prat",
+   "date": "2026-05-10",
+   "town": null,
+   "distancesKm": [
+    5,
+    10
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "46a-cursa-el-corte-ingles-10-km-amb-desnivell-2026",
+   "confirmed": true,
+   "website": "https://lacursa.barcelona/info-cursa/",
+   "name": "46a Cursa El Corte Inglés",
+   "date": "2026-05-10",
+   "town": "Barcelona",
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "campionat-de-catalunya-de-trail-per-relleus-mixtos-absolut-master-i-pr-2026",
+   "confirmed": true,
+   "website": "https://www.lasansi.com/es/lloretdemartrail",
+   "name": "7a Acerko Lloretrail",
+   "date": "2026-05-10",
+   "town": "Lloret de Mar",
+   "distancesKm": [],
+   "organiser": "La Sansi",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "16a-cursa-nocturna-de-lhospitalet-5-i-10-km-2026",
+   "confirmed": true,
+   "website": "https://cursanocturnalh.cat/",
+   "name": "16a PlanetaFP Cursa Nocturna de L’Hospitalet",
+   "date": "2026-05-16",
+   "town": "l’Hospitalet de Llobregat",
+   "distancesKm": [
+    5,
+    10
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "11a-cursa-5-km-13a-cursa-10-km-i-1a-milla-ciutat-de-vilanova-2026",
+   "confirmed": true,
+   "website": "https://cursa10kmvng.com/",
+   "name": "Cursa 10 KM VNG",
+   "date": "2026-05-17",
+   "town": "Vilanova i la Geltrú",
+   "distancesKm": [
+    5,
+    10
+   ],
+   "organiser": "Club Atletisme Atletesvng.org",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "17a-run-festival-tossa-de-mar-5-10-21-km-circuits-no-homologats-2026",
+   "confirmed": false,
+   "website": "https://runfestivaltossa.com/info-carrera/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (18a, hi diu 18 de maig de 2027) i no diu la data de la de 2026."
+  },
+  {
+   "slug": "21k-lo-port-2026",
+   "confirmed": false,
+   "website": "https://www.21kloport.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El robots.txt del web prohibeix l’accés a tots els robots: no s’ha llegit."
+  },
+  {
+   "slug": "39a-cursa-popular-nou-barris-5-i-10-km-2026",
+   "confirmed": false,
+   "website": "https://cursanoubarris.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (16.05.2027) i no diu la data de la cursa de 2026."
+  },
+  {
+   "slug": "12a-cursa-diagonal-dir-guardia-urbana-5-i-10-km-amb-desnivell-2026",
+   "confirmed": false,
+   "website": "https://www.dir.cat/ca/cursa-diagonal",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "La pàgina diu «23 i 24 de maig» sense dir quin dels dos dies són les curses de 5 i 10 km."
+  },
+  {
+   "slug": "19a-milla-urbana-de-montcada-i-reixac-2026",
+   "confirmed": false,
+   "website": "https://www.jam.cat/lamilla.html",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "Ni la pàgina de la Milla ni la dels resultats de la 19a en diuen la data."
+  },
+  {
+   "slug": "senders-de-can-costa-trs-cmt-2026",
+   "confirmed": false,
+   "website": "https://sendersdecancosta.com/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (28 de febrer de 2027) i no diu la data de la de 2026."
+  },
+  {
+   "slug": "guilleries-trail-ccp-2026",
+   "confirmed": false,
+   "website": "https://trailguilleries.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web ja és de l’edició següent (IX, 29 i 30 de maig de 2027) i no diu la data de la de 2026."
+  },
+  {
+   "slug": "night-trail-lloret-2026",
+   "confirmed": false,
+   "website": "https://nighttraillloret.com/ca",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "La pàgina no dona cap data a una petició simple (el compte enrere el posa un script)."
+  },
+  {
+   "slug": "8a-milla-del-foc-2026",
+   "confirmed": false,
+   "website": "https://www.cursadelfoc.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web parla de la Cursa del Foc 2026 (inscripcions fins a l’11 de juny) però no diu el dia de la milla."
+  },
+  {
+   "slug": "19a-cursa-del-foc-5-i-10-km-2026",
+   "confirmed": false,
+   "website": "https://www.cursadelfoc.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web parla de la Cursa del Foc 2026 (inscripcions fins a l’11 de juny) però no diu el dia de la cursa."
+  },
+  {
+   "slug": "9a-milla-urbana-ciutat-de-badalona-2026",
+   "confirmed": true,
+   "website": "https://gesport.cat/2026-milla-urbana-badalona/",
+   "name": "9a Milla Urbana Badalona",
+   "date": "2026-06-20",
+   "town": "Badalona",
+   "distancesKm": [
+    1.609
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "13a-milla-urbana-de-sant-pere-la-sagrera-2026",
+   "confirmed": false,
+   "website": "https://gestoriapalau.es/santpere/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web anomena la Milla Urbana 2026 i els seus resultats, sense dir-ne la data."
+  },
+  {
+   "slug": "19a-la-sansi-viladecans-5-km-2026",
+   "confirmed": true,
+   "website": "https://www.lasansi.com/ca/sansi-viladecans",
+   "name": "La Sansi de Viladecans",
+   "date": "2026-07-11",
+   "town": "Viladecans",
+   "distancesKm": [
+    5
+   ],
+   "organiser": "La Sansi",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "18a-cursa-de-llafranc-pujada-al-far-de-sant-sebastia-2026",
+   "confirmed": true,
+   "website": "https://www.capalafrugell.cat/llafranc/",
+   "name": "XVIII Cursa Llafranc Pujada al Far",
+   "date": "2026-07-12",
+   "town": "Llafranc",
+   "distancesKm": [
+    10.2
+   ],
+   "organiser": "Club Atlètic Palafrugell",
+   "differs": "L’organitzador diu que es va cancel·lar («CANCEL·LADA PER ONADA DE CALOR EXTREMA I RISC D’INCENDIS»). La distància que hi diu és de 10,2 km.",
+   "why": null,
+   "status": "cancelled"
+  },
+  {
+   "slug": "56a-mini-marato-de-calella-de-palafrugell-gp-intersport-sports-77-2026",
+   "confirmed": true,
+   "website": "https://www.capalafrugell.cat/mini-marato-calella-de-palafrugell/",
+   "name": "56a Mini-marató Calella de Palafrugell",
+   "date": "2026-08-30",
+   "town": "Calella de Palafrugell",
+   "distancesKm": [
+    8.8
+   ],
+   "organiser": "Club Atlètic Palafrugell",
+   "differs": "L’organitzador diu 8,8 km; el calendari hi tenia 42,2 km.",
+   "why": null
+  },
+  {
+   "slug": "48a-cursa-de-la-merce-bimbo-global-race-10-km-2026",
+   "confirmed": false,
+   "website": "https://www.barcelona.cat/cursamerce/ca",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El robots.txt del web prohibeix l’accés als agents d’Anthropic: no s’ha llegit."
+  },
+  {
+   "slug": "campionat-de-catalunya-trail-master-trail-del-pont-de-vilomara-2026",
+   "confirmed": true,
+   "website": "https://cursaelpont.cat/",
+   "name": "Trail del Pont de Vilomara i Rocafort",
+   "date": "2026-09-26",
+   "town": "el Pont de Vilomara i Rocafort",
+   "distancesKm": [
+    11,
+    17
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "37a-cursa-de-la-llagosta-5-i-10-km-2026",
+   "confirmed": false,
+   "website": "https://www.lasansieventos.com/es/cursa-de-la-llagosta",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "La pàgina ja no hi és (404)."
+  },
+  {
+   "slug": "15a-edicio-nocturna-cursa-de-la-tardor-gran-premi-pohlcon-5-i-10-km-2026",
+   "confirmed": true,
+   "website": "https://cursadelatardor.com/",
+   "name": "XV Cursa de la Tardor",
+   "date": "2026-10-03",
+   "town": "Sant Andreu de la Barca",
+   "distancesKm": [
+    5,
+    10
+   ],
+   "organiser": null,
+   "differs": "L’organitzador diu que es va suspendre i que no s’ajorna («SUSPENSIÓ DEFINITIVA XV CURSA DE LA TARDOR»).",
+   "why": null,
+   "status": "cancelled"
+  },
+  {
+   "slug": "la-megalitica-de-tossa-de-mar-2026",
+   "confirmed": true,
+   "website": "https://lamegalitica.es/",
+   "name": "La Megalítica",
+   "date": "2026-10-11",
+   "town": "Tossa de Mar",
+   "distancesKm": [
+    5,
+    10,
+    21
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "3r-cros-de-castello-dempuries-2026",
+   "confirmed": false,
+   "website": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&amp;id_act=1368&amp;nom_jornada=4t-Cros-Castello-dEmpuries&amp;id_jornada=657",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "La data hi és («Dissabte 17 octubre de 2026»), però a la pàgina del Circuit Gironí de Cros al web del Consell Esportiu de la Selva, que no és l’organitzador d’aquesta prova. Hi diu «4t Cros de Castelló d’Empúries»; el calendari, «3r»."
+  },
+  {
+   "slug": "16a-cursa-del-remei-10-km-no-homologat-2026",
+   "confirmed": false,
+   "website": "https://atletisme-baixmontseny.cat/organitzacions/els-10-km/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "La pàgina no diu la data de la cursa."
+  },
+  {
+   "slug": "38a-mitja-marato-de-mollerussa-2026",
+   "confirmed": false,
+   "website": "https://sites.google.com/mollerussa.cat/mitjamollerussa/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web anomena la 38a Mitja Marató de Mollerussa però no en diu la data al text (el reglament és un PDF)."
+  },
+  {
+   "slug": "45a-cursa-solidaria-ciutat-de-cornella-la-de-deu-10-km-2026",
+   "confirmed": true,
+   "website": "https://cornellaatletic.com/la-de-deu/",
+   "name": "La de deu",
+   "date": "2026-10-18",
+   "town": null,
+   "distancesKm": [],
+   "organiser": "Club Cornellà Atlètic",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "7a-cursa-mercabarna-5-i-10-km-ajornada-al-17-de-gener-de-2026",
+   "confirmed": false,
+   "website": "https://www.cursamercabarna.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "L’organitzador diu «Nueva fecha: 17 de enero de 2027»: la cursa es va ajornar."
+  },
+  {
+   "slug": "19a-cursa-i-caminada-lluis-companys-5-i-10-km-2026",
+   "confirmed": true,
+   "website": "https://cursacompanys.cat/",
+   "name": "Cursa Companys",
+   "date": "2026-10-24",
+   "town": null,
+   "distancesKm": [
+    5,
+    10
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "15a-cursa-solidaria-pais-del-cava-13-400-m-2026",
+   "confirmed": true,
+   "website": "https://www.rockthesport.com/ca/esdeveniment/xv-cursa-solidaria-pais-del-cava-",
+   "name": "XV Cursa Solidària País del Cava",
+   "date": "2026-10-25",
+   "town": "Vilafranca del Penedès",
+   "distancesKm": [
+    13.4
+   ],
+   "organiser": "Confraria del Cava i Esedosevents",
+   "differs": "La pàgina dona com a contacte de l’organització «Confraria del Cava i Esedosevents»; el calendari hi tenia el CE Penedès.",
+   "why": null
+  },
+  {
+   "slug": "21a-edicio-10-km-urbans-de-manresa-5-i-10-km-circuits-no-homologats-2026",
+   "confirmed": false,
+   "website": "https://clubatleticmanresa.cat/cursa-urbana-de-manresa/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "La pàgina no diu la data de la cursa."
+  },
+  {
+   "slug": "39a-mitja-marato-del-vendrell-2026",
+   "confirmed": false,
+   "website": "https://mitjavendrell.runnerselvendrell.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El robots.txt del web prohibeix l’accés a tots els robots: no s’ha llegit."
+  },
+  {
+   "slug": "campionat-de-catalunya-de-cros-de-relleus-mixtos-totes-les-categories-2026",
+   "confirmed": false,
+   "website": "/wp-content/uploads/2026/10/reg-20261025-croscanovelles.pdf",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "L’adreça no és un web de l’organitzador: és un PDF penjat al web de la federació."
+  },
+  {
+   "slug": "el-tast-de-la-mitja-10-km-amb-desnivell-2026",
+   "confirmed": true,
+   "website": "https://eltast.lamitja.cat/",
+   "name": "El Tast de la Mitja",
+   "date": "2026-10-31",
+   "town": "la Garriga",
+   "distancesKm": [
+    10
+   ],
+   "organiser": "Associació Esportiva La Mitja",
+   "differs": "L’organitzador diu que surt de la Garriga i arriba a Canovelles; el calendari la situava a Granollers.",
+   "why": null
+  },
+  {
+   "slug": "26e-cros-ciutat-de-cerdanyola-2026",
+   "confirmed": false,
+   "website": "https://www.atcerdanyola.com/curses/crosCerdanyola/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "La pàgina no dona cap data a una petició simple."
+  },
+  {
+   "slug": "60e-cros-internacional-de-catalunya-ciutat-de-granollers-rfea-2026",
+   "confirmed": false,
+   "website": "/wp-content/uploads/2026/09/reg-20261108-crosgranollersdiptic.pdf",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "L’adreça no és un web de l’organitzador: és un PDF penjat al web de la federació."
+  },
+  {
+   "slug": "campionat-de-catalunya-de-10-km-27a-vueling-cursa-bombers-barcelona-2026",
+   "confirmed": true,
+   "website": "https://cursadebombers.barcelona/",
+   "name": "27a Vueling Cursa Bombers Barcelona",
+   "date": "2026-11-08",
+   "town": "Barcelona",
+   "distancesKm": [
+    10
+   ],
+   "organiser": "Prensa Ibérica, Relay Events i Sport Life Ibérica",
+   "differs": "La pàgina diu que l’organitzen Prensa Ibérica, Relay Events i Sport Life Ibérica; el calendari hi tenia una altra empresa.",
+   "why": null
+  },
+  {
+   "slug": "14a-cursa-benefica-els-10-km-de-les-franqueses-2026",
+   "confirmed": true,
+   "website": "http://www.els10delesfranqueses.cat/",
+   "name": "Els 10 de Les Franqueses",
+   "date": "2026-11-15",
+   "town": "les Franqueses del Vallès",
+   "distancesKm": [
+    10
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "2a-cursa-de-5-i-10k-de-vic-2026",
+   "confirmed": true,
+   "website": "https://5k10kvic.cat/",
+   "name": "5K10K Vic",
+   "date": "2026-11-15",
+   "town": "Vic",
+   "distancesKm": [
+    5,
+    10
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "32a-cursa-de-muntanya-del-farell-2",
+   "confirmed": false,
+   "website": "https://cncaldes.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El robots.txt del web prohibeix l’accés als agents d’Anthropic: no s’ha llegit."
+  },
+  {
+   "slug": "47e-campionat-datletisme-de-fons-del-ripolles-mitja-marato-2026",
+   "confirmed": false,
+   "website": "https://www.mitjamarato.cat/",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "El web continua a l’edició de 2024 (17 de novembre de 2024)."
+  },
+  {
+   "slug": "51e-cros-de-santa-coloma-de-farners-2026",
+   "confirmed": true,
+   "website": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&id_act=1368&nom_jornada=51e-Cros-Santa-Coloma-Farners&id_jornada=658",
+   "name": "51è Cros de Santa Coloma de Farners",
+   "date": "2026-11-15",
+   "town": "Santa Coloma de Farners",
+   "distancesKm": [],
+   "organiser": "Consell Esportiu de la Selva",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "38a-milles-de-cerdanyola-5-km-2026",
+   "confirmed": true,
+   "website": "https://www.atcerdanyola.com/curses/milles-cerdanyola/",
+   "name": "38a Milles Nocturnes de Cerdanyola del Vallès",
+   "date": "2026-11-21",
+   "town": "Cerdanyola del Vallès",
+   "distancesKm": [
+    5
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "20a-cursa-de-parets-5-i-10-km-circuits-no-homologats-2026",
+   "confirmed": true,
+   "website": "https://www.caparets.com/la-cursa",
+   "name": "La Cursa de Parets",
+   "date": "2026-11-22",
+   "town": "Parets del Vallès",
+   "distancesKm": [
+    5,
+    10
+   ],
+   "organiser": "Club Atletisme Parets",
+   "differs": null,
+   "why": null
+  },
+  {
+   "slug": "27e-cros-ciutat-de-girona-2026",
+   "confirmed": false,
+   "website": "https://www.selvaesports.cat/activitats.php?nom_activitat=Circuit-Gironi-Cros-2026&amp;id_act=1368&amp;nom_jornada=27e-Cros-Ciutat-Girona&amp;id_jornada=659",
+   "name": null,
+   "date": null,
+   "town": null,
+   "distancesKm": [],
+   "organiser": null,
+   "differs": null,
+   "why": "La data hi és («Diumenge 22 novembre de 2026»), però a la pàgina del Circuit Gironí de Cros al web del Consell Esportiu de la Selva, que no és l’organitzador d’aquesta prova."
+  },
+  {
+   "slug": "47a-mitja-marato-espirall-vilafranca-2026",
+   "confirmed": true,
+   "website": "https://mitja.vilafranca.cat/",
+   "name": "47a Mitja Espirall · Vilafranca",
+   "date": "2026-11-22",
+   "town": "Vilafranca del Penedès",
+   "distancesKm": [
+    5,
+    21.1
+   ],
+   "organiser": null,
+   "differs": null,
+   "why": null
+  }
+ ]
+}

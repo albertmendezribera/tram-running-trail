@@ -1,0 +1,44 @@
+---
+import Viewer3DShell from '@tram/design-system/interactive/Viewer3DShell.astro';
+import Fiche from '../Fiche.astro';
+
+const code = `<div data-splat-viewer="/splats/mostra.spz" data-turned="Sabatilla girada {degrees} graus.">
+  <Viewer3DShell id="splat" label="Sabatilla escanejada en 3D" />
+</div>
+<script>import '../islands/splat-viewer-boot.ts';</script>`;
+---
+
+<Fiche
+  group="Exploració"
+  title="E06 · Sabatilla escanejada (splats)"
+  use="Prova de l'exploració E06: una sabatilla escanejada, dibuixada amb splats gaussians i el renderer de splats de three.js sobre el mateix motor que la resta de vistes 3D."
+  avoid="No és un component acabat ni una sabatilla del catàleg: és la mostra amb què es prova el pipeline de punta a punta."
+  code={code}
+>
+  <section class="fiche-block" data-testid="splat">
+    <h2 data-type="display-sm">La mostra</h2>
+    <div data-splat-viewer="/splats/mostra.spz" data-turned="Sabatilla girada {degrees} graus.">
+      <Viewer3DShell id="demo-splat" label="Sabatilla escanejada en 3D" ready="Vista 3D a punt. Arrossega o fes servir les fletxes per girar la sabatilla.">
+        <img slot="poster" class="poster" src="/splats/mostra.webp" alt="" loading="lazy" decoding="async" />
+        <p slot="text" class="fiche-note" data-type="text-xs">Una sabatilla de muntanya escanejada, per girar amb el dit o amb les fletxes. Es veu per tots els costats, la sola inclosa.</p>
+      </Viewer3DShell>
+    </div>
+    <p class="fiche-note">
+      No és una captura nostra: és un model de Google Scanned Objects (© Google, CC BY 4.0), fotografiat des de 150 punts amb Blender com si se li donés la volta amb el mòbil, i entrenat amb Brush. Serveix per provar el camí sencer mentre no
+      hi ha una sabatilla gravada de debò.
+    </p>
+  </section>
+</Fiche>
+
+<script>
+  import '../../islands/splat-viewer-boot.ts';
+</script>
+
+<style>
+  .poster {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
+  }
+</style>

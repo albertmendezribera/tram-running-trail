@@ -18,6 +18,7 @@ import RaceRowFiche from './fiches/RaceRowFiche.astro';
 import LocatorMapFiche from './fiches/LocatorMapFiche.astro';
 import RoutePlateFiche from './fiches/RoutePlateFiche.astro';
 import SegmentedFiche from './fiches/SegmentedFiche.astro';
+import E06SplatFiche from './fiches/E06SplatFiche.astro';
 import FieldsFiche from './fiches/FieldsFiche.astro';
 import SearchFieldFiche from './fiches/SearchFieldFiche.astro';
 import SelectFiche from './fiches/SelectFiche.astro';
@@ -62,4 +63,5 @@ export const FICHES = [
   { slug: 'interactive/game-stage', title: 'GameStage', Page: GameStageFiche },
   { slug: 'moments/de-la-quadricula-a-la-corba', title: 'M1 · De la quadrícula a la corba de nivell', Page: MomentM1 },
   { slug: 'moments/recorrer-el-tram', title: 'M2 · Recórrer el tram', Page: MomentM2 },
+  { slug: 'explorations/e06-splat', title: 'E06 · Sabatilla escanejada (splats)', Page: E06SplatFiche },
 ];

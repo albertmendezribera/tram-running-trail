@@ -49,6 +49,10 @@ export const GROUPS = [
       { href: '/ds/moments/recorrer-el-tram/', title: 'M2 · Recórrer el tram' },
     ],
   },
+  {
+    title: 'Exploracions',
+    items: [{ href: '/ds/explorations/e06-splat/', title: 'E06 · Sabatilla escanejada' }],
+  },
 ] as const;
 
 export const NAV = GROUPS.flatMap((group) => group.items.map((item) => ({ ...item, group: group.title })));

@@ -1,4 +1,5 @@
 import { expect, type Page, test } from '@playwright/test';
+import sharp from 'sharp';
 
 const PAGES = {
   index: '/ds/',
@@ -158,6 +159,38 @@ test.describe('ElevationProfile', () => {
   test('says so when there is no route', async ({ page }) => {
     await open(page, PAGES['elevation-profile']);
     await expect(page.getByTestId('absent').getByText('Sense perfil')).toBeVisible();
+  });
+});
+
+test.describe('E06 · A scanned shoe as splats', () => {
+  test.describe.configure({ timeout: 90_000 });
+
+  test('the splat loads into the shared 3D shell, is drawn and turns by hand and by key', async ({ page }) => {
+    await open(page, '/ds/explorations/e06-splat/');
+    const viewer = page.locator('#demo-splat');
+    await viewer.scrollIntoViewIfNeeded();
+    await expect(viewer).toHaveAttribute('data-state', 'ready', { timeout: 60_000 });
+    const canvas = viewer.locator('canvas');
+    // The whole scan is there, on the renderer every 3D island shares.
+    expect(Number(await canvas.getAttribute('data-splats'))).toBeGreaterThan(10_000);
+    await expect(canvas).toHaveAttribute('data-engine', /three\.js/);
+    // Something other than the paper is drawn: the picture of the canvas has many colours, not one.
+    // (Read from a capture: a 3D canvas gives its pixels back empty once the frame has been shown.)
+    const { data } = await sharp(await canvas.screenshot()).resize(48, 48, { fit: 'fill' }).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+    const seen = new Set<string>();
+    for (let i = 0; i < data.length; i += 3) seen.add(`${data[i]! >> 4},${data[i + 1]! >> 4},${data[i + 2]! >> 4}`);
+    const colours = seen.size;
+    expect(colours).toBeGreaterThan(40);
+    // Dragging turns it; so does an arrow key, and the shell says where it is.
+    const box = (await canvas.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width / 2 + 120, box.y + box.height / 2, { steps: 4 });
+    await page.mouse.up();
+    await expect(canvas).toHaveAttribute('data-yaw', /^-?\d/);
+    const turned = Number(await canvas.getAttribute('data-yaw'));
+    expect(Math.abs(turned - -0.6)).toBeGreaterThan(0.5);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
   });
 });
 

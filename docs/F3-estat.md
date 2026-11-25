@@ -165,6 +165,10 @@ Cap marca declara l'amplada en mil·límetres. El que sí que diuen, i s'ha lleg
 - No hi ha cap necessitat que el catàleg no pugui respondre amb dades: estabilitat o pronació, impermeable, o «per a principiants» no hi són.
 - El comparador no diu res de l'amplada.
 
+## Els escàners (E06): el camí, provat amb una mostra (25 de novembre de 2026)
+
+La part de la fase que no s'havia començat. El camí de les fotos al navegador funciona amb eines lliures en aquest Mac: COLMAP troba les càmeres, Brush entrena els splats, es comprimeixen a SPZ (632 KB) i la web els dibuixa amb el renderer de splats de three.js, dins del pressupost. S'ha provat amb un model de llicència oberta, no amb una sabatilla nostra: falta la captura real i la transició a la radiografia. Detall a `docs/explorations/E06-splats.md`; prototip a `/ds/explorations/e06-splat/`.
+
 ## El comparador: una pàgina per a totes les parelles
 
 CLAUDE.md 3 preveu `/ca/comparar/[a]-vs-[b]/`, amb les parelles populars generades i la resta sota demanda. **El lloc encara és estàtic** (l'adaptador de Cloudflare no hi és), i 161 models són 12.880 parelles: massa pàgines per generar-les totes, i sense dades per saber quines són les populars. Decisió presa en fer-lo (2026-11-20), a revisar quan hi hagi servidor:

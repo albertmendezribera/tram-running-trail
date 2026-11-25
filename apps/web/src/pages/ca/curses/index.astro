@@ -48,16 +48,19 @@ const notice = pending
   <Stack gap={4}>
     <Heading level={1} size="lg" kicker="Calendari">Curses</Heading>
     <Text size="lg" measure>Asfalt, muntanya i marxes a la mateixa llista. De cada prova, la data, el lloc i les distàncies, i d'on surt cada dada. Les que tenen el recorregut es poden recórrer en 3D.</Text>
+    {
+      calendar.length > 0 && (
+        <nav aria-label="Parts d’aquesta pàgina" data-jump>
+          <Cluster gap={4}>
+            {coming.length > 0 && <Link href="#properes">{`Properes (${coming.length})`}</Link>}
+            <Link href="#cerca">Cerca i filtres</Link>
+            {doors.length > 0 && <Link href="#parts">Per tipus, distància i comarca</Link>}
+            {run.length > 0 && <Link href="#disputades">{`Ja disputades (${run.length})`}</Link>}
+          </Cluster>
+        </nav>
+      )
+    }
   </Stack>
-  {
-    races.length > 0 && (
-      <Band tone="tint" title="Amb el recorregut en 3D">
-        <Panel>
-          <RaceList races={races} />
-        </Panel>
-      </Band>
-    )
-  }
   {
     calendar.length > 0 && (
       <Band tone="plain" title="L'any com a perfil">
@@ -65,10 +68,10 @@ const notice = pending
       </Band>
     )
   }
-  {calendar.length > 0 && <CalendarFilter races={calendar} />}
+  {calendar.length > 0 && <div id="cerca"><CalendarFilter races={calendar} /></div>}
   {
     coming.length > 0 && (
-      <div data-calendar-list>
+      <div data-calendar-list id="properes">
         <Band tone="plain" title="Properes">
           <div class="coming">
             <Stack gap={6}>
@@ -84,7 +87,7 @@ const notice = pending
   }
   {
     run.length > 0 && (
-      <div data-calendar-list>
+      <div data-calendar-list id="disputades">
         <Band tone="alt" title="Ja disputades">
           <Panel>
             <CalendarList races={run} level={3} anchor="fet" />
@@ -93,11 +96,20 @@ const notice = pending
       </div>
     )
   }
+  {
+    races.length > 0 && (
+      <Band tone="tint" title="Amb el recorregut en 3D">
+        <Panel>
+          <RaceList races={races} />
+        </Panel>
+      </Band>
+    )
+  }
   {races.length + calendar.length === 0 && <Text tone="muted">Encara no hi ha cap cursa publicada.</Text>}
   {
     doors.length > 0 && (
       <Band tone="plain" title="El calendari per parts">
-        <nav class="coming" aria-label="El calendari per tipus, distància i comarca">
+        <nav class="coming" id="parts" aria-label="El calendari per tipus, distància i comarca">
           <Stack gap={5}>
             {doors.map((group) => (
               <Stack gap={2}>

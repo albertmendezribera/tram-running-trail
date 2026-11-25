@@ -1,12 +1,15 @@
 ---
+import SectionRow from '@tram/design-system/patterns/SectionRow.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
 import Heading from '@tram/design-system/primitives/Heading.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
-import { ROUTES, visible } from '../../../content';
+import { ROUTES, STORY_MAKER_SHOWN, visible } from '../../../content';
 import Site from '../../../layouts/Site.astro';
 import RouteList from '../../../sections/RouteList.astro';
 
 const routes = visible(ROUTES);
+const walked = routes.find((route) => route.onFoot);
 ---
 
 <Site title="Rutes" trail={[]} description="Rutes reals per recórrer en 3D, amb el perfil, les pujades i les xifres de cada una.">
@@ -15,4 +18,41 @@ const routes = visible(ROUTES);
     <Text size="lg" measure>Cada ruta surt d'un GPX: se'n pot fer el vol sobre el terreny, veure'n el perfil i llegir-ne les xifres.</Text>
   </Stack>
   <RouteList routes={routes} />
+  {
+    (walked?.onFoot || STORY_MAKER_SHOWN) && (
+      <Band tone="alt" title="Més enllà de la ruta">
+        <ul class="more" data-route-tools>
+          {
+            walked?.onFoot && (
+              <li>
+                <SectionRow href={walked.onFoot.href} name={`${walked.name} a peu`} line="El poble en 3D, fet amb dades obertes: per córrer-hi la ruta sencera o passejar-hi pel teu compte." />
+              </li>
+            )
+          }
+          {
+            STORY_MAKER_SHOWN && (
+              <li>
+                <SectionRow href="/ca/stories/" name="La teva sortida, en una story" line="Puja el GPX d’una sortida teva i baixa’n la imatge per a Instagram o WhatsApp, en cinc dissenys." />
+              </li>
+            )
+          }
+        </ul>
+      </Band>
+    )
+  }
 </Site>
+
+<style>
+  .more {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A band runs edge to edge on a phone, for the panels it holds. This list is in no panel, and keeps the page's margin. */
+  @media (width < 48rem) {
+    .more {
+      padding-inline: var(--tram-sys-grid-margin);
+    }
+  }
+</style>

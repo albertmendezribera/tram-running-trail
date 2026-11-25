@@ -1,15 +1,22 @@
 ---
+import ShoeRow from '@tram/design-system/patterns/ShoeRow.astro';
 import Band from '@tram/design-system/primitives/Band.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
 import Heading from '@tram/design-system/primitives/Heading.astro';
 import Link from '@tram/design-system/primitives/Link.astro';
 import Panel from '@tram/design-system/primitives/Panel.astro';
-import Button from '@tram/design-system/primitives/Button.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
-import { RACES, ROUTES, routeOf, visible } from '../../content';
+import { RACES, ROUTES, routeOf, STORY_MAKER_SHOWN, visible } from '../../content';
 import { buildDay, calendarRaces } from '../../content/calendar';
+import { facets, hrefOf } from '../../content/facets';
+import { catalogShoes } from '../../content/shoe-catalog';
+import { shoePath, visibleShoes } from '../../content/shoes';
 import Site from '../../layouts/Site.astro';
 import CalendarList from '../../sections/CalendarList.astro';
+import CatalogNeeds from '../../sections/CatalogNeeds.astro';
+import HomeDoors from '../../sections/HomeDoors.astro';
 import HomeHero from '../../sections/HomeHero.astro';
 import RaceList from '../../sections/RaceList.astro';
 import RouteList from '../../sections/RouteList.astro';
@@ -20,30 +27,55 @@ const sample = races.some((r) => r.isPlaceholder);
 const cover = routeOf('calonge');
 // The next few races of the calendar, from the day the page is built.
 const today = buildDay();
-const next = calendarRaces().filter((race) => race.date >= today && !race.status).slice(0, 6);
+const calendar = calendarRaces();
+const next = calendar.filter((race) => race.date >= today && !race.status).slice(0, 6);
+// The calendar by kind of race, for whoever knows what they run.
+const kinds = calendar.length ? facets().filter((facet) => facet.kind === 'type') : [];
+const shoes = visibleShoes();
+const catalog = catalogShoes();
+const walked = routes.find((route) => route.onFoot);
 ---
 
 <Site
   title="Running d'asfalt i de muntanya"
-  description="TRAM: curses, rutes i sabatilles de running d'asfalt i de muntanya. Recorreguts en 3D sobre el terreny real, perfils i xifres."
+  description="TRAM: el calendari de curses de Catalunya, rutes per recórrer en 3D sobre el terreny real i sabatilles de running llegides com un plànol tècnic. Cada xifra, amb la seva font."
   placeholder={sample}
   notice={sample ? 'Aquesta és una versió de proves: la data i el dorsal de la cursa són de mostra; els recorreguts i les seves xifres són reals.' : undefined}
 >
   <HomeHero town="palamos" mountain={cover.slug}>
     <Stack gap={5}>
       <Heading level={1} size="xl" kicker="Running d’asfalt i de muntanya">Recórrer el tram</Heading>
-      <Text size="lg" measure>Cada cursa i cada ruta, quilòmetre a quilòmetre: el vol sobre el terreny real, el perfil amb el pendent de cada tram i les xifres com en un full de resultats.</Text>
-      <div><Button variant="primary" href={`/ca/rutes/${cover.slug}/`}>{`Recorre ${cover.name} en 3D`}</Button></div>
+      <Text size="lg" measure>El calendari de curses de Catalunya, rutes per recórrer en 3D sobre el terreny real i sabatilles llegides com un plànol tècnic. Cada xifra, amb la seva font.</Text>
+      <Cluster gap={3}>
+        {calendar.length > 0 && <Button variant="primary" href="/ca/curses/">Troba una cursa</Button>}
+        <Button variant={calendar.length > 0 ? 'secondary' : 'primary'} href={`/ca/rutes/${cover.slug}/`}>{`Recorre ${cover.name} en 3D`}</Button>
+      </Cluster>
     </Stack>
   </HomeHero>
+
+  <HomeDoors />
+
+  {
+    next.length > 0 && (
+      <Band tone="tint" title="Properes curses">
+        <Panel>
+          <CalendarList races={next} level={3} />
+        </Panel>
+        <nav aria-label="El calendari, sencer i per tipus" data-home-calendar>
+          <Cluster gap={4}>
+            <Link href="/ca/curses/" variant="standalone">Tot el calendari</Link>
+            {kinds.map((facet) => <Link href={hrefOf(facet)}>{`${facet.label} (${facet.races.length})`}</Link>)}
+          </Cluster>
+        </nav>
+      </Band>
+    )
+  }
   {
     races.length > 0 && (
-      <Band tone="tint" title="Curses">
-        <Panel>
+      <Band tone="plain" title="Curses amb el recorregut en 3D">
+        <div class="open">
           <RaceList races={races} />
-        </Panel>
-        {next.length > 0 && <Panel title="Properes al calendari"><CalendarList races={next} level={3} /></Panel>}
-        <Link href="/ca/curses/" variant="standalone">Totes les curses</Link>
+        </div>
       </Band>
     )
   }
@@ -51,6 +83,54 @@ const next = calendarRaces().filter((race) => race.date >= today && !race.status
     <Panel>
       <RouteList routes={routes} />
     </Panel>
-    <Link href="/ca/rutes/" variant="standalone">Totes les rutes</Link>
+    <nav aria-label="Rutes, i el que se’n pot fer" data-home-routes>
+      <Cluster gap={4}>
+        <Link href="/ca/rutes/" variant="standalone">Totes les rutes</Link>
+        {walked?.onFoot && <Link href={walked.onFoot.href}>{`${walked.name} a peu, en 3D`}</Link>}
+        {STORY_MAKER_SHOWN && <Link href="/ca/stories/">Fes la story d’una sortida teva</Link>}
+      </Cluster>
+    </nav>
   </Band>
+  {
+    shoes.length + catalog.length > 0 && (
+      <Band tone="tint" title="Sabatilles">
+        {
+          shoes.length > 0 && (
+            <Panel title="Mesurades al laboratori">
+              <Stack gap={0} as="ul">
+                {shoes.map((shoe) => (
+                  <li><ShoeRow href={shoePath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.specs.weightG} specs={shoe.specs} /></li>
+                ))}
+              </Stack>
+            </Panel>
+          )
+        }
+        {
+          catalog.length > 0 && (
+            <Panel>
+              <CatalogNeeds />
+            </Panel>
+          )
+        }
+        <nav aria-label="Sabatilles: el catàleg i el comparador" data-home-shoes>
+          <Cluster gap={4}>
+            <Link href="/ca/sabatilles/" variant="standalone">{catalog.length > 0 ? `Tot el catàleg (${catalog.length} models)` : 'Totes les sabatilles'}</Link>
+            {catalog.length > 0 && <Link href="/ca/comparar/">Compara dos models</Link>}
+          </Cluster>
+        </nav>
+      </Band>
+    )
+  }
 </Site>
+
+<style>
+  /* A band runs edge to edge on a phone, for the panels it holds. What is in no panel keeps the page's margin. */
+  @media (width < 48rem) {
+    .open,
+    nav[data-home-calendar],
+    nav[data-home-routes],
+    nav[data-home-shoes] {
+      padding-inline: var(--tram-sys-grid-margin);
+    }
+  }
+</style>

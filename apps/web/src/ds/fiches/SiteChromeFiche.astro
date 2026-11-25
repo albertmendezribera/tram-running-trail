@@ -9,11 +9,20 @@ const links = [
   { href: '/ca/rutes/', label: 'Rutes' },
   { href: '/ca/sabatilles/', label: 'Sabatilles' },
 ];
+const more = [
+  { href: '/ca/rutes/palamos/a-peu/', label: 'Palamós a peu' },
+  { href: '/ca/stories/', label: 'Stories' },
+];
+const sections = [
+  { title: 'Curses', href: '/ca/curses/', links: [{ href: '/ca/curses/', label: 'Calendari' }, { href: '/ca/curses/trail/', label: 'Curses de muntanya' }] },
+  { title: 'Rutes', href: '/ca/rutes/', links: [{ href: '/ca/rutes/calonge/', label: 'Calonge' }, { href: '/ca/rutes/sils/', label: 'Sils' }] },
+  { title: 'Eines', links: more },
+];
 const code = `<SiteFrame>
-  <SiteHeader slot="header" home="/ca/" links={links} current={Astro.url.pathname} />
+  <SiteHeader slot="header" home="/ca/" links={links} more={more} current={Astro.url.pathname} />
   <SiteTrail slot="trail" items={[{ label: 'Inici', href: '/ca/' }, { label: 'Curses', href: '/ca/curses/' }]} />
   …
-  <SiteFooter slot="footer" credits={[…]} notice="…" />
+  <SiteFooter slot="footer" sections={sections} credits={[…]} notice="…" />
 </SiteFrame>`;
 ---
 
@@ -31,6 +40,15 @@ const code = `<SiteFrame>
     <div class="fiche-chrome"><SiteHeader home="/ca/" links={links} current="/ca/curses/cursa/" /></div>
   </section>
 
+  <section class="fiche-block" data-testid="header-more">
+    <h2 data-type="display-sm">Capçalera amb dos rangs</h2>
+    <p class="fiche-note">
+      Les seccions són el menú. El que no és una secció però té entrada des de tota pàgina (una eina, una pàgina amb porta pròpia) va a <code>more</code>: després d'un filet i amb la tinta més apagada, perquè es llegeixi què és el web abans
+      que què més s'hi pot fer. En un mòbil tot plegat és una sola línia que es fa lliscar.
+    </p>
+    <div class="fiche-chrome"><SiteHeader home="/ca/" links={links} more={more} current="/ca/stories/" /></div>
+  </section>
+
   <section class="fiche-block">
     <h2 data-type="display-sm">Camí</h2>
     <p class="fiche-note">D'on penja la pàgina, un pas per enllaç, entre la capçalera i el contingut. La pàgina mateixa no hi surt: la diu el títol, just a sota. La portada no en porta. El traç entre dos passos no es llegeix en veu alta.</p>
@@ -39,7 +57,11 @@ const code = `<SiteFrame>
 
   <section class="fiche-block">
     <h2 data-type="display-sm">Peu</h2>
-    <p class="fiche-note">Els crèdits de les dades de la pàgina i, si n'hi ha, l'avís que el contingut és de mostra.</p>
+    <p class="fiche-note">
+      El mapa del web (<code>sections</code>): de qualsevol pàgina, un camí a cada secció i a les seves pàgines principals. A sota, els crèdits de les dades de la pàgina i, si n'hi ha, l'avís que el contingut és de mostra.
+    </p>
+    <div data-testid="footer-map"><SiteFooter sections={sections} credits={['Model d’elevacions: © ICGC, CC BY 4.0']} /></div>
+    <p class="fiche-note">Sense mapa, com era:</p>
     <SiteFooter credits={['Recorregut: GPX d’una sortida real.', 'Model d’elevacions: © ICGC, CC BY 4.0']} notice="Cursa de mostra: el recorregut és real, però el nom i la data són inventats." />
   </section>
 </Fiche>

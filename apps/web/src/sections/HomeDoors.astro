@@ -1,0 +1,66 @@
+---
+import SectionRow from '@tram/design-system/patterns/SectionRow.astro';
+import { formatNumber } from '@tram/formats';
+import { ROUTES, STORY_MAKER_SHOWN, visible } from '../content';
+import { buildDay, calendarRaces } from '../content/calendar';
+import { catalogShoes } from '../content/shoe-catalog';
+import { visibleShoes } from '../content/shoes';
+
+// Every figure is counted from what the build holds: nothing is written by hand.
+const today = buildDay();
+const calendar = calendarRaces();
+const coming = calendar.filter((race) => race.date >= today).length;
+const routes = visible(ROUTES);
+const shoes = catalogShoes().length + visibleShoes().length;
+const walked = routes.find((route) => route.onFoot);
+const count = (n: number): string => formatNumber(n, 'ca', 0);
+---
+
+<!--
+  What the site holds, said at once and with its size: a newcomer sees the three sections and the two
+  tools before any list, and each line is the way in.
+-->
+<nav aria-label="Què hi ha a TRAM" data-doors>
+  <ul class="doors">
+    {
+      calendar.length > 0 && (
+        <li>
+          <SectionRow href="/ca/curses/" figure={count(calendar.length)} unit="curses" name="Calendari de curses" line={`Asfalt, muntanya i marxes de Catalunya: la data, el lloc i les distàncies de cada una, i d’on surt cada dada. ${count(coming)} per disputar.`} />
+        </li>
+      )
+    }
+    <li>
+      <SectionRow href="/ca/rutes/" figure={count(routes.length)} unit="rutes" name="Rutes en 3D" line="Sortides reals per recórrer sobre el relleu, amb el perfil, les pujades i les xifres de cada tram." />
+    </li>
+    {
+      shoes > 0 && (
+        <li>
+          <SectionRow href="/ca/sabatilles/" figure={count(shoes)} unit="models" name="Sabatilles" line="El que declara cada marca, la sola dibuixada com un plànol i un comparador. Es poden buscar pel que necessites: peu ample, lleugera, molt amortiment." />
+        </li>
+      )
+    }
+    {
+      STORY_MAKER_SHOWN && (
+        <li>
+          <SectionRow href="/ca/stories/" name="La teva sortida, en una story" line="Puja el GPX d’una sortida i baixa’n la imatge per a Instagram o WhatsApp, en cinc dissenys." />
+        </li>
+      )
+    }
+    {
+      walked?.onFoot && (
+        <li>
+          <SectionRow href={walked.onFoot.href} name={`${walked.name} a peu`} line="El poble en 3D, fet amb dades obertes: per córrer-hi la ruta sencera o passejar-hi pel teu compte." />
+        </li>
+      )
+    }
+  </ul>
+</nav>
+
+<style>
+  .doors {
+    margin: 0;
+    padding: 0;
+    border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
+    list-style: none;
+  }
+</style>

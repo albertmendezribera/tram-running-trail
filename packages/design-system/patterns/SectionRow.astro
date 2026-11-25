@@ -1,0 +1,88 @@
+---
+import Icon from '../primitives/Icon.astro';
+
+export interface Props {
+  href: string;
+  /** What the door leads to: the name of the part of the site. */
+  name: string;
+  /** What is found there, in a line. */
+  line: string;
+  /** How much of it there is, already written with its unit of count (`324`, `161`). Left out, the row has none: a tool has no count. */
+  figure?: string | undefined;
+  /** What the figure counts, under it: `curses`, `models`. */
+  unit?: string | undefined;
+}
+
+const { href, name, line, figure, unit } = Astro.props;
+---
+
+<!-- A way into a part of the site, as a line of an index: how much there is, what it is, and where it leads. Not a card (6.4). -->
+<a class="row" href={href}>
+  <span class="figure" data-empty={figure ? undefined : ''}>
+    {figure && <span class="count" data-type="display-md" data-numeric="tabular">{figure}</span>}
+    {figure && unit && <span class="unit" data-type="text-xs">{unit}</span>}
+  </span>
+  <span class="what">
+    <span class="name" data-type="display-sm">{name}</span>
+    <span class="line" data-type="text-sm">{line}</span>
+  </span>
+  <span class="go"><Icon name="arrow-right" /></span>
+</a>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: calc(var(--tram-sys-space-12) * 0.9) minmax(0, 1fr) auto;
+    gap: var(--tram-sys-space-4);
+    align-items: center;
+    padding-block: var(--tram-sys-space-4);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    color: var(--tram-sys-text);
+    text-decoration: none;
+    transition: background-color var(--tram-sys-motion-quick) var(--tram-sys-motion-ease-standard);
+  }
+
+  .row:hover {
+    background: var(--tram-sys-surface-alt);
+  }
+
+  .row:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .figure,
+  .what {
+    display: grid;
+    gap: var(--tram-sys-space-1);
+    min-inline-size: 0;
+  }
+
+  /* A row with no figure keeps its place, so the names of all the rows start on the same line. A mark stands where the figure would. */
+  .figure[data-empty]::before {
+    content: '';
+    inline-size: var(--tram-sys-space-6);
+    block-size: var(--tram-sys-line-mark);
+    background: var(--tram-sys-accent);
+  }
+
+  .unit,
+  .line {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .unit {
+    text-transform: uppercase;
+  }
+
+  .go {
+    display: grid;
+  }
+
+  @media (width >= 48rem) {
+    .row {
+      grid-template-columns: calc(var(--tram-sys-space-12) * 1.25) minmax(0, 1fr) auto;
+      gap: var(--tram-sys-space-6);
+    }
+  }
+</style>

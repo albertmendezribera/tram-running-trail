@@ -1,6 +1,7 @@
 ---
 import Facts from '@tram/design-system/patterns/Facts.astro';
 import RaceRow from '@tram/design-system/patterns/RaceRow.astro';
+import SectionRow from '@tram/design-system/patterns/SectionRow.astro';
 import TerrainTag from '@tram/design-system/patterns/TerrainTag.astro';
 import { CALONGE, SILS } from '../../content/profiles';
 import Fiche from '../Fiche.astro';
@@ -27,6 +28,19 @@ const code = `<RaceRow href="/ca/curses/…/" name="…" place="…" terrain="tr
       <li><RaceRow href="#" name="Cursa de mostra de muntanya" place="Calonge, Baix Empordà" terrain="trail" date="2027-03-14" distanceKm={12.41} gainM={340} profile={CALONGE} scaleM={290} /></li>
       <li><RaceRow href="#" name="Cursa de mostra d'asfalt" place="Sils, la Selva" terrain="road" date="2027-04-11" distanceKm={9.99} gainM={6} profile={SILS} scaleM={290} /></li>
       <li><RaceRow href="#" name="Ruta sense data ni terreny" place="Sils, la Selva" distanceKm={9.99} gainM={null} profile={SILS} scaleM={290} /></li>
+    </ul>
+  </section>
+
+  <section class="fiche-block" data-testid="section-row">
+    <h2 data-type="display-sm">SectionRow</h2>
+    <p class="fiche-note">
+      Una entrada a una part del web, com una línia d'índex: quant n'hi ha, què és i cap on porta. La xifra arriba ja escrita i comptada de les dades; una eina, que no té res a comptar, porta una marca d'accent al seu lloc, i els noms de
+      totes les files comencen a la mateixa línia.
+    </p>
+    <ul class="fiche-list">
+      <li><SectionRow href="#" figure="324" unit="curses" name="Calendari de curses" line="Asfalt, muntanya i marxes de Catalunya, amb la font de cada dada." /></li>
+      <li><SectionRow href="#" figure="4" unit="rutes" name="Rutes en 3D" line="Sortides reals per recórrer sobre el relleu." /></li>
+      <li><SectionRow href="#" name="La teva sortida, en una story" line="Una eina: no té xifra." /></li>
     </ul>
   </section>
 

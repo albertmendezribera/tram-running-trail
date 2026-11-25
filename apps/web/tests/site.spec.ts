@@ -89,8 +89,71 @@ test.describe('Home and lists', () => {
     await expect(page.locator('main a[href="/ca/curses/marxa-de-les-tines/"]')).toHaveCount(1);
     // And to the next few races of the calendar, each to its own page.
     expect(await page.locator('main [data-month] a[href^="/ca/curses/"]').count()).toBeGreaterThan(3);
-    await expect(page.locator('a[href="/ca/rutes/sils/"]')).toHaveCount(1);
-    await expect(page.locator('a[href="/ca/rutes/palamos/"]')).toHaveCount(1);
+    await expect(page.locator('main a[href="/ca/rutes/sils/"]')).toHaveCount(1);
+    await expect(page.locator('main a[href="/ca/rutes/palamos/"]')).toHaveCount(1);
+  });
+
+  test('the home says what the site holds before any list: its three sections and its tools, each with its size', async ({ page }) => {
+    await open(page, PAGES.home);
+    // What the site is, in the first screen, and the main thing to do.
+    await expect(main(page)).toContainText('El calendari de curses de Catalunya, rutes per recórrer en 3D sobre el terreny real i sabatilles llegides com un plànol tècnic.');
+    await expect(page.getByRole('link', { name: 'Troba una cursa' })).toHaveAttribute('data-variant', 'primary');
+    await expect(page.getByRole('link', { name: /Recorre Calonge en 3D/ })).toHaveAttribute('data-variant', 'secondary');
+    // An index of the parts, each with how much there is of it; a tool has no count.
+    const doors = page.getByRole('navigation', { name: 'Què hi ha a TRAM' });
+    await expect(doors.getByRole('link')).toHaveCount(5);
+    await expect(doors.getByRole('link', { name: /Calendari de curses/ })).toHaveAttribute('href', '/ca/curses/');
+    await expect(doors.getByRole('link', { name: /Calendari de curses/ })).toContainText(/^\s*\d{3}\s*curses/);
+    await expect(doors.getByRole('link', { name: /Rutes en 3D/ })).toContainText(/^\s*4\s*rutes/);
+    await expect(doors.getByRole('link', { name: /Sabatilles/ })).toHaveAttribute('href', '/ca/sabatilles/');
+    await expect(doors.getByRole('link', { name: /La teva sortida, en una story/ })).toHaveAttribute('href', '/ca/stories/');
+    await expect(doors.getByRole('link', { name: /Palamós a peu/ })).toHaveAttribute('href', '/ca/rutes/palamos/a-peu/');
+    // The index comes before the lists.
+    const [index, first] = await Promise.all([doors.boundingBox(), page.getByRole('heading', { level: 2 }).first().boundingBox()]);
+    expect(index!.y).toBeLessThan(first!.y);
+    // The parts, in the order of the menu: what is to come first, and the one race with a route named for what it is.
+    await expect(main(page).getByRole('heading', { level: 2 })).toHaveText(['Properes curses', 'Curses amb el recorregut en 3D', 'Rutes', 'Sabatilles']);
+    await expect(page.getByRole('navigation', { name: 'El calendari, sencer i per tipus' }).getByRole('link', { name: /^Muntanya \(\d+\)$/ })).toHaveAttribute('href', '/ca/curses/trail/');
+    // The shoes are on the home too: the two of the lab, and the way in by need.
+    const shoes = page.locator('main section', { hasText: 'Mesurades al laboratori' }).last();
+    await expect(shoes.getByRole('link', { name: /Vaporfly 4/ })).toHaveAttribute('href', '/ca/sabatilles/nike/vaporfly-4/');
+    await expect(shoes.getByRole('link', { name: /^Peu ample · \d+$/ })).toHaveAttribute('href', '/ca/sabatilles/amples/');
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('the menu says the sections first and the tools after, and the foot of every page is a map of the site', async ({ page }) => {
+    await open(page, '/ca/stories/');
+    const nav = page.locator('header nav');
+    await expect(nav.getByRole('link')).toHaveText(['Curses', 'Rutes', 'Sabatilles', 'Palamós a peu', 'Stories']);
+    // The tools are of another rank, and the one the reader is in is still marked.
+    await expect(nav.locator('a[data-rank="more"]')).toHaveText(['Palamós a peu', 'Stories']);
+    await expect(nav.locator('a[aria-current="page"]')).toHaveText('Stories');
+    // On a phone the menu is one line, however many links it has.
+    const tall = await nav.evaluate((node) => node.getBoundingClientRect().height);
+    expect(tall).toBeLessThan(60);
+    const map = page.getByRole('navigation', { name: 'Mapa del web' });
+    await expect(map.getByRole('link', { name: 'Curses', exact: true })).toHaveAttribute('href', '/ca/curses/');
+    await expect(map.getByRole('link', { name: 'Curses de muntanya' })).toHaveAttribute('href', '/ca/curses/trail/');
+    await expect(map.getByRole('link', { name: 'Riera de Santa Coloma' })).toHaveAttribute('href', '/ca/rutes/riera-de-santa-coloma/');
+    await expect(map.getByRole('link', { name: 'Sabatilles per a peu ample' })).toHaveAttribute('href', '/ca/sabatilles/amples/');
+    await expect(map.getByRole('link', { name: 'Stories' })).toHaveAttribute('href', '/ca/stories/');
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('the calendar leads straight to each of its parts, and the routes to what else can be done with one', async ({ page }) => {
+    await open(page, PAGES.races);
+    const jump = page.getByRole('navigation', { name: 'Parts d’aquesta pàgina' });
+    await expect(jump.getByRole('link', { name: /^Properes \(\d+\)$/ })).toHaveAttribute('href', '#properes');
+    for (const id of ['properes', 'cerca', 'parts', 'disputades']) await expect(page.locator(`#${id}`)).toHaveCount(1);
+    // The list comes before the one race that has a route.
+    const tops = await page.locator('main h2').evaluateAll((titles) => titles.map((title) => title.textContent!.trim()));
+    expect(tops.indexOf('Properes')).toBeLessThan(tops.indexOf('Amb el recorregut en 3D'));
+    await open(page, PAGES.routes);
+    const tools = page.locator('[data-route-tools]');
+    await expect(tools.getByRole('link', { name: /Palamós a peu/ })).toHaveAttribute('href', '/ca/rutes/palamos/a-peu/');
+    await expect(tools.getByRole('link', { name: /La teva sortida, en una story/ })).toHaveAttribute('href', '/ca/stories/');
+    await open(page, PAGES.shoes);
+    await expect(main(page).getByRole('heading', { level: 2 })).toHaveText(['Mesurades al laboratori', 'El catàleg']);
   });
 
   test('the section the reader is in is marked in the header', async ({ page }) => {

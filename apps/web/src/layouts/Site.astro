@@ -7,7 +7,7 @@ import SiteFooter from '@tram/design-system/patterns/SiteFooter.astro';
 import SiteFrame from '@tram/design-system/patterns/SiteFrame.astro';
 import SiteHeader from '@tram/design-system/patterns/SiteHeader.astro';
 import SiteTrail from '@tram/design-system/patterns/SiteTrail.astro';
-import { ROUTES, STORY_MAKER_SHOWN, visible } from '../content';
+import { SECTIONS, siteMap, tools } from '../content/site-map';
 
 export interface Props {
   title: string;
@@ -42,15 +42,6 @@ const breadcrumbs =
         itemListElement: [...steps.map((step) => ({ name: step.label, item: new URL(step.href, Astro.site).href })), { name: title, item: canonical.href }].map((step, i) => ({ '@type': 'ListItem', position: i + 1, ...step })),
       }
     : undefined;
-const LINKS = [
-  { href: '/ca/curses/', label: 'Curses' },
-  { href: '/ca/rutes/', label: 'Rutes' },
-  { href: '/ca/sabatilles/', label: 'Sabatilles' },
-  // A town that can be walked in 3D has its own way in from every page: today, «Palamós a peu».
-  ...visible(ROUTES).flatMap((route) => (route.onFoot ? [{ href: route.onFoot.href, label: `${route.name} a peu` }] : [])),
-  // A story of the visitor's own outing, from their GPX.
-  ...(STORY_MAKER_SHOWN ? [{ href: '/ca/stories/', label: 'Stories' }] : []),
-];
 ---
 
 <!doctype html>
@@ -91,10 +82,10 @@ const LINKS = [
   </head>
   <body data-type="text-md">
     <SiteFrame>
-      <SiteHeader slot="header" home="/ca/" links={LINKS} current={Astro.url.pathname} />
+      <SiteHeader slot="header" home="/ca/" links={SECTIONS} more={tools()} current={Astro.url.pathname} />
       {steps && <SiteTrail slot="trail" items={steps} />}
       <slot />
-      <SiteFooter slot="footer" credits={credits} notice={notice} />
+      <SiteFooter slot="footer" sections={siteMap()} credits={credits} notice={notice} />
     </SiteFrame>
   </body>
 </html>

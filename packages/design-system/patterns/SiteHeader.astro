@@ -6,16 +6,18 @@ export interface Props {
   /** Home of the site in this language. */
   home: string;
   links: ReadonlyArray<{ href: string; label: string }>;
+  /** What is not a section of its own but has a way in from every page: a tool, a page worth its own door. Said after the sections, more quietly. */
+  more?: ReadonlyArray<{ href: string; label: string }>;
   /** Path of the page being shown: the link that leads to it, or to its section, is marked. */
   current: string;
   locale?: Locale;
 }
 
 const NAV: Record<Locale, string> = { ca: 'Principal', es: 'Principal', en: 'Main' };
-const { home, links, current, locale = 'ca' } = Astro.props;
+const { home, links, more = [], current, locale = 'ca' } = Astro.props;
 const within = (href: string): boolean => current === href || (href !== home && current.startsWith(href));
 // When a link leads to a page inside another link's section, only the closest one is marked: the longest address that holds the page.
-const closest = links.filter((l) => within(l.href)).reduce((best, l) => Math.max(best, l.href.length), 0);
+const closest = [...links, ...more].filter((l) => within(l.href)).reduce((best, l) => Math.max(best, l.href.length), 0);
 const active = (href: string): boolean => within(href) && href.length === closest;
 ---
 
@@ -24,6 +26,8 @@ const active = (href: string): boolean => within(href) && href.length === closes
   <a class="brand" href={home} data-type="display-sm" aria-label="TRAM, inici">TRAM</a>
   <nav class="nav" aria-label={NAV[locale]}>
     {links.map((l) => <a class="link" data-type="text-sm" href={l.href} aria-current={active(l.href) ? 'page' : undefined}>{l.label}</a>)}
+    {more.length > 0 && <span class="rule" aria-hidden="true" />}
+    {more.map((l) => <a class="link" data-rank="more" data-type="text-sm" href={l.href} aria-current={active(l.href) ? 'page' : undefined}>{l.label}</a>)}
   </nav>
   <ThemeToggle locale={locale} />
 </header>
@@ -66,6 +70,23 @@ const active = (href: string): boolean => within(href) && href.length === closes
     text-decoration-color: currentcolor;
   }
 
+  /* What comes after the sections is told apart from them: a rule between, and a quieter ink. */
+  .rule {
+    align-self: center;
+    inline-size: var(--tram-sys-line-hairline);
+    block-size: var(--tram-sys-space-4);
+    background: var(--tram-sys-rule-strong);
+  }
+
+  .link[data-rank='more'] {
+    color: var(--tram-sys-text-muted);
+  }
+
+  .link[data-rank='more']:hover,
+  .link[data-rank='more'][aria-current] {
+    color: inherit;
+  }
+
   /* The section the reader is in carries the accent: it is the active thing in the bar. */
   .link[aria-current] {
     font-weight: 700;
@@ -78,12 +99,20 @@ const active = (href: string): boolean => within(href) && href.length === closes
       justify-content: space-between;
     }
 
+    /* One line, however many links: what does not fit is reached by sliding it, and the bar keeps its height. */
     .nav {
       flex: none;
+      flex-wrap: nowrap;
       order: 1;
       inline-size: 100%;
       padding-block-start: var(--tram-sys-space-1);
       border-block-start: var(--tram-sys-line-hairline) solid var(--tram-sys-rule);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .link {
+      flex: none;
     }
   }
 

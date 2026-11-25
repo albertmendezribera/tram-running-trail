@@ -1,15 +1,36 @@
 ---
+export interface Section {
+  title: string;
+  /** Where the title itself leads, when the section has a page of its own. */
+  href?: string;
+  links: ReadonlyArray<{ href: string; label: string }>;
+}
+
 export interface Props {
+  /** The site by its parts: from any page, a way to every section and to the main pages under it. */
+  sections?: readonly Section[] | undefined;
   /** Sources of what the page shows: every figure says where it comes from. */
   credits?: readonly string[] | undefined;
   /** Shown when the page mixes real data with sample data. */
   notice?: string | undefined;
 }
 
-const { credits = [], notice } = Astro.props;
+const { sections = [], credits = [], notice } = Astro.props;
 ---
 
 <footer class="footer" data-type="text-xs">
+  {
+    sections.length > 0 && (
+      <nav class="map" aria-label="Mapa del web">
+        {sections.map((section) => (
+          <div class="part">
+            <p class="head" data-type="text-sm">{section.href ? <a class="go" href={section.href}>{section.title}</a> : section.title}</p>
+            <ul class="links">{section.links.map((link) => <li><a class="go" data-type="text-sm" href={link.href}>{link.label}</a></li>)}</ul>
+          </div>
+        ))}
+      </nav>
+    )
+  }
   {notice && <p class="notice">{notice}</p>}
   {credits.length > 0 && <ul class="credits">{credits.map((c) => <li>{c}</li>)}</ul>}
   <p class="brand">TRAM · Running &amp; Trail</p>
@@ -22,6 +43,50 @@ const { credits = [], notice } = Astro.props;
     padding-block: var(--tram-sys-space-5) var(--tram-sys-space-7);
     border-block-start: var(--tram-sys-line-strong) solid var(--tram-sys-text);
     color: var(--tram-sys-text-muted);
+  }
+
+  .map {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(calc(var(--tram-sys-space-12) * 1.6), 1fr));
+    gap: var(--tram-sys-space-6) var(--tram-sys-space-5);
+    padding-block-end: var(--tram-sys-space-5);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+  }
+
+  .part {
+    display: grid;
+    align-content: start;
+    gap: var(--tram-sys-space-2);
+  }
+
+  .head {
+    margin: 0;
+    color: var(--tram-sys-text);
+    font-weight: 700;
+  }
+
+  .links {
+    display: grid;
+    gap: var(--tram-sys-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .go {
+    color: inherit;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.3em;
+  }
+
+  .go:hover {
+    color: var(--tram-sys-text);
+    text-decoration-color: currentcolor;
+  }
+
+  .go:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
   }
 
   .notice,

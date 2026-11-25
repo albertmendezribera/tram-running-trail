@@ -4,6 +4,12 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Portada i jerarquia del web.
+
+- `SiteHeader`: propietat nova `more`, per al que no és una secció però té entrada des de tota pàgina; va després d'un filet i en tinta apagada. En un mòbil el menú és una sola línia que es fa lliscar (abans es trencava en dues quan hi havia més de quatre enllaços). Sense `more`, a l'escriptori és com era.
+- `SiteFooter`: propietat nova `sections`, el mapa del web sobre els crèdits. Sense, el peu és com era.
+- `SectionRow` (patró nou, a la fitxa de `RaceRow`): una entrada a una part del web com una línia d'índex, amb la xifra de quant n'hi ha. No hi ha «abans»: és nou.
+
 Stories d'una sortida pròpia.
 
 - `TextField` i `FileField` (interactius nous, amb fitxa): el camp de text i el camp de fitxer del navegador, amb l'etiqueta a sobre. Són per a una eina que treballa amb el que hi porta qui visita la web. No hi ha «abans»: són nous.

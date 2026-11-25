@@ -26,16 +26,23 @@ const makers = [...new Set(catalog.map((shoe) => shoe.brand.name))].sort((a, b) 
   </Stack>
   {
     shoes.length > 0 ? (
-      <Stack gap={0} as="ul">
-        {shoes.map((shoe) => (
-          <li><ShoeRow href={shoePath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.specs.weightG} specs={shoe.specs} /></li>
-        ))}
-      </Stack>
+      <Band tone="tint" title="Mesurades al laboratori">
+        <div class="catalog">
+          <Stack gap={5}>
+            <Text measure>{`${shoes.length === 1 ? 'Una sabatilla' : `${shoes.length} sabatilles`} amb les mesures d'un laboratori independent: la radiografia amb totes les cotes, la fitxa tècnica i la vista en 3D.`}</Text>
+            <Stack gap={0} as="ul">
+              {shoes.map((shoe) => (
+                <li><ShoeRow href={shoePath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.specs.weightG} specs={shoe.specs} /></li>
+              ))}
+            </Stack>
+            {pairs.map(([a, b]) => <div><Button variant="primary" href={`/ca/comparar/${pairSlug(a, b)}/`}>{`Compara ${shoeName(a)} i ${shoeName(b)}`}</Button></div>)}
+          </Stack>
+        </div>
+      </Band>
     ) : (
-      <Text tone="muted">Encara no hi ha cap sabatilla publicada.</Text>
+      catalog.length === 0 && <Text tone="muted">Encara no hi ha cap sabatilla publicada.</Text>
     )
   }
-  {pairs.map(([a, b]) => <div><Button variant="primary" href={`/ca/comparar/${pairSlug(a, b)}/`}>{`Compara ${shoeName(a)} i ${shoeName(b)}`}</Button></div>)}
   {
     catalog.length > 0 && (
       <Band tone="plain" title="El catàleg">

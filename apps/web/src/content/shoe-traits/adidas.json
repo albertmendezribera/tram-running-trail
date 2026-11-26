@@ -1,0 +1,79 @@
+{
+  "maker": "adidas",
+  "accessed": "2026-11-26",
+  "method": "browser",
+  "shoes": {
+    "adizero-adios-pro-evo-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "Lo mejor para: Competición … diseñada para las carreras que hacen historia",
+      "distanceSaid": "Distancias: Largas (de 0 a más de 42 km)",
+      "note": "La pàgina no hi diu el tipus de trepitjada."
+    },
+    "adizero-evo-sl": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": "Distancias: Largas (de 0 a más de 42 km)",
+      "note": "La pàgina hi posa l’etiqueta «Lo mejor para: Competición», que és igual a les vuit pàgines d’Adidas llegides; la descripció no ho recolza i no es registra com a ús. Tampoc hi diu el tipus de trepitjada."
+    },
+    "adizero-boston-13": {
+      "support": "neutral",
+      "supportSaid": "Tipo de pisada: Neutra",
+      "use": [
+        "race"
+      ],
+      "useSaid": "Lo mejor para: Competición … Compite o entrena con esta zapatilla",
+      "distanceSaid": "Distancias: Largas (de 0 a más de 42 km)",
+      "note": "«entrena» no diu quina mena d’entrenament i no s’hi afegeix cap més ús."
+    },
+    "adizero-adios-pro-5": {
+      "support": "neutral",
+      "supportSaid": "Tipo de pisada: Neutra",
+      "use": [
+        "race"
+      ],
+      "useSaid": "diseñado para el running de maratón en carretera y el rendimiento profesional",
+      "distanceSaid": "Distancias: Largas (de 0 a más de 42 km)",
+      "note": null
+    },
+    "adizero-prime-x3-strung": {
+      "support": "neutral",
+      "supportSaid": "Tipo de pisada: Neutra",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": "Distancias: Largas (de 0 a más de 42 km)",
+      "note": "La pàgina hi posa l’etiqueta «Lo mejor para: Competición», que és igual a les vuit pàgines d’Adidas llegides; la descripció no ho recolza i no es registra com a ús."
+    },
+    "adizero-sl-2": {
+      "support": "neutral",
+      "supportSaid": "Tipo de pisada: Neutra",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Zapatilla ligera de running, hecha para adaptarse a tu ritmo diario",
+      "distanceSaid": "Distancias: Medias (de 0 a 21 km)",
+      "note": "La pàgina hi posa l’etiqueta «Lo mejor para: Competición», que és igual a les vuit pàgines d’Adidas llegides; la descripció no ho recolza i no es registra com a ús."
+    },
+    "terrex-agravic-speed-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La pàgina hi posa l’etiqueta «Lo mejor para: Competición», que és igual a les vuit pàgines d’Adidas llegides; la descripció no ho recolza i no es registra com a ús. La descripció parla de «velocidad y agilidad» i d’«objetivos de entrenamiento»; no hi diu distàncies ni tipus de trepitjada."
+    },
+    "terrex-agravic-tt": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La pàgina hi posa l’etiqueta «Lo mejor para: Competición», que és igual a les vuit pàgines d’Adidas llegides; la descripció no ho recolza i no es registra com a ús. La descripció parla de «velocidad en terrenos técnicos y rocosos»; no hi diu distàncies ni tipus de trepitjada."
+    }
+  }
+}

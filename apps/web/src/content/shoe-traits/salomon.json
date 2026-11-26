@@ -1,0 +1,64 @@
+{
+  "maker": "salomon",
+  "accessed": "2026-11-26",
+  "method": "browser",
+  "shoes": {
+    "genesis-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La fitxa hi diu «Respuesta en carrera: Estable», que descriu la resposta de la sabata i no el tipus de trepitjada; no es registra com a suport. No hi diu cap ús ni distància."
+    },
+    "s-lab-genesis-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "long",
+        "ultra"
+      ],
+      "useSaid": "Tipo de trail running: Ultratrail … aventuras de larga distancia",
+      "distanceSaid": "aventuras de larga distancia",
+      "note": "La fitxa hi diu «Respuesta en carrera: Estable», que descriu la resposta de la sabata i no el tipus de trepitjada; no es registra com a suport."
+    },
+    "ultra-glide-4": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "ultra"
+      ],
+      "useSaid": "Tipo de trail running: Ultratrail",
+      "distanceSaid": null,
+      "note": null
+    },
+    "pulsar": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "tempo"
+      ],
+      "useSaid": "Tipo de trail running: Velocidad … Acelera el ritmo",
+      "distanceSaid": null,
+      "note": "«tempo» surt de «Velocidad»; la pàgina no hi diu «competición»."
+    },
+    "speedcross-6": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La pàgina no hi diu cap ús ni distància, només «Terreno: Barro»."
+    },
+    "s-lab-ultra-v2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "ultra"
+      ],
+      "useSaid": "Tipo de trail running: Ultratrail",
+      "distanceSaid": "zapatilla de trail running de ultradistancia",
+      "note": "La descripció també parla de «la línea de meta» i de «largas distancias»."
+    }
+  }
+}

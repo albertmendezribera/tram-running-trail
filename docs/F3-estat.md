@@ -189,13 +189,16 @@ El catàleg i cada llista de «Què busques?» es poden **ordenar per una xifra*
 
 De la pàgina de cada model, al web de la marca, i amb les paraules de la marca al costat (`src/content/shoe-traits/<marca>.json`): si diu que és neutra o d'estabilitat, i per a què diu que és (competició, ritme, dia a dia, tirada llarga, ultra). D'aquí surten dos filtres nous, sis llistes («Competir», «Fer ritme», «El dia a dia», «Tirades llargues», «Ultres», «Amb suport») i dues línies a la fitxa. No és cap valoració nostra ni cap consell: la pàgina «Amb suport» diu que no sap si en necessites.
 
+Llegides les 17 marques (7 amb peticions simples, 10 amb el navegador, el 26 de novembre): dels 169 models, **90 diuen el suport** (76 neutres, 14 d'estabilitat), **126 diuen per a què són** i 57 anomenen una distància. Salomon, Scarpa i La Sportiva no diuen mai el suport; quan parlen d'«estabilitat» és del terreny, i no s'ha comptat.
+
 També s'han afegit al catàleg els **8 models de muntanya d'Asics** de la gamma actual, llegits al seu web.
 
 Peces del sistema de disseny tocades: `SegmentedControl` (`labelled`), `ShoeRow` (nota que un script omple) i `TextField` (`inputmode`); vegeu el CHANGELOG.
 
 ### Què no s'ha mirat
 
-- **Una sola lectura** de la trepitjada i l'ús, feta per agents; les lectures dubtoses són anotades a cada fitxer (`note`), i les més febles són les que surten d'un camp genèric de la marca (a Asics, «Objetivo: Correr más lejos» s'ha llegit com a tirada llarga).
+- **Una sola lectura** de la trepitjada i l'ús, feta per agents; les lectures dubtoses són anotades a cada fitxer (`note`), i les més febles són les que surten d'un camp genèric de la marca (a Asics, «Objetivo: Correr más lejos» s'ha llegit com a tirada llarga). No s'ha forçat cap lectura: a Brooks, «Soporte equilibrado» no s'ha pres per «neutra»; a Adidas, l'etiqueta «Lo mejor para: Competición», que porten tots els models, només compta on la descripció també ho diu; i l'Asics Gel-Kayano 33, que es contradiu, queda sense suport.
+- **La Trabuco 13 ja no és al web d'Asics** (ni a la llista de trail ni al cercador): s'hi ha posat la 14, i la 13 entra per la pàgina de xifres a mà.
 - **La regla de semblança no l'ha jutjada cap corredor.** Amb dues xifres en comú (drop i pes), que és el que declaren moltes marques, la llista és honesta però poc fina: per això no passa de «Semblant».
 - **Safari, Firefox i un mòbil real**: provat només amb Chromium, a mida d'escriptori i de mòbil.
 

@@ -1,0 +1,84 @@
+{
+  "maker": "altra",
+  "accessed": "2026-11-26",
+  "method": "browser",
+  "shoes": {
+    "lone-peak-9": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La pàgina només hi diu «Best For: Trail Running, Hiking, and Thru Hiking»."
+    },
+    "timp-6": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "long"
+      ],
+      "useSaid": "Best For: Trail running, All-day trail running, and Hiking",
+      "distanceSaid": null,
+      "note": "«long» surt de «All-day trail running»."
+    },
+    "olympus-7": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "long"
+      ],
+      "useSaid": "All-Day Trail Running … designed to go the distance",
+      "distanceSaid": null,
+      "note": "«long» surt de «All-Day Trail Running» i «go the distance»."
+    },
+    "torin-9": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Best For: Daily Runs and Walking",
+      "distanceSaid": null,
+      "note": null
+    },
+    "escalante-5": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "tempo"
+      ],
+      "useSaid": "Best For: Road Running, Speedwork, and Walking",
+      "distanceSaid": null,
+      "note": null
+    },
+    "vanish-carbon-3": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "race",
+        "tempo"
+      ],
+      "useSaid": "Best For: Road Racing and Speedwork",
+      "distanceSaid": null,
+      "note": null
+    },
+    "experience-flow-3": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "you can hit the road for daily miles",
+      "distanceSaid": null,
+      "note": "«Best For» només hi diu «Road Running and Walking»."
+    },
+    "experience-wild-3": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La pàgina només hi diu «Best For: Trail Running and Hiking»."
+    }
+  }
+}

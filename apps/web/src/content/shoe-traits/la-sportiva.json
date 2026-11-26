@@ -1,0 +1,71 @@
+{
+  "maker": "la-sportiva",
+  "accessed": "2026-11-26",
+  "method": "browser",
+  "shoes": {
+    "prodigio-pro": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race",
+        "long",
+        "ultra"
+      ],
+      "useSaid": "diseñadas para ultramaratonistas, trail runners y competidores",
+      "distanceSaid": "respaldo total en cualquier distancia",
+      "note": "La descripció també hi diu «carreras largas» i «en entrenamientos o competiciones»."
+    },
+    "prodigio-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "long"
+      ],
+      "useSaid": "diseñadas para recorrer senderos largos y exigentes",
+      "distanceSaid": "tus retos de larga distancia",
+      "note": "La descripció també hi diu «desde recorridos sencillos de montaña hasta carreras intensas de resistencia»."
+    },
+    "prodigio-max": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "long",
+        "ultra"
+      ],
+      "useSaid": "creado específicamente para los amantes del mundo “Ultra”",
+      "distanceSaid": "distancias medias y largas",
+      "note": "La descripció hi anomena curses com «Tor Des Geants (330km), Swiss Peak (360km), Tahoe (320km)»."
+    },
+    "bushido-iii": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La pàgina en diu «dedicado al mundo de las carreras aéreas» i parla d’«estabilidad» sobre el terreny, no de tipus de suport; no hi diu distàncies."
+    },
+    "mutant": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race",
+        "long"
+      ],
+      "useSaid": "adecuado para carreras de trail y sky-race y para entrenar",
+      "distanceSaid": "distancias medias-largas",
+      "note": "«extremadamente estable» hi descriu el model sobre terreny tècnic, no el tipus de suport."
+    },
+    "akasha-ii": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race",
+        "long",
+        "ultra"
+      ],
+      "useSaid": "dedicado a las competiciones de resistencia",
+      "distanceSaid": "rutas de larga distancia, Ultra Maratones, Ultra-Trails",
+      "note": "La descripció també hi diu «uso prolongado en entrenamientos»."
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "maker": "brooks",
+  "accessed": "2026-11-26",
+  "method": "browser",
+  "shoes": {
+    "ghost-18": {
+      "support": null,
+      "supportSaid": "Soporte equilibrado",
+      "use": [
+        "daily",
+        "long"
+      ],
+      "useSaid": "Salidas a correr diarias … carreras largas, en las de recuperación",
+      "distanceSaid": "carreras largas … o en cualquier otra distancia",
+      "note": "La pàgina hi diu «Soporte equilibrado», sense dir ni «neutral» ni «estabilidad»; no es classifica."
+    },
+    "glycerin-23": {
+      "support": null,
+      "supportSaid": "Soporte equilibrado",
+      "use": [
+        "daily",
+        "long"
+      ],
+      "useSaid": "Las mejores para: … Para el día a día, Largas distancias",
+      "distanceSaid": "Largas distancias",
+      "note": "La pàgina hi diu «Soporte equilibrado», sense dir ni «neutral» ni «estabilidad»; no es classifica."
+    },
+    "adrenaline-gts-26": {
+      "support": "stability",
+      "supportSaid": "Soporte estructurado",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Las mejores para: Salidas a correr diarias, Caminar, Soporte añadido",
+      "distanceSaid": null,
+      "note": "La pàgina en diu «Nuestra zapatilla de soporte más fiable» i que els GuideRails™ ajuden «a mantener el exceso de movimiento bajo control»."
+    },
+    "glycerin-max-3": {
+      "support": null,
+      "supportSaid": "Máximo soporte",
+      "use": [
+        "daily",
+        "long"
+      ],
+      "useSaid": "Las mejores para: Largas distancias, Salidas a correr diarias",
+      "distanceSaid": "Largas distancias",
+      "note": "La pàgina hi diu «Máximo soporte» parlant de transició i amortiment, sense dir ni «neutral» ni «estabilidad»; no es classifica."
+    },
+    "cascadia-20": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La pàgina no porta camp «Soporte» i només hi diu «Carreras en montaña, Senderismo, Terreno técnico, Distintas superficies»."
+    }
+  }
+}

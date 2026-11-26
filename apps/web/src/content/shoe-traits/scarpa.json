@@ -1,0 +1,86 @@
+{
+  "maker": "scarpa",
+  "accessed": "2026-11-26",
+  "method": "browser",
+  "shoes": {
+    "spin-ultra-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race",
+        "long",
+        "ultra"
+      ],
+      "useSaid": "Designed to tackle long distances … during the most challenging races",
+      "distanceSaid": "Shoe for ultra distances",
+      "note": "L’encapçalament de la pàgina hi diu «Trail Running for extreme distance»."
+    },
+    "spin-st": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "For OCR and Spartan Race",
+      "distanceSaid": "suitable for short distances and technical uses",
+      "note": "«race» surt de «For OCR and Spartan Race» (curses d’obstacles)."
+    },
+    "spin-race": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "Designed to maximize performance in competition and during training",
+      "distanceSaid": "The race shoe for short distances",
+      "note": null
+    },
+    "spin-planet": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "long"
+      ],
+      "useSaid": "Designed for long-distance trail running",
+      "distanceSaid": "For long distances",
+      "note": null
+    },
+    "ribelle-run-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": "Skyrunning and short to medium-distance trails",
+      "note": "La pàgina parla de «stability» com a control en terreny tècnic, no com a tipus de suport; no es registra."
+    },
+    "ribelle-run-kalibra-ht": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": "short/medium distance trail and skyrunning",
+      "note": "La pàgina parla de «stability» com a control en terreny tècnic, no com a tipus de suport; no es registra."
+    },
+    "golden-gate-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily",
+        "long"
+      ],
+      "useSaid": "designed and built for medium and long distances … their daily training",
+      "distanceSaid": "medium and long distances",
+      "note": null
+    },
+    "golden-gate-lt": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "searching for a reliable daily trainer",
+      "distanceSaid": null,
+      "note": "La pàgina també hi diu «Reliable Comfort for Everyday Trail Running»."
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "maker": "decathlon",
+  "accessed": "2026-11-26",
+  "method": "browser",
+  "shoes": {
+    "kiprun-kipstorm-elite": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "tu mejor aliada para ganar valiosos segundos en competición",
+      "distanceSaid": "De 1 a 10 km, Media maratón, Maratón",
+      "note": "Les especificacions de la pàgina no porten «Tipo de pisada». La descripció hi afegeix «competición, del medio maratón al maratón»."
+    },
+    "kiprun-kipride-max": {
+      "support": "neutral",
+      "supportSaid": "Tipo de pisada: Neutra",
+      "use": [
+        "long"
+      ],
+      "useSaid": "te ayuda a dar lo mejor de ti en tus salidas largas",
+      "distanceSaid": "De 1 a 10 km, Media maratón, Maratón",
+      "note": null
+    },
+    "kiprun-kipride": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Ideal para tus runnings diarios, seas principiante o corredor regular",
+      "distanceSaid": "De 1 a 10 km, Media maratón, Maratón",
+      "note": "Les especificacions de la pàgina no porten «Tipo de pisada». La descripció també diu «desde los runnings relajados hasta los entrenamientos intensivos»."
+    },
+    "kiprun-kipsummit-race": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race",
+        "ultra"
+      ],
+      "useSaid": "Diseñada para rendir al máximo en carreras ultra «rodantes» como la UTMB®",
+      "distanceSaid": "carreras de trail running de entre 40 y 170 km",
+      "note": "Les especificacions de la pàgina no porten «Tipo de pisada». Les especificacions diuen «Distancia: De 43 a 80 km, > 80 km, Trail running de 0 a 170 km»."
+    },
+    "kiprun-kipsummit-max": {
+      "support": null,
+      "supportSaid": "Todas las pisadas, Neutra, Pronadora, Supinadora",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": "De 22 a 42 km",
+      "note": "La pàgina hi posa totes les trepitjades alhora i no es classifica. Les especificacions també diuen «Trail running de 0 a 40 km, de 0 a 60 km, de 0 a 25 km»; no hi ha cap frase d’ús."
+    }
+  }
+}

@@ -15,6 +15,18 @@ export interface Props {
 
 const { current, level = 3 } = Astro.props;
 const all = needs();
+// Two ways of asking: for how a shoe is made, and for what its maker says it is for.
+const KINDS = [
+  { kind: 'shape', label: 'Com la vols' },
+  { kind: 'use', label: 'Per a què, segons la marca' },
+] as const;
+// The catalogue in the order of one figure: the same list, asked for by its address (`CatalogFilter`).
+const RANKS = [
+  { order: 'pes', label: 'Per pes' },
+  { order: 'talo-alt', label: 'Per alçada al taló' },
+  { order: 'drop-baix', label: 'Per drop' },
+  { order: 'tacs', label: 'Per tacs' },
+] as const;
 ---
 
 <!--
@@ -27,17 +39,47 @@ const all = needs();
       <Stack gap={3}>
         <Heading level={level} size="sm">{current ? 'Busques una altra cosa?' : 'Què busques?'}</Heading>
         {!current && <Text measure>Si no véns amb una marca al cap, comença pel que necessites. Cada llista diu amb quina regla s’ha fet, i què no pot dir.</Text>}
-        <Cluster gap={2}>
-          {all
-            .filter((need) => need !== current)
-            .map((need) => (
-              <span data-need={need.slug}>
-                <Button variant="secondary" size={current ? 'sm' : 'md'} href={needPath(need)}>{`${need.label} · ${need.shoes.length}`}</Button>
+        {KINDS.map(({ kind, label }) => {
+          const offered = all.filter((need) => need.kind === kind && need !== current);
+          return (
+            offered.length > 0 && (
+              <div class="kind" data-need-kind={kind}>
+                <span class="label" data-type="text-xs">{label}</span>
+                <Cluster gap={2}>
+                  {offered.map((need) => (
+                    <span data-need={need.slug}>
+                      <Button variant="secondary" size={current ? 'sm' : 'md'} href={needPath(need)}>{`${need.label} · ${need.shoes.length}`}</Button>
+                    </span>
+                  ))}
+                </Cluster>
+              </div>
+            )
+          );
+        })}
+        <div class="kind" data-need-kind="rank">
+          <span class="label" data-type="text-xs">Tot el catàleg, en rànquing</span>
+          <Cluster gap={2}>
+            {RANKS.map((rank) => (
+              <span data-rank-by={rank.order}>
+                <Button variant="secondary" size={current ? 'sm' : 'md'} href={`/ca/sabatilles/?ordre=${rank.order}#llista`}>{rank.label}</Button>
               </span>
             ))}
-          {current && <Button variant="quiet" size="sm" href="/ca/sabatilles/">Tot el catàleg</Button>}
-        </Cluster>
+          </Cluster>
+        </div>
+        {current && <div><Button variant="quiet" size="sm" href="/ca/sabatilles/">Tot el catàleg</Button></div>}
       </Stack>
     </nav>
   )
 }
+
+<style>
+  .kind {
+    display: grid;
+    gap: var(--tram-sys-space-2);
+  }
+
+  .label {
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+</style>

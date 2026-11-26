@@ -2333,6 +2333,174 @@
       "accessed": "2026-11-20"
     },
     {
+      "slug": "trabuco-14",
+      "brand": {
+        "slug": "asics",
+        "name": "Asics"
+      },
+      "model": "Trabuco 14",
+      "terrain": "trail",
+      "weightG": 281,
+      "weightRef": "la pàgina no en diu la talla",
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": 8,
+      "lugDepthMm": null,
+      "plate": "rock_plate",
+      "midsole": "FF BLAST MAX",
+      "outsole": "ASICSGRIP",
+      "url": "https://www.asics.com/es/es-es/trabuco-14/p/1011C166-750.html",
+      "note": null,
+      "accessed": "2026-11-26"
+    },
+    {
+      "slug": "trabuco-max-5",
+      "brand": {
+        "slug": "asics",
+        "name": "Asics"
+      },
+      "model": "Trabuco Max 5",
+      "terrain": "trail",
+      "weightG": 302,
+      "weightRef": "la pàgina no en diu la talla",
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": 5,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": "FF BLAST PLUS",
+      "outsole": "ASICSGRIP",
+      "url": "https://www.asics.com/es/es-es/trabuco-max-5/p/1011C164-200.html",
+      "note": null,
+      "accessed": "2026-11-26"
+    },
+    {
+      "slug": "gel-trabuco-terra-3",
+      "brand": {
+        "slug": "asics",
+        "name": "Asics"
+      },
+      "model": "Gel-Trabuco Terra 3",
+      "terrain": "trail",
+      "weightG": 310,
+      "weightRef": "la pàgina no en diu la talla",
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": 8,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": "FF BLAST",
+      "outsole": "ASICSGRIP",
+      "url": "https://www.asics.com/es/es-es/gel-trabuco-terra-3/p/1011C152-021.html",
+      "note": null,
+      "accessed": "2026-11-26"
+    },
+    {
+      "slug": "fuji-lite-7",
+      "brand": {
+        "slug": "asics",
+        "name": "Asics"
+      },
+      "model": "Fuji Lite 7",
+      "terrain": "trail",
+      "weightG": 241,
+      "weightRef": "la pàgina no en diu la talla",
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": 4,
+      "lugDepthMm": 4,
+      "plate": null,
+      "midsole": "FF BLAST PLUS",
+      "outsole": "ASICSGRIP",
+      "url": "https://www.asics.com/es/es-es/fuji-lite-7/p/1013A232-200.html",
+      "note": null,
+      "accessed": "2026-11-26"
+    },
+    {
+      "slug": "fujispeed-4",
+      "brand": {
+        "slug": "asics",
+        "name": "Asics"
+      },
+      "model": "Fujispeed 4",
+      "terrain": "trail",
+      "weightG": 240,
+      "weightRef": "la pàgina no en diu la talla",
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": 5,
+      "lugDepthMm": null,
+      "plate": "pebax",
+      "midsole": "FF BLAST PLUS",
+      "outsole": "ASICSGRIP",
+      "url": "https://www.asics.com/es/es-es/fujispeed-4/p/1013A179-750.html",
+      "note": null,
+      "accessed": "2026-11-26"
+    },
+    {
+      "slug": "metafuji-trail-2",
+      "brand": {
+        "slug": "asics",
+        "name": "Asics"
+      },
+      "model": "Metafuji Trail 2",
+      "terrain": "trail",
+      "weightG": 255,
+      "weightRef": "la pàgina no en diu la talla",
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": 5,
+      "lugDepthMm": null,
+      "plate": "carbon",
+      "midsole": "FF LEAP i FF BLAST PLUS",
+      "outsole": "ASICSGRIP",
+      "url": "https://www.asics.com/es/es-es/metafuji-trail-2/p/1013A178-750.html",
+      "note": null,
+      "accessed": "2026-11-26"
+    },
+    {
+      "slug": "blazeblast",
+      "brand": {
+        "slug": "asics",
+        "name": "Asics"
+      },
+      "model": "Blazeblast",
+      "terrain": "trail",
+      "weightG": 252,
+      "weightRef": "la pàgina no en diu la talla",
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": 8,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": "FF BLAST MAX",
+      "outsole": "ASICSGRIP",
+      "url": "https://www.asics.com/es/es-es/blazeblast/p/1011C276-001.html",
+      "note": null,
+      "accessed": "2026-11-26"
+    },
+    {
+      "slug": "gel-venture-11",
+      "brand": {
+        "slug": "asics",
+        "name": "Asics"
+      },
+      "model": "Gel-Venture 11",
+      "terrain": "trail",
+      "weightG": 326,
+      "weightRef": "la pàgina no en diu la talla",
+      "stackHeelMm": null,
+      "stackForefootMm": null,
+      "dropMm": 10,
+      "lugDepthMm": null,
+      "plate": null,
+      "midsole": "AMPLIFOAM PLUS",
+      "outsole": null,
+      "url": "https://www.asics.com/es/es-es/gel-venture-%C2%A011/p/1011C160-003.html",
+      "note": null,
+      "accessed": "2026-11-26"
+    },
+    {
       "slug": "ghost-18",
       "brand": {
         "slug": "brooks",

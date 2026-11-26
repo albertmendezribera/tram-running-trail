@@ -15,7 +15,7 @@ export interface Props {
   specs?: ShoeSpecs | null | undefined;
   /** The drop, when it is known apart from the heights: a maker that states it and not its stacks. Otherwise it is the difference of the heights. */
   dropMm?: number | null | undefined;
-  /** A few words under its name: why it is in this list, where a list is made by a rule. */
+  /** A few words under its name: why it is in this list, where a list is made by a rule. Given empty, the line keeps its place for a script to write in (`data-row-note`). */
   note?: string | undefined;
   locale?: Locale;
 }
@@ -32,7 +32,7 @@ const BOX = { width: 300, height: 70 };
   <span class="what">
     <span class="brand" data-type="text-sm">{brand}</span>
     <span class="model" data-type="display-sm">{model}</span>
-    {note && <span class="note" data-type="text-sm">{note}</span>}
+    {note !== undefined && <span class="note" data-type="text-sm" data-row-note>{note}</span>}
   </span>
   <span class="tag"><TerrainTag terrain={terrain} locale={locale} /></span>
   <span class="figures">
@@ -91,6 +91,10 @@ const BOX = { width: 300, height: 70 };
 
   .note {
     margin-block-start: var(--tram-sys-space-1);
+  }
+
+  .note:empty {
+    display: none;
   }
 
   .tag {

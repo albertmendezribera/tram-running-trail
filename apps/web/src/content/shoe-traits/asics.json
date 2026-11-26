@@ -1,0 +1,149 @@
+{
+  "maker": "asics",
+  "accessed": "2026-11-26",
+  "method": "browser",
+  "shoes": {
+    "novablast-6": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "long"
+      ],
+      "useSaid": "Objetivo: Correr más lejos",
+      "distanceSaid": null,
+      "note": "L’ús surt del camp «Objetivo» de la fitxa; la descripció només parla d’«entrenamiento»."
+    },
+    "metaspeed-sky-tokyo": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "race",
+        "tempo"
+      ],
+      "useSaid": "nuestro producto de competición por excelencia … Objetivo: Correr más rápido",
+      "distanceSaid": "superar la barrera de los 30 km",
+      "note": null
+    },
+    "gel-kayano-33": {
+      "support": null,
+      "supportSaid": "Neutra … Neutral / Pronación",
+      "use": [
+        "long"
+      ],
+      "useSaid": "Objetivo: Correr más lejos",
+      "distanceSaid": null,
+      "note": "La fitxa diu «Soporte: Neutra» i alhora «Diseñado para Neutral / Pronación» i FLUIDSUPPORT com a «tecnología de sujeción»; contradictori, no es registra el suport."
+    },
+    "superblast-3": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "tempo",
+        "daily"
+      ],
+      "useSaid": "Objetivo: Correr más rápido … muy práctica para correr todos los días",
+      "distanceSaid": null,
+      "note": null
+    },
+    "megablast": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "long"
+      ],
+      "useSaid": "Objetivo: Correr más lejos",
+      "distanceSaid": null,
+      "note": "L’ús surt del camp «Objetivo» de la fitxa."
+    },
+    "gel-nimbus-28": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "long"
+      ],
+      "useSaid": "para que correr largas distancias resulte más cómodo",
+      "distanceSaid": "largas distancias",
+      "note": null
+    },
+    "trabuco-14": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "long"
+      ],
+      "useSaid": "mayor comodidad en las largas carreras de trail",
+      "distanceSaid": null,
+      "note": null
+    },
+    "trabuco-max-5": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "long"
+      ],
+      "useSaid": "Objetivo: Correr más lejos",
+      "distanceSaid": null,
+      "note": "L’ús surt del camp «Objetivo» de la fitxa."
+    },
+    "gel-trabuco-terra-3": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "fuji-lite-7": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "long"
+      ],
+      "useSaid": "Objetivo: Correr más lejos",
+      "distanceSaid": null,
+      "note": "L’ús surt del camp «Objetivo» de la fitxa; la descripció parla d’«ir rápido en terrenos de trail exigentes»."
+    },
+    "fujispeed-4": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "tempo"
+      ],
+      "useSaid": "recorrer los senderos a la máxima velocidad … Objetivo: Correr más rápido",
+      "distanceSaid": null,
+      "note": null
+    },
+    "metafuji-trail-2": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "race",
+        "tempo",
+        "ultra"
+      ],
+      "useSaid": "Diseñada para ultracorredores que se niegan a bajar el ritmo",
+      "distanceSaid": null,
+      "note": "La fitxa també diu «Objetivo: Correr más rápido» i «la velocidad del día de la carrera durante los entrenamientos y la competición»."
+    },
+    "blazeblast": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "long"
+      ],
+      "useSaid": "Objetivo: Correr más lejos",
+      "distanceSaid": null,
+      "note": "L’ús surt del camp «Objetivo» de la fitxa."
+    },
+    "gel-venture-11": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "long"
+      ],
+      "useSaid": "Objetivo: Correr más lejos",
+      "distanceSaid": null,
+      "note": "L’ús surt del camp «Objetivo» de la fitxa; la descripció parla de «comodidad en su uso diario»."
+    }
+  }
+}

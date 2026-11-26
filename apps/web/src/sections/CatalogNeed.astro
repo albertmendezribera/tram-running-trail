@@ -1,15 +1,15 @@
 ---
 import { formatDate } from '@tram/formats';
-import ShoeRow from '@tram/design-system/patterns/ShoeRow.astro';
 import Band from '@tram/design-system/primitives/Band.astro';
 import Heading from '@tram/design-system/primitives/Heading.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
-import { CATALOG_ACCESSED, CATALOG_NOTICE, catalogId, catalogPath, drawable } from '../content/shoe-catalog';
+import { CATALOG_ACCESSED, CATALOG_NOTICE } from '../content/shoe-catalog';
 import type { Need } from '../content/shoe-needs';
 import Site from '../layouts/Site.astro';
 import CatalogFilter from './CatalogFilter.astro';
 import CatalogNeeds from './CatalogNeeds.astro';
+import CatalogRows from './CatalogRows.astro';
 
 export interface Props {
   need: Need;
@@ -41,25 +41,8 @@ const lead = `${need.shoes.length} models de ${makers} ${makers === 1 ? 'marca' 
   <Band tone="plain" title="Els models">
     <div class="list" data-catalog>
       <Stack gap={7}>
-        <CatalogFilter shoes={need.shoes} />
-        <div data-catalog-list>
-          <Stack gap={7}>
-            {need.groups.map((group) => (
-              <section data-maker={group.title}>
-                <Stack gap={3}>
-                  <Heading level={3} size="sm">{`${group.title} · ${group.entries.length}`}</Heading>
-                  <Stack gap={0} as="ul">
-                    {group.entries.map(({ shoe, reason }) => (
-                      <li data-shoe={catalogId(shoe)} data-brand={shoe.brand.slug} data-terrain={shoe.terrain}>
-                        <ShoeRow href={catalogPath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.weightG} specs={drawable(shoe)} dropMm={shoe.dropMm} note={reason ?? undefined} />
-                      </li>
-                    ))}
-                  </Stack>
-                </Stack>
-              </section>
-            ))}
-          </Stack>
-        </div>
+        <CatalogFilter shoes={need.shoes} grouped="L’ordre de la llista" />
+        <CatalogRows groups={need.groups} />
       </Stack>
     </div>
   </Band>

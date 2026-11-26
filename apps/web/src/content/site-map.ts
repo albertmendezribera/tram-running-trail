@@ -44,7 +44,12 @@ export function siteMap(): SiteSection[] {
           {
             title: 'Sabatilles',
             href: '/ca/sabatilles/',
-            links: [{ href: '/ca/sabatilles/', label: 'Catàleg' }, ...needs().map((need) => ({ href: needPath(need), label: need.title })), ...(catalogShoes().length ? [{ href: '/ca/comparar/', label: 'Comparador' }] : [])],
+            // The needs by how a shoe is made; those by what its maker says it is for are a step further, from the catalogue.
+            links: [
+              { href: '/ca/sabatilles/', label: 'Catàleg' },
+              ...(catalogShoes().length ? [{ href: '/ca/sabatilles/semblants/', label: 'Semblants a la teva' }, { href: '/ca/comparar/', label: 'Comparador' }] : []),
+              ...needs().filter((need) => need.kind === 'shape').map((need) => ({ href: needPath(need), label: need.title })),
+            ],
           },
         ]
       : []),

@@ -1,17 +1,18 @@
 ---
-import Fold from '@tram/design-system/interactive/Fold.astro';
 import ShoeRow from '@tram/design-system/patterns/ShoeRow.astro';
 import Button from '@tram/design-system/primitives/Button.astro';
 import Heading from '@tram/design-system/primitives/Heading.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import Band from '@tram/design-system/primitives/Band.astro';
-import { catalogId, catalogPath, catalogShoes, drawable } from '../../../content/shoe-catalog';
+import { catalogShoes } from '../../../content/shoe-catalog';
 import { pairSlug, SHOE_NOTICE, shoeName, shoePath, visiblePairs, visibleShoes } from '../../../content/shoes';
 import Site from '../../../layouts/Site.astro';
+import CatalogAlike from '../../../sections/CatalogAlike.astro';
 import CatalogFilter from '../../../sections/CatalogFilter.astro';
 import CatalogMaps from '../../../sections/CatalogMaps.astro';
 import CatalogNeeds from '../../../sections/CatalogNeeds.astro';
+import CatalogRows from '../../../sections/CatalogRows.astro';
 
 const shoes = visibleShoes();
 const pairs = visiblePairs();
@@ -52,25 +53,12 @@ const makers = [...new Set(catalog.map((shoe) => shoe.brand.name))].sort((a, b) 
             <Text measure>
               {`${catalog.length} models de ${makers.length} marques, cadascun amb el que la seva marca declara al seu web: pes, alçades, drop i tacs. No són mesures nostres ni de cap laboratori, i el que una marca no diu queda sense dada. Primer el mapa; a sota, la llista marca a marca, on la sola es dibuixa només quan la marca declara les dues alçades.`}
             </Text>
+            <CatalogAlike shoes={catalog} />
             <CatalogNeeds />
             <div><Button variant="secondary" href="/ca/comparar/">Compara dos models</Button></div>
             <CatalogFilter shoes={catalog} />
             <CatalogMaps shoes={catalog} />
-            <div data-catalog-list>
-              <Stack gap={7}>
-                {makers.map((maker) => (
-                  <Fold data-maker={maker.name} title={maker.name} count={maker.shoes.length} level={3} folded="narrow">
-                    <Stack gap={0} as="ul">
-                      {maker.shoes.map((shoe) => (
-                        <li data-shoe={catalogId(shoe)} data-brand={shoe.brand.slug} data-terrain={shoe.terrain}>
-                          <ShoeRow href={catalogPath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.weightG} specs={drawable(shoe)} dropMm={shoe.dropMm} />
-                        </li>
-                      ))}
-                    </Stack>
-                  </Fold>
-                ))}
-              </Stack>
-            </div>
+            <CatalogRows groups={makers.map((maker) => ({ title: maker.name, entries: maker.shoes.map((shoe) => ({ shoe })) }))} fold />
           </Stack>
         </div>
       </Band>

@@ -15,28 +15,47 @@ export interface Props {
   value: string;
   /** Smaller, for a control laid over other content, as on a map. */
   compact?: boolean;
+  /** Writes the legend over the control, as a field has its label: for a form where two controls would otherwise look alike. */
+  labelled?: boolean;
 }
 
 // Native radios: arrow keys, focus and form state come from the browser, and
 // the `change` event works with any island framework (E10 is still open).
-const { name, legend, options, value, compact = false } = Astro.props;
+const { name, legend, options, value, compact = false, labelled = false } = Astro.props;
+const Wrap = labelled ? 'div' : Fragment;
 ---
 
-<fieldset class="control" data-compact={compact ? '' : undefined}>
-  <legend class="legend">{legend}</legend>
-  {
-    options.map((o) => (
-      <label class="option">
-        <input class="input" type="radio" name={name} value={o.value} checked={o.value === value} disabled={o.disabled} />
-        <span class="face" data-type={compact ? 'text-xs' : 'text-sm'}>
-          {o.label}
-        </span>
-      </label>
-    ))
-  }
-</fieldset>
+<Wrap {...(labelled ? { class: 'field' } : {})}>
+  {/* The legend names the group to a screen reader; this is the same words for the eye. */}
+  {labelled && <span class="label" data-type="text-xs" aria-hidden="true">{legend}</span>}
+  <fieldset class="control" data-compact={compact ? '' : undefined}>
+    <legend class="legend">{legend}</legend>
+    {
+      options.map((o) => (
+        <label class="option">
+          <input class="input" type="radio" name={name} value={o.value} checked={o.value === value} disabled={o.disabled} />
+          <span class="face" data-type={compact ? 'text-xs' : 'text-sm'}>
+            {o.label}
+          </span>
+        </label>
+      ))
+    }
+  </fieldset>
+</Wrap>
 
 <style>
+  .field {
+    display: grid;
+    justify-items: start;
+    gap: var(--tram-sys-space-1);
+    min-inline-size: 0;
+  }
+
+  .label {
+    color: var(--tram-sys-text-muted);
+    text-transform: uppercase;
+  }
+
   .control {
     display: inline-flex;
     flex-wrap: wrap;

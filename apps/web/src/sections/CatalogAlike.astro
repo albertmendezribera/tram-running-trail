@@ -1,0 +1,59 @@
+---
+import SegmentedControl from '@tram/design-system/interactive/SegmentedControl.astro';
+import Select from '@tram/design-system/interactive/Select.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { type CatalogShoe, catalogId, catalogName } from '../content/shoe-catalog';
+
+export interface Props {
+  shoes: readonly CatalogShoe[];
+  /** The level of its title. */
+  level?: 2 | 3;
+  /** Where somebody whose shoe is not in the catalogue is sent: the page to write its figures on, or the place of it on this page. */
+  byHand?: string;
+  /** On the page that is all about this, the title and the words over it are the page's own: only the form is drawn. */
+  bare?: boolean;
+}
+
+const { shoes, level = 3, byHand = '/ca/sabatilles/semblants/#a-ma', bare = false } = Astro.props;
+const sorted = [...shoes].sort((a, b) => catalogName(a).localeCompare(catalogName(b), 'ca'));
+const options = [{ value: '', label: 'Tria la teva' }, ...sorted.map((shoe) => ({ value: catalogId(shoe), label: catalogName(shoe) }))];
+const grounds = [
+  { value: 'road', label: 'Asfalt' },
+  { value: 'trail', label: 'Muntanya' },
+];
+---
+
+<!--
+  The way into the catalogue for whoever already runs in a shoe and is happy with it: «which ones are
+  like mine, for the road?». The answer is on the page of the shoe itself (its «Semblants»), so this
+  only leads there: the shoe chosen, and the ground asked for in the address.
+-->
+<form class="alike" id="semblant" data-alike-finder>
+  <Stack gap={3}>
+    <Heading level={level} size="sm">{bare ? 'Si és al catàleg, tria-la' : 'Ja en tens una que et va bé?'}</Heading>
+    {!bare && <Text measure>Tria-la i et diem quines s’hi assemblen, d’asfalt o de muntanya: per canviar de model sense canviar de sensacions, o per trobar la parella de les teves de muntanya per a l’asfalt.</Text>}
+    <Cluster gap={4} align="end">
+      <Select name="meva" label="La teva sabatilla" options={options} value="" />
+      <SegmentedControl name="per" legend="En busco una per a" options={grounds} value="road" labelled />
+      <Button type="submit" variant="primary">Mostra les semblants</Button>
+    </Cluster>
+    <Text size="sm" tone="muted"><span data-alike-status role="status" /></Text>
+    <div data-alike-by-hand><Link href={byHand}>La meva no hi és: en poso les xifres</Link></div>
+  </Stack>
+</form>
+
+<script>
+  import '../islands/similar-finder.ts';
+</script>
+
+<style>
+  /* Without the script the form leads nowhere: it keeps its place, so nothing moves, and is not shown. */
+  .alike:not([data-ready]) {
+    visibility: hidden;
+  }
+</style>

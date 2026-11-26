@@ -1,0 +1,195 @@
+{
+  "maker": "on",
+  "accessed": "2026-11-26",
+  "method": "plain",
+  "shoes": {
+    "cloudmonster-3": {
+      "support": "neutral",
+      "supportSaid": "Support: Neutral",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Daily Trainer / Everyday Runs",
+      "distanceSaid": null,
+      "note": null
+    },
+    "cloudboom-max": {
+      "support": "stability",
+      "supportSaid": "Support: Stable",
+      "use": [
+        "race",
+        "long"
+      ],
+      "useSaid": "Race Shoe / Made for marathon training.",
+      "distanceSaid": "Half Marathon / Marathon",
+      "note": null
+    },
+    "cloudboom-strike": {
+      "support": "neutral",
+      "supportSaid": "Support: Neutral",
+      "use": [
+        "race"
+      ],
+      "useSaid": "Built for marathons. Race-day ready.",
+      "distanceSaid": "Half Marathon / Marathon",
+      "note": null
+    },
+    "cloudboom-volt": {
+      "support": "neutral",
+      "supportSaid": "Support: Neutral",
+      "use": [
+        "race"
+      ],
+      "useSaid": "Made for race day.",
+      "distanceSaid": "5-10K / Half Marathon",
+      "note": null
+    },
+    "cloudflow-5": {
+      "support": "neutral",
+      "supportSaid": "Support: Neutral",
+      "use": [
+        "tempo"
+      ],
+      "useSaid": "Your super trainer for tempo runs and intervals.",
+      "distanceSaid": null,
+      "note": null
+    },
+    "cloudflyer-5": {
+      "support": "stability",
+      "supportSaid": "Support: Stable",
+      "use": [
+        "daily",
+        "long"
+      ],
+      "useSaid": "Daily Trainer / Everyday Runs / ideal for longer efforts, recovery runs",
+      "distanceSaid": null,
+      "note": null
+    },
+    "cloudmonster-3-hyper": {
+      "support": "neutral",
+      "supportSaid": "Support: Neutral",
+      "use": [
+        "tempo",
+        "long"
+      ],
+      "useSaid": "A super trainer for long runs and tempo runs.",
+      "distanceSaid": null,
+      "note": null
+    },
+    "cloudrunner-3": {
+      "support": "stability",
+      "supportSaid": "Support: Stable",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "The evolution of your favourite everyday running shoe.",
+      "distanceSaid": null,
+      "note": null
+    },
+    "cloudrunner-3-max": {
+      "support": "stability",
+      "supportSaid": "Support: Stable",
+      "use": [
+        "daily",
+        "long"
+      ],
+      "useSaid": "Built for short and long distances – and for everyday runners",
+      "distanceSaid": "short and long distances",
+      "note": null
+    },
+    "cloudsurfer-2": {
+      "support": "neutral",
+      "supportSaid": "Support: Neutral",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Built for everyday running",
+      "distanceSaid": null,
+      "note": null
+    },
+    "cloudsurfer-max": {
+      "support": "neutral",
+      "supportSaid": "Support: Neutral",
+      "use": [
+        "daily",
+        "long"
+      ],
+      "useSaid": "Run easy, run long / Long Runs / Everyday Runs",
+      "distanceSaid": "Long-distance runs",
+      "note": null
+    },
+    "cloudsurfer-next": {
+      "support": "neutral",
+      "supportSaid": "Support: Neutral",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Made for everyday runs.",
+      "distanceSaid": null,
+      "note": null
+    },
+    "cloudsurfer-trail-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Everyday Runs / Ideal for short trail runs on non-technical terrains",
+      "distanceSaid": "Short Distance",
+      "note": null
+    },
+    "cloudswift-4": {
+      "support": "neutral",
+      "supportSaid": "Support: Neutral",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "An everyday running shoe",
+      "distanceSaid": null,
+      "note": null
+    },
+    "cloudultra-3": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race",
+        "daily",
+        "ultra"
+      ],
+      "useSaid": "Built for ultra-distance races on technical terrain / Everyday Runs",
+      "distanceSaid": "Ultra Distance",
+      "note": null
+    },
+    "cloudultra-peak": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "Race Day / Designed to perform in shorter, faster racing conditions",
+      "distanceSaid": "Mid Distance / steep, short, technical courses",
+      "note": "L'etiqueta de distància diu «Mid Distance» i la descripció parla de recorreguts «short»."
+    },
+    "cloudultra-pro": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race",
+        "ultra"
+      ],
+      "useSaid": "Built for ultra distance racing on all kinds of terrain.",
+      "distanceSaid": "Ultra Distance",
+      "note": null
+    },
+    "cloudvista-3": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "made for shorter, everyday trail runs on any terrain",
+      "distanceSaid": "Mid Distance / distances up to 40km",
+      "note": null
+    }
+  }
+}

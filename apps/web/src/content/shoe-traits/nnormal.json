@@ -1,0 +1,56 @@
+{
+  "maker": "nnormal",
+  "accessed": "2026-11-26",
+  "method": "plain",
+  "shoes": {
+    "cadi": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily",
+        "long"
+      ],
+      "useSaid": "pensada per a tirades llargues, terrenys fàcils i entrenaments diaris",
+      "distanceSaid": "distàncies llargues",
+      "note": null
+    },
+    "kboix": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La pàgina la presenta com a sabatilla multiesport modular; no diu cap ús de córrer concret."
+    },
+    "kjerag-02": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "tempo"
+      ],
+      "useSaid": "dissenyada per a la velocitat. Pensada per córrer ràpid per senders",
+      "distanceSaid": null,
+      "note": null
+    },
+    "kjerag-brut": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "idònia per aconseguir el màxim rendiment en curses",
+      "distanceSaid": null,
+      "note": null
+    },
+    "tomir-02": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "long"
+      ],
+      "useSaid": "la sabatilla per a les teves llargues rutes tècniques de trail",
+      "distanceSaid": null,
+      "note": "La pàgina diu «estable» i «estabilitat» parlant del terreny, no com a tipus de suport; no s'ha comptat."
+    }
+  }
+}

@@ -4,6 +4,12 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Sabatilles semblants i rànquings del catàleg.
+
+- `SegmentedControl`: propietat nova `labelled`, que escriu la llegenda sobre el control com l'etiqueta d'un camp. És per a un formulari amb dos controls d'opcions iguals («La teva és de», «En busco una per a»). Sense `labelled`, el control és com era. Al filtre del catàleg, «Terreny» ara porta l'etiqueta escrita, com els desplegables del costat (abans no en tenia).
+- `ShoeRow`: `note` buida (`note=""`) deixa la línia a punt perquè un script hi escrigui (`data-row-note`), i no es veu mentre és buida. És per a una llista que es reordena al navegador: el rànquing hi escriu la xifra per la qual ordena, i «Semblants», per què s'assembla. Amb text o sense `note`, la fila és com era.
+- `TextField`: propietat nova `inputmode` (`decimal` o `numeric`), el teclat que obre un mòbil per a una xifra. Sense, és com era.
+
 Llistes llargues al mòbil.
 
 - `Fold` (interactiu nou, amb fitxa): una part d'una llista que es pot plegar, amb el títol com a botó i el nombre del que hi ha a dins. Pot començar plegada només al mòbil (`narrow`) o sempre. Ho decideixen els estils, sense salt en carregar, i sense JavaScript res no es plega. No hi ha «abans»: és nou.

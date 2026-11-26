@@ -1,0 +1,117 @@
+{
+  "maker": "mizuno",
+  "accessed": "2026-11-26",
+  "method": "plain",
+  "shoes": {
+    "wave-rider-30": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "The legacy Mizuno daily trainer",
+      "distanceSaid": null,
+      "note": null
+    },
+    "wave-sky-9": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "for easy and recovery running",
+      "distanceSaid": null,
+      "note": null
+    },
+    "wave-inspire-22": {
+      "support": "stability",
+      "supportSaid": "Designed for runners with overpronation",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "For easy running and walking with softness and stability",
+      "distanceSaid": null,
+      "note": null
+    },
+    "wave-rebellion-pro-3": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "ideal gait from the start to finish of races",
+      "distanceSaid": "sub 2.5 hour full-marathon",
+      "note": null
+    },
+    "neo-vista-3": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "tempo",
+        "daily",
+        "long"
+      ],
+      "useSaid": "Long run unicorn. Uptempo warrior / Performance engineering for daily training",
+      "distanceSaid": null,
+      "note": null
+    },
+    "neo-zen-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "tempo",
+        "daily"
+      ],
+      "useSaid": "high-performance option for versatile uses from jogging to faster-paced runs",
+      "distanceSaid": null,
+      "note": null
+    },
+    "neo-cosmo-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "hyperwarp-elite-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "a new generation of smooth speed racing shoes",
+      "distanceSaid": null,
+      "note": null
+    },
+    "hyperwarp-pure-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "a new generation of smooth speed racing shoes",
+      "distanceSaid": null,
+      "note": null
+    },
+    "hyperwarp-pro": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race",
+        "tempo"
+      ],
+      "useSaid": "For your faster training and road racing.",
+      "distanceSaid": "Ideal for 5km - 42km road racing and training",
+      "note": null
+    },
+    "neo-daichi-10": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    }
+  }
+}

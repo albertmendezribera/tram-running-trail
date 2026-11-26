@@ -1,0 +1,99 @@
+---
+import Fold from '@tram/design-system/interactive/Fold.astro';
+import ShoeRow from '@tram/design-system/patterns/ShoeRow.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import { type CatalogShoe, catalogId, catalogPath, drawable } from '../content/shoe-catalog';
+import { traitsOf } from '../content/shoe-traits';
+
+export interface Group {
+  /** Over its rows: the maker, or what the rows share. */
+  title: string;
+  entries: readonly { shoe: CatalogShoe; reason?: string | null }[];
+}
+
+export interface Props {
+  groups: readonly Group[];
+  /** Each group can be shut, and starts shut on a phone: for a list as long as the whole catalogue. */
+  fold?: boolean;
+}
+
+const { groups, fold = false } = Astro.props;
+---
+
+<!--
+  The rows of a list of the catalogue, in the groups the page gives them. Each row carries what the
+  filters and the orders of `CatalogFilter` read; asked for an order, the island moves the rows into
+  the one numbered list at the top, and back to their groups when the order is taken away.
+-->
+<div data-catalog-list>
+  <ol class="ranked" data-ranked hidden></ol>
+  <div data-grouped>
+    <Stack gap={7}>
+      {groups.map((group) => {
+        const rows = (
+          <Stack gap={0} as="ul">
+            {group.entries.map(({ shoe, reason }) => {
+              const traits = traitsOf(shoe);
+              return (
+                <li
+                  class="row"
+                  data-shoe={catalogId(shoe)}
+                  data-brand={shoe.brand.slug}
+                  data-terrain={shoe.terrain}
+                  data-weight={shoe.weightG}
+                  data-heel={shoe.stackHeelMm}
+                  data-forefoot={shoe.stackForefootMm}
+                  data-plate={shoe.plate}
+                  data-drop={shoe.dropMm}
+                  data-lugs={shoe.lugDepthMm}
+                  data-support={traits?.support}
+                  data-use={traits?.use.join(' ') || undefined}
+                  data-reason={reason ?? undefined}
+                >
+                  <span class="rank" data-rank data-type="data-lg" data-numeric="tabular" hidden />
+                  <ShoeRow href={catalogPath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.weightG} specs={drawable(shoe)} dropMm={shoe.dropMm} note={reason ?? ''} />
+                </li>
+              );
+            })}
+          </Stack>
+        );
+        return fold ? (
+          <Fold data-maker={group.title} title={group.title} count={group.entries.length} level={3} folded="narrow">{rows}</Fold>
+        ) : (
+          <section data-maker={group.title}>
+            <Stack gap={3}>
+              <Heading level={3} size="sm">{`${group.title} · ${group.entries.length}`}</Heading>
+              {rows}
+            </Stack>
+          </section>
+        );
+      })}
+    </Stack>
+  </div>
+</div>
+
+<style>
+  .ranked {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* In the numbered list, the place of a shoe stands before its row. */
+  .ranked > .row {
+    display: grid;
+    grid-template-columns: var(--tram-sys-space-8) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .ranked > .row[hidden] {
+    display: none;
+  }
+
+  .rank {
+    padding-block-start: var(--tram-sys-space-5);
+    color: var(--tram-sys-text-muted);
+  }
+</style>

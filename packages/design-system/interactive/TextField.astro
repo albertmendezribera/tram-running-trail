@@ -8,15 +8,17 @@ export interface Props {
   value?: string;
   /** The most letters it takes. */
   maxlength?: number;
+  /** For a figure: the keyboard a phone opens, with or without the decimal mark. The field still takes text, so «8,5» can be written. */
+  inputmode?: 'decimal' | 'numeric';
 }
 
 // The browser's own text field, for a few words: a name, a place.
-const { name, label, value, maxlength } = Astro.props;
+const { name, label, value, maxlength, inputmode } = Astro.props;
 ---
 
 <label class="field">
   <span class="label" data-type="text-xs">{label}</span>
-  <input class="input" type="text" name={name} value={value} maxlength={maxlength} data-type="text-sm" autocomplete="off" />
+  <input class="input" type="text" name={name} value={value} maxlength={maxlength} inputmode={inputmode} data-type="text-sm" autocomplete="off" />
 </label>
 
 <style>

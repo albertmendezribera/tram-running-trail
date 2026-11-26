@@ -1,0 +1,134 @@
+{
+  "maker": "topo-athletic",
+  "accessed": "2026-11-26",
+  "method": "plain",
+  "shoes": {
+    "atmos-2": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Best For: Daily Running, Walking",
+      "distanceSaid": null,
+      "note": null
+    },
+    "aura-2": {
+      "support": "stability",
+      "supportSaid": "Stability",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Best For: Daily Running, Walking",
+      "distanceSaid": null,
+      "note": null
+    },
+    "cyclone-3": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "race",
+        "tempo",
+        "daily"
+      ],
+      "useSaid": "performance trainer for every day running, workouts, races and more",
+      "distanceSaid": null,
+      "note": null
+    },
+    "fli-lyte-6": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "tempo",
+        "daily"
+      ],
+      "useSaid": "Best For: Gym & Training, Tempo Runs, Daily Running",
+      "distanceSaid": null,
+      "note": null
+    },
+    "mtn-racer-4": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "race",
+        "daily"
+      ],
+      "useSaid": "A fan favorite for race day and daily training",
+      "distanceSaid": null,
+      "note": null
+    },
+    "phantom-4": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Best For: Daily Running, Walking",
+      "distanceSaid": null,
+      "note": null
+    },
+    "pursuit-3": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "specter-2": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "race",
+        "tempo"
+      ],
+      "useSaid": "Best For: Tempo Runs, Race",
+      "distanceSaid": null,
+      "note": null
+    },
+    "specter-elite": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "race"
+      ],
+      "useSaid": "Best For: Race",
+      "distanceSaid": null,
+      "note": null
+    },
+    "terraventure-5": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "ultrafly-6": {
+      "support": "stability",
+      "supportSaid": "Stability",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Best For: Daily Running, Walking",
+      "distanceSaid": null,
+      "note": null
+    },
+    "ultraventure-4": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "vista": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    }
+  }
+}

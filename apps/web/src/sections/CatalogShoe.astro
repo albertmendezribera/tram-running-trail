@@ -15,8 +15,10 @@ import { CATALOG_NOTICE, type CatalogShoe, catalogId, catalogName, catalogPath, 
 import { fitAccessed, fitOf } from '../content/shoe-fit';
 import { needPath, needsOf } from '../content/shoe-needs';
 import { catalogPhoto } from '../content/shoe-photos';
+import { SUPPORT_LABEL, traitsAccessed, traitsOf, USE_LABEL } from '../content/shoe-traits';
 import Site from '../layouts/Site.astro';
 import CatalogShoeViewer from './CatalogShoeViewer.astro';
+import CatalogSimilar from './CatalogSimilar.astro';
 
 export interface Props {
   shoe: CatalogShoe;
@@ -57,6 +59,17 @@ const fitFacts = fit
       { label: 'La puntera, segons la marca', value: fit.toeBox ? `«${fit.toeBox}»` : fit.widths === null ? null : 'No en destaca l’amplada' },
     ]
   : [];
+// What it is for and what support it gives, read apart: the maker's answer, with its own words beside it.
+const traits = traitsOf(shoe);
+const traitsDay = traitsAccessed(shoe);
+const quoted = (answer: string | null, said: string | null): string | null => (answer === null ? null : said ? `${answer} («${said}»)` : answer);
+const traitFacts = traits
+  ? [
+      { label: 'Trepitjada', value: quoted(traits.support ? SUPPORT_LABEL[traits.support] : null, traits.supportSaid) },
+      { label: 'Per a què', value: quoted(traits.use.length ? several.format(traits.use.map((use) => USE_LABEL[use])) : null, traits.useSaid) },
+      ...(traits.distanceSaid ? [{ label: 'Distància, segons la marca', value: `«${traits.distanceSaid}»` }] : []),
+    ]
+  : [];
 // The lists by need it is on: from a shoe to the others that answer the same.
 const answers = needsOf(shoe);
 // The others of the same maker, to go on from one to the next.
@@ -79,6 +92,7 @@ const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.bran
       <TerrainTag terrain={shoe.terrain} />
       {answers.map((need) => <span data-answers={need.slug}><Link href={needPath(need)}>{need.label}</Link></span>)}
     </Cluster>
+    <div data-to-similar><Link href="#semblants" variant="standalone">Quines s’hi assemblen?</Link></div>
     <Text size="lg" measure>{`${KIND[shoe.terrain]}. Les xifres són les que ${shoe.brand.name} declara al seu web: no les hem mesurat, i el que la marca no diu queda sense dada.`}</Text>
     <StatBlock stats={stats} lead />
   </Stack>
@@ -128,6 +142,19 @@ const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.bran
             </div>
           )
         }
+        {
+          traits && traitsDay && (
+            <div data-traits>
+              <Stack gap={3}>
+                <Facts facts={traitFacts} />
+                {traits.note && <Text size="sm" measure>{traits.note}</Text>}
+                <Text size="sm" tone="muted" measure>
+                  {`La trepitjada i l’ús són el que en diu ${shoe.brand.name} al seu web, consultat el ${formatDate(traitsDay, 'ca')}, amb les seves paraules entre cometes. No diuen quina et convé a tu.`}
+                </Text>
+              </Stack>
+            </div>
+          )
+        }
         <Text size="sm" tone="muted" measure>
           {`${known} de ${facts.length} dades, totes de la pàgina del model al web de ${shoe.brand.name}, consultada el ${formatDate(shoe.accessed, 'ca')}.`}
         </Text>
@@ -136,6 +163,8 @@ const siblings = catalogShoes().filter((other) => other.brand.slug === shoe.bran
       </Stack>
     </Panel>
   </Band>
+
+  <CatalogSimilar shoe={shoe} />
 
   {
     siblings.length > 0 && (

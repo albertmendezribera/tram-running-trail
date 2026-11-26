@@ -33,6 +33,15 @@ const code = `<SegmentedControl
   </section>
 
   <section class="fiche-block">
+    <h2 data-type="display-sm">Amb l'etiqueta escrita</h2>
+    <div class="fiche-row" data-testid="labelled">
+      <SegmentedControl name="labelled-a" legend="La teva és de" value="trail" options={TERRAIN} labelled />
+      <SegmentedControl name="labelled-b" legend="En busco una per a" value="road" options={TERRAIN} labelled />
+    </div>
+    <p class="fiche-note">`labelled` escriu la llegenda sobre el control, com l'etiqueta d'un camp: per a un formulari on dos controls tindrien les mateixes opcions i no es distingirien. Sense, la llegenda només la diu el lector de pantalla.</p>
+  </section>
+
+  <section class="fiche-block">
     <h2 data-type="display-sm">Desactivat</h2>
     <div class="fiche-row" data-testid="disabled">
       <SegmentedControl

@@ -1,13 +1,20 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import { needs } from '../../../content/shoe-needs';
+import { catalogShoes } from '../../../content/shoe-catalog';
+import { type Need, needs } from '../../../content/shoe-needs';
+import CatalogAlikeByHand from '../../../sections/CatalogAlikeByHand.astro';
 import CatalogNeed from '../../../sections/CatalogNeed.astro';
 
 // The catalogue by what somebody is looking for: `/ca/sabatilles/amples/`. A page only where the rule
-// finds shoes; the addresses of the shoes themselves are a level deeper (`<marca>/<model>/`).
-export const getStaticPaths = (() => needs().map((need) => ({ params: { cerca: need.slug }, props: { need } }))) satisfies GetStaticPaths;
+// finds shoes; the addresses of the shoes themselves are a level deeper (`<marca>/<model>/`). And
+// `/ca/sabatilles/semblants/`, for a shoe like one's own: there only where there is a catalogue.
+type Kinds = { need?: Need };
+export const getStaticPaths = (() => [
+  ...needs().map((need) => ({ params: { cerca: need.slug }, props: { need } as Kinds })),
+  ...(catalogShoes().length > 0 ? [{ params: { cerca: 'semblants' }, props: {} as Kinds }] : []),
+]) satisfies GetStaticPaths;
 
 const { need } = Astro.props;
 ---
 
-<CatalogNeed need={need} />
+{need ? <CatalogNeed need={need} /> : <CatalogAlikeByHand />}

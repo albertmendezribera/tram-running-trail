@@ -767,7 +767,7 @@ test.describe('Long lists on a phone', () => {
       await expect(open12(page)).toHaveCount(0);
       await expect(makers.first().getByRole('heading')).toHaveText(/^\s*\S.* · \d+\s*$/);
       await expect(page.locator('[data-catalog-list] [data-shoe]:visible')).toHaveCount(0);
-      await page.locator('[data-catalog-filter]').getByLabel('Marca').selectOption('puma');
+      await page.locator('[data-catalog-filter]').locator('select[name="marca"]').selectOption('puma');
       await expect(page.locator('[data-catalog-list] [data-shoe]:visible')).toHaveCount(12);
       await page.locator('[data-catalog-filter]').getByRole('button', { name: 'Treu els filtres' }).click();
       await expect(page.locator('[data-catalog-list] [data-shoe]:visible')).toHaveCount(0);
@@ -975,7 +975,7 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     const kept = page.locator('[data-catalog-list] [data-shoe]:not([hidden])');
     const total = await kept.count();
     await expect(filter.locator('[data-status]')).toHaveText(`${total} models.`);
-    await filter.getByLabel('Marca').selectOption('puma');
+    await filter.locator('select[name="marca"]').selectOption('puma');
     await expect(filter.locator('[data-status]')).toHaveText(`12 de ${total} models.`);
     await expect(rows).toHaveCount(12);
     expect(new Set(await rows.evaluateAll((items) => items.map((item) => item.getAttribute('data-brand'))))).toEqual(new Set(['puma']));
@@ -992,13 +992,13 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     // A link to a filtered catalogue opens filtered.
     await page.reload();
     await expect(rows).toHaveCount(4);
-    await expect(filter.getByLabel('Marca')).toHaveValue('puma');
+    await expect(filter.locator('select[name="marca"]')).toHaveValue('puma');
     await filter.getByRole('button', { name: 'Treu els filtres' }).click();
     await expect(kept).toHaveCount(total);
     expect(new URL(page.url()).search).toBe('');
     // Filters that leave nothing say so.
-    await filter.getByLabel('Marca').selectOption('asics');
-    await filter.getByRole('radio', { name: /Muntanya/ }).check({ force: true });
+    await filter.locator('select[name="marca"]').selectOption('nnormal');
+    await filter.getByRole('radio', { name: /Asfalt/ }).check({ force: true });
     await expect(rows).toHaveCount(0);
     await expect(filter.locator('[data-status]')).toHaveText('Cap model amb aquests filtres.');
     await expect(page.locator('[data-map-view="stack"] [data-map-count]')).toHaveText('0');
@@ -1099,6 +1099,199 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     await open(page, '/ca/sabatilles/nike/streakfly-2/');
     await expect(page.locator('[data-answers="lleugeres"]').getByRole('link', { name: 'Lleugera' })).toHaveAttribute('href', '/ca/sabatilles/lleugeres/');
     await expect(page.locator('[data-answers="tacs-profunds"]')).toHaveCount(0);
+  });
+
+  test('a shoe offers the ones most like it, on its own ground and on the other, each with why', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, '/ca/sabatilles/topo-athletic/cyclone-3/');
+    const similar = page.locator('#semblants');
+    await expect(similar.getByRole('heading', { level: 2, name: 'Semblants' })).toBeVisible();
+    await expect(similar).toContainText('La regla és nostra, i no diu com et quedarà cap sabatilla.');
+    // Its own ground first; the other is in the page and one press away.
+    const road = similar.locator('[data-similar-list="road"]');
+    const trail = similar.locator('[data-similar-list="trail"]');
+    await expect(road).toBeVisible();
+    await expect(trail).toBeHidden();
+    const rows = road.locator('[data-alike]');
+    expect(await rows.count()).toBeGreaterThan(0);
+    expect(await rows.count()).toBeLessThanOrEqual(5);
+    // Each says how alike it is and in what, and none is the shoe itself or of another ground.
+    for (const row of await rows.all()) {
+      await expect(row.locator('[data-row-note]')).toHaveText(/^(Molt semblant|Semblant|Propera): \S/);
+      await expect(row).not.toHaveAttribute('data-alike', 'topo-athletic/cyclone-3');
+      await expect(row.getByRole('link')).toHaveAttribute('href', /^\/ca\/sabatilles\/[a-z0-9-]+\/[a-z0-9-]+\/$/);
+    }
+    await expect(road.getByRole('link', { name: /^Posa-la de costat amb la / })).toHaveAttribute('href', new RegExp(`^/ca/comparar/\\?a=topo-athletic/cyclone-3&b=${await rows.first().getAttribute('data-alike')}$`));
+    await similar.getByRole('radio', { name: /^Muntanya/ }).check({ force: true });
+    await expect(trail).toBeVisible();
+    await expect(road).toBeHidden();
+    await expect(page).toHaveURL(/\?per=trail$/);
+    // Across grounds the page says how a mountain shoe and a road one were compared, with what is usual on each.
+    await expect(trail).toContainText(/es comparen amb el que és habitual a cada un \(a muntanya, \d+\sg i \d+\smm al taló; a l’asfalt, \d+\sg i \d+\smm\)/);
+    expect(new Set(await trail.locator('[data-alike] a').evaluateAll((links) => links.map((link) => link.getAttribute('data-terrain'))))).toEqual(new Set(['trail']));
+    // The address can ask for a ground, and the list of a shoe can be linked to.
+    await open(page, '/ca/sabatilles/nnormal/kjerag-02/?per=road#semblants');
+    await expect(page.locator('[data-similar-list="road"]')).toBeVisible();
+    await expect(page.locator('[data-similar-list="trail"]')).toBeHidden();
+    await expect(page.locator('#semblants').getByRole('radio', { name: /^Asfalt/ })).toBeChecked();
+    // A shoe whose maker states too little is not matched on a guess.
+    await open(page, '/ca/sabatilles/nnormal/kboix/');
+    await expect(page.locator('#semblants [data-similar-none]')).toContainText('declara massa poques xifres');
+    await expect(page.locator('#semblants [data-alike]')).toHaveCount(0);
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('without JavaScript both lists of shoes alike are there to read', async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto('/ca/sabatilles/topo-athletic/cyclone-3/');
+    await expect(page.locator('[data-similar-list="road"]')).toBeVisible();
+    await expect(page.locator('[data-similar-list="trail"]')).toBeVisible();
+    await expect(page.locator('[data-similar-pick]')).toBeHidden();
+    await context.close();
+  });
+
+  test('somebody happy with a shoe is led from the catalogue to the ones like it, on the ground asked for', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.shoes);
+    const finder = page.locator('[data-alike-finder]');
+    await expect(finder.getByRole('heading', { name: 'Ja en tens una que et va bé?' })).toBeVisible();
+    // Nothing chosen: it says what is missing and goes nowhere.
+    await finder.getByRole('button', { name: 'Mostra les semblants' }).click();
+    await expect(finder.locator('[data-alike-status]')).toHaveText('Tria primer la teva sabatilla.');
+    await finder.getByLabel('La teva sabatilla').selectOption('nnormal/kjerag-02');
+    await finder.getByRole('radio', { name: 'Asfalt' }).check({ force: true });
+    await finder.getByRole('button', { name: 'Mostra les semblants' }).click();
+    await expect(page).toHaveURL(/\/ca\/sabatilles\/nnormal\/kjerag-02\/\?per=road#semblants$/);
+    await expect(page.locator('[data-similar-list="road"] [data-alike]').first()).toBeVisible();
+    // A shoe that is not in the catalogue has a way too.
+    await open(page, PAGES.shoes);
+    await expect(page.locator('[data-alike-by-hand]').getByRole('link')).toHaveAttribute('href', '/ca/sabatilles/semblants/#a-ma');
+    // And the home page leads to it.
+    await open(page, PAGES.home);
+    await expect(page.locator('[data-home-shoes]').getByRole('link', { name: 'Troba’n una de semblant a la teva' })).toHaveAttribute('href', '/ca/sabatilles/semblants/');
+  });
+
+  test('a shoe that is not in the catalogue is matched by the figures written, in the browser and with nothing sent', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const asked: string[] = [];
+    await open(page, '/ca/sabatilles/semblants/');
+    page.on('request', (request) => asked.push(request.url()));
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Troba’n una de semblant');
+    const hand = page.locator('[data-alike-hand]');
+    const status = hand.locator('[data-hand-status]');
+    const shown = hand.locator('[data-ranked] > [data-shoe]:not([hidden])');
+    await expect(shown).toHaveCount(0);
+    // One figure is not enough, and a slip is said, not reckoned with.
+    await hand.getByLabel('Drop (mm)').fill('8');
+    await hand.getByRole('button', { name: 'Busca’n de semblants' }).click();
+    await expect(status).toHaveText('Posa’n dues xifres com a mínim: el drop i el pes, per exemple.');
+    await hand.getByLabel('Pes (g)').fill('3000');
+    await hand.getByRole('button', { name: 'Busca’n de semblants' }).click();
+    await expect(status).toHaveText('El pes ha de ser entre 100 i 500.');
+    await expect(shown).toHaveCount(0);
+    // A mountain shoe of 300 g and 8 mm of drop, asked for the road: road shoes only, the most alike first, each with why.
+    await hand.getByLabel('Pes (g)').fill('300');
+    await hand.getByLabel('Alçada al taló (mm)').fill('36,5');
+    await hand.getByRole('button', { name: 'Busca’n de semblants' }).click();
+    await expect(status).toHaveText(/^Els \d models d’asfalt que més s’hi assemblen, el més semblant primer\.$/);
+    const total = await shown.count();
+    expect(total).toBeGreaterThan(1);
+    expect(total).toBeLessThanOrEqual(8);
+    expect(new Set(await shown.evaluateAll((rows) => rows.map((row) => row.getAttribute('data-terrain'))))).toEqual(new Set(['road']));
+    expect(await shown.evaluateAll((rows) => rows.map((row) => row.querySelector('[data-rank]')!.textContent))).toEqual(Array.from({ length: total }, (_, index) => String(index + 1)));
+    await expect(shown.first().locator('[data-row-note]')).toHaveText(/^(Molt semblant|Semblant|Propera): .*drop/);
+    await expect(shown.first().locator('[data-row-note]')).toContainText(/sola (equivalent|una mica més|més)/);
+    // What was written is in the address, and the address gives the answer again.
+    await expect(page).toHaveURL(/terreny=trail&drop=8&pes=300&talo=36%2C5&per=road/);
+    const first = await shown.first().getAttribute('data-shoe');
+    // Asked for the mountain instead, the answer changes at once.
+    await hand.getByRole('radio', { name: 'Muntanya' }).last().check({ force: true });
+    await expect(status).toHaveText(/models de muntanya que més s’hi assemblen/);
+    expect(new Set(await shown.evaluateAll((rows) => rows.map((row) => row.getAttribute('data-terrain'))))).toEqual(new Set(['trail']));
+    expect(asked).toEqual([]);
+    await open(page, '/ca/sabatilles/semblants/?terreny=trail&drop=8&pes=300&talo=36%2C5&per=road#a-ma');
+    await expect(shown.first()).toHaveAttribute('data-shoe', first!);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('the catalogue becomes a ranking by one figure, and goes back to its groups as it was', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.shoes);
+    const filter = page.locator('[data-catalog-filter]');
+    const status = filter.locator('[data-status]');
+    const before = await page.locator('[data-grouped] [data-shoe]').evaluateAll((rows) => rows.map((row) => row.getAttribute('data-shoe')));
+    await filter.getByLabel('Ordena per').selectOption('pes');
+    const ranked = page.locator('[data-ranked] > [data-shoe]:not([hidden])');
+    const weights = await ranked.evaluateAll((rows) => rows.map((row) => Number(row.getAttribute('data-weight'))));
+    expect(weights.length).toBeGreaterThan(100);
+    expect(weights).toEqual([...weights].sort((a, b) => a - b));
+    // Places are numbered, and two shoes of the same weight share theirs.
+    const places = await ranked.evaluateAll((rows) => rows.map((row) => Number(row.querySelector('[data-rank]')!.textContent)));
+    expect(places[0]).toBe(1);
+    weights.forEach((weight, index) => expect(places[index]).toBe(weights.indexOf(weight) + 1));
+    // The shoes whose maker states no weight have no place, and the page says how many they are.
+    await expect(status).toHaveText(new RegExp(`^${weights.length} de ${before.length} models, del més lleuger al més pesant\\. ${before.length - weights.length} més no declaren el pes i no hi surten\\.$`));
+    await expect(page.locator('[data-grouped]')).toBeHidden();
+    await expect(page.locator('[data-catalog-maps]')).toBeHidden();
+    await expect(page).toHaveURL(/\?ordre=pes$/);
+    // By the height of the heel the row says the figure, which it does not show otherwise; lugs rank mountain shoes only.
+    await filter.getByLabel('Ordena per').selectOption('talo-alt');
+    await expect(ranked.first().locator('[data-row-note]')).toHaveText(/^\d+(,\d)?\smm al taló$/);
+    await filter.getByLabel('Ordena per').selectOption('tacs');
+    expect(new Set(await ranked.evaluateAll((rows) => rows.map((row) => row.getAttribute('data-terrain'))))).toEqual(new Set(['trail']));
+    await expect(status).toHaveText(/de més a menys tac\. \d+ més no declaren la profunditat dels tacs i no hi surten\.$/);
+    // A filter narrows the ranking.
+    await filter.getByLabel('Ordena per').selectOption('pes');
+    await filter.getByLabel('Trepitjada').selectOption('stability');
+    expect(new Set(await ranked.evaluateAll((rows) => rows.map((row) => row.getAttribute('data-support'))))).toEqual(new Set(['stability']));
+    await expect(status).toContainText('del més lleuger al més pesant.');
+    // Taken away, the list is in its groups again, every row where it was.
+    await filter.getByRole('button', { name: 'Treu els filtres' }).click();
+    await expect(page.locator('[data-ranked]')).toBeHidden();
+    await expect(page.locator('[data-catalog-maps]')).toBeVisible();
+    expect(await page.locator('[data-grouped] [data-shoe]').evaluateAll((rows) => rows.map((row) => row.getAttribute('data-shoe')))).toEqual(before);
+    await expect(status).toHaveText(`${before.length} models.`);
+    // An address can ask for a ranking.
+    await open(page, `${PAGES.shoes}?ordre=drop-baix&terreny=trail`);
+    const drops = await ranked.evaluateAll((rows) => rows.map((row) => Number(row.getAttribute('data-drop'))));
+    expect(drops.length).toBeGreaterThan(10);
+    expect(drops).toEqual([...drops].sort((a, b) => a - b));
+    expect(await overflow(page)).toBe(0);
+  });
+
+  test('what a maker says a shoe is for is a filter, a list of its own and a line on the shoe, always in the maker’s words', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, PAGES.shoes);
+    const ways = page.getByRole('navigation', { name: 'Què busques?' });
+    await expect(ways.locator('[data-need-kind="shape"]')).toContainText('Com la vols');
+    await expect(ways.locator('[data-need-kind="use"]')).toContainText('Per a què, segons la marca');
+    await ways.getByRole('link', { name: /^Competir · \d+$/ }).click();
+    await expect(page).toHaveURL(/\/ca\/sabatilles\/per-competir\/$/);
+    await expect(main(page)).toContainText('la seva marca diu que són per competir, amb les paraules de la marca al costat. No és cap valoració nostra');
+    await expect(page.locator('[data-blind]')).toContainText(/De \d+ models, la marca no diu per a què són\./);
+    const rows = page.locator('[data-catalog-list] [data-shoe]');
+    expect(await rows.count()).toBeGreaterThan(5);
+    for (const use of await rows.evaluateAll((items) => items.map((item) => item.getAttribute('data-use') ?? ''))) expect(use.split(' ')).toContain('race');
+    await expect(rows.first().locator('[data-row-note]')).toHaveText(/^«.+»$/);
+    // The shoes a maker calls of stability or support: its word, and no advice.
+    await open(page, '/ca/sabatilles/amb-suport/');
+    await expect(main(page)).toContainText('Aquesta pàgina no diu si en necessites');
+    expect(new Set(await page.locator('[data-catalog-list] [data-shoe]').evaluateAll((items) => items.map((item) => item.getAttribute('data-support'))))).toEqual(new Set(['stability']));
+    // On the shoe: the answer and, beside it, the maker's words; and nothing where its page does not say.
+    await open(page, '/ca/sabatilles/topo-athletic/cyclone-3/');
+    const traits = page.locator('[data-traits]');
+    await expect(traits.locator('dl > div').first()).toHaveText(/Trepitjada\s*Neutra \(«Neutral»\)/);
+    await expect(traits).toContainText('No diuen quina et convé a tu.');
+    await open(page, '/ca/sabatilles/merrell/nova-4/');
+    await expect(page.locator('[data-traits] dl > div').first()).toContainText('Sense dada');
+    // The filter by use, on the whole catalogue, says how many shoes it could not judge.
+    await open(page, `${PAGES.shoes}?us=ultra`);
+    const shown = page.locator('[data-catalog-list] [data-shoe]:not([hidden])');
+    expect(await shown.count()).toBeGreaterThan(0);
+    for (const use of await shown.evaluateAll((items) => items.map((item) => item.getAttribute('data-use') ?? ''))) expect(use.split(' ')).toContain('ultra');
+    await expect(page.locator('[data-catalog-filter] [data-status]')).toHaveText(/De \d+ models, la marca no diu per a què són\.$/);
   });
 
   test('compares any two models of the catalogue: figure by figure, with the soles over one another and a warning where figures were not taken alike', async ({ page }) => {

@@ -6,7 +6,7 @@
 
 | Peça | On | Estat |
 |---|---|---|
-| Catàleg | `/ca/sabatilles/`, «El catàleg» | **161 models de 17 marques**, a més de les dues sabatilles de la Fase 1 mesurades en laboratori |
+| Catàleg | `/ca/sabatilles/`, «El catàleg» | **169 models de 17 marques** (161 fins al 26 de novembre, que s'hi van afegir 8 de muntanya d'Asics), a més de les dues sabatilles de la Fase 1 mesurades en laboratori |
 | Fitxa d'un model del catàleg | `/ca/sabatilles/<marca>/<model>/` | Feta: les xifres que declara la marca, la radiografia quan declara les dues alçades, la nota quan la pàgina es contradiu, i l'enllaç a la pàgina del model |
 | Mapa del catàleg | `/ca/sabatilles/`, sobre la llista | Fet: dos mapes, «pes i alçada al taló» (67 models) i «pes i drop» (132), amb una forma per terreny. Cada punt és un enllaç a la fitxa; les xifres, també en una taula |
 | Filtres | `/ca/sabatilles/` | Fets: per marca i per terreny. Amaguen files de la llista i punts dels mapes alhora, i queden a l'adreça (`?marca=puma&terreny=trail`) |
@@ -167,7 +167,37 @@ Cap marca declara l'amplada en mil·límetres. El que sí que diuen, i s'ha lleg
 
 ## Els escàners (E06): el camí, provat amb una mostra (25 de novembre de 2026)
 
-La part de la fase que no s'havia començat. El camí de les fotos al navegador funciona amb eines lliures en aquest Mac: COLMAP troba les càmeres, Brush entrena els splats, es comprimeixen a SPZ (632 KB) i la web els dibuixa amb el renderer de splats de three.js, dins del pressupost. S'ha provat amb un model de llicència oberta, no amb una sabatilla nostra: falta la captura real i la transició a la radiografia. Detall a `docs/explorations/E06-splats.md`; prototip a `/ds/explorations/e06-splat/`.
+Des del 26 de novembre la fase no en depèn (vegeu «Sense escàner», a sota). La part de la fase que no s'havia començat. El camí de les fotos al navegador funciona amb eines lliures en aquest Mac: COLMAP troba les càmeres, Brush entrena els splats, es comprimeixen a SPZ (632 KB) i la web els dibuixa amb el renderer de splats de three.js, dins del pressupost. S'ha provat amb un model de llicència oberta, no amb una sabatilla nostra: falta la captura real i la transició a la radiografia. Detall a `docs/explorations/E06-splats.md`; prototip a `/ds/explorations/e06-splat/`.
+
+## Sense escàner: semblants i rànquings (26 de novembre de 2026)
+
+La fase ja no depèn d'escanejar cap sabatilla: els models de fotos i la radiografia fan la part visual, i E06 queda com a camí provat i opcional. El que s'hi ha posat al lloc és el que algú ve a buscar de debò: **«tinc aquesta i em va bé, quina s'hi assembla?»** i **«quina és la més lleugera, la de més sola, la de menys drop?»**.
+
+### Semblants
+
+- **A cada fitxa**, una banda «Semblants» (`#semblants`): les cinc que més s'hi assemblen del seu terreny i les cinc de l'altre, cadascuna amb el perquè en una línia («Molt semblant: mateix drop · 2 mm més de taló · 12 g menys · també neutra»). Es veu una llista cada vegada i l'adreça diu quina (`?per=road`); sense JavaScript hi són totes dues.
+- **Des del catàleg i des de la portada**, «Ja en tens una que et va bé?»: tries la teva i el terreny per al qual en busques una, i et porta a la fitxa, a la llista que toca.
+- **Si la teva no és al catàleg** (un model d'una altra temporada: Asics ja ven la Trabuco 14 i no la 13), `/ca/sabatilles/semblants/` deixa escriure'n les xifres: drop, pes, alçades i trepitjada. El càlcul es fa al navegador amb la mateixa regla i no s'envia res; el que s'escriu queda a l'adreça, per poder-ho enllaçar.
+
+**La regla** (`src/content/similar-keys.ts`, amb proves): només es compara el que les dues marques declaren. El drop es compara tal com és; el pes i les alçades, d'un terreny a l'altre, pel lloc que cada sabatilla té entre les del seu (grams i mil·límetres per sobre o per sota de la mediana del catàleg en aquell terreny), perquè una sabatilla de muntanya pesa més i porta menys escuma. Hi compten també, quan les dues marques ho diuen, el suport, l'ús i si hi ha placa per córrer; els tacs, només entre dues de muntanya. Una diferència clara és 4 mm de drop, 5 mm d'alçada, 30 g o 1,5 mm de tac. Cal un mínim de dues xifres en comú, i «molt semblant» en demana tres i cap diferència clara. Els pesos de cada part i els llindars són nostres, i la pàgina ho diu. No hi ha cap percentatge de semblança: s'ensenya l'ordre i el perquè.
+
+### Rànquings
+
+El catàleg i cada llista de «Què busques?» es poden **ordenar per una xifra** («Ordena per»: pes, alçada al taló, drop, tacs): la llista deixa els grups i queda numerada, amb els empats compartint lloc. Els models que no declaren la xifra no hi surten, i la pàgina diu quants són. L'ordre es combina amb els filtres i queda a l'adreça (`?ordre=pes&terreny=trail`); sota «Què busques?» hi ha l'entrada directa a cada rànquing. Amb un ordre triat, els mapes s'aparten perquè el primer de la llista quedi sota el filtre.
+
+### Trepitjada i ús: què s'ha llegit
+
+De la pàgina de cada model, al web de la marca, i amb les paraules de la marca al costat (`src/content/shoe-traits/<marca>.json`): si diu que és neutra o d'estabilitat, i per a què diu que és (competició, ritme, dia a dia, tirada llarga, ultra). D'aquí surten dos filtres nous, sis llistes («Competir», «Fer ritme», «El dia a dia», «Tirades llargues», «Ultres», «Amb suport») i dues línies a la fitxa. No és cap valoració nostra ni cap consell: la pàgina «Amb suport» diu que no sap si en necessites.
+
+També s'han afegit al catàleg els **8 models de muntanya d'Asics** de la gamma actual, llegits al seu web.
+
+Peces del sistema de disseny tocades: `SegmentedControl` (`labelled`), `ShoeRow` (nota que un script omple) i `TextField` (`inputmode`); vegeu el CHANGELOG.
+
+### Què no s'ha mirat
+
+- **Una sola lectura** de la trepitjada i l'ús, feta per agents; les lectures dubtoses són anotades a cada fitxer (`note`), i les més febles són les que surten d'un camp genèric de la marca (a Asics, «Objetivo: Correr más lejos» s'ha llegit com a tirada llarga).
+- **La regla de semblança no l'ha jutjada cap corredor.** Amb dues xifres en comú (drop i pes), que és el que declaren moltes marques, la llista és honesta però poc fina: per això no passa de «Semblant».
+- **Safari, Firefox i un mòbil real**: provat només amb Chromium, a mida d'escriptori i de mòbil.
 
 ## El comparador: una pàgina per a totes les parelles
 

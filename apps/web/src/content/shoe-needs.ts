@@ -5,6 +5,8 @@ import { formatMeasure } from '@tram/formats';
 import { CUSHION_MM, DEEP_LUG_MM, hasDeepLugs, hasPlate, hasWideToeBox, hasWideVersion, isCushioned, isLight, isLowDrop, LIGHT_G, LOW_DROP_MM, widthRead } from './need-keys';
 import { type CatalogShoe, catalogShoes } from './shoe-catalog';
 import { fitOf } from './shoe-fit';
+import { traitsOf } from './shoe-traits';
+import type { Use } from './similar-keys';
 
 /** A need with fewer shoes than this is no page: a list of one answers nothing. */
 export const NEED_MIN_SHOES = 2;
@@ -24,6 +26,8 @@ export interface NeedGroup {
 export interface Need {
   /** Its address under `/ca/sabatilles/`. */
   slug: string;
+  /** What the need is about: how the shoe is made, or what its maker says it is for. The links to the needs are grouped by it. */
+  kind: 'shape' | 'use';
   /** A few words for a link to it, under «Què busques?». */
   label: string;
   title: string;
@@ -52,6 +56,16 @@ const weighed = (shoe: CatalogShoe): string | null => {
   return ref.toLocaleLowerCase('ca').startsWith('pes') ? `${ref[0]!.toLocaleUpperCase('ca')}${ref.slice(1)}` : `Pes: ${ref}`;
 };
 
+/** The maker's own words, as a quotation. */
+const said = (words: string | null): string | null => (words ? `«${words}»` : null);
+const USE_NEEDS: readonly { use: Use; slug: string; label: string; title: string; what: string }[] = [
+  { use: 'race', slug: 'per-competir', label: 'Competir', title: 'Sabatilles per competir', what: 'per competir' },
+  { use: 'tempo', slug: 'per-fer-ritme', label: 'Fer ritme', title: 'Sabatilles per fer ritme', what: 'per als entrenaments ràpids: sèries i ritme' },
+  { use: 'daily', slug: 'dia-a-dia', label: 'El dia a dia', title: 'Sabatilles per al dia a dia', what: 'per a l’entrenament de cada dia' },
+  { use: 'long', slug: 'tirada-llarga', label: 'Tirades llargues', title: 'Sabatilles per a tirades llargues', what: 'per a les tirades llargues i la llarga distància' },
+  { use: 'ultra', slug: 'ultra', label: 'Ultres', title: 'Sabatilles per a ultres', what: 'per a distàncies d’ultra' },
+];
+
 let built: Need[] | undefined;
 
 /** Every need with shoes enough to be a page. */
@@ -66,11 +80,13 @@ export function needs(): Need[] {
     return [fit.widths?.length ? `També en ${list(fit.widths)}` : null, fit.toeBox ? `«${fit.toeBox}»` : null].filter(Boolean).join(' · ');
   };
   const unread = all.filter((shoe) => !widthRead(fitOf(shoe)));
+  const unsaidUse = all.filter((shoe) => !traitsOf(shoe)?.use.length).length;
   const unreadMakers = [...new Set(unread.map((shoe) => shoe.brand.name))].sort((a, b) => a.localeCompare(b, 'ca'));
 
   const found = [
     make({
       slug: 'amples',
+      kind: 'shape',
       label: 'Peu ample',
       title: 'Sabatilles per a peu ample',
       rule: 'Hi són els models que la seva marca ven també en una versió més ampla que la normal, i els que la marca descriu amb la puntera ampla o eixamplada, amb les seves paraules. Cap marca declara l’amplada en mil·límetres: aquesta pàgina no pot dir quin model és més ample que un altre, ni com et quedarà.',
@@ -85,6 +101,7 @@ export function needs(): Need[] {
     }),
     make({
       slug: 'lleugeres',
+      kind: 'shape',
       label: 'Lleugera',
       title: 'Sabatilles lleugeres',
       rule: `Hi són els models que, segons la seva marca, pesen ${g(LIGHT_G.road)} o menys si són d’asfalt i ${g(LIGHT_G.trail)} o menys si són de muntanya. ${OURS} Cada marca pesa una talla diferent, i algunes no diuen quina: entre marques, uns grams amunt o avall no volen dir res.`,
@@ -98,6 +115,7 @@ export function needs(): Need[] {
     }),
     make({
       slug: 'molt-amortiment',
+      kind: 'shape',
       label: 'Molt amortiment',
       title: 'Sabatilles amb molt amortiment',
       rule: `Hi són els models amb ${mm(CUSHION_MM.road)} o més d’alçada al taló si són d’asfalt i ${mm(CUSHION_MM.trail)} o més si són de muntanya, segons la seva marca. ${OURS} L’alçada diu quanta escuma hi ha, no com és de tova, i cada marca la mesura a la seva manera.`,
@@ -111,6 +129,7 @@ export function needs(): Need[] {
     }),
     make({
       slug: 'drop-baix',
+      kind: 'shape',
       label: 'Drop baix',
       title: 'Sabatilles de drop baix',
       rule: `Hi són els models amb ${mm(LOW_DROP_MM)} de drop o menys, segons la seva marca: el taló gairebé a l’alçada de l’avantpeu. ${OURS}`,
@@ -119,6 +138,7 @@ export function needs(): Need[] {
     }),
     make({
       slug: 'amb-placa',
+      kind: 'shape',
       label: 'Amb placa',
       title: 'Sabatilles amb placa',
       rule: 'Hi són els models dels quals la marca diu que porten una placa dins la sola: de carboni o de niló, per córrer de pressa, o de protecció contra les pedres, a la muntanya.',
@@ -130,6 +150,7 @@ export function needs(): Need[] {
     }),
     make({
       slug: 'tacs-profunds',
+      kind: 'shape',
       label: 'Tacs profunds',
       title: 'Sabatilles de muntanya amb tacs profunds',
       rule: `Hi són els models de muntanya amb tacs de ${mm(DEEP_LUG_MM)} o més, segons la seva marca: per a fang i terreny tou. ${OURS}`,
@@ -137,6 +158,36 @@ export function needs(): Need[] {
       groups: [
         { title: 'De més a menys tac', entries: all.filter(hasDeepLugs).sort((a, b) => b.lugDepthMm! - a.lugDepthMm! || byName(a, b)).map((shoe) => ({ shoe, reason: `Tacs de ${mm(shoe.lugDepthMm!)}` })) },
       ],
+    }),
+    // By what the maker says the shoe is for, and by the support it says it gives: its word, never ours.
+    ...USE_NEEDS.map(({ use, slug, label, title, what }) =>
+      make({
+        slug,
+        kind: 'use',
+        label,
+        title,
+        rule: `Hi són els models que la seva marca diu que són ${what}, amb les paraules de la marca al costat. No és cap valoració nostra, i un model pot ser a més d’una llista.`,
+        blind: unsaidUse ? `De ${unsaidUse} models, la marca no diu per a què són.` : null,
+        groups: (['road', 'trail'] as const).map((ground) => ({
+          title: ground === 'road' ? 'D’asfalt' : 'De muntanya',
+          entries: all.filter((shoe) => shoe.terrain === ground && traitsOf(shoe)?.use.includes(use)).sort(byName).map((shoe) => ({ shoe, reason: said(traitsOf(shoe)!.useSaid) })),
+        })),
+      }),
+    ),
+    make({
+      slug: 'amb-suport',
+      kind: 'use',
+      label: 'Amb suport',
+      title: 'Sabatilles amb suport',
+      rule: 'Hi són els models que la seva marca descriu com d’estabilitat o de suport, pensats per a qui prona, amb les paraules de la marca al costat. Aquesta pàgina no diu si en necessites: això ho diu qui et miri la trepitjada.',
+      blind: (() => {
+        const silent = all.filter((shoe) => !traitsOf(shoe)?.support).length;
+        return silent ? `De ${silent} models, la marca no diu si són neutres o de suport.` : null;
+      })(),
+      groups: (['road', 'trail'] as const).map((ground) => ({
+        title: ground === 'road' ? 'D’asfalt' : 'De muntanya',
+        entries: all.filter((shoe) => shoe.terrain === ground && traitsOf(shoe)?.support === 'stability').sort(byName).map((shoe) => ({ shoe, reason: said(traitsOf(shoe)!.supportSaid) })),
+      })),
     }),
   ];
   built = found.filter((need) => need.shoes.length >= NEED_MIN_SHOES);

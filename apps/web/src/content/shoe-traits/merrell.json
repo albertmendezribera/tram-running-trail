@@ -1,0 +1,91 @@
+{
+  "maker": "merrell",
+  "accessed": "2026-11-26",
+  "method": "plain",
+  "shoes": {
+    "agility-peak-6": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "agility-trail": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "mtl-skyfire-2-matryx": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "mtl-long-sky-2-matryx": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "long"
+      ],
+      "useSaid": "our best FloatPro™ foam for long distance comfort",
+      "distanceSaid": "long distance",
+      "note": "La frase parla de l'escuma de la mitja sola, no de la sabatilla sencera."
+    },
+    "mtl-adapt-matryx": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "nova-4": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "morphlite": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "trail-glove-8": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "vapor-glove-7": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "mtl-speedarc-peak": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "pinnacle trail runner, built for podiums and personal records",
+      "distanceSaid": null,
+      "note": null
+    }
+  }
+}

@@ -115,6 +115,7 @@ const walked = routes.find((route) => route.onFoot);
         <nav aria-label="Sabatilles: el catàleg i el comparador" data-home-shoes>
           <Cluster gap={4}>
             <Link href="/ca/sabatilles/" variant="standalone">{catalog.length > 0 ? `Tot el catàleg (${catalog.length} models)` : 'Totes les sabatilles'}</Link>
+            {catalog.length > 0 && <Link href="/ca/sabatilles/semblants/">Troba’n una de semblant a la teva</Link>}
             {catalog.length > 0 && <Link href="/ca/comparar/">Compara dos models</Link>}
           </Cluster>
         </nav>

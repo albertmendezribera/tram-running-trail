@@ -1,0 +1,157 @@
+{
+  "maker": "hoka",
+  "accessed": "2026-11-26",
+  "method": "browser",
+  "shoes": {
+    "clifton-11": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "daily",
+        "long"
+      ],
+      "useSaid": "Ligeras y acolchadas para largas distancias diarias",
+      "distanceSaid": "largas distancias diarias",
+      "note": "La taula comparativa de Hoka (llegida a la pàgina d’un altre model) hi diu «Uso: Correr a diario» i «Distancia: Todas»."
+    },
+    "mach-7": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "tempo",
+        "daily"
+      ],
+      "useSaid": "Uso: Correr a diario, Entrenamientos de velocidad",
+      "distanceSaid": "Todas",
+      "note": "La distància («Todas») i «Pronación neutra» surten de la taula comparativa que Hoka posa a la pàgina d’un altre model; no s’ha rellegit la taula a la pàgina pròpia."
+    },
+    "bondi-9": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "el máximo acolchado para tus entrenamientos diarios",
+      "distanceSaid": "Todas",
+      "note": "La distància («Todas») i «Pronación neutra» surten de la taula comparativa que Hoka posa a la pàgina d’un altre model; no s’ha rellegit la taula a la pàgina pròpia."
+    },
+    "mach-x-3": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "race",
+        "tempo"
+      ],
+      "useSaid": "Uso: Entrenamientos de velocidad, Carrera",
+      "distanceSaid": "Todas",
+      "note": null
+    },
+    "rocket-x-3": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "race",
+        "tempo"
+      ],
+      "useSaid": "Uso: Entrenamientos de velocidad, Carrera",
+      "distanceSaid": "Todas",
+      "note": null
+    },
+    "arahi-9": {
+      "support": "stability",
+      "supportSaid": "Estable … Sobrepronación",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Uso: Correr a diario",
+      "distanceSaid": "Todas",
+      "note": "La pàgina en diu «zapatillas para pronadores»."
+    },
+    "rincon-5": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Unas deportivas equilibradas para correr a diario sin esfuerzo",
+      "distanceSaid": "Hasta 10 km",
+      "note": null
+    },
+    "skyward-x-2": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Uso: Correr a diario, Recuperación",
+      "distanceSaid": "Todas",
+      "note": null
+    },
+    "gaviota-6": {
+      "support": "stability",
+      "supportSaid": "Estable … Sobrepronación",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Uso: Correr a diario",
+      "distanceSaid": "Todas",
+      "note": "La pàgina en diu «zapatillas para pronadores»."
+    },
+    "speedgoat-7": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La taula de la pàgina només hi diu «Uso: Trail running»."
+    },
+    "tecton-x-4": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "race"
+      ],
+      "useSaid": "Uso: Carrera, Trail técnico",
+      "distanceSaid": null,
+      "note": null
+    },
+    "challenger-8": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Uso: Carreras en cualquier terreno, Correr a diario",
+      "distanceSaid": null,
+      "note": null
+    },
+    "mafate-5": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La taula de la pàgina només hi diu «Uso: Trail running»."
+    },
+    "torrent-5": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "Uso: Correr a diario",
+      "distanceSaid": null,
+      "note": null
+    },
+    "zinal-3": {
+      "support": "neutral",
+      "supportSaid": "Neutra",
+      "use": [
+        "race"
+      ],
+      "useSaid": "Uso: TRAIL CARRERA",
+      "distanceSaid": null,
+      "note": "L’ús surt de l’etiqueta «Uso» de la fitxa; la pàgina no porta taula comparativa."
+    }
+  }
+}

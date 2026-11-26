@@ -1,0 +1,117 @@
+{
+  "maker": "puma",
+  "accessed": "2026-11-26",
+  "method": "plain",
+  "shoes": {
+    "deviate-nitro-4": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "diseñadas para disfrutar de velocidad en tus carreras diarias",
+      "distanceSaid": null,
+      "note": "La descripció que serveix la pàgina és la de la versió «Wide»; cap variant diu la pronació."
+    },
+    "deviate-nitro-elite-4": {
+      "support": "neutral",
+      "supportSaid": "Pronación: neutral",
+      "use": [
+        "race"
+      ],
+      "useSaid": "están hechas para el día de la carrera",
+      "distanceSaid": null,
+      "note": null
+    },
+    "deviate-pure-nitro": {
+      "support": "neutral",
+      "supportSaid": "Pronación: neutra",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "están listas para tus carreras diarias",
+      "distanceSaid": null,
+      "note": null
+    },
+    "fast-fwd-nitro-elite-2": {
+      "support": "neutral",
+      "supportSaid": "Pronación: neutra",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": "distancias cortas",
+      "note": "Diu «acelerar el ritmo durante toda la carrera»: «carrera» pot ser cursa o sortida, i no s'ha comptat com a ús."
+    },
+    "fast-r-nitro-elite-3": {
+      "support": "neutral",
+      "supportSaid": "Pronación: neutral",
+      "use": [
+        "race"
+      ],
+      "useSaid": "te ayudarán a aumentar el ritmo el día de la carrera",
+      "distanceSaid": null,
+      "note": null
+    },
+    "foreverrun-nitro-3": {
+      "support": "stability",
+      "supportSaid": "Pronación: sobrepronación",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "un nuevo nivel de sujeción a las carreras diarias en carretera",
+      "distanceSaid": null,
+      "note": null
+    },
+    "magmax-nitro-2": {
+      "support": "neutral",
+      "supportSaid": "Pronación: neutral",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "velocity-nitro-5": {
+      "support": "neutral",
+      "supportSaid": "Pronación: neutra",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "para las carreras diarias, independientemente del ritmo o la distancia",
+      "distanceSaid": null,
+      "note": null
+    },
+    "deviate-nitro-elite-trail": {
+      "support": "neutral",
+      "supportSaid": "Pronación: neutra",
+      "use": [
+        "race"
+      ],
+      "useSaid": "están diseñadas para el día de la carrera",
+      "distanceSaid": null,
+      "note": null
+    },
+    "fast-trac-nitro-4": {
+      "support": "neutral",
+      "supportSaid": "Pronación: neutra",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "velocity-nitro-trail": {
+      "support": "neutral",
+      "supportSaid": "Pronación: neutra",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "voyage-nitro-4": {
+      "support": "neutral",
+      "supportSaid": "Pronación: neutra",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    }
+  }
+}

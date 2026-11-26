@@ -1,0 +1,137 @@
+{
+  "maker": "nike",
+  "accessed": "2026-11-26",
+  "method": "plain",
+  "shoes": {
+    "pegasus-42": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "an energised ride for everyday road runs",
+      "distanceSaid": null,
+      "note": null
+    },
+    "pegasus-plus-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "a smooth, energised ride for everyday runs",
+      "distanceSaid": null,
+      "note": null
+    },
+    "pegasus-premium": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "No llegida: l'URL del catàleg respon 404 (pàgina no trobada)."
+    },
+    "vomero-18": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "a comfortable ride for everyday runs",
+      "distanceSaid": null,
+      "note": null
+    },
+    "vomero-plus": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "daily"
+      ],
+      "useSaid": "an ultra-comfortable ride for everyday runs",
+      "distanceSaid": null,
+      "note": null
+    },
+    "structure-plus": {
+      "support": "stability",
+      "supportSaid": "our most cushioned stability shoe yet",
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "winflo-12": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "zoom-fly-6": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race",
+        "tempo",
+        "daily"
+      ],
+      "useSaid": "all-round daily training and race-day shoe / Race training or Speed Runs",
+      "distanceSaid": null,
+      "note": null
+    },
+    "vaporfly-4": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "A versatile, all-round race-day shoe from 10K to a marathon.",
+      "distanceSaid": "10K, half-marathons and marathons",
+      "note": "La descripció diu «from the mile to the marathon»; la fitxa de distància, «10K, half-marathons and marathons»."
+    },
+    "alphafly-4": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "No llegida: l'URL del catàleg respon 404 (pàgina no trobada)."
+    },
+    "streakfly-2": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "A lightweight, short-distance racer designed for the mile to 10K.",
+      "distanceSaid": "Mile, 5K and 10K",
+      "note": null
+    },
+    "acg-pegasus-trail": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    },
+    "acg-ultrafly": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "race"
+      ],
+      "useSaid": "Engineered For / Trail Running & Racing",
+      "distanceSaid": null,
+      "note": null
+    },
+    "acg-zegama-trail": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": null
+    }
+  }
+}

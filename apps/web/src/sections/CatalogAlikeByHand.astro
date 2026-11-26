@@ -1,0 +1,106 @@
+---
+import { formatDate } from '@tram/formats';
+import SegmentedControl from '@tram/design-system/interactive/SegmentedControl.astro';
+import Select from '@tram/design-system/interactive/Select.astro';
+import TextField from '@tram/design-system/interactive/TextField.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Button from '@tram/design-system/primitives/Button.astro';
+import Cluster from '@tram/design-system/primitives/Cluster.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { CATALOG_ACCESSED, CATALOG_NOTICE, catalogShoes } from '../content/shoe-catalog';
+import Site from '../layouts/Site.astro';
+import CatalogAlike from './CatalogAlike.astro';
+import CatalogNeeds from './CatalogNeeds.astro';
+import CatalogRows from './CatalogRows.astro';
+
+const shoes = catalogShoes();
+const grounds = [
+  { value: 'road', label: 'Asfalt' },
+  { value: 'trail', label: 'Muntanya' },
+];
+const supports = [
+  { value: '', label: 'No ho sé' },
+  { value: 'neutral', label: 'Neutra' },
+  { value: 'stability', label: 'Amb suport' },
+];
+---
+
+<!--
+  A shoe like one's own. Two ways in: the shoe is in the catalogue, and its own page has the answer; or
+  it is not (a model of another season, a maker the catalogue lacks), and its figures are written by
+  hand. Then the answer is reckoned in the browser, with the same rule, over the rows already in the page.
+-->
+<Site
+  title="Troba’n una de semblant"
+  trail={[{ label: 'Sabatilles', href: '/ca/sabatilles/' }]}
+  description="Si ja corres amb una sabatilla que et va bé, troba les que més s’hi assemblen, d’asfalt o de muntanya, pel que declaren les marques: drop, alçades, pes, suport i ús."
+  placeholder
+  notice={CATALOG_NOTICE}
+  credits={[`Xifres: cada marca, al seu web. Consultat a partir del ${formatDate(CATALOG_ACCESSED, 'ca')}.`]}
+>
+  <Stack gap={5}>
+    <Heading level={1} size="lg" kicker="Sabatilles · Semblants">Troba’n una de semblant</Heading>
+    <Text size="lg" measure>Si ja corres amb una sabatilla que et va bé, no cal començar de zero: busca les que més s’hi assemblen. Serveix per canviar de model, i també per trobar la parella d’asfalt d’una sabatilla de muntanya, o a l’inrevés.</Text>
+  </Stack>
+
+  <CatalogAlike shoes={shoes} level={2} byHand="#a-ma" bare />
+
+  <div id="a-ma" class="hand" data-alike-hand>
+    <Band tone="alt" title="La meva no hi és">
+      <div class="inside">
+        <Stack gap={6}>
+          <Text measure>Un model d’una altra temporada, o d’una marca que no tenim: posa’n les xifres que en sàpigues, que solen ser al web de la marca o a la capsa. Amb el drop i una xifra més ja n’hi ha prou; com més n’hi posis, més afinada surt la llista. No es desa res: el càlcul es fa al teu navegador.</Text>
+          <form data-hand-form>
+            <Stack gap={4}>
+              <SegmentedControl name="terreny" legend="La teva és de" options={grounds} value="trail" labelled />
+              <Cluster gap={4} align="end">
+                <div class="figure"><TextField name="drop" label="Drop (mm)" maxlength={5} inputmode="decimal" /></div>
+                <div class="figure"><TextField name="pes" label="Pes (g)" maxlength={5} inputmode="decimal" /></div>
+                <div class="figure"><TextField name="talo" label="Alçada al taló (mm)" maxlength={5} inputmode="decimal" /></div>
+                <div class="figure"><TextField name="avantpeu" label="Alçada a l’avantpeu (mm)" maxlength={5} inputmode="decimal" /></div>
+                <Select name="trepitjada" label="Trepitjada" options={supports} value="" />
+              </Cluster>
+              <Cluster gap={4} align="end">
+                <SegmentedControl name="per" legend="En busco una per a" options={grounds} value="road" labelled />
+                <Button type="submit" variant="primary">Busca’n de semblants</Button>
+              </Cluster>
+              <Text size="sm"><span data-hand-status role="status" /></Text>
+            </Stack>
+          </form>
+          <div data-hand-found hidden>
+            <CatalogRows groups={[{ title: 'Catàleg', entries: shoes.map((shoe) => ({ shoe })) }]} />
+          </div>
+          <Text size="sm" tone="muted" measure>D’un terreny a l’altre, el pes i l’alçada de la sola es comparen amb el que és habitual a cada un, i el drop tal com és. Només es compara el que tu poses i la marca declara. La regla és nostra, i no diu com et quedarà cap sabatilla.</Text>
+        </Stack>
+      </div>
+    </Band>
+  </div>
+
+  <CatalogNeeds level={2} />
+</Site>
+
+<script>
+  import '../islands/similar-hand.ts';
+</script>
+
+<style>
+  /* A band runs edge to edge on a phone, for the panels it holds. This form is in no panel, and keeps the page's margin. */
+  @media (width < 48rem) {
+    .inside {
+      padding-inline: var(--tram-sys-grid-margin);
+    }
+  }
+
+  /* A figure is a few digits: its field is no wider than that asks. */
+  .figure {
+    inline-size: calc(var(--tram-sys-space-12) * 1.5);
+    max-inline-size: 100%;
+  }
+
+  /* The answer is reckoned by the script: without it there is nothing to ask here. */
+  .hand:not([data-ready]) {
+    display: none;
+  }
+</style>

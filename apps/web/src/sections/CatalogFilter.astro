@@ -6,13 +6,16 @@ import Cluster from '@tram/design-system/primitives/Cluster.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import Text from '@tram/design-system/primitives/Text.astro';
 import type { CatalogShoe } from '../content/shoe-catalog';
+import { SUPPORT_LABEL, traitsOf, USE_LABEL, USES } from '../content/shoe-traits';
 
 export interface Props {
   /** Every shoe the page lists: the filters are built from what they are. */
   shoes: readonly CatalogShoe[];
+  /** How the list comes when no order is asked: by maker, or as the page made it. */
+  grouped?: string;
 }
 
-const { shoes } = Astro.props;
+const { shoes, grouped = 'Marca a marca' } = Astro.props;
 const count = (is: (shoe: CatalogShoe) => boolean): number => shoes.filter(is).length;
 const makers = [...new Map(shoes.map((shoe) => [shoe.brand.slug, shoe.brand.name]))].sort((a, b) => a[1].localeCompare(b[1], 'ca'));
 const brands = [{ value: '', label: 'Totes les marques' }, ...makers.map(([slug, name]) => ({ value: slug, label: `${name} (${count((shoe) => shoe.brand.slug === slug)})` }))];
@@ -21,18 +24,35 @@ const grounds = [
   { value: 'road', label: `Asfalt (${count((shoe) => shoe.terrain === 'road')})` },
   { value: 'trail', label: `Muntanya (${count((shoe) => shoe.terrain === 'trail')})` },
 ];
+// What each maker says of the support and the use, where it says: a filter is offered only when some shoe of the list can answer it.
+const supports = (['neutral', 'stability'] as const).map((support) => ({ value: support, label: `${SUPPORT_LABEL[support]} (${count((shoe) => traitsOf(shoe)?.support === support)})`, n: count((shoe) => traitsOf(shoe)?.support === support) })).filter((option) => option.n > 0);
+const uses = USES.map((use) => ({ value: use, label: `${USE_LABEL[use]} (${count((shoe) => Boolean(traitsOf(shoe)?.use.includes(use)))})`, n: count((shoe) => Boolean(traitsOf(shoe)?.use.includes(use))) })).filter((option) => option.n > 0);
+const unsaid = { support: count((shoe) => !traitsOf(shoe)?.support), use: count((shoe) => !traitsOf(shoe)?.use.length) };
+// The orders: each by one figure the makers state. A shoe whose maker does not state it has no place in that order.
+const has = (key: 'weightG' | 'stackHeelMm' | 'dropMm' | 'lugDepthMm'): boolean => count((shoe) => shoe[key] !== null) > 1;
+const orders = [
+  { value: '', label: grouped },
+  ...(has('weightG') ? [{ value: 'pes', label: 'Pes: de menys a més' }] : []),
+  ...(has('stackHeelMm') ? [{ value: 'talo-alt', label: 'Alçada al taló: de més a menys' }, { value: 'talo-baix', label: 'Alçada al taló: de menys a més' }] : []),
+  ...(has('dropMm') ? [{ value: 'drop-baix', label: 'Drop: de menys a més' }, { value: 'drop-alt', label: 'Drop: de més a menys' }] : []),
+  ...(has('lugDepthMm') ? [{ value: 'tacs', label: 'Tacs: de més a menys' }] : []),
+];
 ---
 
 <!--
-  The filters of the catalogue of shoes: by maker and by ground. The list and the maps are whole in the
+  The filters of the catalogue of shoes: by maker, by ground and by what the maker says of the support
+  and the use; and the orders, which make of the list a ranking by one figure. The list and the maps are whole in the
   page; a small island hides what the choices leave out, in the list and on the maps at once, and keeps
   the choices in the address.
 -->
-<form class="filter" data-catalog-filter data-total={shoes.length}>
+<form class="filter" id="llista" data-catalog-filter data-total={shoes.length} data-unsaid-support={unsaid.support} data-unsaid-use={unsaid.use}>
   <Stack gap={3}>
     <Cluster gap={4} align="end">
       <Select name="marca" label="Marca" options={brands} value="" />
-      <SegmentedControl name="terreny" legend="Terreny" options={grounds} value="" />
+      <SegmentedControl name="terreny" legend="Terreny" options={grounds} value="" labelled />
+      {supports.length > 0 && <Select name="trepitjada" label="Trepitjada" options={[{ value: '', label: 'Totes' }, ...supports]} value="" />}
+      {uses.length > 0 && <Select name="us" label="Per a què" options={[{ value: '', label: 'Tot' }, ...uses]} value="" />}
+      {orders.length > 1 && <Select name="ordre" label="Ordena per" options={orders} value="" />}
       <Button type="button" variant="quiet"><span data-reset>Treu els filtres</span></Button>
     </Cluster>
     <Text size="sm" tone="muted"><span data-status role="status">{`${shoes.length} models.`}</span></Text>

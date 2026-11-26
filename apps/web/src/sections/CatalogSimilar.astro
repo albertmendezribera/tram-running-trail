@@ -1,0 +1,98 @@
+---
+import { formatMeasure } from '@tram/formats';
+import SegmentedControl from '@tram/design-system/interactive/SegmentedControl.astro';
+import ShoeRow from '@tram/design-system/patterns/ShoeRow.astro';
+import Band from '@tram/design-system/primitives/Band.astro';
+import Heading from '@tram/design-system/primitives/Heading.astro';
+import Link from '@tram/design-system/primitives/Link.astro';
+import Stack from '@tram/design-system/primitives/Stack.astro';
+import Text from '@tram/design-system/primitives/Text.astro';
+import { type CatalogShoe, catalogId, catalogName, catalogPath, drawable } from '../content/shoe-catalog';
+import { catalogUsual, similarOf } from '../content/shoe-similar';
+
+export interface Props {
+  shoe: CatalogShoe;
+}
+
+const { shoe } = Astro.props;
+const found = similarOf(shoe);
+const usual = catalogUsual();
+const OF = { road: 'd’asfalt', trail: 'de muntanya' } as const;
+const g = (value: number | null): string => formatMeasure(value, 'g', 'ca');
+const mm = (value: number | null): string => formatMeasure(value, 'mm', 'ca');
+// Its own ground first: the list most people come for. The other is one press away, and an address can ask for it (`?per=`).
+const grounds = ([shoe.terrain, shoe.terrain === 'road' ? 'trail' : 'road'] as const).map((ground) => ({
+  ground,
+  across: ground !== shoe.terrain,
+  title: ground === shoe.terrain ? `Semblants ${OF[ground]}, com ella` : `Semblants ${OF[ground]}`,
+  alikes: found[ground],
+}));
+const choices = grounds.map(({ ground, alikes }) => ({ value: ground, label: `${ground === 'road' ? 'Asfalt' : 'Muntanya'} (${alikes.length})` }));
+// What is usual on each ground, said where two grounds are compared: the reader sees what «equivalent» stands on.
+const usualText = `a muntanya, ${g(usual.trail.weightG)} i ${mm(usual.trail.stackHeelMm)} al taló; a l’asfalt, ${g(usual.road.weightG)} i ${mm(usual.road.stackHeelMm)}`;
+---
+
+<!--
+  From a shoe somebody is happy with to the ones most like it, on its own ground and on the other.
+  Both lists are in the page; where the script runs, one is shown at a time and the address says which.
+-->
+<div id="semblants" data-similar>
+  <Band tone="alt" title="Semblants">
+    <div class="list">
+      {
+        found.comparable ? (
+          <Stack gap={6}>
+            <Text measure>{`Si la ${shoe.model} et va bé, aquestes són les que més s’hi assemblen pel que declaren les marques: el drop, les alçades, el pes i, quan ho diuen, el suport i l’ús. Només es compara el que les dues marques declaren. La regla és nostra, i no diu com et quedarà cap sabatilla.`}</Text>
+            <div class="pick" data-similar-pick>
+              <SegmentedControl name="per" legend="En busco una per a" options={choices} value={shoe.terrain} labelled />
+            </div>
+            {grounds.map(({ ground, across, title, alikes }) => (
+              <section data-similar-list={ground}>
+                <Stack gap={3}>
+                  <Heading level={3} size="sm">{title}</Heading>
+                  {across && (
+                    <Text size="sm" tone="muted" measure>{`Una sabatilla de muntanya pesa més i porta menys escuma que una d’asfalt. Per això, d’un terreny a l’altre, el pes i l’alçada de la sola es comparen amb el que és habitual a cada un (${usualText}), i el drop tal com és.`}</Text>
+                  )}
+                  {alikes.length > 0 ? (
+                    <>
+                      <Stack gap={0} as="ul">
+                        {alikes.map((alike) => (
+                          <li data-alike={catalogId(alike.shoe)} data-closeness={alike.closeness}>
+                            <ShoeRow href={catalogPath(alike.shoe)} brand={alike.shoe.brand.name} model={alike.shoe.model} terrain={alike.shoe.terrain} weightG={alike.shoe.weightG} specs={drawable(alike.shoe)} dropMm={alike.shoe.dropMm} note={alike.note} />
+                          </li>
+                        ))}
+                      </Stack>
+                      <div><Link href={`/ca/comparar/?a=${catalogId(shoe)}&b=${catalogId(alikes[0]!.shoe)}`} variant="standalone">{`Posa-la de costat amb la ${catalogName(alikes[0]!.shoe)}`}</Link></div>
+                    </>
+                  ) : (
+                    <Text measure><span data-similar-none>{`Cap model ${OF[ground]} del catàleg s’hi assembla prou per dir-ne semblant.`}</span></Text>
+                  )}
+                </Stack>
+              </section>
+            ))}
+          </Stack>
+        ) : (
+          <Text measure><span data-similar-none>{`${shoe.brand.name} declara massa poques xifres d’aquest model per buscar-ne de semblants: en calen dues, entre el drop, les dues alçades i el pes.`}</span></Text>
+        )
+      }
+    </div>
+  </Band>
+</div>
+
+<script>
+  import '../islands/similar-pick.ts';
+</script>
+
+<style>
+  /* A band runs edge to edge on a phone, for the panels it holds. These lists are in no panel, and keep the page's margin. */
+  @media (width < 48rem) {
+    .list {
+      padding-inline: var(--tram-sys-grid-margin);
+    }
+  }
+
+  /* Without the script both lists are there to read, and there is nothing to choose. */
+  .pick:not([data-ready]) {
+    display: none;
+  }
+</style>

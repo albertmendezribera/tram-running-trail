@@ -1,0 +1,121 @@
+{
+  "maker": "saucony",
+  "accessed": "2026-11-26",
+  "method": "browser",
+  "shoes": {
+    "ride-19": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "tempo",
+        "daily",
+        "long"
+      ],
+      "useSaid": "equally at home on easy miles, long steady runs, or faster-paced training",
+      "distanceSaid": "Built for any pace or distance",
+      "note": null
+    },
+    "guide-19": {
+      "support": "stability",
+      "supportSaid": "Stability",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "MADE FOR DAILY MOVEMENT",
+      "distanceSaid": null,
+      "note": "«Stability» surt de les dades de producte de la pàgina («Stability / Men»); la fitxa visible hi diu «Category: Max cushioning» i parla de CenterPath que «guide your foot for balanced support»."
+    },
+    "triumph-24": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "daily",
+        "long"
+      ],
+      "useSaid": "engineered for total comfort on your longest miles",
+      "distanceSaid": null,
+      "note": "La pàgina també hi diu «MADE FOR DAILY MOVEMENT», «daily runs» i «high-mileage training»."
+    },
+    "hurricane-26": {
+      "support": "stability",
+      "supportSaid": "Stability",
+      "use": [
+        "daily"
+      ],
+      "useSaid": "MADE FOR DAILY MOVEMENT … comfort on daily runs or all day wear",
+      "distanceSaid": null,
+      "note": "«Stability» surt de les dades de producte de la pàgina («Stability / Men») i el títol hi diu «Max Cushion Support Running Shoes»; la fitxa visible hi diu «Category: Max cushion»."
+    },
+    "kinvara-16": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "tempo",
+        "daily"
+      ],
+      "useSaid": "MADE FOR SPEED DAY / DAILY TRAINING",
+      "distanceSaid": null,
+      "note": null
+    },
+    "endorphin-speed-6": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "tempo"
+      ],
+      "useSaid": "MADE FOR TEMPO RUNS & SPEED DAY",
+      "distanceSaid": null,
+      "note": null
+    },
+    "endorphin-pro-5": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "race",
+        "tempo"
+      ],
+      "useSaid": "MADE FOR SPEED DAY / RACE DAY",
+      "distanceSaid": null,
+      "note": null
+    },
+    "endorphin-elite-3": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "race"
+      ],
+      "useSaid": "MADE FOR RACE DAY",
+      "distanceSaid": null,
+      "note": null
+    },
+    "endorphin-azura": {
+      "support": "neutral",
+      "supportSaid": "Neutral",
+      "use": [
+        "tempo",
+        "daily"
+      ],
+      "useSaid": "MADE FOR EVERYDAY TRAINING … Daily Training / Speed Days",
+      "distanceSaid": null,
+      "note": null
+    },
+    "peregrine-16": {
+      "support": null,
+      "supportSaid": null,
+      "use": [],
+      "useSaid": null,
+      "distanceSaid": null,
+      "note": "La pàgina només hi diu «MADE FOR TRAIL RUNNING» i «Category: Technical Trail»."
+    },
+    "xodus-ultra-4": {
+      "support": null,
+      "supportSaid": null,
+      "use": [
+        "long"
+      ],
+      "useSaid": "Designed for long-haul adventures",
+      "distanceSaid": null,
+      "note": "La pàgina hi diu «MADE FOR TRAIL RUN/HIKING»; no hi anomena cap distància ni la paraula ultra fora del nom."
+    }
+  }
+}

@@ -1,5 +1,6 @@
 ---
 import RaceRow from '@tram/design-system/patterns/RaceRow.astro';
+import Fold from '@tram/design-system/interactive/Fold.astro';
 import Heading from '@tram/design-system/primitives/Heading.astro';
 import Stack from '@tram/design-system/primitives/Stack.astro';
 import { type CalendarRace, placeOf } from '../content/calendar';
@@ -10,10 +11,15 @@ export interface Props {
   level?: 2 | 3;
   /** What the id of each month starts with, so it can be jumped to. Two lists in a page need two. */
   anchor?: string;
+  /**
+   * For a long list: every month is a part that is shut on a phone, with how many races it holds said on
+   * its heading. The number is how many of the first months start open there. Left out, months are plain headings.
+   */
+  fold?: number;
 }
 
 const MONTHS = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
-const { races, level = 2, anchor = 'mes' } = Astro.props;
+const { races, level = 2, anchor = 'mes', fold } = Astro.props;
 // A month to a group, in the order the races come. A race with several distances shows the longest; its page has them all.
 const STATE = { postponed: ' (ajornada)', cancelled: ' (suspesa)' } as const;
 const km = (metres: number | undefined): number | null => (metres === undefined ? null : Number((metres / 1000).toFixed(2)));
@@ -40,15 +46,23 @@ for (const race of races) {
 <!-- The calendar as a list, month by month. No race here has a route yet, and no source gives its climb: the row has no place for it. -->
 <Stack gap={7}>
   {
-    months.map((month) => (
-      <section id={`${anchor}-${month.key}`} data-month={month.key}>
-        <Stack gap={3}>
-          <Heading level={level} size="sm">{month.title}</Heading>
+    months.map((month, i) =>
+      fold === undefined ? (
+        <section id={`${anchor}-${month.key}`} data-month={month.key}>
+          <Stack gap={3}>
+            <Heading level={level} size="sm">{month.title}</Heading>
+            <Stack gap={0} as="ul">
+              {month.rows.map((row) => <li data-race={row.slug}><RaceRow {...row.props} compact /></li>)}
+            </Stack>
+          </Stack>
+        </section>
+      ) : (
+        <Fold id={`${anchor}-${month.key}`} data-month={month.key} title={month.title} count={month.rows.length} level={level} folded={i < fold ? undefined : 'narrow'}>
           <Stack gap={0} as="ul">
             {month.rows.map((row) => <li data-race={row.slug}><RaceRow {...row.props} compact /></li>)}
           </Stack>
-        </Stack>
-      </section>
-    ))
+        </Fold>
+      ),
+    )
   }
 </Stack>

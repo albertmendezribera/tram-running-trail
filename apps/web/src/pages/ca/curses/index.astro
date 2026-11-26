@@ -78,7 +78,7 @@ const notice = pending
               <nav aria-label="Mesos del calendari">
                 <Cluster>{months.map((month) => <Link href={month.href}>{month.label}</Link>)}</Cluster>
               </nav>
-              <CalendarList races={coming} level={3} />
+              <CalendarList races={coming} level={3} fold={1} />
             </Stack>
           </div>
         </Band>
@@ -90,7 +90,7 @@ const notice = pending
       <div data-calendar-list id="disputades">
         <Band tone="alt" title="Ja disputades">
           <Panel>
-            <CalendarList races={run} level={3} anchor="fet" />
+            <CalendarList races={run} level={3} anchor="fet" fold={0} />
           </Panel>
         </Band>
       </div>

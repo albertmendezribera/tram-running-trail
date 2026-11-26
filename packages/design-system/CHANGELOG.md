@@ -4,6 +4,10 @@ Tot canvi de token o de component s'hi registra, amb captures abans/després (CL
 
 ## Sense publicar
 
+Llistes llargues al mòbil.
+
+- `Fold` (interactiu nou, amb fitxa): una part d'una llista que es pot plegar, amb el títol com a botó i el nombre del que hi ha a dins. Pot començar plegada només al mòbil (`narrow`) o sempre. Ho decideixen els estils, sense salt en carregar, i sense JavaScript res no es plega. No hi ha «abans»: és nou.
+
 Portada i jerarquia del web.
 
 - `SiteHeader`: propietat nova `more`, per al que no és una secció però té entrada des de tota pàgina; va després d'un filet i en tinta apagada. En un mòbil el menú és una sola línia que es fa lliscar (abans es trencava en dues quan hi havia més de quatre enllaços). Sense `more`, a l'escriptori és com era.

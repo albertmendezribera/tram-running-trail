@@ -10,6 +10,22 @@ const FIELDS = [SEARCH, ...CHOICES] as const;
 /** How long the address waits for the typing to stop: a browser allows only so many changes of it a minute. */
 const ADDRESS_WAIT_MS = 200;
 
+/**
+ * The parts of the list that can be shut (`Fold`). While a filter or a search is on, every part with
+ * something left in it is opened: what was asked for is not left behind a shut door. With nothing asked,
+ * each part goes back to how the page set it.
+ */
+const folds = [...document.querySelectorAll<HTMLElement>('[data-fold]')].map((fold) => ({ fold, set: fold.dataset['folded'] }));
+let unfolded = false;
+const unfold = (asking: boolean): void => {
+  if (asking === unfolded) return;
+  unfolded = asking;
+  for (const { fold, set } of folds) {
+    if (asking || set === undefined) delete fold.dataset['folded'];
+    else fold.dataset['folded'] = set;
+  }
+};
+
 for (const form of document.querySelectorAll<HTMLFormElement>('[data-calendar-filter]')) {
   const index = JSON.parse(form.querySelector('script[type="application/json"]')!.textContent!) as Record<string, Entry>;
   const status = form.querySelector<HTMLElement>('[data-status]')!;
@@ -46,6 +62,7 @@ for (const form of document.querySelectorAll<HTMLFormElement>('[data-calendar-fi
     // And a part of the calendar with nothing left, title and all: «Properes», or «Ja disputades».
     for (const list of document.querySelectorAll<HTMLElement>('[data-calendar-list]')) list.hidden = !list.querySelector('[data-race]:not([hidden])');
     const [searched, chosen] = [Boolean(asked.trim()), Boolean(type || band || comarca)];
+    unfold(searched || chosen);
     const none = searched && chosen ? 'Cap prova amb aquesta cerca i aquests filtres.' : searched ? 'Cap prova amb aquesta cerca.' : 'Cap prova amb aquests filtres.';
     status.textContent = !(searched || chosen) ? `${total} proves.` : shown.size ? `${shown.size} de ${total} proves.` : none;
     form.dataset['shown'] = String(shown.size);

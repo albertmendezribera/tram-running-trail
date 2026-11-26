@@ -1,0 +1,28 @@
+---
+import Fold from '@tram/design-system/interactive/Fold.astro';
+import Fiche from '../Fiche.astro';
+
+const code = `<Fold title="Desembre 2026" count={23} level={3} folded="narrow" id="mes-2026-12">
+  <ul>…</ul>
+</Fold>`;
+---
+
+<Fiche
+  group="Interactiu"
+  js="0,6 KB de JavaScript"
+  title="Fold"
+  use="Una part d'una llista molt llarga que es pot plegar: un mes d'un calendari, una marca d'un catàleg. El títol és el botó, i diu quant hi ha a dins."
+  avoid="Amagar el que la pàgina ha de dir (un avís, una xifra principal) ni fer-ne un menú. Tampoc en una llista curta: plegar té un cost, i només es paga quan la llista no es pot abastar."
+  code={code}
+>
+  <section class="fiche-block" data-testid="fold">
+    <h2 data-type="display-sm">Com comença</h2>
+    <Fold title="Obert" count={2} level={3} id="demo-open"><p class="fiche-note">Sense <code>folded</code>, comença obert. El títol el plega.</p></Fold>
+    <Fold title="Plegat al mòbil" count={3} level={3} folded="narrow" id="demo-narrow"><p class="fiche-note">Amb <code>folded="narrow"</code>, plegat en un mòbil i obert on hi ha lloc.</p></Fold>
+    <Fold title="Plegat sempre" count={5} level={3} folded="always" id="demo-always"><p class="fiche-note">Amb <code>folded="always"</code>, plegat a tota amplada.</p></Fold>
+    <p class="fiche-note">
+      Que una part estigui plegada ho diu la part mateixa (<code>data-folded</code>) i ho decideixen els estils, no el script: quan la pàgina arriba no es mou res. I només es plega on el script corre (<code>data-js</code> a l'arrel): sense
+      JavaScript tot hi és per llegir. Un enllaç a una part plegada, o a alguna cosa de dins, l'obre. Qui filtra la llista pot obrir les parts treient-los <code>data-folded</code>; el títol segueix el canvi.
+    </p>
+  </section>
+</Fiche>

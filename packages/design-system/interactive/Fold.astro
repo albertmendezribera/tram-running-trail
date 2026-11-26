@@ -1,0 +1,121 @@
+---
+import Icon from '../primitives/Icon.astro';
+
+export interface Props {
+  /** What the part is: the month, the maker. It is its heading, and what is pressed to open or shut it. */
+  title: string;
+  /** How much is inside, said after the title, so a shut part still says what it holds. */
+  count?: number;
+  level?: 2 | 3 | 4;
+  /**
+   * How it starts. `narrow`: shut on a phone, open where there is room. `always`: shut at every width.
+   * Left out, it starts open. Whichever, the heading opens and shuts it.
+   */
+  folded?: 'narrow' | 'always' | undefined;
+  id?: string | undefined;
+  /** Any `data-*` the page needs on the part itself, as the filters of a list do. */
+  [name: `data-${string}`]: string | undefined;
+}
+
+const { title, count, level = 3, folded, id, ...rest } = Astro.props;
+const Tag = `h${level}` as 'h2' | 'h3' | 'h4';
+---
+
+<!--
+  A part of a long list that can be shut: its heading is a button that says what is inside and how much.
+  It is shut by a rule of the page, not by the script, so nothing moves when the page arrives; and it is
+  shut only where the script runs (`data-js` on the root), so without it everything is there to read.
+-->
+<section class="fold" id={id} data-fold data-folded={folded} {...rest}>
+  <Tag class="head" data-type="display-sm">
+    <button class="toggle" type="button" data-fold-toggle aria-expanded="true">
+      <span class="title">{title}{count !== undefined && <span class="count" data-numeric="tabular">{` · ${count}`}</span>}</span>
+      <span class="mark"><Icon name="arrow-down" size="sm" /></span>
+    </button>
+  </Tag>
+  <div class="body" data-fold-body><slot /></div>
+</section>
+
+<script>
+  import './fold.ts';
+</script>
+
+<style>
+  .fold {
+    display: grid;
+    gap: var(--tram-sys-space-3);
+    min-inline-size: 0;
+  }
+
+  .head {
+    margin: 0;
+  }
+
+  /* The heading itself is what is pressed: it keeps the look of a heading. */
+  .toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--tram-sys-space-3);
+    inline-size: 100%;
+    min-block-size: var(--tram-sys-space-8);
+    padding: 0;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-align: start;
+    background: none;
+    cursor: pointer;
+  }
+
+  .toggle:focus-visible {
+    outline: var(--tram-sys-line-strong) solid var(--tram-sys-focus);
+    outline-offset: var(--tram-sys-line-strong);
+  }
+
+  .count {
+    color: var(--tram-sys-text-muted);
+  }
+
+  /* The arrow says which way the part goes: down to open, up when it is open. Only where the script can do it. */
+  .mark {
+    display: none;
+    transition: rotate var(--tram-sys-motion-quick) var(--tram-sys-motion-ease-standard);
+  }
+
+  :global(:root[data-js]) .mark {
+    display: grid;
+  }
+
+  .toggle[aria-expanded='true'] .mark {
+    rotate: 180deg;
+  }
+
+  /* Shut: a rule under the heading stands for the list that is not shown. */
+  :global(:root[data-js]) .fold[data-folded='always'] > .body {
+    display: none;
+  }
+
+  :global(:root[data-js]) .fold[data-folded='always'] {
+    padding-block-end: var(--tram-sys-space-2);
+    border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+  }
+
+  @media (width < 48rem) {
+    :global(:root[data-js]) .fold[data-folded='narrow'] > .body {
+      display: none;
+    }
+
+    :global(:root[data-js]) .fold[data-folded='narrow'] {
+      padding-block-end: var(--tram-sys-space-2);
+      border-block-end: var(--tram-sys-line-hairline) solid var(--tram-sys-rule-strong);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mark {
+      transition: none;
+    }
+  }
+</style>

@@ -12,6 +12,22 @@ const remember = (name: string, value: string): void => {
   history.replaceState(null, '', `${location.pathname}${params.size ? `?${params}` : ''}${location.hash}`);
 };
 
+/**
+ * The parts of the list that can be shut (`Fold`). While a filter or a search is on, every part with
+ * something left in it is opened: what was asked for is not left behind a shut door. With nothing asked,
+ * each part goes back to how the page set it.
+ */
+const folds = [...document.querySelectorAll<HTMLElement>('[data-fold]')].map((fold) => ({ fold, set: fold.dataset['folded'] }));
+let unfolded = false;
+const unfold = (asking: boolean): void => {
+  if (asking === unfolded) return;
+  unfolded = asking;
+  for (const { fold, set } of folds) {
+    if (asking || set === undefined) delete fold.dataset['folded'];
+    else fold.dataset['folded'] = set;
+  }
+};
+
 for (const form of document.querySelectorAll<HTMLFormElement>('[data-catalog-filter]')) {
   const status = form.querySelector<HTMLElement>('[data-status]')!;
   const total = Number(form.dataset['total']);
@@ -41,6 +57,7 @@ for (const form of document.querySelectorAll<HTMLFormElement>('[data-catalog-fil
       const count = view.querySelector<HTMLElement>('[data-map-count]');
       if (count) count.textContent = String(view.querySelectorAll('[data-point]:not([hidden])').length);
     }
+    unfold(Boolean(brand || ground));
     status.textContent = !(brand || ground) ? `${total} models.` : kept.size ? `${kept.size} de ${total} models.` : 'Cap model amb aquests filtres.';
     form.dataset['shown'] = String(kept.size);
     for (const name of CHOICES) remember(name, field(name).value);

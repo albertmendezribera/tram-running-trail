@@ -27,9 +27,20 @@ Revisades la portada, les tres llistes (curses, rutes, sabatilles) i la pàgina 
 - **Sabatilles.** Les dues de laboratori, en una franja amb nom i una frase que diu què tenen de diferent.
 - **Rutes.** Sota la llista, «Més enllà de la ruta»: «Palamós a peu» i les stories.
 
+## Les llistes llargues al mòbil (26 de novembre de 2026)
+
+El titular va dir que sí a plegar-les. En un mòbil el calendari feia uns 52.000 px d'alt i el catàleg uns 46.000; ara fan uns 15.000 i uns 5.000.
+
+- **Calendari:** cada mes és un títol que diu quantes proves té («Desembre 2026 · 46») i que l'obre i el tanca. A «Properes» el primer mes comença obert; a «Ja disputades», tots tancats.
+- **Catàleg:** cada marca, igual («Adidas · 8»), totes tancades d'entrada.
+- **Només al mòbil.** On hi ha lloc tot comença obert, com abans; el títol també hi tanca la seva part.
+- **El que es busca no queda darrere d'una porta tancada:** una cerca o un filtre obren tot el que hi coincideix, i en treure'ls les parts tornen com eren. Un enllaç a un mes l'obre.
+- **Sense JavaScript no es plega res**, i en carregar no es mou res: ho decideixen els estils, no el script (`Fold`, nou al sistema de disseny).
+- **No s'ha plegat** la llista de les pàgines per necessitat ni la de les facetes del calendari, que són curtes, ni la portada.
+- **No comprovat:** en cap mòbil de debò, ni amb un lector de pantalla.
+
 ## Què no s'ha fet, i s'hauria de mirar
 
-- **Les llistes són molt llargues en un mòbil:** el calendari fa uns 52.000 px d'alt i el catàleg uns 46.000. Calen mesos i marques que es pleguin, o paginar. És el problema de UX més gros que queda.
 - **La cerca global** (E13): només es cerca dins del calendari.
 - **El camí de la pàgina** («Inici») no ajuda a les pàgines de primer nivell.
 - **Cap prova amb persones.** Tot això són criteris generals aplicats amb el meu judici; ningú no ha fet servir la portada nova.

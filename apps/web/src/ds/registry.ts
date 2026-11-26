@@ -20,6 +20,7 @@ import RoutePlateFiche from './fiches/RoutePlateFiche.astro';
 import SegmentedFiche from './fiches/SegmentedFiche.astro';
 import E06SplatFiche from './fiches/E06SplatFiche.astro';
 import FieldsFiche from './fiches/FieldsFiche.astro';
+import FoldFiche from './fiches/FoldFiche.astro';
 import SearchFieldFiche from './fiches/SearchFieldFiche.astro';
 import SelectFiche from './fiches/SelectFiche.astro';
 import ShoeSheetFiche from './fiches/ShoeSheetFiche.astro';
@@ -58,6 +59,7 @@ export const FICHES = [
   { slug: 'interactive/search-field', title: 'SearchField', Page: SearchFieldFiche },
   { slug: 'interactive/fields', title: 'TextField i FileField', Page: FieldsFiche },
   { slug: 'interactive/select', title: 'Select', Page: SelectFiche },
+  { slug: 'interactive/fold', title: 'Fold', Page: FoldFiche },
   { slug: 'interactive/theme-toggle', title: 'ThemeToggle', Page: ThemeToggleFiche },
   { slug: 'interactive/viewer-3d-shell', title: 'Viewer3DShell', Page: ViewerFiche },
   { slug: 'interactive/game-stage', title: 'GameStage', Page: GameStageFiche },

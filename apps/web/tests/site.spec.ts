@@ -281,7 +281,9 @@ test.describe('Calendar (Phase 2)', () => {
     await expect(filter).toBeVisible();
     const status = filter.locator('[data-status]');
     const shown = page.locator('main [data-race]:visible');
-    const all = await shown.count();
+    // Every race the page holds: on a phone the months but the first start shut, so what is seen is not all there is.
+    const kept = page.locator('main [data-race]:not([hidden])');
+    const all = await kept.count();
     await expect(status).toHaveText(`${all} proves.`);
     // Marches only: fewer rows, every one of them a march, and the months left empty are gone with their links.
     await filter.locator('select[name="tipus"]').selectOption('march');
@@ -299,7 +301,7 @@ test.describe('Calendar (Phase 2)', () => {
     await expect(status).toHaveText('Cap prova amb aquests filtres.');
     await filter.getByRole('button', { name: 'Treu els filtres' }).click();
     await expect(status).toHaveText(`${all} proves.`);
-    expect(await shown.count()).toBe(all);
+    expect(await kept.count()).toBe(all);
     await expect(page).toHaveURL(/\/ca\/curses\/$/);
     // No source gives the climb, and the page says why there is no filter for it.
     await expect(filter).toContainText('no es pot filtrar per ell');
@@ -319,7 +321,9 @@ test.describe('Calendar (Phase 2)', () => {
     const search = filter.getByRole('searchbox', { name: 'Nom o població' });
     const status = filter.locator('[data-status]');
     const shown = page.locator('main [data-race]:visible');
-    const all = await shown.count();
+    // Every race the page holds: on a phone the months but the first start shut, so what is seen is not all there is.
+    const kept = page.locator('main [data-race]:not([hidden])');
+    const all = await kept.count();
     // A word of the name is enough, in capitals too: the march of Pals is the only one left, and its month the only month.
     await search.pressSequentially('ARROSSARS');
     await expect(shown).toHaveCount(1);
@@ -703,6 +707,98 @@ test.describe('Route as a story (M5)', () => {
   });
 });
 
+test.describe('Long lists on a phone', () => {
+  const open12 = (page: Page) => page.locator('[data-fold] [data-fold-toggle][aria-expanded="true"]');
+
+  test.describe('at the width of a phone', () => {
+    test.use({ viewport: { width: 390, height: 844 } });
+
+    test('the calendar shows its first month and the others shut, each saying how many races it holds; a heading opens its month', async ({ page }) => {
+      await open(page, PAGES.races);
+      const months = page.locator('#properes [data-fold]');
+      expect(await months.count()).toBeGreaterThan(8);
+      // The first month is open; no other is, and those already run are all shut.
+      await expect(months.first().locator('[data-fold-toggle]')).toHaveAttribute('aria-expanded', 'true');
+      await expect(page.locator('#properes [data-fold-toggle][aria-expanded="true"]')).toHaveCount(1);
+      await expect(page.locator('#disputades [data-fold-toggle][aria-expanded="true"]')).toHaveCount(0);
+      // A shut month says what it is and how much it holds, and shows none of its races.
+      const second = months.nth(1);
+      await expect(second.getByRole('heading')).toHaveText(/^\s*\S+ \d{4} · \d+\s*$/);
+      await expect(second.locator('[data-race]').first()).toBeHidden();
+      const held = Number((await second.getByRole('heading').textContent())!.split('·')[1]);
+      expect(await second.locator('[data-race]').count()).toBe(held);
+      // Its heading opens it, and shuts it again.
+      await second.getByRole('button').click();
+      await expect(second.getByRole('button')).toHaveAttribute('aria-expanded', 'true');
+      await expect(second.locator('[data-race]').first()).toBeVisible();
+      await second.getByRole('button').click();
+      await expect(second.locator('[data-race]').first()).toBeHidden();
+      // The page is no longer tens of thousands of pixels long.
+      expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(25_000);
+      expect(await overflow(page)).toBe(0);
+    });
+
+    test('a link to a month opens it, and a search opens every month it finds something in', async ({ page }) => {
+      await open(page, PAGES.races);
+      const march = page.locator('#mes-2027-03');
+      await expect(march.locator('[data-race]').first()).toBeHidden();
+      await page.locator('a[href="#mes-2027-03"]').first().click();
+      await expect(march.getByRole('button')).toHaveAttribute('aria-expanded', 'true');
+      await expect(march.locator('[data-race]').first()).toBeVisible();
+      await expect(march).toBeInViewport();
+      // What is searched for is not left behind a shut door; with the search taken off, the months go back as they were.
+      const search = page.getByRole('searchbox', { name: 'Nom o població' });
+      await search.fill('trail');
+      const found = page.locator('main [data-race]:not([hidden])');
+      await expect(page.locator('[data-calendar-filter] [data-status]')).toHaveText(/^\d+ de \d+ proves\.$/);
+      expect(await found.count()).toBeGreaterThan(20);
+      expect(await page.locator('main [data-race]:visible').count()).toBe(await found.count());
+      await search.fill('');
+      await expect(page.locator('#properes [data-fold-toggle][aria-expanded="true"]')).toHaveCount(1);
+      // A page opened at a month has it open from the start.
+      await open(page, `${PAGES.races}#mes-2027-05`);
+      await expect(page.locator('#mes-2027-05 [data-race]').first()).toBeVisible();
+    });
+
+    test('the catalogue shows its makers shut, each with how many models; choosing a maker opens it', async ({ page }) => {
+      await open(page, PAGES.shoes);
+      const makers = page.locator('[data-catalog-list] [data-fold]');
+      expect(await makers.count()).toBeGreaterThanOrEqual(10);
+      await expect(open12(page)).toHaveCount(0);
+      await expect(makers.first().getByRole('heading')).toHaveText(/^\s*\S.* · \d+\s*$/);
+      await expect(page.locator('[data-catalog-list] [data-shoe]:visible')).toHaveCount(0);
+      await page.locator('[data-catalog-filter]').getByLabel('Marca').selectOption('puma');
+      await expect(page.locator('[data-catalog-list] [data-shoe]:visible')).toHaveCount(12);
+      await page.locator('[data-catalog-filter]').getByRole('button', { name: 'Treu els filtres' }).click();
+      await expect(page.locator('[data-catalog-list] [data-shoe]:visible')).toHaveCount(0);
+      expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(12_000);
+    });
+  });
+
+  test.describe('where there is room', () => {
+    test.use({ viewport: { width: 1440, height: 900 } });
+
+    test('nothing starts shut: every month and every maker is open, and a heading still shuts its own', async ({ page }) => {
+      await open(page, PAGES.races);
+      const months = page.locator('#properes [data-fold]');
+      await expect(page.locator('#properes [data-fold-toggle][aria-expanded="true"]')).toHaveCount(await months.count());
+      await months.nth(1).getByRole('button').click();
+      await expect(months.nth(1).locator('[data-race]').first()).toBeHidden();
+      await open(page, PAGES.shoes);
+      const makers = page.locator('[data-catalog-list] [data-fold]');
+      await expect(page.locator('[data-catalog-list] [data-fold-toggle][aria-expanded="true"]')).toHaveCount(await makers.count());
+    });
+  });
+
+  test('without a script nothing is shut: every race is there to read', async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+    const page = await context.newPage();
+    await page.goto(PAGES.races);
+    await expect(page.locator('#mes-2027-03 [data-race]').first()).toBeVisible();
+    await context.close();
+  });
+});
+
 test.describe('Story maker', () => {
   const PATH = '/ca/stories/';
   const maker = (page: Page) => page.locator('[data-story-maker]');
@@ -875,7 +971,9 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     await open(page, PAGES.shoes);
     const filter = page.locator('[data-catalog-filter]');
     const rows = page.locator('[data-catalog-list] [data-shoe]:visible');
-    const total = await rows.count();
+    // Every model the page holds: on a phone the makers start shut, so what is seen is not all there is.
+    const kept = page.locator('[data-catalog-list] [data-shoe]:not([hidden])');
+    const total = await kept.count();
     await expect(filter.locator('[data-status]')).toHaveText(`${total} models.`);
     await filter.getByLabel('Marca').selectOption('puma');
     await expect(filter.locator('[data-status]')).toHaveText(`12 de ${total} models.`);
@@ -896,7 +994,7 @@ test.describe('Shoe catalogue (Phase 3)', () => {
     await expect(rows).toHaveCount(4);
     await expect(filter.getByLabel('Marca')).toHaveValue('puma');
     await filter.getByRole('button', { name: 'Treu els filtres' }).click();
-    await expect(rows).toHaveCount(total);
+    await expect(kept).toHaveCount(total);
     expect(new URL(page.url()).search).toBe('');
     // Filters that leave nothing say so.
     await filter.getByLabel('Marca').selectOption('asics');

@@ -73,6 +73,8 @@ const breadcrumbs =
     <Font cssVariable="--tram-ref-font-text" preload />
     <!-- Before the first paint: the theme the reader chose, not the one of the phone. -->
     <script is:inline>
+      // The parts of a list that start shut are shut only where a script can open them (Fold).
+      document.documentElement.dataset.js = '';
       try {
         if (localStorage.getItem('tram-theme') === 'night') document.documentElement.dataset.theme = 'night';
       } catch {}

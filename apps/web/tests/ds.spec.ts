@@ -28,6 +28,7 @@ const PAGES = {
   'search-field': '/ds/interactive/search-field/',
   fields: '/ds/interactive/fields/',
   select: '/ds/interactive/select/',
+  fold: '/ds/interactive/fold/',
   'theme-toggle': '/ds/interactive/theme-toggle/',
   viewer: '/ds/interactive/viewer-3d-shell/',
   'game-stage': '/ds/interactive/game-stage/',

@@ -1,4 +1,5 @@
 ---
+import Fold from '@tram/design-system/interactive/Fold.astro';
 import ShoeRow from '@tram/design-system/patterns/ShoeRow.astro';
 import Button from '@tram/design-system/primitives/Button.astro';
 import Heading from '@tram/design-system/primitives/Heading.astro';
@@ -58,18 +59,15 @@ const makers = [...new Set(catalog.map((shoe) => shoe.brand.name))].sort((a, b) 
             <div data-catalog-list>
               <Stack gap={7}>
                 {makers.map((maker) => (
-                  <section data-maker={maker.name}>
-                    <Stack gap={3}>
-                      <Heading level={3} size="sm">{`${maker.name} · ${maker.shoes.length}`}</Heading>
-                      <Stack gap={0} as="ul">
-                        {maker.shoes.map((shoe) => (
-                          <li data-shoe={catalogId(shoe)} data-brand={shoe.brand.slug} data-terrain={shoe.terrain}>
-                            <ShoeRow href={catalogPath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.weightG} specs={drawable(shoe)} dropMm={shoe.dropMm} />
-                          </li>
-                        ))}
-                      </Stack>
+                  <Fold data-maker={maker.name} title={maker.name} count={maker.shoes.length} level={3} folded="narrow">
+                    <Stack gap={0} as="ul">
+                      {maker.shoes.map((shoe) => (
+                        <li data-shoe={catalogId(shoe)} data-brand={shoe.brand.slug} data-terrain={shoe.terrain}>
+                          <ShoeRow href={catalogPath(shoe)} brand={shoe.brand.name} model={shoe.model} terrain={shoe.terrain} weightG={shoe.weightG} specs={drawable(shoe)} dropMm={shoe.dropMm} />
+                        </li>
+                      ))}
                     </Stack>
-                  </section>
+                  </Fold>
                 ))}
               </Stack>
             </div>
